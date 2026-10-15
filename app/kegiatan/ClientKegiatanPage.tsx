@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
-import { SiteContent, getYouTubeEmbedUrl } from '@/lib/initialData';
+import { SiteContent, initialSiteContent, getYouTubeEmbedUrl } from '@/lib/initialData';
 import { 
   HardHat, 
   Maximize2, 
@@ -36,18 +36,20 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
     title: '',
   });
 
-  const rawActivities = content.activities?.items || [];
+  const safeContent = content || initialSiteContent;
+  const activities = safeContent?.activities || initialSiteContent.activities;
+  const rawActivities = Array.isArray(activities?.items) ? activities.items : [];
 
   const filteredItems = filterTag === 'all'
     ? rawActivities
-    : rawActivities.filter((item) => (item.tag || '').toLowerCase().includes(filterTag.toLowerCase()));
+    : rawActivities.filter((item) => (item?.tag || '').toLowerCase().includes(filterTag.toLowerCase()));
 
   // Dynamically collect unique tags for filters
-  const uniqueTags = Array.from(new Set(rawActivities.map(i => i.tag).filter(Boolean)));
+  const uniqueTags = Array.from(new Set(rawActivities.map((i) => i?.tag).filter(Boolean))) as string[];
 
   return (
     <div className="min-h-screen bg-[#F3EFE6] text-[#262722] flex flex-col font-sans selection:bg-[#C5A568] selection:text-[#262722]">
-      <Header content={content} />
+      <Header content={safeContent} />
 
       <main id="main-content" className="flex-1">
         {/* Page Hero Header */}
@@ -63,13 +65,13 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
             <div className="max-w-3xl space-y-4">
               <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-[4px] bg-white/[0.06] border border-white/10 text-[#C5A568] text-[11px] font-semibold uppercase tracking-wider">
                 <HardHat className="w-3.5 h-3.5" />
-                <span>{content.activities.badge || 'AKTIVITAS & PROGRES PROYEK'}</span>
+                <span>{activities?.badge || 'AKTIVITAS & PROGRES PROYEK'}</span>
               </div>
               <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-[#F3EFE6] leading-tight">
-                {content.activities.title || 'Dokumentasi Pekerjaan Lapangan'}
+                {activities?.title || 'Dokumentasi Pekerjaan Lapangan'}
               </h1>
               <p className="text-[#F3EFE6]/80 text-sm sm:text-base leading-relaxed max-w-2xl">
-                {content.activities.subtitle || 'Transparansi tahapan konstruksi fisik di Puri Gunung Langgar, Desa Sabah Balau, Tanjung Bintang, Lampung Selatan.'}
+                {activities?.subtitle || 'Transparansi tahapan konstruksi fisik di Puri Gunung Langgar, Desa Sabah Balau, Tanjung Bintang, Lampung Selatan.'}
               </p>
             </div>
           </div>

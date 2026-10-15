@@ -1,6 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { getSiteContent } from '@/lib/db';
+import { initialSiteContent } from '@/lib/initialData';
 import ClientKegiatanPage from './ClientKegiatanPage';
 
 export const dynamic = 'force-dynamic';
@@ -12,6 +13,12 @@ export const metadata: Metadata = {
 };
 
 export default function KegiatanPage() {
-  const content = getSiteContent();
+  let content = initialSiteContent;
+  try {
+    const fetched = getSiteContent();
+    if (fetched) content = fetched;
+  } catch (err) {
+    console.error('Failed to getSiteContent on KegiatanPage:', err);
+  }
   return <ClientKegiatanPage content={content} />;
 }
