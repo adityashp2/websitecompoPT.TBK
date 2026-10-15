@@ -57,7 +57,7 @@ export default function FloatingWhatsApp({ content }: FloatingWhatsAppProps) {
   const waUrl = `https://wa.me/${formattedWa}?text=${encodeURIComponent('Halo PT. TBK, saya ingin bertanya informasi unit dan promo perumahan Puri Gunung Langgar.')}`;
 
   return (
-    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex flex-col items-end pointer-events-none">
+    <div className="fixed bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] md:bottom-6 right-4 sm:right-6 z-40 flex flex-col items-end pointer-events-none">
       {/* Consultation Notification Bubble */}
       {showPopup && !dismissed && (
         <div className="mb-2.5 w-[calc(100vw-32px)] max-w-[300px] bg-white rounded-[4px] shadow-lg border border-[#DDD8CE] p-3.5 text-[#262722] relative z-50 font-sans select-none pointer-events-auto animate-fade-in">

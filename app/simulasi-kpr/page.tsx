@@ -212,7 +212,7 @@ export default function SimulasiKprPage() {
                     <ShieldCheck className="w-4 h-4 text-[#C5A568] shrink-0" />
                     <span className="font-medium">Suku Bunga KPR Subsidi FLPP</span>
                   </div>
-                  <span className="font-mono font-bold text-[#262722]">5.0% Flat Sampai Lunas</span>
+                  <span className="font-mono font-bold text-[#262722]">5.0% Tetap (Anuitas) Sampai Lunas</span>
                 </div>
               </div>
 
@@ -231,7 +231,7 @@ export default function SimulasiKprPage() {
                   {/* Main Highlighted Number */}
                   <div className="p-5 rounded-[10px] bg-white/[0.05] border border-white/10 text-center space-y-1">
                     <div className="text-xs uppercase tracking-wider text-[#F3EFE6]/60">
-                      Angsuran Tenor {tenor} Tahun
+                      Angsuran Tenor {tenor} Tahun (Suku Bunga 5% Tetap)
                     </div>
                     <div className="text-3xl sm:text-4xl font-serif text-[#C5A568] tracking-tight">
                       {formatRupiah(angsuranBulan)}
@@ -258,7 +258,7 @@ export default function SimulasiKprPage() {
                     </div>
                     <div className="flex justify-between py-2">
                       <span>Suku Bunga FLPP</span>
-                      <span className="font-mono font-semibold text-emerald-400">5% Tetap (Flat)</span>
+                      <span className="font-mono font-semibold text-emerald-400">5% Tetap (Anuitas Subsidi)</span>
                     </div>
                   </div>
 
@@ -282,6 +282,10 @@ export default function SimulasiKprPage() {
                       <span>Isi Formulir Minat Unit</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
+
+                    <p className="text-[11px] text-[#DDD8CE]/60 italic leading-relaxed pt-2 text-center">
+                      *Perhitungan di atas adalah estimasi simulasi mengacu pada skema subsidi FLPP pemerintah dengan suku bunga anuitas 5% tetap sampai lunas. Plafon dan cicilan resmi mengacu pada SP3K dari bank mitra penyalur (Bank BTN, BSI, Mandiri).
+                    </p>
                   </div>
                 </div>
 

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
+import LookbookModal, { LookbookItem } from '../components/LookbookModal';
 import { SiteContent, initialSiteContent, getYouTubeEmbedUrl } from '@/lib/initialData';
 import { 
   HardHat, 
@@ -25,10 +26,14 @@ import {
 
 export default function ClientKegiatanPage({ content }: { content: SiteContent }) {
   const [filterTag, setFilterTag] = useState<string>('all');
-  const [lightbox, setLightbox] = useState<{ open: boolean; image: string; caption: string }>({
+  const [lightbox, setLightbox] = useState<{
+    open: boolean;
+    currentIndex: number;
+    items: LookbookItem[];
+  }>({
     open: false,
-    image: '',
-    caption: '',
+    currentIndex: 0,
+    items: [],
   });
   const [videoModal, setVideoModal] = useState<{ open: boolean; url: string; title: string }>({
     open: false,
@@ -43,6 +48,14 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
   const filteredItems = filterTag === 'all'
     ? rawActivities
     : rawActivities.filter((item) => (item?.tag || '').toLowerCase().includes(filterTag.toLowerCase()));
+
+  const filteredLookbookItems: LookbookItem[] = filteredItems.map((item, idx) => ({
+    image: item.image,
+    title: item.title,
+    description: item.description,
+    tag: item.tag || `Tahap 0${idx + 1}`,
+    category: 'Dokumentasi Lapangan',
+  }));
 
   // Dynamically collect unique tags for filters
   const uniqueTags = Array.from(new Set(rawActivities.map((i) => i?.tag).filter(Boolean))) as string[];
@@ -128,8 +141,8 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
                             onClick={() =>
                               setLightbox({
                                 open: true,
-                                image: item.image,
-                                caption: `${item.title} (${item.tag || `Tahap 0${idx + 1}`}) - Puri Gunung Langgar`,
+                                currentIndex: idx,
+                                items: filteredLookbookItems,
                               })
                             }
                             className="relative h-60 rounded-[12px] overflow-hidden border border-[#DDD8CE] bg-[#262722] cursor-pointer"
@@ -138,6 +151,8 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
                               src={item.image}
                               alt={item.title}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              loading="lazy"
+                              decoding="async"
                             />
                             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                               <span className="px-3 py-1.5 rounded-[8px] bg-[#262722]/80 backdrop-blur-md text-[#F3EFE6] text-xs font-medium flex items-center gap-1.5 border border-white/20">
@@ -276,38 +291,18 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
         </section>
       </main>
 
-      {/* Lightbox Modal */}
-      {lightbox.open && (
-        <div
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4"
-          onClick={() => setLightbox({ open: false, image: '', caption: '' })}
-        >
-          <div
-            className="relative max-w-4xl w-full bg-slate-900 rounded-2xl overflow-hidden border border-white/20 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={() => setLightbox({ open: false, image: '', caption: '' })}
-              className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center transition-colors"
-              aria-label="Tutup foto"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <div className="max-h-[75vh] overflow-hidden flex items-center justify-center bg-black">
-              <img
-                src={lightbox.image}
-                alt={lightbox.caption}
-                className="w-full h-auto max-h-[75vh] object-contain"
-              />
-            </div>
-            <div className="p-4 bg-slate-950 text-white text-xs sm:text-sm border-t border-white/10 flex items-center justify-between">
-              <span>{lightbox.caption}</span>
-              <span className="text-[#C9A96A] font-semibold shrink-0 ml-4">Dokumentasi PT. TBK</span>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Luxury Architectural Lookbook Modal */}
+      <LookbookModal
+        isOpen={lightbox.open}
+        onClose={() => setLightbox((prev) => ({ ...prev, open: false }))}
+        items={lightbox.items}
+        currentIndex={lightbox.currentIndex}
+        onIndexChange={(newIndex) =>
+          setLightbox((prev) => ({ ...prev, currentIndex: newIndex }))
+        }
+        projectName={safeContent.project?.name || 'Puri Gunung Langgar'}
+        whatsappNumber={safeContent.contact?.whatsapp || ''}
+      />
 
       {/* Video Modal */}
       {videoModal.open && (

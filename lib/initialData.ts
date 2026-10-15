@@ -137,32 +137,28 @@ export const initialSiteContent: SiteContent = {
     ],
     slides: [
       {
-        image: "/assets/project-workspace.jpg",
-        caption: "Kawasan Puri Gunung Langgar, Tanjung Bintang, Lampung Selatan."
-      },
-      {
         image: "/assets/service-construction.jpg",
-        caption: "Pekerjaan Cut & Fill dan Perataan Kontur Lahan Kawasan Perumahan."
+        caption: "Dokumentasi Lapangan: Pekerjaan Cut & Fill Perataan Lahan Kawasan Puri Gunung Langgar."
       },
       {
         image: "/assets/service-residential.jpg",
-        caption: "Pembangunan Unit Hunian Subsidi Berkualitas dan Kokoh."
+        caption: "Dokumentasi Lapangan: Pengukuran Batas Kavling & Persiapan Struktur Bangunan."
       },
       {
         image: "/assets/service-interior.jpg",
-        caption: "Pekerjaan Pondasi, Pembesian, dan Struktur Bangunan."
+        caption: "Dokumentasi Lapangan: Pekerjaan Pondasi Batu Belah & Penegakan Struktur Dinding."
       },
       {
         image: "/assets/project-coastal.jpg",
-        caption: "Penataan Lingkungan, Drainase, dan Akses Jalan Kawasan."
+        caption: "Dokumentasi Lapangan: Pembangunan Saluran Drainase & Akses Jalan Kawasan."
       },
       {
-        image: "/assets/project-identity.jpg",
-        caption: "Perencanaan Fasilitas Kawasan dan Tata Ruang Terpadu."
+        image: "/assets/project-workspace.jpg",
+        caption: "Ilustrasi Perencanaan: Konsep Tata Ruang Terpadu & Kawasan Hunian Modern."
       },
       {
         image: "/assets/hero-villa.jpg",
-        caption: "Unit Contoh & Standar Kualitas Hunian PT. Terbang Bersama Kawan."
+        caption: "Visualisasi Arsitektural: Konsep Desain & Standar Mutu Hunian PT. TBK."
       }
     ],
   },
@@ -255,39 +251,39 @@ export const initialSiteContent: SiteContent = {
     items: [
       {
         title: "Perataan Tanah & Pembukaan Jalan",
-        description: "Pekerjaan cut & fill perataan kontur lahan dan pembukaan akses jalan utama kawasan perumahan.",
+        description: "Dokumentasi riil pekerjaan cut & fill perataan kontur lahan dan pembukaan akses jalan utama kawasan perumahan.",
         image: "/assets/service-construction.jpg",
-        tag: "Tahap 1",
+        tag: "Tahap 1 • Lapangan",
       },
       {
         title: "Pengukuran & Pematokan Kavling",
-        description: "Pengukuran presisi batas-batas tanah dan pematokan kavling unit hunian sesuai master plan.",
+        description: "Dokumentasi riil pengukuran presisi batas tanah dan pematokan kavling unit hunian sesuai master plan.",
         image: "/assets/service-residential.jpg",
-        tag: "Tahap 2",
+        tag: "Tahap 2 • Lapangan",
       },
       {
         title: "Pondasi & Struktur Dinding",
-        description: "Pekerjaan konstruksi pondasi kokoh dan penegakan struktur dinding bata presisi rumah hunian.",
+        description: "Dokumentasi riil konstruksi pondasi kokoh dan penegakan struktur dinding bata presisi rumah hunian.",
         image: "/assets/service-interior.jpg",
-        tag: "Tahap 3",
+        tag: "Tahap 3 • Lapangan",
       },
       {
         title: "Infrastruktur & Akses Lingkungan",
-        description: "Pembangunan saluran drainase kawasan dan pengerasan akses jalan utama perumahan.",
+        description: "Dokumentasi riil pembangunan saluran drainase kawasan dan pengerasan akses jalan utama perumahan.",
         image: "/assets/project-coastal.jpg",
-        tag: "Tahap 4",
+        tag: "Tahap 4 • Lapangan",
       },
       {
-        title: "Pembangunan Unit & Masterplan",
-        description: "Proses pembangunan unit hunian dan integrasi tata ruang kawasan hunian bersubsidi.",
+        title: "Perencanaan Master Plan Terpadu",
+        description: "Ilustrasi konseptual master plan dan prinsip tata ruang lingkungan hunian yang terintegrasi.",
         image: "/assets/project-workspace.jpg",
-        tag: "Tahap 5",
+        tag: "Tahap 5 • Konsep",
       },
       {
-        title: "Unit Contoh & Standar Mutu",
-        description: "Visualisasi standar kualitas konstruksi dan kenyamanan hunian yang dihadirkan PT. TBK.",
+        title: "Visualisasi Rencana Standar Mutu",
+        description: "Visualisasi arsitektural konsep standar kualitas konstruksi dan kenyamanan hunian yang dihadirkan PT. TBK.",
         image: "/assets/hero-villa.jpg",
-        tag: "Tahap 6",
+        tag: "Tahap 6 • Konsep",
       },
     ],
   },
@@ -305,32 +301,28 @@ export const initialSiteContent: SiteContent = {
     videoUrl: "",
     slides: [
       {
-        image: "/assets/project-workspace.jpg",
-        caption: "Kawasan Puri Gunung Langgar, Desa Sabah Balau, Tanjung Bintang, Lampung Selatan."
-      },
-      {
         image: "/assets/service-construction.jpg",
-        caption: "Pematangan dan Perataan Lahan Proyek Puri Gunung Langgar."
+        caption: "Dokumentasi Lapangan: Pematangan dan Perataan Lahan Proyek Puri Gunung Langgar."
       },
       {
         image: "/assets/service-residential.jpg",
-        caption: "Progres Pembangunan Unit Hunian Subsidi Berkualitas."
-      },
-      {
-        image: "/assets/hero-villa.jpg",
-        caption: "Unit Contoh & Standar Kualitas Hunian PT. TBK."
-      },
-      {
-        image: "/assets/project-coastal.jpg",
-        caption: "Infrastruktur Akses Jalan Lingkungan dan Saluran Air Kawasan."
+        caption: "Dokumentasi Lapangan: Pengukuran Batas Kavling dan Pondasi Unit."
       },
       {
         image: "/assets/service-interior.jpg",
-        caption: "Pekerjaan Pondasi, Pembesian, dan Struktur Bangunan Kokoh."
+        caption: "Dokumentasi Lapangan: Pekerjaan Pondasi, Pembesian, dan Struktur Bangunan Kokoh."
       },
       {
-        image: "/assets/project-identity.jpg",
-        caption: "Perencanaan Fasilitas Kawasan dan Tata Ruang Terpadu."
+        image: "/assets/project-coastal.jpg",
+        caption: "Dokumentasi Lapangan: Infrastruktur Akses Jalan Lingkungan dan Saluran Air Kawasan."
+      },
+      {
+        image: "/assets/project-workspace.jpg",
+        caption: "Ilustrasi Perencanaan: Master Plan Kawasan Puri Gunung Langgar, Tanjung Bintang, Lampung Selatan."
+      },
+      {
+        image: "/assets/hero-villa.jpg",
+        caption: "Visualisasi Arsitektural: Konsep Desain & Standar Mutu Hunian PT. TBK."
       }
     ],
     specs: [

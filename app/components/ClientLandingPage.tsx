@@ -26,6 +26,7 @@ import {
 import Header from './Header';
 import Footer from './Footer';
 import FloatingWhatsApp from './FloatingWhatsApp';
+import LookbookModal, { LookbookItem } from './LookbookModal';
 import { SiteContent, getYouTubeEmbedUrl } from '@/lib/initialData';
 
 function sanitize(val: string | undefined, fallback: string): string {
@@ -126,11 +127,15 @@ export default function ClientLandingPage({ initialContent }: { initialContent: 
     setGalleryTouchStartX(null);
   };
 
-  // Lightbox Modal for Fullscreen Photo Viewing
-  const [lightbox, setLightbox] = useState<{ open: boolean; image: string; caption: string }>({
+  // Luxury Lookbook Modal for Fullscreen Photo Viewing
+  const [lightbox, setLightbox] = useState<{
+    open: boolean;
+    currentIndex: number;
+    items: LookbookItem[];
+  }>({
     open: false,
-    image: '',
-    caption: '',
+    currentIndex: 0,
+    items: [],
   });
 
   // Interactive Mortgage / KPR Simulator State (Subsidized FLPP 5% Flat)
@@ -368,6 +373,14 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   {/* Layered Crossfade & Subtle Scale (1.025 to 1.0) Transitions */}
                   {activeProjectSlides.map((slide, sIdx) => {
                     const isActive = sIdx === currentProjectSlide;
+                    const projectLookbookItems: LookbookItem[] = activeProjectSlides.map((s, idx) => ({
+                      image: s.image,
+                      title: s.caption || `${content.project.name} - Dokumentasi Foto`,
+                      description: `Dokumentasi visual proyek ${content.project.name || 'Puri Gunung Langgar'} yang dikembangkan oleh PT. Terbang Bersama Kawan.`,
+                      tag: `Sudut 0${idx + 1}`,
+                      category: 'Galeri Proyek',
+                    }));
+
                     return (
                       <div
                         key={sIdx}
@@ -379,8 +392,8 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                         onClick={() =>
                           setLightbox({
                             open: true,
-                            image: slide.image,
-                            caption: `${content.project.name} - ${slide.caption || 'Dokumentasi Proyek'}`,
+                            currentIndex: sIdx,
+                            items: projectLookbookItems,
                           })
                         }
                         aria-hidden={!isActive}
@@ -389,6 +402,8 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                           src={slide.image}
                           alt={slide.caption || 'Puri Gunung Langgar'}
                           className="w-full h-full object-cover"
+                          loading="lazy"
+                          decoding="async"
                         />
                       </div>
                     );
@@ -406,13 +421,20 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                     {/* Corner Enlarge Indicator */}
                     <button
                       type="button"
-                      onClick={() =>
+                      onClick={() => {
+                        const projectLookbookItems: LookbookItem[] = activeProjectSlides.map((s, idx) => ({
+                          image: s.image,
+                          title: s.caption || `${content.project.name} - Dokumentasi Foto`,
+                          description: `Dokumentasi visual proyek ${content.project.name || 'Puri Gunung Langgar'} yang dikembangkan oleh PT. Terbang Bersama Kawan.`,
+                          tag: `Sudut 0${idx + 1}`,
+                          category: 'Galeri Proyek',
+                        }));
                         setLightbox({
                           open: true,
-                          image: activeProjectSlides[currentProjectSlide]?.image || '/assets/project-workspace.jpg',
-                          caption: `${content.project.name} - ${activeProjectSlides[currentProjectSlide]?.caption || 'Dokumentasi Proyek'}`,
-                        })
-                      }
+                          currentIndex: currentProjectSlide,
+                          items: projectLookbookItems,
+                        });
+                      }}
                       className="bg-[#262722]/80 backdrop-blur-sm text-white px-2.5 py-1 rounded-[6px] text-[11px] font-medium flex items-center gap-1.5 border border-white/15 shadow-sm hover:bg-[#262722] hover:border-[#C5A568] transition-colors pointer-events-auto focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C5A568]"
                       aria-label="Perbesar foto dokumentasi proyek"
                     >
@@ -632,6 +654,8 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                     src="/assets/project-identity.jpg"
                     alt="Kantor & Perencanaan PT. TBK"
                     className="w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#262722]/80 via-transparent to-transparent" />
                   <div className="absolute bottom-4 left-4 right-4 text-[#F3EFE6] text-xs">
@@ -672,159 +696,79 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
               </p>
             </div>
 
-            {/* Editorial Connected Horizontal Timeline (Desktop) */}
-            <div className="hidden md:block relative pt-2">
-              {/* Thin Horizontal Connecting Line */}
-              <div 
-                className="absolute top-[22px] left-[4%] right-[4%] h-[1px] bg-[#DDD8CE] z-0" 
-                aria-hidden="true" 
-              />
+            {/* Unified Editorial Responsive Purchase Process Flow (Zero DOM Duplication) */}
+            {(() => {
+              const purchaseSteps = [
+                {
+                  step: '01',
+                  title: 'Pilih Unit & Konsultasi',
+                  desc: 'Kunjungi kantor pemasaran atau lokasi proyek untuk memilih nomor kavling yang tersedia dan melakukan konsultasi syarat KPR.',
+                  highlight: 'Survei kavling langsung',
+                },
+                {
+                  step: '02',
+                  title: 'Pemberkasan Dokumen',
+                  desc: 'Menyiapkan berkas identitas (KTP, KK, NPWP, Slip Gaji atau Keterangan Usaha) untuk verifikasi kelayakan subsidi FLPP.',
+                  highlight: 'Didampingi tim admin',
+                },
+                {
+                  step: '03',
+                  title: 'Wawancara & Analisis Bank',
+                  desc: 'Proses persetujuan pembiayaan oleh perbankan mitra penyalur KPR bersubsidi dengan suku bunga 5% tetap (anuitas) pemerintah.',
+                  highlight: 'Kepastian plafon kredit',
+                },
+                {
+                  step: '04',
+                  title: 'Akad & Serah Terima',
+                  desc: 'Penandatanganan akta di hadapan Notaris resmi perseroan dan serah terima kunci unit rumah kepada konsumen.',
+                  highlight: 'Sertifikat Hak Milik (SHM)',
+                },
+              ];
 
-              <div className="grid grid-cols-4 gap-8 lg:gap-12 relative z-10">
-                {/* Stage 01 */}
-                <div className="flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="w-3 h-3 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568] shrink-0" />
-                      <span className="font-serif text-3xl lg:text-4xl text-[#C5A568] font-normal leading-none">01</span>
-                    </div>
-                    <h3 className="font-semibold text-sm lg:text-[15px] text-[#262722] tracking-wide mb-2">
-                      Pilih Unit &amp; Konsultasi
-                    </h3>
-                    <p className="text-xs lg:text-[13px] text-[#77766F] leading-relaxed">
-                      Kunjungi kantor pemasaran atau lokasi proyek untuk memilih nomor kavling yang tersedia dan melakukan konsultasi syarat KPR.
-                    </p>
-                  </div>
-                  <div className="pt-3 mt-5 border-t border-[#DDD8CE]/70 text-[11px] text-[#77766F] font-medium tracking-wide">
-                    Survei kavling langsung
-                  </div>
+              return (
+                <div className="relative pt-2">
+                  {/* Thin Connecting Line visible on desktop */}
+                  <div
+                    className="hidden md:block absolute top-[22px] left-[5%] right-[5%] h-[1px] bg-[#DDD8CE] z-0"
+                    aria-hidden="true"
+                  />
+
+                  <ol className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12 relative z-10 pl-6 md:pl-0 border-l border-[#DDD8CE] md:border-l-0 ml-2 md:ml-0">
+                    {purchaseSteps.map((item, idx) => (
+                      <li key={idx} className="relative flex flex-col justify-between">
+                        {/* Circle Indicator on mobile timeline */}
+                        <span
+                          className="md:hidden absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568]"
+                          aria-hidden="true"
+                        />
+
+                        <div>
+                          {/* Desktop Top Marker */}
+                          <div className="hidden md:flex items-center gap-3 mb-4">
+                            <span className="w-3 h-3 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568] shrink-0" aria-hidden="true" />
+                            <span className="font-serif text-3xl lg:text-4xl text-[#C5A568] font-normal leading-none">{item.step}</span>
+                          </div>
+
+                          {/* Mobile Step Number */}
+                          <span className="md:hidden font-serif text-2xl text-[#C5A568] block mb-1 font-normal">{item.step}</span>
+
+                          <h3 className="font-semibold text-sm lg:text-[15px] text-[#262722] tracking-wide mb-1.5 md:mb-2">
+                            {item.title}
+                          </h3>
+                          <p className="text-xs lg:text-[13px] text-[#77766F] leading-relaxed mb-2 md:mb-0">
+                            {item.desc}
+                          </p>
+                        </div>
+
+                        <div className="pt-2 md:pt-3 md:mt-5 border-t border-[#DDD8CE]/70 text-[11px] text-[#77766F] font-medium tracking-wide">
+                          {item.highlight}
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
-
-                {/* Stage 02 */}
-                <div className="flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="w-3 h-3 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568] shrink-0" />
-                      <span className="font-serif text-3xl lg:text-4xl text-[#C5A568] font-normal leading-none">02</span>
-                    </div>
-                    <h3 className="font-semibold text-sm lg:text-[15px] text-[#262722] tracking-wide mb-2">
-                      Pemberkasan Dokumen
-                    </h3>
-                    <p className="text-xs lg:text-[13px] text-[#77766F] leading-relaxed">
-                      Menyiapkan berkas identitas (KTP, KK, NPWP, Slip Gaji atau Keterangan Usaha) untuk verifikasi kelayakan subsidi FLPP.
-                    </p>
-                  </div>
-                  <div className="pt-3 mt-5 border-t border-[#DDD8CE]/70 text-[11px] text-[#77766F] font-medium tracking-wide">
-                    Didampingi tim admin
-                  </div>
-                </div>
-
-                {/* Stage 03 */}
-                <div className="flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="w-3 h-3 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568] shrink-0" />
-                      <span className="font-serif text-3xl lg:text-4xl text-[#C5A568] font-normal leading-none">03</span>
-                    </div>
-                    <h3 className="font-semibold text-sm lg:text-[15px] text-[#262722] tracking-wide mb-2">
-                      Wawancara &amp; Analisis Bank
-                    </h3>
-                    <p className="text-xs lg:text-[13px] text-[#77766F] leading-relaxed">
-                      Proses persetujuan pembiayaan oleh perbankan mitra penyalur KPR bersubsidi dengan suku bunga 5% flat pemerintah.
-                    </p>
-                  </div>
-                  <div className="pt-3 mt-5 border-t border-[#DDD8CE]/70 text-[11px] text-[#77766F] font-medium tracking-wide">
-                    Kepastian plafon kredit
-                  </div>
-                </div>
-
-                {/* Stage 04 */}
-                <div className="flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="w-3 h-3 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568] shrink-0" />
-                      <span className="font-serif text-3xl lg:text-4xl text-[#C5A568] font-normal leading-none">04</span>
-                    </div>
-                    <h3 className="font-semibold text-sm lg:text-[15px] text-[#262722] tracking-wide mb-2">
-                      Akad &amp; Serah Terima
-                    </h3>
-                    <p className="text-xs lg:text-[13px] text-[#77766F] leading-relaxed">
-                      Penandatanganan akta di hadapan Notaris resmi perseroan dan serah terima kunci unit rumah kepada konsumen.
-                    </p>
-                  </div>
-                  <div className="pt-3 mt-5 border-t border-[#DDD8CE]/70 text-[11px] text-[#77766F] font-medium tracking-wide">
-                    Sertifikat Hak Milik (SHM)
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Editorial Connected Vertical Sequence (Mobile < md) */}
-            <div className="md:hidden relative pl-6 border-l border-[#DDD8CE] ml-2 space-y-8" role="list">
-              {/* Mobile Stage 01 */}
-              <div className="relative" role="listitem">
-                <span 
-                  className="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568]" 
-                  aria-hidden="true" 
-                />
-                <span className="font-serif text-2xl text-[#C5A568] block mb-1 font-normal">01</span>
-                <h3 className="font-semibold text-sm text-[#262722] tracking-wide mb-1.5">
-                  Pilih Unit &amp; Konsultasi
-                </h3>
-                <p className="text-xs text-[#77766F] leading-relaxed mb-2">
-                  Kunjungi kantor pemasaran atau lokasi proyek untuk memilih nomor kavling yang tersedia dan melakukan konsultasi syarat KPR.
-                </p>
-                <span className="text-[11px] text-[#77766F] font-medium">Survei kavling langsung</span>
-              </div>
-
-              {/* Mobile Stage 02 */}
-              <div className="relative" role="listitem">
-                <span 
-                  className="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568]" 
-                  aria-hidden="true" 
-                />
-                <span className="font-serif text-2xl text-[#C5A568] block mb-1 font-normal">02</span>
-                <h3 className="font-semibold text-sm text-[#262722] tracking-wide mb-1.5">
-                  Pemberkasan Dokumen
-                </h3>
-                <p className="text-xs text-[#77766F] leading-relaxed mb-2">
-                  Menyiapkan berkas identitas (KTP, KK, NPWP, Slip Gaji atau Keterangan Usaha) untuk verifikasi kelayakan subsidi FLPP.
-                </p>
-                <span className="text-[11px] text-[#77766F] font-medium">Didampingi tim admin</span>
-              </div>
-
-              {/* Mobile Stage 03 */}
-              <div className="relative" role="listitem">
-                <span 
-                  className="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568]" 
-                  aria-hidden="true" 
-                />
-                <span className="font-serif text-2xl text-[#C5A568] block mb-1 font-normal">03</span>
-                <h3 className="font-semibold text-sm text-[#262722] tracking-wide mb-1.5">
-                  Wawancara &amp; Analisis Bank
-                </h3>
-                <p className="text-xs text-[#77766F] leading-relaxed mb-2">
-                  Proses persetujuan pembiayaan oleh perbankan mitra penyalur KPR bersubsidi dengan suku bunga 5% flat pemerintah.
-                </p>
-                <span className="text-[11px] text-[#77766F] font-medium">Kepastian plafon kredit</span>
-              </div>
-
-              {/* Mobile Stage 04 */}
-              <div className="relative" role="listitem">
-                <span 
-                  className="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568]" 
-                  aria-hidden="true" 
-                />
-                <span className="font-serif text-2xl text-[#C5A568] block mb-1 font-normal">04</span>
-                <h3 className="font-semibold text-sm text-[#262722] tracking-wide mb-1.5">
-                  Akad &amp; Serah Terima
-                </h3>
-                <p className="text-xs text-[#77766F] leading-relaxed mb-2">
-                  Penandatanganan akta di hadapan Notaris resmi perseroan dan serah terima kunci unit rumah kepada konsumen.
-                </p>
-                <span className="text-[11px] text-[#77766F] font-medium">Sertifikat Hak Milik (SHM)</span>
-              </div>
-            </div>
+              );
+            })()}
           </div>
         </section>
 
@@ -850,7 +794,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                 <div className="pt-4 space-y-3 text-xs text-[#F3EFE6]/70">
                   <div className="flex items-center gap-2.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#C5A568]" />
-                    <span>Suku Bunga Tetap (Flat) 5% sampai lunas</span>
+                    <span>Suku Bunga Tetap (Anuitas) 5% sampai lunas</span>
                   </div>
                   <div className="flex items-center gap-2.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#C5A568]" />
@@ -933,7 +877,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                 <div className="p-5 bg-black/30 rounded-[6px] border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
                   <div>
                     <span className="text-[11px] uppercase tracking-wider text-[#77766F] block">
-                      Estimasi Angsuran Flat per Bulan
+                      Estimasi Angsuran Tetap per Bulan (FLPP 5%)
                     </span>
                     <div className="font-mono text-2xl sm:text-3xl font-bold text-[#C5A568] tracking-tight mt-0.5">
                       {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprAngsuran)}
@@ -945,6 +889,10 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                     <div className="text-[11px] text-[#77766F] mt-0.5">Sisa pokok KPR: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprPokok)}</div>
                   </div>
                 </div>
+
+                <p className="text-[11px] text-[#DDD8CE]/60 italic leading-relaxed pt-1">
+                  *Perhitungan merupakan estimasi simulasi berdasarkan skema subsidi FLPP pemerintah dengan suku bunga anuitas 5% tetap sampai lunas. Plafon dan cicilan resmi mengacu pada SP3K dari bank mitra penyalur (Bank BTN, BSI, Mandiri).
+                </p>
 
                 {/* Consultation Button */}
                 <a
@@ -994,68 +942,84 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
             </div>
 
             {/* Photographic Grid (4 Items) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {(content.activities?.items?.slice(0, 4) || [
+            {(() => {
+              const activitiesList = content.activities?.items?.slice(0, 4) || [
                 {
                   title: 'Perataan Tanah & Akses Jalan',
-                  description: 'Pekerjaan cut and fill perataan kontur lahan dan pembukaan akses jalan utama perumahan.',
+                  description: 'Dokumentasi riil pekerjaan cut and fill perataan kontur lahan dan pembukaan akses jalan utama perumahan.',
                   image: '/assets/service-construction.jpg',
-                  tag: 'Tahap 1',
+                  tag: 'Tahap 1 • Lapangan',
                 },
                 {
-                  title: 'Pengukuran & Pematokan',
-                  description: 'Pengukuran presisi batas tanah dan pematokan kavling unit hunian.',
+                  title: 'Pengukuran & Pematokan Kavling',
+                  description: 'Dokumentasi riil pengukuran presisi batas-batas tanah dan pematokan kavling unit hunian sesuai master plan.',
                   image: '/assets/service-residential.jpg',
-                  tag: 'Tahap 2',
+                  tag: 'Tahap 2 • Lapangan',
                 },
                 {
                   title: 'Pondasi & Struktur Bangunan',
-                  description: 'Pekerjaan konstruksi pondasi batu belah dan penegakan struktur dinding bata.',
+                  description: 'Dokumentasi riil pekerjaan konstruksi pondasi batu belah dan penegakan struktur dinding bata.',
                   image: '/assets/service-interior.jpg',
-                  tag: 'Tahap 3',
+                  tag: 'Tahap 3 • Lapangan',
                 },
                 {
                   title: 'Infrastruktur Lingkungan',
-                  description: 'Pembangunan saluran drainase dan pengerasan jalan lingkungan kawasan.',
+                  description: 'Dokumentasi riil pembangunan saluran drainase dan pengerasan jalan lingkungan kawasan.',
                   image: '/assets/project-coastal.jpg',
-                  tag: 'Tahap 4',
+                  tag: 'Tahap 4 • Lapangan',
                 },
-              ]).map((item, idx) => (
-                <div
-                  key={idx}
-                  className="group flex flex-col justify-between space-y-3"
-                >
-                  <div
-                    className="relative aspect-[4/3] w-full overflow-hidden rounded-[8px] bg-[#262722] cursor-pointer border border-[#DDD8CE]/60 shadow-sm"
-                    onClick={() =>
-                      setLightbox({
-                        open: true,
-                        image: item.image,
-                        caption: `${item.title}: ${item.description}`,
-                      })
-                    }
-                  >
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                    />
-                    <div className="absolute top-2.5 left-2.5 bg-[#262722]/85 text-[#F3EFE6] text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-[3px] backdrop-blur-sm">
-                      {item.tag || `Tahap ${idx + 1}`}
-                    </div>
-                  </div>
+              ];
 
-                  <div className="space-y-1.5 pt-0.5">
-                    <h3 className="font-semibold text-sm text-[#262722] leading-snug group-hover:text-[#C5A568] transition-colors">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs text-[#77766F] leading-relaxed line-clamp-2">
-                      {item.description}
-                    </p>
-                  </div>
+              const activityLookbookItems: LookbookItem[] = activitiesList.map((item, idx) => ({
+                image: item.image,
+                title: item.title,
+                description: item.description,
+                tag: item.tag || `Tahap 0${idx + 1}`,
+                category: 'Progres Lapangan',
+              }));
+
+              return (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {activitiesList.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="group flex flex-col justify-between space-y-3"
+                    >
+                      <div
+                        className="relative aspect-[4/3] w-full overflow-hidden rounded-[8px] bg-[#262722] cursor-pointer border border-[#DDD8CE]/60 shadow-sm"
+                        onClick={() =>
+                          setLightbox({
+                            open: true,
+                            currentIndex: idx,
+                            items: activityLookbookItems,
+                          })
+                        }
+                      >
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                        <div className="absolute top-2.5 left-2.5 bg-[#262722]/85 text-[#F3EFE6] text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-[3px] backdrop-blur-sm">
+                          {item.tag || `Tahap ${idx + 1}`}
+                        </div>
+                      </div>
+
+                      <div className="space-y-1.5 pt-0.5">
+                        <h3 className="font-semibold text-sm text-[#262722] leading-snug group-hover:text-[#C5A568] transition-colors">
+                          {item.title}
+                        </h3>
+                        <p className="text-xs text-[#77766F] leading-relaxed line-clamp-2">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              );
+            })()}
           </div>
         </section>
 
@@ -1309,39 +1273,18 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
         </section>
       </main>
 
-      {/* Lightbox Modal */}
-      {lightbox.open && (
-        <div
-          className="fixed inset-0 z-50 bg-[#262722]/95 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
-          onClick={() => setLightbox({ open: false, image: '', caption: '' })}
-          role="dialog"
-          aria-modal="true"
-        >
-          <div
-            className="relative max-w-4xl w-full max-h-[90vh] flex flex-col items-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={() => setLightbox({ open: false, image: '', caption: '' })}
-              className="absolute -top-10 right-0 text-white/70 hover:text-white transition-colors p-1"
-              aria-label="Tutup foto"
-            >
-              <X className="w-6 h-6" />
-            </button>
-            <img
-              src={lightbox.image}
-              alt={lightbox.caption}
-              className="max-h-[75vh] w-auto object-contain rounded-[3px] border border-white/20"
-            />
-            {lightbox.caption && (
-              <p className="mt-3 text-xs sm:text-sm text-[#F3EFE6]/90 text-center max-w-xl">
-                {lightbox.caption}
-              </p>
-            )}
-          </div>
-        </div>
-      )}
+      {/* Luxury Architectural Lookbook Modal */}
+      <LookbookModal
+        isOpen={lightbox.open}
+        onClose={() => setLightbox((prev) => ({ ...prev, open: false }))}
+        items={lightbox.items}
+        currentIndex={lightbox.currentIndex}
+        onIndexChange={(newIndex) =>
+          setLightbox((prev) => ({ ...prev, currentIndex: newIndex }))
+        }
+        projectName={content.project?.name || 'Puri Gunung Langgar'}
+        whatsappNumber={content.contact?.whatsapp || ''}
+      />
 
       {/* Footer */}
       <Footer content={content} />

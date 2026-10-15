@@ -160,6 +160,8 @@ export default function ProyekPage() {
                         src={s.image}
                         alt={s.caption || `Foto ${idx + 1}`}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                        decoding="async"
                       />
                       <div className="absolute top-3 left-3 px-2 py-0.5 rounded-[4px] bg-[#262722]/80 backdrop-blur-sm text-[11px] font-mono font-medium text-[#F3EFE6]">
                         {String(idx + 1).padStart(2, '0')}
@@ -171,7 +173,11 @@ export default function ProyekPage() {
                       </p>
                       <div className="flex items-center justify-between text-[11px] text-[#77766F] pt-1">
                         <span>PT. Terbang Bersama Kawan</span>
-                        <span className="text-[#C5A568] font-medium">Dokumen Lapangan</span>
+                        {(s.caption || '').toLowerCase().includes('ilustrasi') || (s.caption || '').toLowerCase().includes('visualisasi') ? (
+                          <span className="text-amber-600 font-medium">Ilustrasi Konsep</span>
+                        ) : (
+                          <span className="text-[#C5A568] font-medium">Dokumen Lapangan</span>
+                        )}
                       </div>
                     </div>
                   </div>
