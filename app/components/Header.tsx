@@ -14,7 +14,6 @@ import {
   HardHat,
   FileCheck2,
   Calculator,
-  ExternalLink,
   MessageCircle,
   Lock
 } from 'lucide-react';

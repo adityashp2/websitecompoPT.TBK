@@ -9,9 +9,11 @@ interface FloatingWhatsAppProps {
 }
 
 export default function FloatingWhatsApp({ content }: FloatingWhatsAppProps) {
+  // Declare rawWa at the very top before any hooks
+  const rawWa = content?.contact?.whatsapp ?? '';
+
   const [showPopup, setShowPopup] = useState(false);
   const [dismissed, setDismissed] = useState(true);
-  const rawWa = content.contact?.whatsapp || '';
 
   // Auto-show popup after 4.5 seconds ONLY on first visit; if closed once, never show again
   useEffect(() => {
@@ -43,6 +45,7 @@ export default function FloatingWhatsApp({ content }: FloatingWhatsAppProps) {
   }
 
   const cleanPhone = rawWa.replace(/\D/g, '');
+
   const formattedWa = cleanPhone.startsWith('0')
     ? `62${cleanPhone.slice(1)}`
     : cleanPhone.startsWith('62')

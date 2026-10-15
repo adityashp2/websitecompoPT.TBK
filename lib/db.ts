@@ -3,10 +3,13 @@ import path from 'path';
 import fs from 'fs';
 import { initialSiteContent, SiteContent } from './initialData';
 
-let dbInstance: Database.Database | null = null;
+declare global {
+  // eslint-disable-next-line no-var
+  var __sqliteDbInstance: Database.Database | undefined;
+}
 
 function getDb(): Database.Database {
-  if (dbInstance) return dbInstance;
+  if (global.__sqliteDbInstance) return global.__sqliteDbInstance;
 
   const dataDir = path.join(process.cwd(), 'data');
   if (!fs.existsSync(dataDir)) {
@@ -14,8 +17,10 @@ function getDb(): Database.Database {
   }
 
   const dbPath = path.join(dataDir, 'content.db');
-  dbInstance = new Database(dbPath);
+  const dbInstance = new Database(dbPath);
   dbInstance.pragma('journal_mode = WAL');
+  dbInstance.pragma('busy_timeout = 5000');
+  global.__sqliteDbInstance = dbInstance;
 
   // Initialize tables
   dbInstance.exec(`
@@ -91,6 +96,11 @@ export function getSiteContent(): SiteContent {
         hero: {
           ...initialSiteContent.hero,
           ...parsed.hero,
+          headlineTop: parsed.hero?.headlineTop || initialSiteContent.hero.headlineTop,
+          headlineBottom: parsed.hero?.headlineBottom || initialSiteContent.hero.headlineBottom,
+          bodyText: parsed.hero?.bodyText || initialSiteContent.hero.bodyText,
+          activeBadgeLabel: parsed.hero?.activeBadgeLabel || initialSiteContent.hero.activeBadgeLabel,
+          activeBadgeProject: parsed.hero?.activeBadgeProject || initialSiteContent.hero.activeBadgeProject,
           slides: Array.isArray(parsed.hero?.slides)
             ? parsed.hero.slides
             : initialSiteContent.hero.slides,
@@ -123,6 +133,19 @@ export function getSiteContent(): SiteContent {
           ...(parsed.contact || {}),
           mapsEmbedUrl: parsed.contact?.mapsEmbedUrl || initialSiteContent.contact.mapsEmbedUrl,
           mapsUrl: parsed.contact?.mapsUrl || initialSiteContent.contact.mapsUrl,
+        },
+        about: {
+          ...initialSiteContent.about,
+          ...(parsed.about || {}),
+          missions: Array.isArray(parsed.about?.missions) ? parsed.about.missions : initialSiteContent.about.missions,
+          commitmentTitle: parsed.about?.commitmentTitle || initialSiteContent.about.commitmentTitle,
+          commitmentBody: parsed.about?.commitmentBody || initialSiteContent.about.commitmentBody,
+          commitmentPoints: Array.isArray(parsed.about?.commitmentPoints) ? parsed.about.commitmentPoints : initialSiteContent.about.commitmentPoints,
+        },
+        footer: {
+          ...initialSiteContent.footer,
+          ...(parsed.footer || {}),
+          tagline: parsed.footer?.tagline || initialSiteContent.footer.tagline,
         },
       };
     }

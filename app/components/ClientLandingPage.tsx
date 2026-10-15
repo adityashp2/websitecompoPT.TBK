@@ -11,9 +11,7 @@ import {
   Clock,
   ChevronLeft,
   ChevronRight,
-  Menu,
   X,
-  Send,
   Home,
   FileCheck2,
   HardHat,
@@ -21,7 +19,6 @@ import {
   Check,
   Building2,
   Award,
-  Lock,
   ExternalLink,
   ArrowUp,
   Sparkles,
@@ -30,14 +27,12 @@ import {
   Video,
   Image as ImageIcon,
   Play,
-  RefreshCw,
   MessageCircle
 } from 'lucide-react';
 import Link from 'next/link';
 import Header from './Header';
 import Footer from './Footer';
 import FloatingWhatsApp from './FloatingWhatsApp';
-import HeroSlideshow from './HeroSlideshow';
 
 function sanitize(val: string | undefined, fallback: string): string {
   if (!val || val.includes('[ISI:') || val === 'aadad' || val === '23232433') {
@@ -48,7 +43,6 @@ function sanitize(val: string | undefined, fallback: string): string {
 
 export default function ClientLandingPage({ initialContent }: { initialContent: SiteContent }) {
   const [content, setContent] = useState<SiteContent>(initialContent);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setContent(initialContent);
@@ -65,9 +59,25 @@ export default function ClientLandingPage({ initialContent }: { initialContent: 
       .catch(() => {});
   }, []);
 
-  // Hero Background Slideshow: Use ONLY user slides. Never force dummy photos back when deleted.
+  // Hero Background Slideshow & Main Background Image:
+  // Use hero.backgroundImage as the primary background if set, plus any additional slideshow slides.
+  const heroBgImage = (content.hero?.backgroundImage || '').trim();
   const rawSlides = Array.isArray(content.hero?.slides) ? content.hero.slides : [];
-  const activeBgSlides = rawSlides.filter((s) => s && s.image && s.image.trim() !== '');
+  const validSlides = rawSlides.filter((s) => s && s.image && s.image.trim() !== '');
+
+  const activeBgSlides: Array<{ image: string; caption?: string }> = (() => {
+    if (heroBgImage) {
+      const otherSlides = validSlides.filter((s) => s.image !== heroBgImage);
+      return [
+        {
+          image: heroBgImage,
+          caption: content.hero?.heading || 'Puri Gunung Langgar',
+        },
+        ...otherSlides,
+      ];
+    }
+    return validSlides;
+  })();
 
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -350,15 +360,17 @@ Mohon informasi ketersediaan unit, simulasi KPR FLPP, serta jadwal survei lokasi
         )}
 
         {/* Animated Slide Progress Bar along bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/10 z-20 overflow-hidden" aria-hidden="true">
-          <div
-            key={currentBgIndex}
-            className="h-full bg-gradient-to-r from-[#C9A96A] via-amber-400 to-[#C9A96A]"
-            style={{
-              animation: isPaused ? 'none' : 'slideTimerBar 4.5s linear forwards',
-            }}
-          />
-        </div>
+        {activeBgSlides.length > 1 && (
+          <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/10 z-20 overflow-hidden" aria-hidden="true">
+            <div
+              key={currentBgIndex}
+              className="h-full bg-gradient-to-r from-[#C9A96A] via-amber-400 to-[#C9A96A]"
+              style={{
+                animation: isPaused ? 'none' : 'slideTimerBar 4.5s linear forwards',
+              }}
+            />
+          </div>
+        )}
 
         {/* Hero Content placed at bottom-left */}
         <div className="relative z-10 w-full max-w-[1120px] mx-auto px-5 sm:px-6 min-[900px]:px-8 pb-9 sm:pb-12 min-[900px]:pb-[68px] pt-10 sm:pt-20">
@@ -369,20 +381,20 @@ Mohon informasi ketersediaan unit, simulasi KPR FLPP, serta jadwal survei lokasi
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
               </span>
-              <span className="font-bold text-emerald-400 uppercase tracking-wide">PROYEK AKTIF</span>
+              <span className="font-bold text-emerald-400 uppercase tracking-wide">{content.hero?.activeBadgeLabel || 'PROYEK AKTIF'}</span>
               <span className="text-white/40">&bull;</span>
-              <span className="text-[#F4EFE6]/90 truncate">Puri Gunung Langgar</span>
+              <span className="text-[#F4EFE6]/90 truncate">{content.hero?.activeBadgeProject || 'Puri Gunung Langgar'}</span>
             </div>
 
             {/* Judul: Font serif elegan Playfair Display, clamp responsif all device */}
             <h1 className="font-serif font-semibold text-[26px] sm:text-[38px] min-[900px]:text-[52px] leading-[1.18] sm:leading-[1.15] tracking-[-0.01em] max-w-[18ch] text-left [text-wrap:balance]">
-              <span className="block text-[#F4EFE6]">Hunian bersubsidi yang layak,</span>
-              <span className="block text-[#C9A96A]">dibangun dari Lampung.</span>
+              <span className="block text-[#F4EFE6]">{content.hero?.headlineTop || content.hero?.heading || 'Hunian bersubsidi yang layak,'}</span>
+              <span className="block text-[#C9A96A]">{content.hero?.headlineBottom || 'dibangun dari Lampung.'}</span>
             </h1>
 
             {/* Paragraf: font sans (Plus Jakarta Sans) responsif */}
             <p className="font-sans text-[13px] sm:text-[15px] min-[900px]:text-[16px] leading-[1.55] sm:leading-[1.6] text-[#F4EFE6]/85 max-w-[54ch] mt-2.5 sm:mt-4 mb-4 sm:mb-7">
-              PT. Terbang Bersama Kawan adalah pengembang perumahan di Bandar Lampung. Saat ini kami sedang membangun Puri Gunung Langgar di Lampung Selatan.
+              {content.hero?.bodyText || content.hero?.subheading || 'PT. Terbang Bersama Kawan adalah pengembang perumahan di Bandar Lampung. Saat ini kami sedang membangun Puri Gunung Langgar di Lampung Selatan.'}
             </p>
 
             {/* Dua Tombol: Side-by-side rapi di mobile & desktop tanpa terpotong */}
@@ -476,41 +488,27 @@ Mohon informasi ketersediaan unit, simulasi KPR FLPP, serta jadwal survei lokasi
             <div className="lg:col-span-7 space-y-6 flex flex-col justify-between reveal-item reveal-delay-1">
               <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200 space-y-5 hover:border-amber-400/40 hover:shadow-md transition-all duration-300">
                 <h3 className="text-xl font-bold text-slate-900">
-                  Komitmen Utama Perseroan
+                  {content.about?.commitmentTitle || 'Komitmen Utama Perseroan'}
                 </h3>
                 <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-                  Sebagai pengembang properti resmi di Provinsi Lampung, PT. Terbang Bersama Kawan mengutamakan kepastian hukum, keterbukaan informasi, dan mutu konstruksi terbaik agar masyarakat berpenghasilan rendah hingga menengah dapat memiliki rumah impian dengan rasa tenang.
+                  {content.about?.commitmentBody || 'Sebagai pengembang properti resmi di Provinsi Lampung, PT. Terbang Bersama Kawan mengutamakan kepastian hukum, keterbukaan informasi, dan mutu konstruksi terbaik agar masyarakat berpenghasilan rendah hingga menengah dapat memiliki rumah impian dengan rasa tenang.'}
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                  <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                    <div>
-                      <div className="font-semibold text-sm text-slate-900">Legalitas 100% Sah</div>
-                      <div className="text-xs text-slate-500">Terdaftar Kemenkumham & Notaris resmi</div>
+                  {(content.about?.commitmentPoints || [
+                    { title: 'Legalitas 100% Sah', subtitle: 'Terdaftar Kemenkumham & Notaris resmi' },
+                    { title: 'Kualitas Konstruksi', subtitle: 'Standar mutu teknis perumahan layak' },
+                    { title: 'Akses Strategis', subtitle: 'Dekat fasilitas umum & transportasi' },
+                    { title: 'Kemitraan Perbankan', subtitle: 'Kemudahan fasilitas KPR bersubsidi' },
+                  ]).map((point, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <CheckCircle2 className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                      <div>
+                        <div className="font-semibold text-sm text-slate-900">{point.title}</div>
+                        <div className="text-xs text-slate-500">{point.subtitle}</div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                    <div>
-                      <div className="font-semibold text-sm text-slate-900">Kualitas Konstruksi</div>
-                      <div className="text-xs text-slate-500">Standar mutu teknis perumahan layak</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                    <div>
-                      <div className="font-semibold text-sm text-slate-900">Akses Strategis</div>
-                      <div className="text-xs text-slate-500">Dekat fasilitas umum & transportasi</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                    <div>
-                      <div className="font-semibold text-sm text-slate-900">Kemitraan Perbankan</div>
-                      <div className="text-xs text-slate-500">Kemudahan fasilitas KPR bersubsidi</div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
 
@@ -1251,14 +1249,14 @@ Mohon informasi ketersediaan unit, simulasi KPR FLPP, serta jadwal survei lokasi
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl">
             {content.leadership.members?.map((member, idx) => (
               <div
                 key={idx}
-                className={`group rounded-3xl bg-white border border-slate-200/90 shadow-sm hover:shadow-2xl hover:border-amber-400/50 hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col reveal-item ${idx === 1 ? 'reveal-delay-1' : ''}`}
+                className={`group rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-amber-400/50 hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col reveal-item ${idx === 1 ? 'reveal-delay-1' : ''}`}
               >
                 {/* Executive Portrait Frame */}
-                <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
+                <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
                   {member.image && member.image.trim() !== '' ? (
                     <>
                       <img
@@ -1292,30 +1290,30 @@ Mohon informasi ketersediaan unit, simulasi KPR FLPP, serta jadwal survei lokasi
                   )}
 
                   {/* Floating Role Badge */}
-                  <div className="absolute top-4 left-4 z-10 px-3.5 py-1.5 rounded-full bg-slate-950/85 backdrop-blur-md border border-amber-400/40 text-[#C9A96A] text-xs font-bold uppercase tracking-wider shadow-lg flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <div className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-full bg-slate-950/85 backdrop-blur-md border border-amber-400/40 text-[#C9A96A] text-[11px] font-bold uppercase tracking-wider shadow-lg flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-amber-400" />
                     <span>{member.role}</span>
                   </div>
 
                   {/* Official SK Status Badge */}
-                  <div className="absolute top-4 right-4 z-10 px-3 py-1.5 rounded-full bg-slate-950/80 backdrop-blur-md text-emerald-400 text-[11px] font-semibold border border-emerald-500/30 flex items-center gap-1.5 shadow">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <div className="absolute top-3 right-3 z-10 px-2 py-1 rounded-full bg-slate-950/80 backdrop-blur-md text-emerald-400 text-[10px] font-semibold border border-emerald-500/30 flex items-center gap-1 shadow">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                     <span>SK Sah Kemenkumham</span>
                   </div>
 
                   {/* Name Banner at bottom of portrait for cinematic look */}
-                  <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white">
-                    <span className="text-[11px] uppercase tracking-widest text-[#C9A96A] font-semibold block mb-0.5">
+                  <div className="absolute inset-x-0 bottom-0 z-10 p-4 text-white">
+                    <span className="text-[10px] uppercase tracking-widest text-[#C9A96A] font-semibold block mb-0.5">
                       {member.role} PT. TBK
                     </span>
-                    <h3 className="font-extrabold text-2xl text-white tracking-tight drop-shadow-md">
+                    <h3 className="font-extrabold text-lg text-white tracking-tight drop-shadow-md">
                       {member.name}
                     </h3>
                   </div>
                 </div>
 
                 {/* Card Body */}
-                <div className="p-6 sm:p-7 flex flex-col flex-1 justify-between bg-white space-y-4">
+                <div className="p-4 flex flex-col flex-1 justify-between bg-white space-y-3">
                   <div>
                     <div className="flex items-center gap-2 mb-3">
                       <span className="text-xs font-bold uppercase tracking-wider text-amber-800">
@@ -1323,17 +1321,17 @@ Mohon informasi ketersediaan unit, simulasi KPR FLPP, serta jadwal survei lokasi
                       </span>
                       <span className="h-px flex-1 bg-amber-200/60" />
                     </div>
-                    <p className="text-sm text-slate-600 leading-relaxed">
+                    <p className="text-xs text-slate-600 leading-relaxed">
                       {member.roleDescription}
                     </p>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                    <div className="flex items-center gap-2">
-                      <ShieldCheck className="w-4 h-4 text-[#C9A96A] shrink-0" />
-                      <span className="font-medium text-slate-700">Akta Pendirian Notaris No. 10</span>
+                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                    <div className="flex items-center gap-1.5">
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#C9A96A] shrink-0" />
+                      <span className="font-medium text-slate-600">Akta Pendirian Notaris No. 10</span>
                     </div>
-                    <span className="text-[11px] text-slate-400 font-mono">18 Maret 2021</span>
+                    <span className="text-[10px] text-slate-400 font-mono">18 Maret 2021</span>
                   </div>
                 </div>
               </div>

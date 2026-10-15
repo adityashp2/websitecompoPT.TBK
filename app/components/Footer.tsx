@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { SiteContent } from '@/lib/initialData';
-import { MapPin, Phone, Mail, FileCheck2, ArrowRight, ExternalLink } from 'lucide-react';
+import { MapPin, Phone, Mail, FileCheck2, ExternalLink } from 'lucide-react';
 
 interface FooterProps {
   content: SiteContent;

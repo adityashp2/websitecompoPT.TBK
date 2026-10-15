@@ -15,13 +15,15 @@ export async function GET() {
 
     const user = getAdminFromSession(token);
     if (!user) {
-      // Invalid or expired token: clear cookie
-      cookieStore.set(ADMIN_COOKIE_NAME, '', {
-        httpOnly: true,
+      // Invalid or expired token: clear cookie properly on the response
+      const response = NextResponse.json({ authenticated: false }, { status: 401 });
+      response.cookies.delete(ADMIN_COOKIE_NAME);
+      response.cookies.set(ADMIN_COOKIE_NAME, '', {
         path: '/',
+        maxAge: 0,
         expires: new Date(0),
       });
-      return NextResponse.json({ authenticated: false }, { status: 401 });
+      return response;
     }
 
     return NextResponse.json({

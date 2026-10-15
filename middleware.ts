@@ -4,12 +4,20 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Protect /admin routes, but bypass /admin/login and static assets
-  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
+  // Normalize lowercase /a9min to /A9MIN
+  if (pathname === '/a9min' || pathname.startsWith('/a9min/')) {
+    const normalizedPath = pathname.replace(/^\/a9min/, '/A9MIN');
+    const url = request.nextUrl.clone();
+    url.pathname = normalizedPath;
+    return NextResponse.redirect(url);
+  }
+
+  // Protect /A9MIN routes, but bypass /A9MIN/login and its sub-resources
+  if (pathname.startsWith('/A9MIN') && !pathname.startsWith('/A9MIN/login')) {
     const sessionCookie = request.cookies.get('tbk_admin_session')?.value;
 
     if (!sessionCookie) {
-      const loginUrl = new URL('/admin/login', request.url);
+      const loginUrl = new URL('/A9MIN/login', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
@@ -19,5 +27,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/A9MIN/:path*', '/a9min/:path*', '/A9MIN', '/a9min'],
 };

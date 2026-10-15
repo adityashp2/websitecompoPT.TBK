@@ -13,19 +13,22 @@ export async function POST() {
       deleteAdminSession(token);
     }
 
-    // Clear the cookie
-    cookieStore.set(ADMIN_COOKIE_NAME, '', {
+    const response = NextResponse.json({
+      success: true,
+      message: 'Berhasil keluar (logout).',
+    });
+
+    response.cookies.delete(ADMIN_COOKIE_NAME);
+    response.cookies.set(ADMIN_COOKIE_NAME, '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
+      maxAge: 0,
       expires: new Date(0),
     });
 
-    return NextResponse.json({
-      success: true,
-      message: 'Berhasil keluar (logout).',
-    });
+    return response;
   } catch (error) {
     console.error('API /api/auth/logout error:', error);
     return NextResponse.json(

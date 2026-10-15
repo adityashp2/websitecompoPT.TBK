@@ -9,6 +9,11 @@ export interface SiteContent {
     badge: string;
     heading: string;
     subheading: string;
+    headlineTop?: string;
+    headlineBottom?: string;
+    bodyText?: string;
+    activeBadgeLabel?: string;
+    activeBadgeProject?: string;
     primaryCtaText: string;
     primaryCtaLink: string;
     secondaryCtaText: string;
@@ -28,6 +33,9 @@ export interface SiteContent {
     visionText: string;
     missionTitle: string;
     missions: string[];
+    commitmentTitle?: string;
+    commitmentBody?: string;
+    commitmentPoints?: Array<{ title: string; subtitle: string }>;
   };
   leadership: {
     badge: string;
@@ -93,6 +101,7 @@ export interface SiteContent {
   footer: {
     companyName: string;
     shortName: string;
+    tagline?: string;
     summary: string;
     copyrightText: string;
   };
@@ -109,10 +118,15 @@ export const initialSiteContent: SiteContent = {
     badge: "PENGEMBANG PROPERTI RESMI & TERPERCAYA",
     heading: "Hunian Berkualitas, Aman, Nyaman, dan Terjangkau",
     subheading: "PT. Terbang Bersama Kawan (PT. TBK) berkomitmen menghadirkan perumahan subsidi terbaik dengan standar kepuasan dan legalitas resmi terjamin.",
-    primaryCtaText: "Lihat Proyek Puri Gunung Langgar",
-    primaryCtaLink: "#proyek",
+    headlineTop: "Hunian bersubsidi yang layak,",
+    headlineBottom: "dibangun dari Lampung.",
+    bodyText: "PT. Terbang Bersama Kawan adalah pengembang perumahan di Bandar Lampung. Saat ini kami sedang membangun Puri Gunung Langgar di Lampung Selatan.",
+    activeBadgeLabel: "PROYEK AKTIF",
+    activeBadgeProject: "Puri Gunung Langgar",
+    primaryCtaText: "Lihat Proyek",
+    primaryCtaLink: "/proyek",
     secondaryCtaText: "Hubungi Kami",
-    secondaryCtaLink: "#kontak",
+    secondaryCtaLink: "/kontak",
     backgroundImage: "/assets/hero-villa.jpg",
     stats: [
       { label: "Domisili Perusahaan", value: "Bandar Lampung" },
@@ -163,6 +177,14 @@ export const initialSiteContent: SiteContent = {
       "Memberikan hunian yang berkualitas bagi konsumen",
       "Menyediakan hunian yang aman, nyaman, dan terjangkau",
       "Menjadi pengembang yang mampu menjaga kepuasan konsumen"
+    ],
+    commitmentTitle: "Komitmen Utama Perseroan",
+    commitmentBody: "Sebagai pengembang properti resmi di Provinsi Lampung, PT. Terbang Bersama Kawan mengutamakan kepastian hukum, keterbukaan informasi, dan mutu konstruksi terbaik agar masyarakat berpenghasilan rendah hingga menengah dapat memiliki rumah impian dengan rasa tenang.",
+    commitmentPoints: [
+      { title: "Legalitas 100% Sah", subtitle: "Terdaftar Kemenkumham & Notaris resmi" },
+      { title: "Kualitas Konstruksi", subtitle: "Standar mutu teknis perumahan layak" },
+      { title: "Akses Strategis", subtitle: "Dekat fasilitas umum & transportasi" },
+      { title: "Kemitraan Perbankan", subtitle: "Kemudahan fasilitas KPR bersubsidi" }
     ],
   },
   leadership: {
@@ -305,6 +327,7 @@ export const initialSiteContent: SiteContent = {
   footer: {
     companyName: "PT. Terbang Bersama Kawan",
     shortName: "PT. TBK",
+    tagline: "Pengembang Perumahan Resmi",
     summary: "Pengembang perumahan resmi, amanah, dan berkualitas berdomisili di Bandar Lampung. Mengutamakan transparansi, kepuasan konsumen, dan legalitas sah.",
     copyrightText: "Hak Cipta Dilindungi Undang-Undang. PT. Terbang Bersama Kawan (PT. TBK).",
   },

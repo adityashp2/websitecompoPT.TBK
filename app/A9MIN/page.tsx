@@ -36,6 +36,7 @@ import {
   Key,
   Lock,
   UserCheck,
+  MapPin,
   X
 } from 'lucide-react';
 
@@ -149,16 +150,23 @@ export default function AdminDashboard() {
       const authRes = await fetch('/api/auth/me');
       const authJson = await authRes.json();
       if (!authRes.ok || !authJson.authenticated) {
-        router.replace('/admin/login');
+        router.replace('/A9MIN/login');
         return;
       }
       setAdminUser(authJson.user);
+    } catch (err) {
+      console.error('Session verification error:', err);
+      router.replace('/A9MIN/login');
+      return;
+    }
 
-      // 2. Fetch site content
+    // 2. Fetch site content safely
+    try {
       await fetchContent();
     } catch (err) {
-      console.error(err);
-      router.replace('/admin/login');
+      console.error('Failed to load initial site content:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -184,10 +192,10 @@ export default function AdminDashboard() {
     setLoggingOut(true);
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
-      router.replace('/admin/login');
+      router.replace('/A9MIN/login');
     } catch (err) {
       console.error('Logout failed:', err);
-      router.replace('/admin/login');
+      router.replace('/A9MIN/login');
     }
   };
 
@@ -959,12 +967,19 @@ export default function AdminDashboard() {
                               accept="image/*"
                               className="hidden"
                               disabled={uploadingKey === 'hero-bg'}
+                              onClick={(e) => {
+                                (e.target as HTMLInputElement).value = '';
+                              }}
                               onChange={(e) => {
                                 if (e.target.files && e.target.files[0]) {
                                   handleGenericFileUpload(e.target.files[0], 'hero-bg', (url) => {
                                     setContent({
                                       ...content,
                                       hero: { ...content.hero, backgroundImage: url },
+                                    });
+                                    setSaveStatus({
+                                      type: 'success',
+                                      message: 'Foto latar hero berhasil diupload! Klik "Simpan Perubahan" di pojok kanan atas untuk menerapkannya ke website.',
                                     });
                                   });
                                 }
@@ -974,12 +989,16 @@ export default function AdminDashboard() {
                           {content.hero.backgroundImage && (
                             <button
                               type="button"
-                              onClick={() =>
+                              onClick={() => {
                                 setContent({
                                   ...content,
                                   hero: { ...content.hero, backgroundImage: '' },
-                                })
-                              }
+                                });
+                                setSaveStatus({
+                                  type: 'success',
+                                  message: 'Foto latar hero dihapus. Klik "Simpan Perubahan" di pojok kanan atas untuk menerapkan.',
+                                });
+                              }}
                               className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-colors"
                               title="Hapus foto background"
                             >
@@ -987,6 +1006,11 @@ export default function AdminDashboard() {
                             </button>
                           )}
                         </div>
+                        {uploadError && (
+                          <div className="p-2 rounded bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+                            {uploadError}
+                          </div>
+                        )}
                         <p className="text-[11px] text-gray-500">
                           Format: JPG, PNG, atau WebP (disarankan orientasi lanskap 1920x1080).
                         </p>

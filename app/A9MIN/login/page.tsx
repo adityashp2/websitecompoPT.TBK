@@ -20,7 +20,10 @@ import {
 function LoginFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTarget = searchParams.get('redirect') || '/admin';
+  const rawRedirect = searchParams.get('redirect') || '/A9MIN';
+  const redirectTarget = (!rawRedirect || rawRedirect.startsWith('/A9MIN/login') || rawRedirect.startsWith('/admin/login') || rawRedirect === '/login')
+    ? '/A9MIN'
+    : rawRedirect;
 
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
@@ -28,29 +31,47 @@ function LoginFormContent() {
   const [rememberMe, setRememberMe] = useState(true);
   
   const [loading, setLoading] = useState(false);
-  const [checkingAuth, setCheckingAuth] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  // Check if user is already logged in
+  // Non-blocking background session check with timeout
   useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000);
+
     async function checkExistingSession() {
       try {
-        const res = await fetch('/api/auth/me');
+        const res = await fetch('/api/auth/me', { signal: controller.signal });
         if (res.ok) {
           const data = await res.json();
-          if (data.authenticated) {
-            router.replace(redirectTarget);
+          if (data.authenticated && isMounted) {
+            setSuccessMsg('Sesi aktif terdeteksi. Mengalihkan ke panel...');
+            setTimeout(() => {
+              if (isMounted) {
+                router.replace(redirectTarget);
+              }
+            }, 300);
             return;
           }
         }
-      } catch (err) {
-        console.error('Session check failed', err);
+      } catch (err: unknown) {
+        // Silently ignore abort or network issues on initial check
+        if (err instanceof Error && err.name !== 'AbortError') {
+          console.warn('Session check info:', err.message);
+        }
       } finally {
-        setCheckingAuth(false);
+        clearTimeout(timeoutId);
       }
     }
+
     checkExistingSession();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+      clearTimeout(timeoutId);
+    };
   }, [router, redirectTarget]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -99,19 +120,6 @@ function LoginFormContent() {
     setPassword('admin123');
     setErrorMsg('');
   };
-
-  if (checkingAuth) {
-    return (
-      <div className="min-h-screen bg-[#0A0C10] flex items-center justify-center text-white">
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 text-[#C9A96A] animate-spin" />
-          <span className="text-xs text-white/70 font-sans tracking-wider uppercase">
-            Memeriksa sesi login...
-          </span>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-[#0A0C10] text-[#F4EFE6] relative flex flex-col justify-between overflow-hidden selection:bg-[#C9A96A] selection:text-[#0E1014]">
