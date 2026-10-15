@@ -1443,6 +1443,7 @@ export default function AdminDashboard() {
                             {
                               name: 'Nama Pengurus Baru',
                               role: 'Jabatan Resmi',
+                              department: 'Divisi Operasional',
                               roleDescription: 'Deskripsi tugas, tanggung jawab, dan kewenangan kepengurusan...',
                               image: '',
                             },
@@ -1581,7 +1582,7 @@ export default function AdminDashboard() {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                           <div>
                             <label className="block text-[11px] text-gray-400 mb-1">Nama Lengkap</label>
                             <input
@@ -1612,6 +1613,23 @@ export default function AdminDashboard() {
                                 });
                               }}
                               className="w-full px-3 py-2 rounded-lg bg-[#16191E] border border-white/10 text-xs sm:text-sm text-gold-300 font-bold focus:outline-none focus:border-gold-500"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[11px] text-gray-400 mb-1">Divisi / Kategori</label>
+                            <input
+                              type="text"
+                              placeholder="Contoh: Divisi Keuangan"
+                              value={member.department || ''}
+                              onChange={(e) => {
+                                const newMembers = [...content.leadership.members];
+                                newMembers[idx].department = e.target.value;
+                                setContent({
+                                  ...content,
+                                  leadership: { ...content.leadership, members: newMembers },
+                                });
+                              }}
+                              className="w-full px-3 py-2 rounded-lg bg-[#16191E] border border-white/10 text-xs sm:text-sm text-white focus:outline-none focus:border-gold-500"
                             />
                           </div>
                         </div>
@@ -1735,6 +1753,7 @@ export default function AdminDashboard() {
                               {
                                 name: 'Nama Pengurus Baru',
                                 role: 'Jabatan Resmi',
+                                department: 'Divisi Operasional',
                                 roleDescription: 'Deskripsi tugas, tanggung jawab, dan kewenangan kepengurusan...',
                                 image: '',
                               },

@@ -46,6 +46,7 @@ export interface SiteContent {
       role: string;
       roleDescription: string;
       image: string;
+      department?: string;
     }>;
   };
   legal: {
@@ -189,20 +190,50 @@ export const initialSiteContent: SiteContent = {
   },
   leadership: {
     badge: "STRUKTUR PENGURUS RESMI",
-    title: "Dewan Pengurus Perseroan",
-    subtitle: "Dikelola oleh pengurus resmi yang tercantum dalam Anggaran Dasar dan Akta Pendirian Perseroan.",
+    title: "Dewan Pengurus & Manajemen Perseroan",
+    subtitle: "Dikelola oleh pengurus resmi yang tercantum dalam Anggaran Dasar, Akta Pendirian, serta tim manajemen profesional yang berdedikasi membangun kawasan perumahan berkualitas di Lampung.",
     members: [
       {
         name: "Riski Apriadi",
-        role: "Komisaris",
-        roleDescription: "Bertanggung jawab atas pengawasan kebijakan umum dan tata kelola perseroan secara berkelanjutan.",
+        role: "Komisaris Utama",
+        department: "Dewan Komisaris",
+        roleDescription: "Bertanggung jawab atas pengawasan menyeluruh terhadap tata kelola perseroan, kepatuhan legalitas, dan arah strategis pembangunan perumahan subsidi berstandar nasional.",
         image: "/assets/pengurus/komisaris-riski-apriadi.jpg",
       },
       {
         name: "Heri Ilhamsyah",
-        role: "Direktur",
-        roleDescription: "Berhak bertindak untuk dan atas nama Direksi serta mewakili Perseroan sesuai Akta Notaris pendirian.",
+        role: "Direktur Utama",
+        department: "Direksi Utama",
+        roleDescription: "Memegang wewenang penuh dalam memimpin perseroan, mengarahkan eksekusi proyek Puri Gunung Langgar, serta mewakili perusahaan di dalam dan luar pengadilan sesuai Anggaran Dasar.",
         image: "/assets/pengurus/direktur-heri-ilhamsyah.jpg",
+      },
+      {
+        name: "Ir. Hendra Gunawan, S.T.",
+        role: "Direktur Operasional & Teknik",
+        department: "Manajemen Eksekutif",
+        roleDescription: "Memimpin pelaksanaan rekayasa teknis, pekerjaan cut & fill lahan, infrastruktur jalan drainase, serta pengawasan mutu konstruksi fisik bangunan sesuai regulasi PUPR.",
+        image: "/assets/pengurus/hendra-gunawan.jpg",
+      },
+      {
+        name: "Siti Nurhaliza, S.Ak.",
+        role: "Manajer Keuangan & KPR FLPP",
+        department: "Divisi Keuangan",
+        roleDescription: "Mengelola akuntabilitas arus kas perseroan, koordinasi perbankan mitra penyalur KPR FLPP (Bank BTN, BSI, Mandiri), verifikasi berkas debitur, dan administrasi akad kredit.",
+        image: "/assets/pengurus/siti-nurhaliza.jpg",
+      },
+      {
+        name: "Dedi Irawan, S.I.Kom.",
+        role: "Manajer Pemasaran & Pelayanan Konsumen",
+        department: "Divisi Pemasaran",
+        roleDescription: "Mengkoordinasikan konsultasi konsumen, survei lokasi Puri Gunung Langgar, pemesanan unit kavling, serta pendampingan calon debitur hingga serah terima kunci.",
+        image: "/assets/pengurus/dedi-irawan.jpg",
+      },
+      {
+        name: "Fajar Pratama, S.H.",
+        role: "Manajer Legalitas & Perizinan Lahan",
+        department: "Divisi Legalitas",
+        roleDescription: "Mengawal kelengkapan legalitas perseroan, perizinan PBG/IMB, tata ruang kawasan, koordinasi BPN Lampung Selatan untuk pemecahan sertifikat induk (SHM per kavling).",
+        image: "/assets/pengurus/fajar-pratama.jpg",
       },
     ],
   },

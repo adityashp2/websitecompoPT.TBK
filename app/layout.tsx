@@ -20,7 +20,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-amber-600 selection:text-white min-h-screen">
+      <body className="bg-[#F3EFE6] text-[#262722] font-sans antialiased selection:bg-[#C5A568] selection:text-[#262722] min-h-screen">
         {children}
       </body>
     </html>

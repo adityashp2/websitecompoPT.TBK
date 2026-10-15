@@ -46,49 +46,48 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
   const uniqueTags = Array.from(new Set(rawActivities.map(i => i.tag).filter(Boolean)));
 
   return (
-    <div className="min-h-screen bg-[#FBF9F5] text-slate-800 flex flex-col font-sans selection:bg-amber-600 selection:text-white">
+    <div className="min-h-screen bg-[#F3EFE6] text-[#262722] flex flex-col font-sans selection:bg-[#C5A568] selection:text-[#262722]">
       <Header content={content} />
 
       <main id="main-content" className="flex-1">
         {/* Page Hero Header */}
-        <section className="bg-[#0E1014] text-white pt-12 pb-16 px-4 border-b border-white/[0.08] relative overflow-hidden">
-          <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#C9A96A_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
-          <div className="container-std relative z-10 max-w-[1120px] mx-auto">
+        <section className="bg-[#262722] text-[#F3EFE6] pt-12 pb-16 px-4 border-b border-white/[0.08] relative overflow-hidden">
+          <div className="container-editorial relative z-10">
             {/* Breadcrumb */}
-            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-white/60 mb-6">
-              <Link href="/" className="hover:text-[#C9A96A] transition-colors">Beranda</Link>
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-[#F3EFE6]/60 mb-6">
+              <Link href="/" className="hover:text-[#C5A568] transition-colors">Beranda</Link>
               <span>/</span>
-              <span className="text-[#C9A96A] font-semibold">Dokumentasi Lapangan</span>
+              <span className="text-[#C5A568] font-semibold">Dokumentasi Lapangan</span>
             </nav>
 
             <div className="max-w-3xl space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.08] border border-[#C9A96A]/40 text-[#C9A96A] text-xs font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-[4px] bg-white/[0.06] border border-white/10 text-[#C5A568] text-[11px] font-semibold uppercase tracking-wider">
                 <HardHat className="w-3.5 h-3.5" />
                 <span>{content.activities.badge || 'AKTIVITAS & PROGRES PROYEK'}</span>
               </div>
-              <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#F4EFE6] leading-tight">
+              <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-[#F3EFE6] leading-tight">
                 {content.activities.title || 'Dokumentasi Pekerjaan Lapangan'}
               </h1>
-              <p className="text-white/80 text-sm sm:text-base leading-relaxed max-w-2xl">
+              <p className="text-[#F3EFE6]/80 text-sm sm:text-base leading-relaxed max-w-2xl">
                 {content.activities.subtitle || 'Transparansi tahapan konstruksi fisik di Puri Gunung Langgar, Desa Sabah Balau, Tanjung Bintang, Lampung Selatan.'}
               </p>
             </div>
           </div>
         </section>
 
-        {/* Filter Tabs & Content Section */}
-        <section className="py-12 sm:py-16">
-          <div className="container-std max-w-[1120px] mx-auto space-y-8">
+        {/* Filter Tabs & Content Section: Open Editorial Grid */}
+        <section className="py-16 sm:py-20">
+          <div className="container-editorial space-y-10">
             {/* Filter Buttons */}
             {rawActivities.length > 0 && uniqueTags.length > 0 && (
-              <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-4">
+              <div className="flex flex-wrap items-center gap-2 border-b border-[#DDD8CE] pb-6">
                 <button
                   type="button"
                   onClick={() => setFilterTag('all')}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                  className={`px-3.5 py-1.5 rounded-[8px] text-xs font-semibold transition-all ${
                     filterTag === 'all'
-                      ? 'bg-slate-900 text-white shadow-sm ring-2 ring-amber-500/30'
-                      : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
+                      ? 'bg-[#262722] text-[#F3EFE6]'
+                      : 'bg-white/60 hover:bg-white text-[#262722] border border-[#DDD8CE]'
                   }`}
                 >
                   Semua ({rawActivities.length})
@@ -98,10 +97,10 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
                     key={tag}
                     type="button"
                     onClick={() => setFilterTag(tag)}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                    className={`px-3.5 py-1.5 rounded-[8px] text-xs font-semibold transition-all ${
                       filterTag === tag
-                        ? 'bg-slate-900 text-white shadow-sm ring-2 ring-amber-500/30'
-                        : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
+                        ? 'bg-[#262722] text-[#F3EFE6]'
+                        : 'bg-white/60 hover:bg-white text-[#262722] border border-[#DDD8CE]'
                     }`}
                   >
                     {tag}
@@ -110,18 +109,18 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
               </div>
             )}
 
-            {/* Activities Grid */}
+            {/* Activities Grid: Open Photographic Layout */}
             {filteredItems.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 {filteredItems.map((item, idx) => {
                   const hasImage = item.image && item.image.trim() !== '';
                   const hasVideo = !!item.videoUrl && item.videoUrl.trim() !== '';
                   return (
                     <div
                       key={idx}
-                      className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm hover:shadow-xl hover:border-[#C9A96A] transition-all duration-300 flex flex-col justify-between group"
+                      className="group space-y-4 flex flex-col justify-between"
                     >
-                      <div>
+                      <div className="space-y-4">
                         {hasImage ? (
                           <div
                             onClick={() =>
@@ -131,7 +130,7 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
                                 caption: `${item.title} (${item.tag || `Tahap 0${idx + 1}`}) - Puri Gunung Langgar`,
                               })
                             }
-                            className="relative h-56 overflow-hidden bg-slate-950 cursor-pointer"
+                            className="relative h-60 rounded-[12px] overflow-hidden border border-[#DDD8CE] bg-[#262722] cursor-pointer"
                           >
                             <img
                               src={item.image}
@@ -139,12 +138,12 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             />
                             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                              <span className="px-3 py-1.5 rounded-full bg-black/70 backdrop-blur-md text-white text-xs font-medium flex items-center gap-1.5 border border-white/20">
-                                <Maximize2 className="w-3.5 h-3.5 text-[#C9A96A]" />
+                              <span className="px-3 py-1.5 rounded-[8px] bg-[#262722]/80 backdrop-blur-md text-[#F3EFE6] text-xs font-medium flex items-center gap-1.5 border border-white/20">
+                                <Maximize2 className="w-3.5 h-3.5 text-[#C5A568]" />
                                 <span>Perbesar Foto</span>
                               </span>
                             </div>
-                            <div className="absolute top-3 left-3 px-3 py-1 rounded-md bg-slate-950/80 backdrop-blur-sm text-white text-xs font-semibold">
+                            <div className="absolute top-3 left-3 px-2.5 py-1 rounded-[4px] bg-[#262722]/80 backdrop-blur-sm text-[#F3EFE6] text-[11px] font-semibold">
                               {item.tag || `Tahap 0${idx + 1}`}
                             </div>
                             {hasVideo && (
@@ -158,16 +157,16 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
                                     title: `${item.title} (${item.tag || `Tahap 0${idx + 1}`})`,
                                   });
                                 }}
-                                className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-md bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold flex items-center gap-1 shadow-md transition-colors"
+                                className="absolute top-3 right-3 z-10 px-2 py-0.5 rounded-[4px] bg-[#262722]/85 text-[#C5A568] border border-[#C5A568]/40 text-[11px] font-semibold flex items-center gap-1 shadow-sm transition-colors"
                               >
-                                <Play className="w-3 h-3 fill-white" />
+                                <Play className="w-3 h-3 fill-[#C5A568]" />
                                 <span>Video</span>
                               </button>
                             )}
                           </div>
                         ) : (
-                          <div className="relative h-36 bg-gradient-to-br from-slate-100 to-slate-200 border-b border-slate-200 flex items-center justify-between px-6">
-                            <span className="px-3 py-1 rounded-md bg-slate-900 text-amber-400 text-xs font-semibold">
+                          <div className="relative h-40 rounded-[12px] border border-[#DDD8CE] bg-white/40 flex items-center justify-between px-6">
+                            <span className="px-2.5 py-1 rounded-[4px] bg-[#262722] text-[#C5A568] text-xs font-semibold">
                               {item.tag || `Tahap 0${idx + 1}`}
                             </span>
                             {hasVideo ? (
@@ -180,39 +179,39 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
                                     title: `${item.title} (${item.tag || `Tahap 0${idx + 1}`})`,
                                   })
                                 }
-                                className="px-2.5 py-1 rounded-md bg-red-600 hover:bg-red-700 text-white text-xs font-bold flex items-center gap-1.5 shadow"
+                                className="px-2.5 py-1 rounded-[6px] bg-[#262722] text-[#C5A568] border border-[#C5A568]/40 text-xs font-semibold flex items-center gap-1.5 shadow"
                               >
-                                <Play className="w-3 h-3 fill-white" />
+                                <Play className="w-3 h-3 fill-[#C5A568]" />
                                 <span>Putar Video</span>
                               </button>
                             ) : (
-                              <HardHat className="w-8 h-8 text-slate-400" />
+                              <HardHat className="w-8 h-8 text-[#77766F]/50" />
                             )}
                           </div>
                         )}
 
-                        <div className="p-6 space-y-3">
-                          <h3 className="font-bold text-lg text-slate-900 group-hover:text-amber-800 transition-colors">
+                        <div className="space-y-2">
+                          <h3 className="font-serif text-xl text-[#262722] group-hover:text-[#C5A568] transition-colors">
                             {item.title}
                           </h3>
-                          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                          <p className="text-xs sm:text-sm text-[#77766F] leading-relaxed">
                             {item.description}
                           </p>
 
-                          <div className="space-y-1.5 text-xs text-slate-600 pt-2 border-t border-slate-100">
+                          <div className="space-y-1.5 text-xs text-[#77766F] pt-2 border-t border-[#DDD8CE]">
                             <div className="flex items-center gap-2">
-                              <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                              <Check className="w-3.5 h-3.5 text-[#C5A568] shrink-0" />
                               <span>Sesuai standar teknis perumahan PUPR</span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                              <Check className="w-3.5 h-3.5 text-[#C5A568] shrink-0" />
                               <span>Pengawasan mutu langsung tim teknis perseroan</span>
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      <div className="px-6 pb-6 pt-2 space-y-2">
+                      <div className="pt-3 border-t border-[#DDD8CE] flex flex-wrap items-center justify-between gap-2">
                         {hasVideo && (
                           <button
                             type="button"
@@ -223,18 +222,18 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
                                 title: `${item.title} (${item.tag || `Tahap 0${idx + 1}`})`,
                               })
                             }
-                            className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-4 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold border border-red-200 transition-colors"
+                            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#262722] hover:text-[#C5A568] transition-colors"
                           >
-                            <Play className="w-3.5 h-3.5 fill-red-700" />
-                            <span>Tonton Video Dokumentasi</span>
+                            <Play className="w-3.5 h-3.5 text-[#C5A568]" />
+                            <span>Tonton Video</span>
                           </button>
                         )}
                         <Link
                           href="/kontak"
-                          className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl border border-slate-200 hover:border-[#C9A96A] hover:bg-amber-50 text-slate-800 text-xs font-bold transition-colors"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-[#262722] hover:text-[#C5A568] transition-colors ml-auto"
                         >
-                          <span>Jadwalkan Survei Lapangan</span>
-                          <ArrowRight className="w-3.5 h-3.5 text-[#C9A96A]" />
+                          <span>Survei Lokasi</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
                         </Link>
                       </div>
                     </div>
@@ -242,10 +241,10 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
                 })}
               </div>
             ) : (
-              <div className="p-12 rounded-2xl bg-white border border-slate-200 text-center space-y-3">
-                <HardHat className="w-10 h-10 text-slate-400 mx-auto" />
-                <h3 className="font-bold text-slate-800 text-base">Belum Ada Dokumentasi Kegiatan</h3>
-                <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
+              <div className="p-12 text-center space-y-3 border border-dashed border-[#DDD8CE] rounded-[12px]">
+                <HardHat className="w-10 h-10 text-[#77766F]/50 mx-auto" />
+                <h3 className="font-serif text-lg text-[#262722]">Belum Ada Dokumentasi Kegiatan</h3>
+                <p className="text-xs sm:text-sm text-[#77766F] max-w-md mx-auto">
                   Dokumentasi kegiatan dan tahapan fisik sedang diperbarui. Anda dapat menambahkan kegiatan melalui Admin Panel.
                 </p>
               </div>
@@ -253,22 +252,22 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
           </div>
         </section>
 
-        {/* CTA Banner */}
-        <section className="py-14 bg-[#0E1014] text-white">
-          <div className="container-std max-w-[1120px] mx-auto text-center space-y-4">
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#F4EFE6]">
+        {/* CTA Banner: Charcoal Editorial Section */}
+        <section className="py-16 sm:py-20 bg-[#262722] text-[#F3EFE6]">
+          <div className="container-editorial text-center space-y-6">
+            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-[#F3EFE6] max-w-xl mx-auto">
               Ingin Melihat Langsung Lapangan?
             </h2>
-            <p className="text-white/80 text-xs sm:text-sm max-w-lg mx-auto">
+            <p className="text-[#F3EFE6]/80 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed">
               Kunjungi lokasi proyek Puri Gunung Langgar di Desa Sabah Balau, Tanjung Bintang didampingi staf resmi kami.
             </p>
             <div className="pt-2">
               <Link
                 href="/kontak"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#C9A96A] hover:bg-amber-500 text-[#0E1014] font-bold text-xs uppercase tracking-wider transition-colors"
+                className="group inline-flex items-center gap-2 px-6 py-3 rounded-[12px] bg-[#C5A568] hover:bg-[#B69455] text-[#262722] text-xs font-semibold uppercase tracking-wider transition-all duration-200 hover:-translate-y-[1.5px] active:scale-[0.99]"
               >
                 <span>Hubungi Kami untuk Jadwal Survei</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
               </Link>
             </div>
           </div>

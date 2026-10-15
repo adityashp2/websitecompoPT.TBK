@@ -9,13 +9,12 @@ interface FloatingWhatsAppProps {
 }
 
 export default function FloatingWhatsApp({ content }: FloatingWhatsAppProps) {
-  // Declare rawWa at the very top before any hooks
   const rawWa = content?.contact?.whatsapp ?? '';
 
   const [showPopup, setShowPopup] = useState(false);
   const [dismissed, setDismissed] = useState(true);
 
-  // Auto-show popup after 4.5 seconds ONLY on first visit; if closed once, never show again
+  // Auto-show popup after 6 seconds ONLY on first visit; if closed once, never show again
   useEffect(() => {
     try {
       const alreadyDismissed = localStorage.getItem('tbk_wa_popup_dismissed') === 'true';
@@ -23,12 +22,10 @@ export default function FloatingWhatsApp({ content }: FloatingWhatsAppProps) {
         setDismissed(false);
         const timer = setTimeout(() => {
           setShowPopup(true);
-        }, 4500);
+        }, 6000);
         return () => clearTimeout(timer);
       }
-    } catch {
-      // In case localStorage is blocked/disabled
-    }
+    } catch {}
   }, []);
 
   const handleDismiss = () => {
@@ -39,7 +36,6 @@ export default function FloatingWhatsApp({ content }: FloatingWhatsAppProps) {
     } catch {}
   };
 
-  // Tombol WhatsApp melayang hanya tampil jika nomor sudah diisi
   if (!rawWa || rawWa.includes('[ISI:') || rawWa.trim() === '') {
     return null;
   }
@@ -61,34 +57,31 @@ export default function FloatingWhatsApp({ content }: FloatingWhatsAppProps) {
   const waUrl = `https://wa.me/${formattedWa}?text=${encodeURIComponent('Halo PT. TBK, saya ingin bertanya informasi unit dan promo perumahan Puri Gunung Langgar.')}`;
 
   return (
-    <div className="fixed bottom-[64px] right-3 sm:bottom-6 sm:right-6 z-40 flex flex-col items-end pointer-events-none">
-      {/* Automated WhatsApp Consultation Notification Bubble */}
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex flex-col items-end pointer-events-none">
+      {/* Consultation Notification Bubble */}
       {showPopup && !dismissed && (
-        <div className="mb-3 w-[calc(100vw-24px)] max-w-[320px] bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 text-slate-800 animate-fade-in relative z-50 font-sans select-none pointer-events-auto">
+        <div className="mb-2.5 w-[calc(100vw-32px)] max-w-[300px] bg-white rounded-[4px] shadow-lg border border-[#DDD8CE] p-3.5 text-[#262722] relative z-50 font-sans select-none pointer-events-auto animate-fade-in">
           <button
             type="button"
             onClick={handleDismiss}
-            className="absolute top-2.5 right-2.5 w-6 h-6 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors text-xs"
+            className="absolute top-2 right-2 w-5 h-5 rounded-[2px] text-[#77766F] hover:text-[#262722] flex items-center justify-center transition-colors text-xs"
             aria-label="Tutup pesan"
           >
             <X className="w-3.5 h-3.5" />
           </button>
 
-          <div className="flex items-center gap-2.5 mb-2">
-            <div className="w-8 h-8 rounded-full bg-[#25D366] text-white flex items-center justify-center shrink-0 shadow-sm">
-              <MessageCircle className="w-4 h-4 fill-white" />
+          <div className="flex items-center gap-2 mb-1.5">
+            <div className="w-6 h-6 rounded-full bg-[#25D366] text-white flex items-center justify-center shrink-0">
+              <MessageCircle className="w-3.5 h-3.5 fill-white" />
             </div>
             <div>
-              <div className="text-xs font-bold text-slate-900 leading-tight">Layanan WhatsApp Resmi</div>
-              <div className="text-[10px] text-emerald-600 font-medium flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Online & Siap Melayani
-              </div>
+              <div className="text-xs font-semibold text-[#262722] leading-tight">Layanan WhatsApp Resmi</div>
+              <div className="text-[10px] text-emerald-600 font-medium">Online & Siap Melayani</div>
             </div>
           </div>
 
-          <p className="text-xs text-slate-600 leading-relaxed mb-3">
-            Butuh informasi ketersediaan unit, tahapan berkas KPR subsidi, atau survei lokasi di <strong>Puri Gunung Langgar</strong>?
+          <p className="text-[11.5px] text-[#77766F] leading-relaxed mb-2.5">
+            Butuh info ketersediaan unit atau tahapan berkas KPR di <strong>Puri Gunung Langgar</strong>?
           </p>
 
           <a
@@ -96,28 +89,25 @@ export default function FloatingWhatsApp({ content }: FloatingWhatsAppProps) {
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleDismiss}
-            className="w-full h-8 px-3 rounded-xl bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all active:scale-[0.98]"
+            className="w-full h-7 px-3 rounded-[3px] bg-[#25D366] hover:bg-[#1EBE5D] text-white font-semibold text-[11px] flex items-center justify-center gap-1.5 transition-colors"
           >
-            <span>Tanya Pemasaran Sekarang</span>
+            <span>Tanya Pemasaran</span>
             <Send className="w-3 h-3" />
           </a>
         </div>
       )}
 
-      {/* Main WhatsApp Floating Button with Ripple Ping Animation (Desktop / Tablet) */}
-      <div className="hidden sm:block relative group pointer-events-auto">
-        {/* Animated Ripple Ping Ring */}
-        <span className="absolute -inset-1 rounded-full bg-[#25D366]/40 animate-ping pointer-events-none" />
-
+      {/* Restrained WhatsApp Floating Button (Clean & Compact) */}
+      <div className="relative group pointer-events-auto">
         <a
           href={waUrl}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Hubungi kami melalui WhatsApp"
-          className="relative w-[48px] h-[48px] rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:bg-[#1EBE5D] hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2"
+          className="w-[42px] h-[42px] sm:w-[44px] sm:h-[44px] rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-md shadow-black/25 hover:bg-[#1EBE5D] hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2"
         >
           <svg
-            className="w-6 h-6 fill-current"
+            className="w-5 h-5 fill-current"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
@@ -129,4 +119,3 @@ export default function FloatingWhatsApp({ content }: FloatingWhatsAppProps) {
     </div>
   );
 }
-

@@ -11,87 +11,86 @@ interface FooterProps {
 
 export default function Footer({ content }: FooterProps) {
   return (
-    <footer className="bg-[#0A0C10] text-slate-400 py-14 border-t border-white/[0.08] text-xs sm:text-sm">
-      <div className="container-std">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-10 pb-10 border-b border-white/[0.08]">
-          {/* Column 1: Profil Perseroan */}
+    <footer className="bg-[#262722] text-[#F3EFE6]/80 pt-16 pb-12 border-t border-[#DDD8CE]/15 text-[13px]">
+      <div className="container-editorial">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-12 pb-12 border-b border-white/10">
+          {/* Column 1: Company Profile & Verification */}
           <div className="md:col-span-12 lg:col-span-4 space-y-4">
             <Link href="/" className="inline-flex items-center gap-3 group">
               <img
                 src={content.meta?.logo || "/assets/logo-tbk.png"}
                 alt="Logo PT. TBK"
-                className="h-10 w-auto object-contain"
-                width="40"
-                height="40"
+                className="h-9 w-auto object-contain"
+                width="36"
+                height="36"
               />
               <div className="flex flex-col text-left">
-                <span className="font-extrabold text-base sm:text-lg text-[#F4EFE6] tracking-tight group-hover:text-[#C9A96A] transition-colors">
+                <span className="font-bold text-[14px] text-[#F3EFE6] tracking-[0.06em] uppercase group-hover:text-[#C5A568] transition-colors">
                   {content.footer?.companyName || 'PT. Terbang Bersama Kawan'}
                 </span>
-                <span className="text-[11px] text-[#C9A96A] font-medium tracking-wide uppercase">
-                  Pengembang Perumahan Resmi
+                <span className="text-[10px] text-[#C5A568] uppercase tracking-[0.08em] font-medium">
+                  Pengembang Properti Bandar Lampung
                 </span>
               </div>
             </Link>
-            <p className="text-slate-400 max-w-sm leading-relaxed text-xs sm:text-[13px]">
-              {content.footer?.summary || 'Pengembang perumahan resmi, amanah, dan berkualitas berdomisili di Bandar Lampung. Mengutamakan transparansi, kepuasan konsumen, dan legalitas sah.'}
+
+            <p className="text-[#77766F] text-[13px] leading-relaxed max-w-sm">
+              {content.footer?.summary || 'Pengembang perumahan resmi berdomisili di Bandar Lampung. Mengutamakan transparansi informasi, kepastian legalitas, dan mutu hunian layak bagi masyarakat.'}
             </p>
-            <div className="flex items-center gap-2 text-xs text-amber-400/90 pt-1">
-              <FileCheck2 className="w-4 h-4 text-[#C9A96A] shrink-0" />
-              <span>SK Kemenkumham RI: {content.legal?.skMenkumham || 'AHU-0016462.AH.01.01.TAHUN 2021'}</span>
+
+            <div className="pt-2 flex items-center gap-2 text-xs text-[#F3EFE6]/70">
+              <FileCheck2 className="w-4 h-4 text-[#C5A568] shrink-0" />
+              <span>SK Kemenkumham: {content.legal?.skMenkumham || 'AHU-0016462.AH.01.01.TAHUN 2021'}</span>
             </div>
           </div>
 
-          {/* Column 2: Kantor & Lokasi Proyek */}
-          <div className="md:col-span-6 lg:col-span-4 space-y-3">
-            <div className="font-bold text-[#C9A96A] uppercase tracking-wider text-xs">
+          {/* Column 2: Address & Coordinates */}
+          <div className="md:col-span-6 lg:col-span-4 space-y-3.5">
+            <div className="text-xs uppercase tracking-[0.1em] text-[#C5A568] font-semibold">
               Kantor & Lokasi Proyek
             </div>
-            <div className="text-slate-300 leading-relaxed text-xs sm:text-[13px] space-y-2.5">
-              <div className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 text-[#C9A96A] shrink-0 mt-0.5" />
+            <div className="text-[13px] text-[#F3EFE6]/80 space-y-3 leading-relaxed">
+              <div className="flex items-start gap-2.5">
+                <MapPin className="w-4 h-4 text-[#C5A568] shrink-0 mt-0.5" />
                 <span>
-                  <strong>Kantor:</strong> {content.contact?.address || 'Bandar Lampung, Provinsi Lampung, Indonesia.'}
+                  <strong className="text-[#F3EFE6]">Kantor:</strong> {content.contact?.address || 'Bandar Lampung, Provinsi Lampung, Indonesia.'}
                 </span>
               </div>
-              <div className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2.5">
+                <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <span>
-                  <strong>Proyek:</strong> {content.project?.location || 'Puri Gunung Langgar'}, {content.project?.district || 'Desa Sabah Balau, Kec. Tanjung Bintang'}, Lampung Selatan.
+                  <strong className="text-[#F3EFE6]">Proyek:</strong> {content.project?.name || 'Puri Gunung Langgar'}, {content.project?.district || 'Desa Sabah Balau, Kec. Tanjung Bintang'}, Lampung Selatan.
                 </span>
               </div>
-              <div className="flex items-center gap-2 pt-1 text-slate-400">
-                <Phone className="w-4 h-4 text-[#C9A96A] shrink-0" />
+              <div className="flex items-center gap-2.5 pt-1 text-[#77766F]">
+                <Phone className="w-4 h-4 text-[#C5A568] shrink-0" />
                 <span>WhatsApp: {content.contact?.whatsapp || '0812-7890-1234'}</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-400">
-                <Mail className="w-4 h-4 text-[#C9A96A] shrink-0" />
+              <div className="flex items-center gap-2.5 text-[#77766F]">
+                <Mail className="w-4 h-4 text-[#C5A568] shrink-0" />
                 <span>Email: {content.contact?.email || 'info@terbangbersamakawan.co.id'}</span>
               </div>
             </div>
           </div>
 
-          {/* Column 3: Peta Lokasi Kantor (Google Maps Embed) */}
+          {/* Column 3: Google Maps Architectural Preview */}
           <div className="md:col-span-6 lg:col-span-4 space-y-3">
             <div className="flex items-center justify-between">
-              <div className="font-bold text-[#C9A96A] uppercase tracking-wider text-xs flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-[#C9A96A]" />
-                <span>Peta Lokasi Kantor</span>
-              </div>
+              <span className="text-xs uppercase tracking-[0.1em] text-[#C5A568] font-semibold">
+                Peta Lokasi Kantor
+              </span>
               <a
                 href={content.contact?.mapsUrl || "https://maps.google.com/?q=Bandar+Lampung"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[11px] text-slate-400 hover:text-[#C9A96A] flex items-center gap-1 transition-colors"
-                title="Buka rute navigasi di Google Maps"
+                className="text-[11.5px] text-[#77766F] hover:text-[#C5A568] flex items-center gap-1 transition-colors"
               >
-                <span>Buka Maps</span>
+                <span>Buka Google Maps</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
             </div>
 
-            {/* Google Maps Embed Container */}
-            <div className="relative w-full h-40 sm:h-44 rounded-xl overflow-hidden border border-white/10 shadow-lg bg-[#14161A] group">
+            <div className="relative w-full h-36 rounded-[4px] overflow-hidden border border-white/10 bg-[#1B1C18]">
               <iframe
                 src={content.contact?.mapsEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127103.95764032483!2d105.19799639726562!3d-5.412499999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e40da473d091219%3A0x3039d80b220cc70!2sKota%20Bandar%20Lampung%2C%20Lampung!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"}
                 width="100%"
@@ -101,34 +100,23 @@ export default function Footer({ content }: FooterProps) {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Peta Lokasi Kantor PT. Terbang Bersama Kawan"
-                className="w-full h-full opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+                className="w-full h-full opacity-85 hover:opacity-100 transition-opacity"
               />
-              <div className="absolute bottom-2.5 right-2.5 pointer-events-auto">
-                <a
-                  href={content.contact?.mapsUrl || "https://maps.google.com/?q=Bandar+Lampung"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-2.5 py-1 rounded-lg bg-[#0E1014]/90 hover:bg-[#C9A96A] hover:text-[#0E1014] text-white text-[11px] font-bold backdrop-blur-md border border-white/20 flex items-center gap-1.5 shadow-md transition-all active:scale-95"
-                >
-                  <MapPin className="w-3.5 h-3.5 text-[#C9A96A]" />
-                  <span>Petunjuk Arah</span>
-                </a>
-              </div>
             </div>
-
-            <p className="text-[11px] text-slate-500 leading-normal">
-              {content.contact?.address || 'Bandar Lampung, Provinsi Lampung, Indonesia'}
+            <p className="text-[11.5px] text-[#77766F]">
+              Jam Operasional: {content.contact?.operatingHours || 'Senin - Sabtu: 08.00 - 17.00 WIB'}
             </p>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between text-slate-500 text-xs gap-4">
+        {/* Bottom Editorial Bar */}
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-[#77766F] text-[12px] gap-3">
           <div>
-            &copy; {new Date().getFullYear()} {content.footer?.copyrightText || 'Hak Cipta Dilindungi Undang-Undang. PT. Terbang Bersama Kawan (PT. TBK).'}
+            &copy; {new Date().getFullYear()} {content.footer?.copyrightText || 'PT. Terbang Bersama Kawan. Hak Cipta Dilindungi Undang-Undang.'}
           </div>
-          <div className="flex items-center gap-4">
-            <span>Bandar Lampung, Indonesia</span>
+          <div className="flex items-center gap-6">
+            <Link href="/legalitas" className="hover:text-[#F3EFE6] transition-colors">Legalitas Perusahaan</Link>
+            <Link href="/kontak" className="hover:text-[#F3EFE6] transition-colors">Kontak</Link>
           </div>
         </div>
       </div>

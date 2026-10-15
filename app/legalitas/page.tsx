@@ -47,176 +47,206 @@ export default function LegalitasPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FBF9F5] text-slate-800 flex flex-col font-sans selection:bg-amber-600 selection:text-white">
+    <div className="min-h-screen bg-[#F3EFE6] text-[#262722] flex flex-col font-sans selection:bg-[#C5A568] selection:text-[#262722]">
       <Header content={content} />
 
       <main id="main-content" className="flex-1">
         {/* Page Hero Header */}
-        <section className="bg-[#0E1014] text-white pt-12 pb-16 px-4 border-b border-white/[0.08] relative overflow-hidden">
-          <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#C9A96A_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
-          <div className="container-std relative z-10 max-w-[1120px] mx-auto">
+        <section className="bg-[#262722] text-[#F3EFE6] pt-12 pb-16 px-4 border-b border-white/[0.08] relative overflow-hidden">
+          <div className="container-editorial relative z-10">
             {/* Breadcrumb */}
-            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-white/60 mb-6">
-              <Link href="/" className="hover:text-[#C9A96A] transition-colors">Beranda</Link>
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-[#F3EFE6]/60 mb-6">
+              <Link href="/" className="hover:text-[#C5A568] transition-colors">Beranda</Link>
               <span>/</span>
-              <span className="text-[#C9A96A] font-semibold">Legalitas Resmi</span>
+              <span className="text-[#C5A568] font-semibold">Legalitas Resmi</span>
             </nav>
 
             <div className="max-w-3xl space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.08] border border-[#C9A96A]/40 text-[#C9A96A] text-xs font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-[4px] bg-white/[0.06] border border-white/10 text-[#C5A568] text-[11px] font-semibold uppercase tracking-wider">
                 <FileCheck2 className="w-3.5 h-3.5" />
                 <span>{content.legal.badge || 'LEGALITAS & TRANSPARANSI PERUSAHAAN'}</span>
               </div>
-              <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#F4EFE6] leading-tight">
+              <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-[#F3EFE6] leading-tight">
                 {content.legal.title || 'Dokumen Resmi Perseroan'}
               </h1>
-              <p className="text-white/80 text-sm sm:text-base leading-relaxed max-w-2xl">
+              <p className="text-[#F3EFE6]/80 text-sm sm:text-base leading-relaxed max-w-2xl">
                 {content.legal.subtitle || 'Kepastian hukum, transparansi data perseroan, dan jaminan keamanan transaksi properti bagi setiap konsumen.'}
               </p>
             </div>
           </div>
         </section>
 
-        {/* 3 Main Legal Documents Grid */}
-        <section className="py-14 sm:py-16">
-          <div className="container-std max-w-[1120px] mx-auto space-y-12">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Card 1: Akta Notaris */}
-              <div className="p-8 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:border-[#C9A96A] transition-all">
-                <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center border border-amber-200">
-                  <FileCheck2 className="w-6 h-6" />
-                </div>
+        {/* 3 Main Legal Documents: Open Architectural Showcase */}
+        <section className="py-16 sm:py-20">
+          <div className="container-editorial space-y-16">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#C5A568] block mb-2">
+                Landasan Yuridis
+              </span>
+              <h2 className="font-serif text-2xl sm:text-3xl text-[#262722]">
+                Dokumen Otentik Badan Hukum Perseroan
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 md:divide-x md:divide-[#DDD8CE]">
+              {/* Document 1: Akta Notaris */}
+              <div className="space-y-4">
+                <span className="font-serif text-3xl text-[#C5A568] block">01</span>
                 <div>
-                  <span className="text-xs uppercase font-semibold text-slate-500 tracking-wider">
+                  <span className="text-[11px] uppercase tracking-wider text-[#77766F] font-semibold block">
                     Akta Pendirian Perseroan
                   </span>
-                  <h3 className="text-xl font-bold text-slate-900 mt-1">
+                  <h3 className="font-serif text-xl sm:text-2xl text-[#262722] mt-0.5">
                     {content.legal.aktaNumber || 'Akta No. 10'}
                   </h3>
                 </div>
-                <div className="space-y-1 text-xs sm:text-sm text-slate-600 border-t border-slate-100 pt-3">
-                  <div>Tanggal: <strong className="text-slate-900">{content.legal.aktaDate}</strong></div>
-                  <div>Notaris Pembuat: <strong className="text-slate-900">{content.legal.notary}</strong></div>
-                  <div>Wilayah Kerja: <strong className="text-slate-900">Bandar Lampung</strong></div>
+                <div className="divide-y divide-[#DDD8CE] text-xs text-[#77766F] pt-2">
+                  <div className="py-2 flex justify-between">
+                    <span>Tanggal Akta</span>
+                    <strong className="text-[#262722] font-medium">{content.legal.aktaDate}</strong>
+                  </div>
+                  <div className="py-2 flex justify-between">
+                    <span>Notaris Pembuat</span>
+                    <strong className="text-[#262722] font-medium">{content.legal.notary}</strong>
+                  </div>
+                  <div className="py-2 flex justify-between">
+                    <span>Wilayah Kerja</span>
+                    <strong className="text-[#262722] font-medium">Bandar Lampung</strong>
+                  </div>
                 </div>
-                <div className="text-[11px] text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                <p className="text-xs text-[#77766F] leading-relaxed pt-1">
                   Dokumen autentik pendirian badan hukum perseroan terbatas sesuai UU No. 40 Tahun 2007.
-                </div>
+                </p>
               </div>
 
-              {/* Card 2: SK Kemenkumham */}
-              <div className="p-8 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:border-emerald-500 transition-all">
-                <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-200">
-                  <ShieldCheck className="w-6 h-6" />
-                </div>
+              {/* Document 2: SK Kemenkumham */}
+              <div className="md:pl-10 space-y-4">
+                <span className="font-serif text-3xl text-[#C5A568] block">02</span>
                 <div>
-                  <span className="text-xs uppercase font-semibold text-slate-500 tracking-wider">
+                  <span className="text-[11px] uppercase tracking-wider text-[#77766F] font-semibold block">
                     Pengesahan Kemenkumham RI
                   </span>
-                  <h3 className="text-lg font-bold text-slate-900 mt-1 break-all">
+                  <h3 className="font-serif text-lg sm:text-xl text-[#262722] mt-0.5 font-mono break-all">
                     {content.legal.skMenkumham}
                   </h3>
                 </div>
-                <div className="space-y-1 text-xs sm:text-sm text-slate-600 border-t border-slate-100 pt-3">
-                  <div>Tanggal SK: <strong className="text-slate-900">{content.legal.skDate}</strong></div>
-                  <div>Lembaga: <strong className="text-slate-900">Ditjen AHU Kemenkumham RI</strong></div>
-                  <div>Status Badan Hukum: <strong className="text-emerald-700">Terdaftar & Sah</strong></div>
+                <div className="divide-y divide-[#DDD8CE] text-xs text-[#77766F] pt-2">
+                  <div className="py-2 flex justify-between">
+                    <span>Tanggal SK</span>
+                    <strong className="text-[#262722] font-medium">{content.legal.skDate}</strong>
+                  </div>
+                  <div className="py-2 flex justify-between">
+                    <span>Lembaga Penerbit</span>
+                    <strong className="text-[#262722] font-medium">Ditjen AHU RI</strong>
+                  </div>
+                  <div className="py-2 flex justify-between">
+                    <span>Status Badan Hukum</span>
+                    <strong className="text-emerald-700 font-medium">Terdaftar &amp; Sah</strong>
+                  </div>
                 </div>
-                <div className="text-[11px] text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                <p className="text-xs text-[#77766F] leading-relaxed pt-1">
                   Pengakuan resmi status badan hukum dari pemerintah Republik Indonesia.
-                </div>
+                </p>
               </div>
 
-              {/* Card 3: Kewenangan Direksi */}
-              <div className="p-8 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:border-blue-500 transition-all">
-                <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center border border-blue-200">
-                  <Building2 className="w-6 h-6" />
-                </div>
+              {/* Document 3: Kewenangan Direksi */}
+              <div className="md:pl-10 space-y-4">
+                <span className="font-serif text-3xl text-[#C5A568] block">03</span>
                 <div>
-                  <span className="text-xs uppercase font-semibold text-slate-500 tracking-wider">
+                  <span className="text-[11px] uppercase tracking-wider text-[#77766F] font-semibold block">
                     Kewenangan Direksi
                   </span>
-                  <h3 className="text-xl font-bold text-slate-900 mt-1">
+                  <h3 className="font-serif text-xl sm:text-2xl text-[#262722] mt-0.5">
                     Mewakili Perseroan
                   </h3>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-600 border-t border-slate-100 pt-3 leading-relaxed">
-                  {content.legal.directorAuthority || 'Direktur berwenang penuh menjalankan kepengurusan dan mewakili perseroan secara sah di dalam dan di luar pengadilan.'}
-                </p>
-                <div className="text-[11px] text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-100">
-                  Memberikan kepastian hak hukum dalam penandatanganan Perjanjian Pengikatan Jual Beli (PPJB).
+                <div className="pt-2 text-xs text-[#77766F] leading-relaxed">
+                  <p>
+                    {content.legal.directorAuthority || 'Direktur berwenang penuh menjalankan kepengurusan dan mewakili perseroan secara sah di dalam dan di luar pengadilan.'}
+                  </p>
                 </div>
+                <p className="text-xs text-[#77766F] leading-relaxed pt-1 border-t border-[#DDD8CE]">
+                  Memberikan kepastian hak hukum dalam penandatanganan Perjanjian Pengikatan Jual Beli (PPJB).
+                </p>
               </div>
             </div>
 
-            {/* Checklist Jaminan Transparansi Konsumen */}
-            <div className="p-8 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-6">
+            {/* Checklist Jaminan Transparansi: Open Editorial Section */}
+            <div className="pt-12 border-t border-[#DDD8CE] space-y-8">
               <div>
-                <span className="text-xs font-bold uppercase tracking-widest text-[#C9A96A] mb-1 block">
-                  STANDAR KEPATUHAN
+                <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#C5A568] block mb-2">
+                  Standar Kepatuhan
                 </span>
-                <h3 className="text-2xl font-bold text-slate-900">
-                  Jaminan Keamanan & Perlindungan Konsumen
+                <h3 className="font-serif text-2xl sm:text-3xl text-[#262722]">
+                  Jaminan Keamanan &amp; Perlindungan Konsumen
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-600 mt-1">
+                <p className="text-xs sm:text-sm text-[#77766F] mt-1 leading-relaxed">
                   Prinsip transparansi yang diterapkan PT. TBK untuk menghindari praktik pengembang fiktif atau bermasalah:
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-bold text-sm text-slate-900">Rekening Resmi Perusahaan</h4>
-                    <p className="text-xs text-slate-600 mt-0.5">Semua dana konsumen masuk ke rekening koran giro atas nama PT. Terbang Bersama Kawan.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-8">
+                <div className="flex items-start gap-4">
+                  <CheckCircle2 className="w-5 h-5 text-[#C5A568] shrink-0 mt-0.5" />
+                  <div className="space-y-1">
+                    <h4 className="font-serif text-lg text-[#262722]">Rekening Resmi Perusahaan</h4>
+                    <p className="text-xs sm:text-sm text-[#77766F] leading-relaxed">
+                      Semua dana konsumen masuk ke rekening koran giro atas nama PT. Terbang Bersama Kawan, bukan rekening perorangan.
+                    </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-bold text-sm text-slate-900">Sertifikat Lahan Bersih & Aman</h4>
-                    <p className="text-xs text-slate-600 mt-0.5">Tidak dalam status sengketa pihak ketiga dan telah diverifikasi notaris rekanan perbankan.</p>
+                <div className="flex items-start gap-4">
+                  <CheckCircle2 className="w-5 h-5 text-[#C5A568] shrink-0 mt-0.5" />
+                  <div className="space-y-1">
+                    <h4 className="font-serif text-lg text-[#262722]">Sertifikat Lahan Bersih &amp; Aman</h4>
+                    <p className="text-xs sm:text-sm text-[#77766F] leading-relaxed">
+                      Tidak dalam status sengketa pihak ketiga dan telah diverifikasi notaris rekanan perbankan penyalur FLPP.
+                    </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-bold text-sm text-slate-900">Kemitraan Bank Penyalur FLPP</h4>
-                    <p className="text-xs text-slate-600 mt-0.5">Memenuhi syarat ketat audit legalitas dari bank penyalur fasilitas likuiditas pembiayaan perumahan.</p>
+                <div className="flex items-start gap-4">
+                  <CheckCircle2 className="w-5 h-5 text-[#C5A568] shrink-0 mt-0.5" />
+                  <div className="space-y-1">
+                    <h4 className="font-serif text-lg text-[#262722]">Kemitraan Bank Penyalur FLPP</h4>
+                    <p className="text-xs sm:text-sm text-[#77766F] leading-relaxed">
+                      Memenuhi syarat ketat audit legalitas dari bank penyalur fasilitas likuiditas pembiayaan perumahan nasional.
+                    </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-bold text-sm text-slate-900">Kantor Fisik & Representasi Nyata</h4>
-                    <p className="text-xs text-slate-600 mt-0.5">Kantor operasional berdomisili di Bandar Lampung dengan tim manajemen yang dapat ditemui langsung.</p>
+                <div className="flex items-start gap-4">
+                  <CheckCircle2 className="w-5 h-5 text-[#C5A568] shrink-0 mt-0.5" />
+                  <div className="space-y-1">
+                    <h4 className="font-serif text-lg text-[#262722]">Kantor Fisik &amp; Representasi Nyata</h4>
+                    <p className="text-xs sm:text-sm text-[#77766F] leading-relaxed">
+                      Kantor operasional berdomisili di Bandar Lampung dengan tim manajemen yang dapat ditemui langsung setiap jam kerja.
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Tanya Jawab Legalitas (FAQ) */}
-            <div className="space-y-6">
+            {/* Tanya Jawab Legalitas (FAQ): Open Editorial List with Dividers */}
+            <div className="pt-12 border-t border-[#DDD8CE] space-y-8">
               <div>
-                <span className="text-xs font-bold uppercase tracking-widest text-[#C9A96A] mb-1 block">
-                  PERTANYAAN UMUM
+                <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#C5A568] block mb-2">
+                  Pertanyaan Umum
                 </span>
-                <h3 className="text-2xl font-bold text-slate-900">
-                  Pertanyaan Seputar Legalitas & Akad
+                <h3 className="font-serif text-2xl sm:text-3xl text-[#262722]">
+                  Pertanyaan Seputar Legalitas &amp; Akad
                 </h3>
               </div>
 
-              <div className="space-y-4">
+              <div className="divide-y divide-[#DDD8CE]">
                 {faqs.map((faq, idx) => (
-                  <div key={idx} className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
-                    <h4 className="font-bold text-base text-slate-900 flex items-start gap-2.5">
-                      <HelpCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  <div key={idx} className="py-6 first:pt-0 space-y-2">
+                    <h4 className="font-serif text-lg sm:text-xl text-[#262722] flex items-start gap-3">
+                      <span className="font-mono text-sm text-[#C5A568] font-bold mt-1">Q.</span>
                       <span>{faq.q}</span>
                     </h4>
-                    <p className="text-xs sm:text-sm text-slate-600 pl-7 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-[#77766F] pl-6 sm:pl-7 leading-relaxed">
                       {faq.a}
                     </p>
                   </div>
@@ -226,22 +256,22 @@ export default function LegalitasPage() {
           </div>
         </section>
 
-        {/* Bottom Banner */}
-        <section className="py-14 bg-[#0E1014] text-white">
-          <div className="container-std max-w-[1120px] mx-auto text-center space-y-4">
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#F4EFE6]">
+        {/* Bottom Banner: Charcoal Editorial Section */}
+        <section className="py-16 sm:py-20 bg-[#262722] text-[#F3EFE6]">
+          <div className="container-editorial text-center space-y-6">
+            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-[#F3EFE6] max-w-xl mx-auto">
               Butuh Verifikasi Dokumen Legalitas Langsung?
             </h2>
-            <p className="text-white/80 text-xs sm:text-sm max-w-lg mx-auto">
+            <p className="text-[#F3EFE6]/80 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed">
               Silakan hubungi perwakilan resmi kami atau kunjungi kantor kami di Bandar Lampung untuk memeriksa salinan berkas perseroan.
             </p>
             <div className="pt-2">
               <Link
                 href="/kontak"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#C9A96A] hover:bg-amber-500 text-[#0E1014] font-bold text-xs uppercase tracking-wider transition-colors"
+                className="group inline-flex items-center gap-2 px-6 py-3 rounded-[12px] bg-[#C5A568] hover:bg-[#B69455] text-[#262722] text-xs font-semibold uppercase tracking-wider transition-all duration-200 hover:-translate-y-[1.5px] active:scale-[0.99]"
               >
                 <span>Hubungi Layanan Konsultasi</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
               </Link>
             </div>
           </div>

@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { SiteContent, getYouTubeEmbedUrl } from '@/lib/initialData';
+import Link from 'next/link';
 import {
-  ShieldCheck,
-  CheckCircle2,
   MapPin,
   Phone,
   Mail,
@@ -12,27 +10,23 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
-  Home,
   FileCheck2,
-  HardHat,
   ArrowRight,
   Check,
-  Building2,
-  Award,
-  ExternalLink,
-  ArrowUp,
-  Sparkles,
   Maximize2,
   Calculator,
-  Video,
-  Image as ImageIcon,
   Play,
-  MessageCircle
+  Image as ImageIcon,
+  MessageCircle,
+  ExternalLink,
+  ShieldCheck,
+  Building,
+  Compass
 } from 'lucide-react';
-import Link from 'next/link';
 import Header from './Header';
 import Footer from './Footer';
 import FloatingWhatsApp from './FloatingWhatsApp';
+import { SiteContent, getYouTubeEmbedUrl } from '@/lib/initialData';
 
 function sanitize(val: string | undefined, fallback: string): string {
   if (!val || val.includes('[ISI:') || val === 'aadad' || val === '23232433') {
@@ -59,8 +53,7 @@ export default function ClientLandingPage({ initialContent }: { initialContent: 
       .catch(() => {});
   }, []);
 
-  // Hero Background Slideshow & Main Background Image:
-  // Use hero.backgroundImage as the primary background if set, plus any additional slideshow slides.
+  // Hero Background Slideshow with authentic project photography
   const heroBgImage = (content.hero?.backgroundImage || '').trim();
   const rawSlides = Array.isArray(content.hero?.slides) ? content.hero.slides : [];
   const validSlides = rawSlides.filter((s) => s && s.image && s.image.trim() !== '');
@@ -76,91 +69,69 @@ export default function ClientLandingPage({ initialContent }: { initialContent: 
         ...otherSlides,
       ];
     }
-    return validSlides;
+    return validSlides.length > 0
+      ? validSlides
+      : [{ image: '/assets/hero-villa.jpg', caption: 'Puri Gunung Langgar, Lampung Selatan' }];
   })();
 
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isHeroPaused, setIsHeroPaused] = useState(false);
 
-  // Mobile Touch Swipe Handling for Hero Slideshow
-  const [heroTouchStart, setHeroTouchStart] = useState<number | null>(null);
-  const [heroTouchEnd, setHeroTouchEnd] = useState<number | null>(null);
-
-  const onHeroTouchStart = (e: React.TouchEvent) => {
-    setHeroTouchEnd(null);
-    setHeroTouchStart(e.targetTouches[0].clientX);
-  };
-  const onHeroTouchMove = (e: React.TouchEvent) => {
-    setHeroTouchEnd(e.targetTouches[0].clientX);
-  };
-  const onHeroTouchEnd = () => {
-    if (heroTouchStart === null || heroTouchEnd === null) return;
-    const distance = heroTouchStart - heroTouchEnd;
-    if (distance > 45) {
+  // Auto-slide effect for hero (5.5s)
+  useEffect(() => {
+    if (activeBgSlides.length <= 1 || isHeroPaused) return;
+    const interval = setInterval(() => {
       setCurrentBgIndex((prev) => (prev + 1) % activeBgSlides.length);
-    } else if (distance < -45) {
-      setCurrentBgIndex((prev) => (prev - 1 + activeBgSlides.length) % activeBgSlides.length);
-    }
-  };
-
-  // Lightbox modal for viewing high-res project / activity photos
-  const [lightbox, setLightbox] = useState<{ open: boolean; image: string; caption: string }>({
-    open: false,
-    image: '',
-    caption: '',
-  });
-
-  // Video modal for YouTube activities documentation playback
-  const [videoModal, setVideoModal] = useState<{ open: boolean; url: string; title: string }>({
-    open: false,
-    url: '',
-    title: '',
-  });
+    }, 5500);
+    return () => clearInterval(interval);
+  }, [activeBgSlides.length, isHeroPaused]);
 
   // Project Media State (Foto Slideshow vs Video YouTube)
-  // Project Media State: Use ONLY user slides.
   const rawProjectSlides = Array.isArray(content.project?.slides) ? content.project.slides : [];
   const projectSlides = rawProjectSlides.filter((s) => s && s.image && s.image.trim() !== '');
+  const activeProjectSlides = projectSlides.length > 0
+    ? projectSlides
+    : [
+        { image: '/assets/project-workspace.jpg', caption: 'Kawasan Puri Gunung Langgar, Tanjung Bintang, Lampung Selatan' },
+        { image: '/assets/service-construction.jpg', caption: 'Pematangan dan Perataan Lahan Kawasan' },
+        { image: '/assets/service-residential.jpg', caption: 'Progres Pembangunan Unit Hunian Subsidi' },
+        { image: '/assets/hero-villa.jpg', caption: 'Visualisasi Standar Kualitas Hunian PT. TBK' },
+      ];
 
   const ytEmbedUrl = getYouTubeEmbedUrl(content.project?.videoUrl);
   const [projectMediaTab, setProjectMediaTab] = useState<'photo' | 'video'>(
     content.project?.mediaType === 'video' && ytEmbedUrl ? 'video' : 'photo'
   );
   const [currentProjectSlide, setCurrentProjectSlide] = useState(0);
-  const [isProjectPaused, setIsProjectPaused] = useState(false);
 
-  // Mobile Touch Swipe Handling for Project Slideshow
-  const [projectTouchStart, setProjectTouchStart] = useState<number | null>(null);
-  const [projectTouchEnd, setProjectTouchEnd] = useState<number | null>(null);
+  // Mobile Touch Swipe State for Project Image Gallery
+  const [galleryTouchStartX, setGalleryTouchStartX] = useState<number | null>(null);
 
-  const onProjectTouchStart = (e: React.TouchEvent) => {
-    setProjectTouchEnd(null);
-    setProjectTouchStart(e.targetTouches[0].clientX);
+  const handleGalleryTouchStart = (e: React.TouchEvent) => {
+    setGalleryTouchStartX(e.touches[0].clientX);
   };
-  const onProjectTouchMove = (e: React.TouchEvent) => {
-    setProjectTouchEnd(e.targetTouches[0].clientX);
-  };
-  const onProjectTouchEnd = () => {
-    if (projectTouchStart === null || projectTouchEnd === null) return;
-    const distance = projectTouchStart - projectTouchEnd;
-    if (distance > 45) {
-      setCurrentProjectSlide((prev) => (prev + 1) % projectSlides.length);
-    } else if (distance < -45) {
-      setCurrentProjectSlide((prev) => (prev - 1 + projectSlides.length) % projectSlides.length);
+
+  const handleGalleryTouchEnd = (e: React.TouchEvent) => {
+    if (galleryTouchStartX === null) return;
+    const touchDiff = galleryTouchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(touchDiff) > 40) {
+      if (touchDiff > 0) {
+        // Swipe left -> Next slide
+        setCurrentProjectSlide((prev) => (prev + 1) % activeProjectSlides.length);
+      } else {
+        // Swipe right -> Prev slide
+        setCurrentProjectSlide((prev) => (prev - 1 + activeProjectSlides.length) % activeProjectSlides.length);
+      }
     }
+    setGalleryTouchStartX(null);
   };
 
-  // Auto-slide effect for Project Showcase (every 5 seconds)
-  useEffect(() => {
-    if (projectSlides.length <= 1 || isProjectPaused || projectMediaTab === 'video') return;
-    const interval = setInterval(() => {
-      setCurrentProjectSlide((prev) => (prev + 1) % projectSlides.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [projectSlides.length, isProjectPaused, projectMediaTab]);
-
-  // Tab for Right Side of Project Section: 'specs' (Spesifikasi Unit) or 'kpr' (Kalkulator Simulasi KPR)
-  const [projectRightTab, setProjectRightTab] = useState<'specs' | 'kpr'>('specs');
+  // Lightbox Modal for Fullscreen Photo Viewing
+  const [lightbox, setLightbox] = useState<{ open: boolean; image: string; caption: string }>({
+    open: false,
+    image: '',
+    caption: '',
+  });
 
   // Interactive Mortgage / KPR Simulator State (Subsidized FLPP 5% Flat)
   const [kprHarga, setKprHarga] = useState(166000000);
@@ -175,35 +146,7 @@ export default function ClientLandingPage({ initialContent }: { initialContent: 
   );
   const kprPerHari = Math.round(kprAngsuran / 30);
 
-  // Scroll Reveal Observer: observe all .reveal-item
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
-    );
-
-    const elements = document.querySelectorAll('.reveal-item');
-    elements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Auto-slide effect every 4.5 seconds with pause on hover
-  useEffect(() => {
-    if (activeBgSlides.length <= 1 || isPaused) return;
-    const interval = setInterval(() => {
-      setCurrentBgIndex((prev) => (prev + 1) % activeBgSlides.length);
-    }, 4500);
-    return () => clearInterval(interval);
-  }, [activeBgSlides.length, isPaused]);
-
-  // Inquiry form state
+  // Inquiry Form State
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -213,7 +156,6 @@ export default function ClientLandingPage({ initialContent }: { initialContent: 
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState('');
-  const [submittedWaUrl, setSubmittedWaUrl] = useState('');
 
   const handleInquirySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -233,16 +175,15 @@ export default function ClientLandingPage({ initialContent }: { initialContent: 
 
     const waText = `Halo PT. Terbang Bersama Kawan, saya ingin berkonsultasi mengenai perumahan Puri Gunung Langgar.
 
-Berikut data diri saya:
-• Nama Lengkap: ${formData.name.trim()}
-• Nomor WhatsApp / HP: ${formData.phone.trim()}${formData.email.trim() ? `\n• Alamat Email: ${formData.email.trim()}` : ''}${formData.message.trim() ? `\n• Pesan / Keterangan: ${formData.message.trim()}` : ''}
+Data Konsumen:
+• Nama: ${formData.name.trim()}
+• WhatsApp: ${formData.phone.trim()}${formData.email.trim() ? `\n• Email: ${formData.email.trim()}` : ''}${formData.message.trim() ? `\n• Pertanyaan: ${formData.message.trim()}` : ''}
 
-Mohon informasi ketersediaan unit, simulasi KPR FLPP, serta jadwal survei lokasi perumahan. Terima kasih.`;
+Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal survei lokasi. Terima kasih.`;
 
     const directWaUrl = `https://wa.me/${formattedWaNumber}?text=${encodeURIComponent(waText)}`;
-    setSubmittedWaUrl(directWaUrl);
 
-    // Kirim data ke database API di background agar tercatat di panel admin
+    // Sync to backend DB
     try {
       fetch('/api/inquiries', {
         method: 'POST',
@@ -251,49 +192,41 @@ Mohon informasi ketersediaan unit, simulasi KPR FLPP, serta jadwal survei lokasi
       }).catch(() => {});
     } catch {}
 
-    // Buka WhatsApp langsung di tab baru
     window.open(directWaUrl, '_blank');
-
     setFormSuccess(true);
     setFormSubmitting(false);
   };
 
   const whatsappNumber = sanitize(content.contact?.whatsapp, '0812-7890-1234').replace(/[^0-9]/g, '');
-  const waUrl = whatsappNumber.startsWith('0') 
+  const waUrl = whatsappNumber.startsWith('0')
     ? `https://wa.me/62${whatsappNumber.slice(1)}`
     : `https://wa.me/${whatsappNumber}`;
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased selection:bg-amber-600 selection:text-white">
-      {/* Navbar Header (Fixed atas hero, transparan to dark frosted blur) */}
+    <div className="min-h-screen bg-[#F3EFE6] text-[#262722] font-sans antialiased selection:bg-[#C5A568] selection:text-[#262722]">
+      {/* Refined Fixed Header */}
       <Header content={content} />
 
-      {/* HERO SECTION - Full-Screen Architectural with Dark Contrast Overlay */}
-      <section
-        id="beranda"
-        className="relative w-full min-h-screen min-h-[100dvh] flex flex-col justify-end bg-[#14161A] overflow-hidden group select-none"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-        onTouchStart={onHeroTouchStart}
-        onTouchMove={onHeroTouchMove}
-        onTouchEnd={onHeroTouchEnd}
-        aria-label="Beranda PT. Terbang Bersama Kawan"
-      >
-        {/* Background Slideshow (or dark architectural backdrop when empty) */}
-        {activeBgSlides.length > 0 ? (
+      <main id="main-content">
+        {/* ========================================================= */}
+        {/* SECTION 1: HERO SECTION (Architectural Editorial Focus) */}
+        {/* ========================================================= */}
+        <section
+          id="beranda"
+          className="relative w-full min-h-[92vh] sm:min-h-screen flex flex-col justify-end bg-[#262722] overflow-hidden select-none"
+          onMouseEnter={() => setIsHeroPaused(true)}
+          onMouseLeave={() => setIsHeroPaused(false)}
+          aria-label="Beranda PT. Terbang Bersama Kawan"
+        >
+          {/* Architectural Background Photography */}
           <div className="absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
             {activeBgSlides.map((slide, idx) => {
               const isActive = idx === currentBgIndex;
-              const isPrev = (idx === currentBgIndex - 1) || (currentBgIndex === 0 && idx === activeBgSlides.length - 1);
               return (
                 <div
                   key={idx}
-                  className={`absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out transform ${
-                    isActive
-                      ? 'opacity-100 translate-x-0 scale-100 z-10'
-                      : isPrev
-                      ? 'opacity-0 -translate-x-12 scale-105 z-0 pointer-events-none'
-                      : 'opacity-0 translate-x-12 scale-105 z-0 pointer-events-none'
+                  className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-out ${
+                    isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
                   }`}
                   style={{
                     backgroundImage: `url(${slide.image})`,
@@ -302,1450 +235,1119 @@ Mohon informasi ketersediaan unit, simulasi KPR FLPP, serta jadwal survei lokasi
               );
             })}
           </div>
-        ) : (
-          <div className="absolute inset-0 z-0 overflow-hidden bg-gradient-to-br from-[#121418] via-[#0E1014] to-[#08090C]" aria-hidden="true">
-            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#C9A96A_1px,transparent_1px)] [background-size:28px_28px]" />
-          </div>
-        )}
 
-        {/* Contrast Overlay: linear-gradient(rgba(10,12,16,0.52), rgba(10,12,16,0.80)) */}
-        <div
-          className="absolute inset-0 z-[1]"
-          style={{
-            background:
-              'linear-gradient(to bottom, rgba(10,12,16,0.52) 0%, rgba(10,12,16,0.82) 100%)',
-          }}
-          aria-hidden="true"
-        />
+          {/* Directional Gradient Overlay: Darker behind text on left, revealing facade & stone textures on right */}
+          <div
+            className="absolute inset-0 z-[1] hidden sm:block pointer-events-none"
+            style={{
+              background:
+                'linear-gradient(to right, rgba(38,39,34,0.86) 0%, rgba(38,39,34,0.64) 36%, rgba(38,39,34,0.20) 68%, rgba(38,39,34,0.02) 100%)',
+            }}
+            aria-hidden="true"
+          />
+          {/* Mobile Directional Gradient: Bottom-up for text contrast */}
+          <div
+            className="absolute inset-0 z-[1] sm:hidden pointer-events-none"
+            style={{
+              background:
+                'linear-gradient(to top, rgba(38,39,34,0.92) 0%, rgba(38,39,34,0.62) 50%, rgba(38,39,34,0.12) 100%)',
+            }}
+            aria-hidden="true"
+          />
 
-        {/* Previous / Next Slide Arrows (Desktop only - Mobile uses touch swipe) */}
-        {activeBgSlides.length > 1 && (
-          <>
-            <button
-              type="button"
-              onClick={() => setCurrentBgIndex((prev) => (prev - 1 + activeBgSlides.length) % activeBgSlides.length)}
-              className="hidden sm:flex absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/45 hover:bg-[#C9A96A] text-white hover:text-[#0E1014] border border-white/20 items-center justify-center transition-all duration-200 backdrop-blur-md opacity-75 hover:opacity-100 focus:opacity-100 focus:outline-none"
-              aria-label="Slide sebelumnya"
-            >
-              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setCurrentBgIndex((prev) => (prev + 1) % activeBgSlides.length)}
-              className="hidden sm:flex absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/45 hover:bg-[#C9A96A] text-white hover:text-[#0E1014] border border-white/20 items-center justify-center transition-all duration-200 backdrop-blur-md opacity-75 hover:opacity-100 focus:opacity-100 focus:outline-none"
-              aria-label="Slide berikutnya"
-            >
-              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
-          </>
-        )}
-
-        {/* Slide Indicators (Kanan Bawah Hero, Responsive all device) */}
-        {activeBgSlides.length > 1 && (
-          <div className="absolute bottom-4 sm:bottom-6 right-5 sm:right-6 z-20 flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 sm:px-3 py-1 rounded-full border border-white/15 shadow-lg">
-            {activeBgSlides.map((_, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => setCurrentBgIndex(idx)}
-                className={`transition-all rounded-full ${
-                  idx === currentBgIndex
-                    ? 'w-5 sm:w-6 h-1.5 bg-[#C9A96A]'
-                    : 'w-1.5 h-1.5 bg-white/40 hover:bg-white'
-                }`}
-                aria-label={`Lihat slide ke-${idx + 1}`}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Animated Slide Progress Bar along bottom */}
-        {activeBgSlides.length > 1 && (
-          <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/10 z-20 overflow-hidden" aria-hidden="true">
-            <div
-              key={currentBgIndex}
-              className="h-full bg-gradient-to-r from-[#C9A96A] via-amber-400 to-[#C9A96A]"
-              style={{
-                animation: isPaused ? 'none' : 'slideTimerBar 4.5s linear forwards',
-              }}
-            />
-          </div>
-        )}
-
-        {/* Hero Content placed at bottom-left */}
-        <div className="relative z-10 w-full max-w-[1120px] mx-auto px-5 sm:px-6 min-[900px]:px-8 pb-9 sm:pb-12 min-[900px]:pb-[68px] pt-10 sm:pt-20">
-          <div className="max-w-[620px] text-left animate-fade-in">
-            {/* Live Project Status Badge */}
-            <div className="inline-flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 sm:px-3.5 py-1.5 rounded-full border border-white/15 text-[11px] sm:text-xs text-[#F4EFE6] shadow-md mb-2.5 sm:mb-4">
-              <span className="relative flex h-2 w-2 shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-              </span>
-              <span className="font-bold text-emerald-400 uppercase tracking-wide">{content.hero?.activeBadgeLabel || 'PROYEK AKTIF'}</span>
-              <span className="text-white/40">&bull;</span>
-              <span className="text-[#F4EFE6]/90 truncate">{content.hero?.activeBadgeProject || 'Puri Gunung Langgar'}</span>
-            </div>
-
-            {/* Judul: Font serif elegan Playfair Display, clamp responsif all device */}
-            <h1 className="font-serif font-semibold text-[26px] sm:text-[38px] min-[900px]:text-[52px] leading-[1.18] sm:leading-[1.15] tracking-[-0.01em] max-w-[18ch] text-left [text-wrap:balance]">
-              <span className="block text-[#F4EFE6]">{content.hero?.headlineTop || content.hero?.heading || 'Hunian bersubsidi yang layak,'}</span>
-              <span className="block text-[#C9A96A]">{content.hero?.headlineBottom || 'dibangun dari Lampung.'}</span>
-            </h1>
-
-            {/* Paragraf: font sans (Plus Jakarta Sans) responsif */}
-            <p className="font-sans text-[13px] sm:text-[15px] min-[900px]:text-[16px] leading-[1.55] sm:leading-[1.6] text-[#F4EFE6]/85 max-w-[54ch] mt-2.5 sm:mt-4 mb-4 sm:mb-7">
-              {content.hero?.bodyText || content.hero?.subheading || 'PT. Terbang Bersama Kawan adalah pengembang perumahan di Bandar Lampung. Saat ini kami sedang membangun Puri Gunung Langgar di Lampung Selatan.'}
-            </p>
-
-            {/* Dua Tombol: Side-by-side rapi di mobile & desktop tanpa terpotong */}
-            <div className="flex flex-row items-center gap-2.5 sm:gap-3.5">
-              {/* Tombol 1: Ke Halaman Proyek */}
-              <Link
-                href="/proyek"
-                prefetch={false}
-                className="flex-1 sm:flex-initial h-[44px] sm:h-[46px] px-4 sm:px-6 rounded-xl border border-[#C9A96A] bg-[#C9A96A] text-[#0E1014] hover:bg-amber-400 text-[12.5px] sm:text-[14px] font-bold flex items-center justify-center text-center shadow-lg shadow-amber-900/20 transition-all duration-200 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#C9A96A]"
-              >
-                Lihat Proyek
-              </Link>
-
-              {/* Tombol 2: Ke Halaman Kontak */}
-              <Link
-                href="/kontak"
-                prefetch={false}
-                className="flex-1 sm:flex-initial h-[44px] sm:h-[46px] px-4 sm:px-6 rounded-xl border border-white/30 bg-black/40 backdrop-blur-md hover:border-white text-white text-[12.5px] sm:text-[14px] font-semibold flex items-center justify-center text-center transition-all duration-200 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#C9A96A]"
-              >
-                Hubungi Kami
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* QUICK CREDENTIALS & STATS BAR (Grid 2x2 di mobile agar rapi & ringkas) */}
-      <div className="bg-white border-b border-slate-200 py-4 sm:py-8 shadow-sm">
-        <div className="container-std">
-          <div className="grid grid-cols-2 gap-2.5 sm:gap-6 lg:grid-cols-4">
-            <Link href="/kontak" prefetch={false} className="p-3 sm:p-3 rounded-xl bg-slate-50/70 hover:bg-amber-50/50 border border-slate-200/80 hover:border-amber-300 flex items-center gap-2.5 sm:gap-3.5 transition-all group">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 shrink-0 group-hover:scale-105 transition-transform">
-                <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[10px] sm:text-xs uppercase font-semibold text-slate-500 tracking-wider truncate">Domisili Kantor</div>
-                <div className="text-[13px] sm:text-lg font-bold text-slate-900 group-hover:text-amber-700 transition-colors truncate">Bandar Lampung</div>
-              </div>
-            </Link>
-
-            <Link href="/legalitas" prefetch={false} className="p-3 sm:p-3 rounded-xl bg-slate-50/70 hover:bg-emerald-50/50 border border-slate-200/80 hover:border-emerald-300 flex items-center gap-2.5 sm:gap-3.5 transition-all group">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 shrink-0 group-hover:scale-105 transition-transform">
-                <FileCheck2 className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[10px] sm:text-xs uppercase font-semibold text-slate-500 tracking-wider truncate">Legalitas Sah</div>
-                <div className="text-[13px] sm:text-lg font-bold text-slate-900 group-hover:text-emerald-700 transition-colors truncate">SK Tahun 2021</div>
-              </div>
-            </Link>
-
-            <Link href="/proyek" prefetch={false} className="p-3 sm:p-3 rounded-xl bg-slate-50/70 hover:bg-amber-50/50 border border-slate-200/80 hover:border-amber-300 flex items-center gap-2.5 sm:gap-3.5 transition-all group">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 shrink-0 group-hover:scale-105 transition-transform">
-                <Home className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[10px] sm:text-xs uppercase font-semibold text-slate-500 tracking-wider truncate">Proyek Unggulan</div>
-                <div className="text-[13px] sm:text-lg font-bold text-slate-900 group-hover:text-amber-700 transition-colors truncate">Puri Gg. Langgar</div>
-              </div>
-            </Link>
-
-            <Link href="/tentang" prefetch={false} className="p-3 sm:p-3 rounded-xl bg-slate-50/70 hover:bg-blue-50/50 border border-slate-200/80 hover:border-blue-300 flex items-center gap-2.5 sm:gap-3.5 transition-all group">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-700 shrink-0 group-hover:scale-105 transition-transform">
-                <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[10px] sm:text-xs uppercase font-semibold text-slate-500 tracking-wider truncate">Kategori Unit</div>
-                <div className="text-[13px] sm:text-lg font-bold text-slate-900 group-hover:text-blue-700 transition-colors truncate">Rumah Subsidi</div>
-              </div>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* SECTION: TENTANG KAMI */}
-      <section id="tentang" className="py-20 sm:py-24 bg-white overflow-hidden">
-        <div className="container-std">
-          <div className="max-w-3xl mb-14 reveal-item">
-            <span className="text-xs font-bold uppercase tracking-widest text-amber-700 mb-2 block">
-              {content.about.badge || 'TENTANG PERUSAHAAN'}
-            </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 mb-4">
-              {content.about.title || 'Membangun dengan Komitmen & Legalitas Nyata'}
-            </h2>
-            <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-              {content.about.description}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            {/* Left Narrative & Key Commitments */}
-            <div className="lg:col-span-7 space-y-6 flex flex-col justify-between reveal-item reveal-delay-1">
-              <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200 space-y-5 hover:border-amber-400/40 hover:shadow-md transition-all duration-300">
-                <h3 className="text-xl font-bold text-slate-900">
-                  {content.about?.commitmentTitle || 'Komitmen Utama Perseroan'}
-                </h3>
-                <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-                  {content.about?.commitmentBody || 'Sebagai pengembang properti resmi di Provinsi Lampung, PT. Terbang Bersama Kawan mengutamakan kepastian hukum, keterbukaan informasi, dan mutu konstruksi terbaik agar masyarakat berpenghasilan rendah hingga menengah dapat memiliki rumah impian dengan rasa tenang.'}
-                </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                  {(content.about?.commitmentPoints || [
-                    { title: 'Legalitas 100% Sah', subtitle: 'Terdaftar Kemenkumham & Notaris resmi' },
-                    { title: 'Kualitas Konstruksi', subtitle: 'Standar mutu teknis perumahan layak' },
-                    { title: 'Akses Strategis', subtitle: 'Dekat fasilitas umum & transportasi' },
-                    { title: 'Kemitraan Perbankan', subtitle: 'Kemudahan fasilitas KPR bersubsidi' },
-                  ]).map((point, i) => (
-                    <div key={i} className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                      <div>
-                        <div className="font-semibold text-sm text-slate-900">{point.title}</div>
-                        <div className="text-xs text-slate-500">{point.subtitle}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+          {/* Hero Content Container */}
+          <div className="relative z-10 w-full container-editorial pb-10 sm:pb-14 lg:pb-16 pt-24 sm:pt-32">
+            <div className="max-w-[540px] text-left">
+              {/* Compact Project Status Label */}
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-[3px] bg-black/40 border border-white/15 text-[#C5A568] text-[10.5px] sm:text-[11px] font-semibold tracking-[0.14em] uppercase mb-3 sm:mb-3.5 backdrop-blur-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                <span>Puri Gunung Langgar &bull; Proyek Berjalan</span>
               </div>
 
-              <div className="p-6 rounded-2xl bg-amber-50/70 border border-amber-200 flex items-center justify-between gap-4 hover:border-amber-400 hover:shadow-md transition-all">
-                <div>
-                  <div className="text-xs font-bold text-amber-800 uppercase tracking-wider mb-1">
-                    Visi Perseroan
-                  </div>
-                  <div className="text-sm sm:text-base font-semibold text-amber-950 italic">
-                    &ldquo;{content.about.visionText || 'Menjadi perusahaan properti yang berkualitas dan terpercaya.'}&rdquo;
-                  </div>
-                </div>
-                <Building2 className="w-8 h-8 text-amber-600 shrink-0" />
-              </div>
-            </div>
+              {/* Headline: Refined Editorial Serif (Reduced by ~12% on desktop, intentional line breaks) */}
+              <h1 className="font-serif font-normal text-[26px] sm:text-[36px] lg:text-[45px] leading-[1.18] sm:leading-[1.2] tracking-[-0.01em] text-[#F3EFE6] max-w-[530px]">
+                <span className="block">Hunian bersubsidi yang layak,</span>
+                <span className="block text-[#C5A568]">dibangun dari Lampung.</span>
+              </h1>
 
-            {/* Right Misi Card */}
-            <div className="lg:col-span-5 p-8 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between reveal-item reveal-delay-2 hover:border-amber-400/40 hover:shadow-md transition-all duration-300">
-              <div>
-                <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 mb-5">
-                  <Award className="w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-4">
-                  {content.about.missionTitle || 'Misi Perusahaan'}
-                </h3>
-                <ul className="space-y-4">
-                  {content.about.missions?.map((misi, i) => (
-                    <li key={i} className="flex items-start gap-3.5 text-slate-700 text-sm sm:text-[14.5px] leading-relaxed">
-                      <span className="w-6 h-6 rounded-full bg-slate-100 text-amber-800 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 border border-slate-200">
-                        {i + 1}
-                      </span>
-                      <span>{misi}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {/* Supporting Copy: Clean Sans-Serif, controlled length */}
+              <p className="font-sans text-[13.5px] sm:text-[15px] leading-[1.62] text-[#F3EFE6]/85 max-w-[480px] mt-3 sm:mt-3.5 mb-6 sm:mb-7">
+                PT. Terbang Bersama Kawan adalah pengembang perumahan di Bandar Lampung. Saat ini kami sedang membangun Puri Gunung Langgar di Lampung Selatan.
+              </p>
 
-              <div className="mt-8 pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-500">
-                <span>Pilar orientasi dalam setiap perwujudan hunian bagi keluarga Indonesia.</span>
+              {/* Refined CTA Button System */}
+              <div className="flex flex-wrap items-center gap-3 sm:gap-3.5">
                 <Link
-                  href="/tentang"
+                  href="/proyek"
                   prefetch={false}
-                  className="inline-flex items-center gap-1.5 font-bold text-amber-800 hover:text-amber-900 group shrink-0"
+                  className="group h-[42px] sm:h-[44px] px-5 sm:px-6 rounded-[12px] bg-[#C5A568] hover:bg-[#B69455] text-[#262722] text-[12px] sm:text-[12.5px] font-semibold tracking-wider uppercase transition-all duration-200 hover:-translate-y-[1.5px] active:translate-y-0 active:scale-[0.99] shadow-sm hover:shadow flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
-                  <span>Profil Lengkap</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  <span>Lihat Proyek</span>
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+                </Link>
+
+                <Link
+                  href="/kontak"
+                  prefetch={false}
+                  className="h-[42px] sm:h-[44px] px-5 sm:px-6 rounded-[12px] border border-white/40 hover:border-[#C5A568] hover:bg-[#C5A568]/15 text-[#F3EFE6] text-[12px] sm:text-[12.5px] font-semibold tracking-wider uppercase transition-all duration-200 hover:-translate-y-[1.5px] active:translate-y-0 active:scale-[0.99] flex items-center justify-center whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                >
+                  Hubungi Kami
                 </Link>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* SECTION: PROYEK RESMI PURI GUNUNG LANGGAR */}
-      <section id="proyek" className="py-20 sm:py-24 bg-slate-100 border-t border-b border-slate-200 overflow-hidden">
-        <div className="container-std">
-          <div className="max-w-3xl mb-14 reveal-item">
-            <span className="text-xs font-bold uppercase tracking-widest text-amber-700 mb-2 block">
-              {content.project.badge || 'PROYEK RESMI PERSEROAN'}
-            </span>
-            <div className="flex flex-wrap items-center gap-3 mb-3">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900">
-                {content.project.name || 'Puri Gunung Langgar'}
-              </h2>
-              <span className="px-3 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-800 text-xs font-bold">
-                {content.project.type || 'Perumahan Subsidi'}
+            {/* Subtle Architectural Slide Counter (Bottom Right) */}
+            {activeBgSlides.length > 1 && (
+              <div className="hidden sm:flex absolute right-6 lg:right-12 bottom-12 lg:bottom-16 items-center gap-3 text-xs text-[#F3EFE6]/70">
+                <span className="font-mono text-[#C5A568] tracking-widest">
+                  0{currentBgIndex + 1} / 0{activeBgSlides.length}
+                </span>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setCurrentBgIndex((prev) => (prev - 1 + activeBgSlides.length) % activeBgSlides.length)}
+                    className="w-8 h-8 rounded-[3px] border border-white/20 hover:border-white text-white flex items-center justify-center transition-colors"
+                    aria-label="Foto sebelumnya"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCurrentBgIndex((prev) => (prev + 1) % activeBgSlides.length)}
+                    className="w-8 h-8 rounded-[3px] border border-white/20 hover:border-white text-white flex items-center justify-center transition-colors"
+                    aria-label="Foto berikutnya"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* ========================================================= */}
+        {/* SECTION 2: DEDICATED PROJECT SECTION (Immediately after Hero!) */}
+        {/* Background: Warm Ivory #F3EFE6 */}
+        {/* ========================================================= */}
+        <section id="proyek" className="py-20 sm:py-28 bg-[#F3EFE6] border-b border-[#DDD8CE]">
+          <div className="container-editorial">
+            {/* Section Header */}
+            <div className="max-w-2xl mb-12 sm:mb-16">
+              <span className="text-xs uppercase tracking-[0.14em] text-[#C5A568] font-semibold block mb-2">
+                Proyek Unggulan
               </span>
+              <h2 className="font-serif text-3xl sm:text-4xl text-[#262722] leading-tight">
+                Puri Gunung Langgar
+              </h2>
+              <p className="text-[15px] sm:text-[16px] text-[#77766F] mt-3 leading-relaxed">
+                Kawasan perumahan subsidi terencana di Tanjung Bintang, Lampung Selatan. Menghadirkan rumah tapak berkualitas dengan kepastian legalitas dan lingkungan yang asri.
+              </p>
             </div>
-            <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-              {content.project.description}
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            {/* Visual Showcase Card: Dynamic Video Embed OR Automated Slideshow */}
-            <div
-              className="lg:col-span-7 rounded-2xl overflow-hidden border border-slate-300 shadow-md relative min-h-[380px] sm:min-h-[460px] bg-slate-900 flex flex-col justify-between group"
-              onMouseEnter={() => setIsProjectPaused(true)}
-              onMouseLeave={() => setIsProjectPaused(false)}
-            >
-              {/* Media Switcher Tab (If YouTube video is set, lets visitor switch between Video & Photos) */}
-              {ytEmbedUrl && (
-                <div className="absolute top-4 left-4 z-30 flex items-center gap-1.5 bg-black/70 backdrop-blur-md p-1 rounded-xl border border-white/15 text-xs shadow-lg">
-                  <button
-                    type="button"
-                    onClick={() => setProjectMediaTab('photo')}
-                    className={`px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition-all ${
-                      projectMediaTab === 'photo'
-                        ? 'bg-amber-500 text-slate-950 shadow'
-                        : 'text-white/80 hover:text-white hover:bg-white/10'
-                    }`}
-                  >
-                    <ImageIcon className="w-3.5 h-3.5" />
-                    <span>Galeri Foto ({projectSlides.length})</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setProjectMediaTab('video')}
-                    className={`px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition-all ${
-                      projectMediaTab === 'video'
-                        ? 'bg-amber-500 text-slate-950 shadow'
-                        : 'text-white/80 hover:text-white hover:bg-white/10'
-                    }`}
-                  >
-                    <Play className="w-3.5 h-3.5 fill-current" />
-                    <span>Video YouTube</span>
-                  </button>
-                </div>
-              )}
-
-              {/* VIDEO MODE */}
-              {projectMediaTab === 'video' && ytEmbedUrl ? (
-                <div className="relative w-full h-full min-h-[360px] sm:min-h-[440px] flex flex-col justify-between bg-black">
-                  <div className="relative w-full aspect-video sm:aspect-[16/10] h-full overflow-hidden">
-                    <iframe
-                      src={ytEmbedUrl}
-                      title={`Video Resmi ${content.project.name}`}
-                      className="w-full h-full border-0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowFullScreen
-                    />
-                  </div>
-                  {/* Bottom Video Location Info */}
-                  <div className="p-4 sm:p-5 bg-slate-950 border-t border-white/10 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold">
-                      <MapPin className="w-4 h-4 text-amber-400 shrink-0" />
-                      <span>{content.project.location}, {content.project.district}</span>
-                    </div>
-                    <span className="text-[11px] text-amber-400 font-mono uppercase tracking-wider">
-                      Dokumentasi Video Resmi
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                /* PHOTO SLIDESHOW MODE (OTOMATIS SLIDE SHOW) */
+            {/* Asymmetrical Editorial Showcase: Visual Photo Left, Spec Sheet Right */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+              {/* Left Column: Authentic Architectural Media Viewer */}
+              <div className="lg:col-span-7 space-y-3">
                 <div
-                  className="relative w-full h-full min-h-[360px] sm:min-h-[440px] cursor-pointer flex flex-col justify-end overflow-hidden"
-                  onTouchStart={onProjectTouchStart}
-                  onTouchMove={onProjectTouchMove}
-                  onTouchEnd={onProjectTouchEnd}
-                  onClick={() =>
-                    setLightbox({
-                      open: true,
-                      image: projectSlides[currentProjectSlide]?.image || '/assets/project-workspace.jpg',
-                      caption: `${content.project.name} - ${projectSlides[currentProjectSlide]?.caption || 'Dokumentasi Proyek'}`,
-                    })
-                  }
+                  className="relative aspect-[4/3] sm:aspect-[16/10] w-full rounded-[10px] overflow-hidden bg-[#262722] border border-[#DDD8CE] shadow-sm select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A568]"
+                  tabIndex={0}
+                  role="region"
+                  aria-label="Galeri foto dokumentasi proyek Puri Gunung Langgar. Gunakan tombol panah kiri dan kanan pada keyboard untuk berganti foto."
+                  onTouchStart={handleGalleryTouchStart}
+                  onTouchEnd={handleGalleryTouchEnd}
+                  onKeyDown={(e) => {
+                    if (e.key === 'ArrowLeft') {
+                      e.preventDefault();
+                      setCurrentProjectSlide((prev) => (prev - 1 + activeProjectSlides.length) % activeProjectSlides.length);
+                    } else if (e.key === 'ArrowRight') {
+                      e.preventDefault();
+                      setCurrentProjectSlide((prev) => (prev + 1) % activeProjectSlides.length);
+                    }
+                  }}
                 >
-                  {/* Slide Background Images with Smooth Crossfade & Zoom */}
-                  <div className="absolute inset-0 z-0 overflow-hidden bg-slate-950">
-                    {projectSlides.length > 0 ? (
-                      projectSlides.map((slide, idx) => {
-                        const isActive = idx === currentProjectSlide;
-                        return (
-                          <div
-                            key={idx}
-                            className={`absolute inset-0 bg-cover bg-center transition-all duration-700 ease-in-out ${
-                              isActive
-                                ? 'opacity-100 scale-100 z-10'
-                                : 'opacity-0 scale-105 z-0 pointer-events-none'
-                            }`}
-                            style={{
-                              backgroundImage: `url(${slide.image})`,
-                            }}
-                          />
-                        );
-                      })
-                    ) : (
-                      <div className="absolute inset-0 bg-gradient-to-br from-[#16191E] via-[#0E1013] to-black flex items-center justify-center p-6 text-center">
-                        <div className="text-white/40 text-xs flex items-center gap-2">
-                          <ImageIcon className="w-4 h-4 text-amber-500/50" />
-                          <span>Belum ada foto galeri proyek yang diunggah</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Gradient Contrast Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-black/20 z-10" />
-
-                  {/* Top Right: Lightbox Trigger Hint */}
-                  <div className="absolute top-4 right-4 z-20 bg-black/60 backdrop-blur-md px-2.5 sm:px-3 py-1.5 rounded-lg text-white text-[11px] sm:text-xs font-semibold flex items-center gap-1.5 border border-white/20 opacity-80 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                    <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Klik untuk Perbesar</span>
-                  </div>
-
-                  {/* Left & Right Chevron Controls (Touch & Desktop) */}
-                  {projectSlides.length > 1 && (
-                    <>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setCurrentProjectSlide((prev) => (prev - 1 + projectSlides.length) % projectSlides.length);
-                        }}
-                        className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 z-30 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/60 hover:bg-amber-500 hover:text-black text-white border border-white/20 flex items-center justify-center transition-all duration-200 backdrop-blur-md opacity-85 sm:opacity-0 sm:group-hover:opacity-100"
-                        aria-label="Slide foto proyek sebelumnya"
-                      >
-                        <ChevronLeft className="w-5 h-5" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setCurrentProjectSlide((prev) => (prev + 1) % projectSlides.length);
-                        }}
-                        className="absolute right-2.5 sm:right-3 top-1/2 -translate-y-1/2 z-30 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/60 hover:bg-amber-500 hover:text-black text-white border border-white/20 flex items-center justify-center transition-all duration-200 backdrop-blur-md opacity-85 sm:opacity-0 sm:group-hover:opacity-100"
-                        aria-label="Slide foto proyek berikutnya"
-                      >
-                        <ChevronRight className="w-5 h-5" />
-                      </button>
-                    </>
-                  )}
-
-                  {/* Bottom Content Bar: Location & Caption & Slide Dots */}
-                  <div className="relative z-20 p-5 sm:p-6 text-white space-y-2.5">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-amber-500 text-slate-950 text-xs font-bold shadow">
-                        <MapPin className="w-3.5 h-3.5" />
-                        <span>Lokasi Resmi</span>
-                      </div>
-                      {projectSlides.length > 1 && (
-                        <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 text-[11px] font-mono text-amber-300">
-                          <span>{currentProjectSlide + 1}</span>
-                          <span className="text-white/40">/</span>
-                          <span>{projectSlides.length}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="font-bold text-base sm:text-lg text-white">
-                      {content.project.location}, {content.project.district}, {content.project.province}
-                    </div>
-
-                    <p className="text-xs sm:text-sm text-slate-200 leading-relaxed max-w-xl line-clamp-2">
-                      {projectSlides[currentProjectSlide]?.caption || 'Akses strategis, suasana lingkungan asri, dan pengembangan kawasan terencana.'}
-                    </p>
-
-                    {/* Slide Dots */}
-                    {projectSlides.length > 1 && (
-                      <div className="flex items-center gap-1.5 pt-1" onClick={(e) => e.stopPropagation()}>
-                        {projectSlides.map((_, idx) => (
-                          <button
-                            key={idx}
-                            type="button"
-                            onClick={() => setCurrentProjectSlide(idx)}
-                            className={`transition-all rounded-full ${
-                              idx === currentProjectSlide
-                                ? 'w-6 h-1.5 bg-amber-400'
-                                : 'w-1.5 h-1.5 bg-white/40 hover:bg-white'
-                            }`}
-                            aria-label={`Lihat slide foto proyek ke-${idx + 1}`}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Animated Progress Timer Bar */}
-                  {projectSlides.length > 1 && (
-                    <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/15 z-30 overflow-hidden" aria-hidden="true">
+                  {/* Layered Crossfade & Subtle Scale (1.025 to 1.0) Transitions */}
+                  {activeProjectSlides.map((slide, sIdx) => {
+                    const isActive = sIdx === currentProjectSlide;
+                    return (
                       <div
-                        key={currentProjectSlide}
-                        className="h-full bg-gradient-to-r from-amber-500 via-amber-300 to-amber-500"
-                        style={{
-                          animation: isProjectPaused ? 'none' : 'slideTimerBar 5s linear forwards',
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Right Panel: Tab Spesifikasi Unit & Kalkulator KPR Interaktif */}
-            <div className="lg:col-span-5 p-6 sm:p-7 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
-              <div>
-                {/* Tab Header: Specs vs KPR Calculator */}
-                <div className="flex items-center gap-2 p-1 bg-slate-100 rounded-xl mb-5">
-                  <button
-                    type="button"
-                    onClick={() => setProjectRightTab('specs')}
-                    className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
-                      projectRightTab === 'specs'
-                        ? 'bg-white text-slate-900 shadow-sm'
-                        : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    <Home className="w-3.5 h-3.5 text-amber-600" />
-                    <span>Spesifikasi Unit</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setProjectRightTab('kpr')}
-                    className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
-                      projectRightTab === 'kpr'
-                        ? 'bg-white text-slate-900 shadow-sm'
-                        : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    <Calculator className="w-3.5 h-3.5 text-emerald-600" />
-                    <span className="flex items-center gap-1">
-                      <span>Simulasi KPR</span>
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    </span>
-                  </button>
-                </div>
-
-                {/* TAB 1: SPESIFIKASI UNIT */}
-                {projectRightTab === 'specs' ? (
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                        <Home className="w-4 h-4 text-amber-600" />
-                        <span>Rincian Teknis Unit Hunian</span>
-                      </h3>
-                      <span className="text-[11px] text-amber-800 font-semibold bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                        Standar FLPP
-                      </span>
-                    </div>
-
-                    <div className="space-y-2">
-                      {content.project.specs?.map((spec, i) => {
-                        const cleanVal = sanitize(spec.value, 'Tersedia');
-                        return (
-                          <div
-                            key={i}
-                            className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs sm:text-[13px] hover:border-amber-300 transition-colors"
-                          >
-                            <span className="text-slate-500 font-medium">{spec.label}</span>
-                            <span className="font-bold text-slate-900 text-right">{cleanVal}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ) : (
-                  /* TAB 2: KALKULATOR KPR SUBSIDI INTERAKTIF */
-                  <div className="space-y-4 animate-fade-in">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-base font-bold text-slate-900 flex items-center gap-1.5">
-                          <Calculator className="w-4 h-4 text-emerald-600" />
-                          <span>Simulasi Angsuran KPR</span>
-                        </h3>
-                        <p className="text-[11px] text-slate-500">
-                          Skema Subsidi Pemerintah (Bunga 5% Flat)
-                        </p>
-                      </div>
-                      <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                        FLPP 5%
-                      </span>
-                    </div>
-
-                    {/* Harga & DP Sliders */}
-                    <div className="space-y-3 pt-1">
-                      <div>
-                        <div className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
-                          <span>Plafon / Harga Unit</span>
-                          <span className="text-amber-700 font-bold font-mono">
-                            {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprHarga)}
-                          </span>
-                        </div>
-                        <input
-                          type="range"
-                          min={140000000}
-                          max={200000000}
-                          step={1000000}
-                          value={kprHarga}
-                          onChange={(e) => setKprHarga(Number(e.target.value))}
-                          className="w-full accent-amber-600 cursor-pointer h-2 bg-slate-200 rounded-lg"
-                        />
-                      </div>
-
-                      <div>
-                        <div className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
-                          <span>Uang Muka (DP)</span>
-                          <span className="text-emerald-700 font-bold font-mono">
-                            {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprDp)}
-                          </span>
-                        </div>
-                        <input
-                          type="range"
-                          min={1000000}
-                          max={20000000}
-                          step={500000}
-                          value={kprDp}
-                          onChange={(e) => setKprDp(Number(e.target.value))}
-                          className="w-full accent-emerald-600 cursor-pointer h-2 bg-slate-200 rounded-lg"
-                        />
-                      </div>
-
-                      {/* Tenor Selection */}
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                          Jangka Waktu Pinjaman (Tenor)
-                        </label>
-                        <div className="grid grid-cols-3 gap-2">
-                          {[10, 15, 20].map((yr) => (
-                            <button
-                              key={yr}
-                              type="button"
-                              onClick={() => setKprTenor(yr)}
-                              className={`py-1.5 px-2 rounded-xl text-xs font-bold transition-all ${
-                                kprTenor === yr
-                                  ? 'bg-slate-900 text-white shadow'
-                                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                              }`}
-                            >
-                              {yr} Tahun
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Result Box */}
-                      <div className="p-4 rounded-xl bg-gradient-to-br from-amber-50 to-emerald-50 border border-amber-200 text-center space-y-1">
-                        <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                          Estimasi Angsuran Bulanan
-                        </div>
-                        <div className="text-2xl font-extrabold text-slate-900 font-mono tracking-tight text-emerald-700">
-                          {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprAngsuran)}
-                          <span className="text-xs font-semibold text-slate-500"> /bulan</span>
-                        </div>
-                        <div className="text-[11px] text-slate-600">
-                          Hanya sekitar <strong className="text-slate-900 font-bold font-mono">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprPerHari)}/hari</strong> (Sisa pokok: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprPokok)})
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Action Buttons */}
-              <div className="pt-5 border-t border-slate-100 space-y-2">
-                {projectRightTab === 'kpr' ? (
-                  <>
-                    <a
-                      href={`${waUrl}?text=${encodeURIComponent(
-                        `Halo PT. Terbang Bersama Kawan, saya tertarik dengan perumahan Puri Gunung Langgar.\n\nBerikut hasil simulasi KPR saya:\n- Plafon: ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprHarga)}\n- DP: ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprDp)}\n- Tenor: ${kprTenor} Tahun\n- Estimasi Angsuran: ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprAngsuran)} / bulan\n\nMohon info ketersediaan unit dan persyaratan berkas KPR bersubsidi.`
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-[0.98]"
-                    >
-                      <span>Konsultasikan Angsuran Ini via WA</span>
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                    <Link
-                      href="/simulasi-kpr"
-                      prefetch={false}
-                      className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-[#C9A96A] hover:text-[#0E1014] text-white font-bold text-xs transition-colors"
-                    >
-                      <Calculator className="w-3.5 h-3.5" />
-                      <span>Buka Halaman Simulasi KPR Lengkap</span>
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    <Link
-                      href="/proyek"
-                      prefetch={false}
-                      className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs sm:text-sm shadow-sm transition-all active:scale-[0.98]"
-                    >
-                      <span>Lihat Rincian & Denah Proyek Lengkap</span>
-                      <ChevronRight className="w-4 h-4" />
-                    </Link>
-                    <Link
-                      href="/kontak"
-                      prefetch={false}
-                      className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs transition-colors"
-                    >
-                      <span>Jadwalkan Kunjungan Lokasi</span>
-                    </Link>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION: DOKUMENTASI PEKERJAAN LAPANGAN */}
-      <section id="kegiatan" className="py-20 sm:py-24 bg-white overflow-hidden">
-        <div className="container-std">
-          <div className="max-w-3xl mb-14 reveal-item">
-            <span className="text-xs font-bold uppercase tracking-widest text-amber-700 mb-2 block">
-              {content.activities.badge || 'DOKUMENTASI PEKERJAAN'}
-            </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 mb-4">
-              {content.activities.title || 'Dokumentasi Pekerjaan Lapangan'}
-            </h2>
-            <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-              {content.activities.subtitle}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {content.activities.items?.map((item, idx) => {
-              const delayClass = idx % 3 === 1 ? 'reveal-delay-1' : idx % 3 === 2 ? 'reveal-delay-2' : '';
-              return (
-                <div
-                  key={idx}
-                  className={`rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm hover:shadow-xl hover:border-amber-400/40 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between reveal-item ${delayClass} group`}
-                >
-                  <div>
-                    {item.image && item.image.trim() !== '' ? (
-                      <div
+                        key={sIdx}
+                        className={`absolute inset-0 transition-all duration-500 ease-out cursor-pointer ${
+                          isActive
+                            ? 'opacity-100 scale-100 z-10 pointer-events-auto'
+                            : 'opacity-0 scale-[1.025] z-0 pointer-events-none'
+                        }`}
                         onClick={() =>
                           setLightbox({
                             open: true,
-                            image: item.image!,
-                            caption: `${item.title} (${item.tag || `Tahap 0${idx + 1}`}) - Puri Gunung Langgar`,
+                            image: slide.image,
+                            caption: `${content.project.name} - ${slide.caption || 'Dokumentasi Proyek'}`,
                           })
                         }
-                        className="relative h-52 sm:h-56 overflow-hidden bg-slate-100 cursor-pointer"
+                        aria-hidden={!isActive}
                       >
                         <img
-                          src={item.image}
-                          alt={item.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          src={slide.image}
+                          alt={slide.caption || 'Puri Gunung Langgar'}
+                          className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/35 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                          <span className="px-3 py-1.5 rounded-full bg-black/70 backdrop-blur-md text-white text-xs font-medium flex items-center gap-1.5 border border-white/20">
-                            <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
-                            <span>Perbesar Foto</span>
-                          </span>
-                        </div>
-                        <div className="absolute top-3 left-3 px-3 py-1 rounded-md bg-slate-950/80 backdrop-blur-sm text-white text-xs font-semibold">
-                          {item.tag || `Tahap 0${idx + 1}`}
-                        </div>
-                        {item.videoUrl && (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setVideoModal({
-                                open: true,
-                                url: item.videoUrl!,
-                                title: `${item.title} (${item.tag || `Tahap 0${idx + 1}`})`,
-                              });
-                            }}
-                            className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-md bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold flex items-center gap-1 shadow-md transition-colors"
-                          >
-                            <Play className="w-3 h-3 fill-white" />
-                            <span>Video</span>
-                          </button>
-                        )}
                       </div>
-                    ) : (
-                      <div className="relative h-28 bg-gradient-to-br from-slate-100 to-slate-200 border-b border-slate-200 flex items-center justify-between px-5">
-                        <div className="px-3 py-1 rounded-md bg-slate-900 text-amber-400 text-xs font-semibold">
-                          {item.tag || `Tahap 0${idx + 1}`}
-                        </div>
-                        {item.videoUrl ? (
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setVideoModal({
-                                open: true,
-                                url: item.videoUrl!,
-                                title: `${item.title} (${item.tag || `Tahap 0${idx + 1}`})`,
-                              })
-                            }
-                            className="px-2.5 py-1 rounded-md bg-red-600 hover:bg-red-700 text-white text-xs font-bold flex items-center gap-1.5 shadow"
-                          >
-                            <Play className="w-3 h-3 fill-white" />
-                            <span>Putar Video</span>
-                          </button>
-                        ) : (
-                          <HardHat className="w-6 h-6 text-slate-400" />
-                        )}
-                      </div>
-                    )}
+                    );
+                  })}
 
-                    <div className="p-6">
-                      <h3 className="font-bold text-lg text-slate-900 mb-2.5 group-hover:text-amber-800 transition-colors">
-                        {item.title}
-                      </h3>
-                      <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                        {item.description}
-                      </p>
-
-                      <div className="space-y-1.5 text-xs text-slate-600">
-                        <div className="flex items-center gap-2">
-                          <Check className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                          <span>Sesuai standar teknis tata ruang</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Check className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                          <span>Pengawasan langsung tim teknis perseroan</span>
-                        </div>
-                      </div>
+                  {/* Top Bar: Minimal Counter & Enlarge Button */}
+                  <div className="absolute top-3 inset-x-3 z-20 flex items-center justify-between pointer-events-none">
+                    {/* Minimal Image Counter: 01 / 04 */}
+                    <div className="px-2.5 py-1 rounded-[6px] bg-[#262722]/80 backdrop-blur-sm border border-white/15 text-[#F3EFE6] font-mono text-[11px] font-medium tracking-wider shadow-sm pointer-events-auto">
+                      <span className="text-[#C5A568]">0{currentProjectSlide + 1}</span>
+                      <span className="text-white/40 mx-1">/</span>
+                      <span>0{activeProjectSlides.length}</span>
                     </div>
-                  </div>
 
-                  <div className="px-6 pb-6 pt-2 space-y-2">
-                    {item.videoUrl && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setVideoModal({
-                            open: true,
-                            url: item.videoUrl!,
-                            title: `${item.title} (${item.tag || `Tahap 0${idx + 1}`})`,
-                          })
-                        }
-                        className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-4 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold border border-red-200 transition-colors"
-                      >
-                        <Play className="w-3.5 h-3.5 fill-red-700" />
-                        <span>Tonton Video Dokumentasi</span>
-                      </button>
-                    )}
-                    <Link
-                      href="/kegiatan"
-                      prefetch={false}
-                      className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl border border-slate-200 hover:border-[#C9A96A] hover:bg-amber-50 text-slate-800 text-xs font-bold transition-colors"
-                    >
-                      <span>Lihat Detail Dokumentasi</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-[#C9A96A]" />
-                    </Link>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="mt-12 text-center reveal-item">
-            <Link
-              href="/kegiatan"
-              prefetch={false}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-[#C9A96A] hover:text-[#0E1014] text-white text-xs font-bold uppercase tracking-wider transition-colors"
-            >
-              <span>Lihat Seluruh Dokumentasi Pekerjaan Lapangan</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION: LEGALITAS RESMI */}
-      <section id="legalitas" className="py-20 sm:py-24 bg-slate-950 text-white relative overflow-hidden">
-        <div className="container-std">
-          <div className="max-w-3xl mb-14 reveal-item">
-            <span className="text-xs font-bold uppercase tracking-widest text-amber-400 mb-2 block">
-              {content.legal.badge || 'LEGALITAS & TRANSPARANSI PERUSAHAAN'}
-            </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white mb-4">
-              {content.legal.title || 'Dokumen Resmi Perseroan'}
-            </h2>
-            <p className="text-base sm:text-lg text-slate-300 leading-relaxed">
-              {content.legal.subtitle}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            {/* Akta Notaris Card */}
-            <div className="p-7 rounded-2xl bg-slate-900 border border-slate-800 space-y-3 reveal-item hover:border-amber-400/40 hover:-translate-y-1.5 transition-all duration-300 shadow-lg">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center">
-                <FileCheck2 className="w-5 h-5" />
-              </div>
-              <div className="text-xs uppercase font-semibold text-slate-400 tracking-wider">
-                Akta Pendirian Perseroan
-              </div>
-              <div className="text-xl font-bold text-white">
-                Akta No. 10
-              </div>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Tanggal: <strong>{content.legal.aktaDate}</strong><br />
-                Notaris: <strong>{content.legal.notary}</strong>
-              </p>
-            </div>
-
-            {/* SK Menkumham Card */}
-            <div className="p-7 rounded-2xl bg-slate-900 border border-slate-800 space-y-3 reveal-item reveal-delay-1 hover:border-emerald-400/40 hover:-translate-y-1.5 transition-all duration-300 shadow-lg">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <div className="text-xs uppercase font-semibold text-slate-400 tracking-wider">
-                Pengesahan Kemenkumham RI
-              </div>
-              <div className="text-base sm:text-lg font-bold text-white break-all">
-                {content.legal.skMenkumham}
-              </div>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Tanggal Keputusan: <strong>{content.legal.skDate}</strong><br />
-                Terdaftar di Administrasi Hukum Umum RI
-              </p>
-            </div>
-
-            {/* Kewenangan Direksi Card */}
-            <div className="p-7 rounded-2xl bg-slate-900 border border-slate-800 space-y-3 reveal-item reveal-delay-2 hover:border-amber-400/40 hover:-translate-y-1.5 transition-all duration-300 shadow-lg">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center">
-                <Building2 className="w-5 h-5" />
-              </div>
-              <div className="text-xs uppercase font-semibold text-slate-400 tracking-wider">
-                Kewenangan Direksi
-              </div>
-              <div className="text-xl font-bold text-white">
-                Mewakili Perseroan
-              </div>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                {content.legal.directorAuthority}
-              </p>
-            </div>
-          </div>
-
-          {/* Legal Summary Banner */}
-          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs sm:text-sm text-slate-400 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 reveal-item">
-            <div className="flex items-center gap-3">
-              <ShieldCheck className="w-5 h-5 text-amber-400 shrink-0" />
-              <span>Seluruh kegiatan perumahan dan transaksi berlandaskan hukum positif Republik Indonesia.</span>
-            </div>
-            <Link
-              href="/legalitas"
-              prefetch={false}
-              className="inline-flex items-center gap-1.5 font-bold text-[#C9A96A] hover:text-amber-300 transition-colors shrink-0"
-            >
-              <span>Periksa Legalitas Lengkap</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION: STRUKTUR PENGURUS */}
-      <section id="pimpinan" className="py-20 sm:py-24 bg-slate-50 border-b border-slate-200 overflow-hidden">
-        <div className="container-std">
-          <div className="max-w-3xl mb-14 reveal-item">
-            <span className="text-xs font-bold uppercase tracking-widest text-amber-700 mb-2 block">
-              {content.leadership.badge || 'STRUKTUR PENGURUS RESMI'}
-            </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 mb-4">
-              {content.leadership.title || 'Dewan Pengurus Perseroan'}
-            </h2>
-            <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-              {content.leadership.subtitle}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl">
-            {content.leadership.members?.map((member, idx) => (
-              <div
-                key={idx}
-                className={`group rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-amber-400/50 hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col reveal-item ${idx === 1 ? 'reveal-delay-1' : ''}`}
-              >
-                {/* Executive Portrait Frame */}
-                <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
-                  {member.image && member.image.trim() !== '' ? (
-                    <>
-                      <img
-                        src={member.image}
-                        alt={member.name}
-                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
-                      />
-                      {/* Vignette Gradient Overlay at Bottom */}
-                      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent pointer-events-none" />
-                    </>
-                  ) : (
-                    /* Fallback: Executive Architectural Monogram Podium */
-                    <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-gradient-to-br from-slate-950 via-[#141822] to-slate-950 relative overflow-hidden">
-                      <div 
-                        className="absolute inset-0 opacity-10 pointer-events-none"
-                        style={{
-                          backgroundImage: `radial-gradient(circle at 1px 1px, #C9A96A 1px, transparent 0)`,
-                          backgroundSize: '24px 24px',
-                        }}
-                      />
-                      <div className="relative z-10 w-24 h-28 rounded-2xl border-2 border-amber-500/40 bg-gradient-to-b from-amber-500/15 to-transparent flex flex-col items-center justify-center p-4 shadow-2xl backdrop-blur-sm">
-                        <Building2 className="w-7 h-7 text-[#C9A96A] mb-1.5" />
-                        <span className="text-2xl font-serif font-black text-[#C9A96A] tracking-wider">
-                          {member.name ? member.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() : 'TBK'}
-                        </span>
-                      </div>
-                      <span className="relative z-10 mt-4 text-xs font-semibold text-slate-400 tracking-wider uppercase">
-                        Portret Eksekutif Perseroan
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Floating Role Badge */}
-                  <div className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-full bg-slate-950/85 backdrop-blur-md border border-amber-400/40 text-[#C9A96A] text-[11px] font-bold uppercase tracking-wider shadow-lg flex items-center gap-1">
-                    <Sparkles className="w-3 h-3 text-amber-400" />
-                    <span>{member.role}</span>
-                  </div>
-
-                  {/* Official SK Status Badge */}
-                  <div className="absolute top-3 right-3 z-10 px-2 py-1 rounded-full bg-slate-950/80 backdrop-blur-md text-emerald-400 text-[10px] font-semibold border border-emerald-500/30 flex items-center gap-1 shadow">
-                    <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                    <span>SK Sah Kemenkumham</span>
-                  </div>
-
-                  {/* Name Banner at bottom of portrait for cinematic look */}
-                  <div className="absolute inset-x-0 bottom-0 z-10 p-4 text-white">
-                    <span className="text-[10px] uppercase tracking-widest text-[#C9A96A] font-semibold block mb-0.5">
-                      {member.role} PT. TBK
-                    </span>
-                    <h3 className="font-extrabold text-lg text-white tracking-tight drop-shadow-md">
-                      {member.name}
-                    </h3>
-                  </div>
-                </div>
-
-                {/* Card Body */}
-                <div className="p-4 flex flex-col flex-1 justify-between bg-white space-y-3">
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="text-xs font-bold uppercase tracking-wider text-amber-800">
-                        Amanat & Tanggung Jawab
-                      </span>
-                      <span className="h-px flex-1 bg-amber-200/60" />
-                    </div>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      {member.roleDescription}
-                    </p>
-                  </div>
-
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-                    <div className="flex items-center gap-1.5">
-                      <ShieldCheck className="w-3.5 h-3.5 text-[#C9A96A] shrink-0" />
-                      <span className="font-medium text-slate-600">Akta Pendirian Notaris No. 10</span>
-                    </div>
-                    <span className="text-[10px] text-slate-400 font-mono">18 Maret 2021</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-10 text-center max-w-3xl reveal-item">
-            <Link
-              href="/pimpinan"
-              prefetch={false}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-[#C9A96A] hover:text-[#0E1014] text-white text-xs font-bold uppercase tracking-wider transition-colors"
-            >
-              <span>Lihat Struktur Pengurus & Tata Kelola Lengkap</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION: KONTAK & FORMULIR INQUIRY */}
-      <section id="kontak" className="py-20 sm:py-24 bg-white overflow-hidden">
-        <div className="container-std">
-          <div className="max-w-3xl mb-14 reveal-item">
-            <span className="text-xs font-bold uppercase tracking-widest text-amber-700 mb-2 block">
-              {content.contact.badge || 'HUBUNGI PERSEROAN'}
-            </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 mb-4">
-              {content.contact.title || 'Layanan Konsultasi & Pemesanan'}
-            </h2>
-            <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-              {content.contact.subtitle}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left Contact Information */}
-            <div className="lg:col-span-5 p-8 rounded-2xl bg-slate-50 border border-slate-200 space-y-6 reveal-item hover:border-amber-400/40 hover:shadow-md transition-all duration-300">
-              <div>
-                <div className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-1">
-                  Kantor & Domisili
-                </div>
-                <div className="text-lg font-bold text-slate-900 mb-2">
-                  {content.contact.city || 'Bandar Lampung'}
-                </div>
-                <div className="flex items-start gap-2.5 text-sm text-slate-600">
-                  <MapPin className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                  <span>{sanitize(content.contact.address, 'Kawasan Puri Gunung Langgar, Desa Sabah Balau, Kec. Tanjung Bintang, Lampung Selatan')}</span>
-                </div>
-              </div>
-
-              <div className="pt-5 border-t border-slate-200">
-                <div className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-1.5">
-                  Layanan WhatsApp Official
-                </div>
-                <div className="flex items-center gap-2 text-sm text-slate-800">
-                  <Phone className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>{sanitize(content.contact.whatsapp, '0812-7890-1234')}</span>
-                </div>
-                <a
-                  href={waUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 inline-flex items-center gap-2 text-xs font-bold text-emerald-700 hover:text-emerald-800"
-                >
-                  <span>Chat Langsung via WhatsApp</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-
-              <div className="pt-5 border-t border-slate-200">
-                <div className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-1.5">
-                  Surat Elektronik (Email)
-                </div>
-                <div className="flex items-center gap-2 text-sm text-slate-800">
-                  <Mail className="w-4 h-4 text-amber-600 shrink-0" />
-                  <span>{sanitize(content.contact.email, 'info@terbangbersamakawan.co.id')}</span>
-                </div>
-              </div>
-
-              <div className="pt-5 border-t border-slate-200">
-                <div className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-1.5">
-                  Jam Operasional
-                </div>
-                <div className="flex items-center gap-2 text-sm text-slate-800">
-                  <Clock className="w-4 h-4 text-amber-600 shrink-0" />
-                  <span>{sanitize(content.contact.operatingHours, 'Senin - Sabtu: 08.00 - 17.00 WIB')}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Interactive Form */}
-            <div className="lg:col-span-7 p-8 rounded-2xl bg-white border border-slate-200 shadow-sm">
-              <h3 className="text-xl font-bold text-slate-900 mb-2">
-                Formulir Minat & Konsultasi Unit
-              </h3>
-              <p className="text-sm text-slate-600 mb-6">
-                Silakan isi data diri Anda di bawah ini. Tim representatif kami akan segera menghubungi Anda untuk memberikan penjelasan lengkap dan jadwal survei lokasi.
-              </p>
-
-              {formSuccess ? (
-                <div className="p-8 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950 text-center space-y-4 animate-fade-in">
-                  <div className="w-14 h-14 rounded-full bg-emerald-100 border border-emerald-300 flex items-center justify-center mx-auto text-emerald-700 shadow-sm">
-                    <MessageCircle className="w-7 h-7 fill-emerald-600 text-white" />
-                  </div>
-                  <div>
-                    <div className="text-xl font-extrabold text-slate-900">
-                      Mengarahkan ke WhatsApp...
-                    </div>
-                    <p className="text-sm text-slate-600 max-w-md mx-auto mt-1 leading-relaxed">
-                      Format pesan konsultasi unit telah otomatis disiapkan sesuai data yang Anda masukkan. WhatsApp tim PT. TBK terbuka di tab baru.
-                    </p>
-                  </div>
-
-                  {submittedWaUrl && (
-                    <div className="pt-2">
-                      <a
-                        href={submittedWaUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-all active:scale-[0.98]"
-                      >
-                        <MessageCircle className="w-4 h-4 fill-white" />
-                        <span>Buka Chat WhatsApp Sekarang</span>
-                      </a>
-                    </div>
-                  )}
-
-                  <div className="pt-2">
+                    {/* Corner Enlarge Indicator */}
                     <button
                       type="button"
-                      onClick={() => {
-                        setFormSuccess(false);
-                        setFormData({ name: '', phone: '', email: '', message: '' });
-                      }}
-                      className="text-xs text-slate-500 hover:text-slate-800 underline transition-colors"
+                      onClick={() =>
+                        setLightbox({
+                          open: true,
+                          image: activeProjectSlides[currentProjectSlide]?.image || '/assets/project-workspace.jpg',
+                          caption: `${content.project.name} - ${activeProjectSlides[currentProjectSlide]?.caption || 'Dokumentasi Proyek'}`,
+                        })
+                      }
+                      className="bg-[#262722]/80 backdrop-blur-sm text-white px-2.5 py-1 rounded-[6px] text-[11px] font-medium flex items-center gap-1.5 border border-white/15 shadow-sm hover:bg-[#262722] hover:border-[#C5A568] transition-colors pointer-events-auto focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C5A568]"
+                      aria-label="Perbesar foto dokumentasi proyek"
                     >
-                      Kirim formulir lain
+                      <Maximize2 className="w-3.5 h-3.5 text-[#C5A568]" />
+                      <span className="hidden sm:inline">Perbesar</span>
                     </button>
                   </div>
-                </div>
-              ) : (
-                <form onSubmit={handleInquirySubmit} className="space-y-4">
-                  {formError && (
-                    <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-sm">
-                      {formError}
+
+                  {/* Understated Previous and Next Controls */}
+                  {activeProjectSlides.length > 1 && (
+                    <div className="absolute inset-y-0 inset-x-3 z-20 flex items-center justify-between pointer-events-none">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentProjectSlide((prev) => (prev - 1 + activeProjectSlides.length) % activeProjectSlides.length);
+                        }}
+                        className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#262722]/75 hover:bg-[#262722] border border-white/20 text-[#F3EFE6] backdrop-blur-sm flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 pointer-events-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A568] shadow-sm"
+                        aria-label="Foto sebelumnya"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentProjectSlide((prev) => (prev + 1) % activeProjectSlides.length);
+                        }}
+                        className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#262722]/75 hover:bg-[#262722] border border-white/20 text-[#F3EFE6] backdrop-blur-sm flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 pointer-events-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A568] shadow-sm"
+                        aria-label="Foto berikutnya"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
                     </div>
                   )}
 
+                  {/* Caption Bar Synchronized with Image Transition */}
+                  <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-[#262722]/95 via-[#262722]/60 to-transparent p-4 sm:p-5 text-[#F3EFE6] pointer-events-none">
+                    <div className="text-[11px] sm:text-xs uppercase tracking-wider text-[#C5A568] font-semibold mb-0.5">
+                      Dokumentasi Fisik Lapangan
+                    </div>
+                    <p className="text-[13px] sm:text-[14px] text-[#F3EFE6]/90 line-clamp-1">
+                      {activeProjectSlides[currentProjectSlide]?.caption || 'Kawasan Puri Gunung Langgar, Lampung Selatan.'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Thumbnail Strip: Active Muted Gold Border, Hover Zoom, Inactive Overlay */}
+                {activeProjectSlides.length > 1 && (
+                  <div className="grid grid-cols-4 gap-2.5 sm:gap-3 pt-1" role="tablist" aria-label="Pilihan sudut galeri proyek">
+                    {activeProjectSlides.map((slide, sIdx) => {
+                      const isActive = sIdx === currentProjectSlide;
+                      return (
+                        <button
+                          key={sIdx}
+                          type="button"
+                          role="tab"
+                          aria-selected={isActive}
+                          onClick={() => setCurrentProjectSlide(sIdx)}
+                          className={`group/thumb relative aspect-[4/3] rounded-[8px] overflow-hidden border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A568] focus-visible:ring-offset-2 ${
+                            isActive
+                              ? 'border-[#C5A568] ring-1 ring-[#C5A568] shadow-sm'
+                              : 'border-[#DDD8CE] hover:border-[#C5A568]/60'
+                          }`}
+                          aria-label={`Pilih sudut dokumentasi ${sIdx + 1} dari ${activeProjectSlides.length}`}
+                        >
+                          <img
+                            src={slide.image}
+                            alt={slide.caption || `Sudut ${sIdx + 1}`}
+                            className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover/thumb:scale-105"
+                          />
+                          {/* Restrained Overlay on Inactive Thumbnails */}
+                          <div
+                            className={`absolute inset-0 transition-colors duration-200 ${
+                              isActive ? 'bg-transparent' : 'bg-black/25 group-hover/thumb:bg-black/5'
+                            }`}
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* Right Column: Architectural Fact & Spec Sheet (Open Editorial Layout) */}
+              <div className="lg:col-span-5 flex flex-col justify-between pt-1">
+                <div>
+                  <div className="flex items-center justify-between pb-3.5 border-b border-[#DDD8CE]">
+                    <div>
+                      <span className="text-[11px] uppercase tracking-wider text-[#77766F] block font-medium">Kategori Proyek</span>
+                      <span className="font-serif text-lg text-[#262722]">Rumah Tapak Bersubsidi</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-xs text-[#262722] font-medium">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                      <span className="text-[#C5A568] uppercase text-[11px] tracking-wider font-semibold">Tahap Konstruksi</span>
+                    </div>
+                  </div>
+
+                  <dl className="py-2 divide-y divide-[#DDD8CE]/70 text-xs sm:text-[13px]">
+                    <div className="flex items-baseline justify-between gap-4 py-3">
+                      <dt className="text-[#77766F] font-medium">Lokasi Proyek</dt>
+                      <dd className="font-medium text-[#262722] text-right">Desa Sabah Balau, Tanjung Bintang, Lampung Selatan</dd>
+                    </div>
+                    <div className="flex items-baseline justify-between gap-4 py-3">
+                      <dt className="text-[#77766F] font-medium">Tipe Bangunan</dt>
+                      <dd className="font-semibold text-[#262722]">Tipe 36 / 72 m²</dd>
+                    </div>
+                    <div className="flex items-baseline justify-between gap-4 py-3">
+                      <dt className="text-[#77766F] font-medium">Luas Bangunan</dt>
+                      <dd className="font-semibold text-[#262722]">36 m²</dd>
+                    </div>
+                    <div className="flex items-baseline justify-between gap-4 py-3">
+                      <dt className="text-[#77766F] font-medium">Luas Tanah</dt>
+                      <dd className="font-semibold text-[#262722]">72 m²</dd>
+                    </div>
+                    <div className="flex items-baseline justify-between gap-4 py-3">
+                      <dt className="text-[#77766F] font-medium">Legalitas Lahan</dt>
+                      <dd className="font-semibold text-[#262722]">Sertifikat Hak Milik (SHM)</dd>
+                    </div>
+                    <div className="flex items-baseline justify-between gap-4 py-3">
+                      <dt className="text-[#77766F] font-medium">Fasilitas Dasar</dt>
+                      <dd className="font-medium text-[#262722] text-right">Jalan Paving, Listrik PLN, Air Bersih</dd>
+                    </div>
+                    <div className="flex items-baseline justify-between gap-4 py-3">
+                      <dt className="text-[#77766F] font-medium">Skema Pembiayaan</dt>
+                      <dd className="font-semibold text-[#262722]">KPR Bersubsidi FLPP 5% & Mandiri</dd>
+                    </div>
+                  </dl>
+                </div>
+
+                <div className="pt-6 border-t border-[#DDD8CE] space-y-3">
+                  <Link
+                    href="/proyek"
+                    prefetch={false}
+                    className="group w-full h-[44px] rounded-[12px] bg-[#C5A568] hover:bg-[#B69455] text-[#262722] text-xs font-semibold tracking-wider uppercase flex items-center justify-center gap-2 transition-all duration-200 hover:-translate-y-[1.5px] active:translate-y-0 active:scale-[0.99] shadow-sm hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#262722]"
+                  >
+                    <span>Lihat Detail Proyek</span>
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+                  </Link>
+
+                  <a
+                    href={waUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full h-[44px] rounded-[12px] border border-[#262722]/30 hover:border-[#C5A568] hover:bg-[#C5A568]/10 text-[#262722] text-xs font-semibold tracking-wider uppercase flex items-center justify-center gap-2 transition-all duration-200 hover:-translate-y-[1.5px] active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A568]"
+                  >
+                    <MessageCircle className="w-4 h-4 text-[#C5A568]" />
+                    <span>Tanya Ketersediaan Kavling</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================= */}
+        {/* SECTION 3: COMPANY PROFILE (Tentang PT. TBK) */}
+        {/* Background: White #FFFFFF */}
+        {/* ========================================================= */}
+        <section id="tentang" className="py-20 sm:py-28 bg-white border-b border-[#DDD8CE]">
+          <div className="container-editorial">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+              {/* Left Column: Narrative & Corporate Identity */}
+              <div className="lg:col-span-7 space-y-6">
+                <div>
+                  <span className="text-xs uppercase tracking-[0.14em] text-[#C5A568] font-semibold block mb-2">
+                    Profil Pengembang
+                  </span>
+                  <h2 className="font-serif text-3xl sm:text-4xl text-[#262722] leading-tight">
+                    Membangun dengan Komitmen & Legalitas Nyata
+                  </h2>
+                </div>
+
+                <p className="text-[15px] sm:text-[16px] text-[#262722]/85 leading-relaxed">
+                  {content.about?.description || 'PT. Terbang Bersama Kawan (PT. TBK) adalah perusahaan pengembang properti yang berbasis di Bandar Lampung. Didirikan secara sah dengan Akta Notaris No. 10 tanggal 18 Maret 2021 dan disahkan oleh Kementerian Hukum dan HAM RI pada 19 Maret 2021.'}
+                </p>
+
+                <p className="text-[15px] text-[#77766F] leading-relaxed">
+                  {content.about?.commitmentBody || 'Sebagai pengembang properti resmi di Provinsi Lampung, PT. Terbang Bersama Kawan mengutamakan kepastian hukum, keterbukaan informasi progres fisik, dan mutu konstruksi terbaik agar masyarakat dapat memiliki rumah impian dengan rasa tenang.'}
+                </p>
+
+                {/* 3 Clear Development Pillars (Open Editorial Layout) */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 pt-6 border-t border-[#DDD8CE]">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                    <span className="font-serif text-2xl text-[#C5A568] block mb-1.5 font-normal">01</span>
+                    <h3 className="font-semibold text-xs text-[#262722] uppercase tracking-wider mb-1.5">Kepastian Hukum</h3>
+                    <p className="text-xs text-[#77766F] leading-relaxed">Legalitas tanah SHM dan terdaftar resmi di Kemenkumham RI.</p>
+                  </div>
+                  <div className="sm:border-l sm:border-[#DDD8CE] sm:pl-6">
+                    <span className="font-serif text-2xl text-[#C5A568] block mb-1.5 font-normal">02</span>
+                    <h3 className="font-semibold text-xs text-[#262722] uppercase tracking-wider mb-1.5">Mutu Konstruksi</h3>
+                    <p className="text-xs text-[#77766F] leading-relaxed">Standar teknis bangunan kokoh dan tata lingkungan terencana.</p>
+                  </div>
+                  <div className="sm:border-l sm:border-[#DDD8CE] sm:pl-6">
+                    <span className="font-serif text-2xl text-[#C5A568] block mb-1.5 font-normal">03</span>
+                    <h3 className="font-semibold text-xs text-[#262722] uppercase tracking-wider mb-1.5">Kemudahan KPR</h3>
+                    <p className="text-xs text-[#77766F] leading-relaxed">Bantuan pendampingan berkas program subsidi FLPP 5% flat.</p>
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <Link
+                    href="/tentang"
+                    prefetch={false}
+                    className="group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#262722] hover:text-[#C5A568] transition-colors"
+                  >
+                    <span>Baca Selengkapnya Tentang PT. TBK</span>
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+                  </Link>
+                </div>
+              </div>
+
+              {/* Right Column: Editorial Corporate Visual & Vision Card */}
+              <div className="lg:col-span-5 space-y-6">
+                <div className="relative aspect-[4/3] rounded-[8px] overflow-hidden border border-[#DDD8CE] shadow-sm bg-[#262722]">
+                  <img
+                    src="/assets/project-identity.jpg"
+                    alt="Kantor & Perencanaan PT. TBK"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#262722]/80 via-transparent to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4 text-[#F3EFE6] text-xs">
+                    <span className="font-semibold text-[#C5A568] uppercase tracking-wider block text-[10px]">Kantor Pusat</span>
+                    Bandar Lampung, Provinsi Lampung
+                  </div>
+                </div>
+
+                {/* Open Editorial Vision Statement */}
+                <div className="pt-1 border-l-2 border-[#C5A568] pl-4 sm:pl-5 space-y-1">
+                  <span className="text-[11px] uppercase tracking-widest text-[#C5A568] font-semibold block">
+                    Visi Perseroan
+                  </span>
+                  <blockquote className="font-serif italic text-base sm:text-lg text-[#262722] leading-snug">
+                    &ldquo;{content.about?.visionText || 'Perusahaan properti yang berkualitas dan terpercaya.'}&rdquo;
+                  </blockquote>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================= */}
+        {/* SECTION 4: HOUSING PURCHASE PROCESS (Alur Kepemilikan) */}
+        {/* Background: Warm Ivory #F3EFE6 */}
+        {/* ========================================================= */}
+        <section className="py-20 sm:py-28 bg-[#F3EFE6] border-b border-[#DDD8CE]">
+          <div className="container-editorial">
+            <div className="max-w-2xl mb-12 sm:mb-16">
+              <span className="text-xs uppercase tracking-[0.14em] text-[#C5A568] font-semibold block mb-2">
+                Panduan Konsumen
+              </span>
+              <h2 className="font-serif text-3xl sm:text-4xl text-[#262722] leading-tight">
+                Tahapan Pembelian Rumah Subsidi
+              </h2>
+              <p className="text-[15px] sm:text-[16px] text-[#77766F] mt-3 leading-relaxed">
+                Alur pengajuan yang transparan dan terstruktur bagi masyarakat, dari pemilihan kavling hingga serah terima kunci.
+              </p>
+            </div>
+
+            {/* Editorial Connected Horizontal Timeline (Desktop) */}
+            <div className="hidden md:block relative pt-2">
+              {/* Thin Horizontal Connecting Line */}
+              <div 
+                className="absolute top-[22px] left-[4%] right-[4%] h-[1px] bg-[#DDD8CE] z-0" 
+                aria-hidden="true" 
+              />
+
+              <div className="grid grid-cols-4 gap-8 lg:gap-12 relative z-10">
+                {/* Stage 01 */}
+                <div className="flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="w-3 h-3 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568] shrink-0" />
+                      <span className="font-serif text-3xl lg:text-4xl text-[#C5A568] font-normal leading-none">01</span>
+                    </div>
+                    <h3 className="font-semibold text-sm lg:text-[15px] text-[#262722] tracking-wide mb-2">
+                      Pilih Unit &amp; Konsultasi
+                    </h3>
+                    <p className="text-xs lg:text-[13px] text-[#77766F] leading-relaxed">
+                      Kunjungi kantor pemasaran atau lokasi proyek untuk memilih nomor kavling yang tersedia dan melakukan konsultasi syarat KPR.
+                    </p>
+                  </div>
+                  <div className="pt-3 mt-5 border-t border-[#DDD8CE]/70 text-[11px] text-[#77766F] font-medium tracking-wide">
+                    Survei kavling langsung
+                  </div>
+                </div>
+
+                {/* Stage 02 */}
+                <div className="flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="w-3 h-3 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568] shrink-0" />
+                      <span className="font-serif text-3xl lg:text-4xl text-[#C5A568] font-normal leading-none">02</span>
+                    </div>
+                    <h3 className="font-semibold text-sm lg:text-[15px] text-[#262722] tracking-wide mb-2">
+                      Pemberkasan Dokumen
+                    </h3>
+                    <p className="text-xs lg:text-[13px] text-[#77766F] leading-relaxed">
+                      Menyiapkan berkas identitas (KTP, KK, NPWP, Slip Gaji atau Keterangan Usaha) untuk verifikasi kelayakan subsidi FLPP.
+                    </p>
+                  </div>
+                  <div className="pt-3 mt-5 border-t border-[#DDD8CE]/70 text-[11px] text-[#77766F] font-medium tracking-wide">
+                    Didampingi tim admin
+                  </div>
+                </div>
+
+                {/* Stage 03 */}
+                <div className="flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="w-3 h-3 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568] shrink-0" />
+                      <span className="font-serif text-3xl lg:text-4xl text-[#C5A568] font-normal leading-none">03</span>
+                    </div>
+                    <h3 className="font-semibold text-sm lg:text-[15px] text-[#262722] tracking-wide mb-2">
+                      Wawancara &amp; Analisis Bank
+                    </h3>
+                    <p className="text-xs lg:text-[13px] text-[#77766F] leading-relaxed">
+                      Proses persetujuan pembiayaan oleh perbankan mitra penyalur KPR bersubsidi dengan suku bunga 5% flat pemerintah.
+                    </p>
+                  </div>
+                  <div className="pt-3 mt-5 border-t border-[#DDD8CE]/70 text-[11px] text-[#77766F] font-medium tracking-wide">
+                    Kepastian plafon kredit
+                  </div>
+                </div>
+
+                {/* Stage 04 */}
+                <div className="flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="w-3 h-3 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568] shrink-0" />
+                      <span className="font-serif text-3xl lg:text-4xl text-[#C5A568] font-normal leading-none">04</span>
+                    </div>
+                    <h3 className="font-semibold text-sm lg:text-[15px] text-[#262722] tracking-wide mb-2">
+                      Akad &amp; Serah Terima
+                    </h3>
+                    <p className="text-xs lg:text-[13px] text-[#77766F] leading-relaxed">
+                      Penandatanganan akta di hadapan Notaris resmi perseroan dan serah terima kunci unit rumah kepada konsumen.
+                    </p>
+                  </div>
+                  <div className="pt-3 mt-5 border-t border-[#DDD8CE]/70 text-[11px] text-[#77766F] font-medium tracking-wide">
+                    Sertifikat Hak Milik (SHM)
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Editorial Connected Vertical Sequence (Mobile < md) */}
+            <div className="md:hidden relative pl-6 border-l border-[#DDD8CE] ml-2 space-y-8" role="list">
+              {/* Mobile Stage 01 */}
+              <div className="relative" role="listitem">
+                <span 
+                  className="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568]" 
+                  aria-hidden="true" 
+                />
+                <span className="font-serif text-2xl text-[#C5A568] block mb-1 font-normal">01</span>
+                <h3 className="font-semibold text-sm text-[#262722] tracking-wide mb-1.5">
+                  Pilih Unit &amp; Konsultasi
+                </h3>
+                <p className="text-xs text-[#77766F] leading-relaxed mb-2">
+                  Kunjungi kantor pemasaran atau lokasi proyek untuk memilih nomor kavling yang tersedia dan melakukan konsultasi syarat KPR.
+                </p>
+                <span className="text-[11px] text-[#77766F] font-medium">Survei kavling langsung</span>
+              </div>
+
+              {/* Mobile Stage 02 */}
+              <div className="relative" role="listitem">
+                <span 
+                  className="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568]" 
+                  aria-hidden="true" 
+                />
+                <span className="font-serif text-2xl text-[#C5A568] block mb-1 font-normal">02</span>
+                <h3 className="font-semibold text-sm text-[#262722] tracking-wide mb-1.5">
+                  Pemberkasan Dokumen
+                </h3>
+                <p className="text-xs text-[#77766F] leading-relaxed mb-2">
+                  Menyiapkan berkas identitas (KTP, KK, NPWP, Slip Gaji atau Keterangan Usaha) untuk verifikasi kelayakan subsidi FLPP.
+                </p>
+                <span className="text-[11px] text-[#77766F] font-medium">Didampingi tim admin</span>
+              </div>
+
+              {/* Mobile Stage 03 */}
+              <div className="relative" role="listitem">
+                <span 
+                  className="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568]" 
+                  aria-hidden="true" 
+                />
+                <span className="font-serif text-2xl text-[#C5A568] block mb-1 font-normal">03</span>
+                <h3 className="font-semibold text-sm text-[#262722] tracking-wide mb-1.5">
+                  Wawancara &amp; Analisis Bank
+                </h3>
+                <p className="text-xs text-[#77766F] leading-relaxed mb-2">
+                  Proses persetujuan pembiayaan oleh perbankan mitra penyalur KPR bersubsidi dengan suku bunga 5% flat pemerintah.
+                </p>
+                <span className="text-[11px] text-[#77766F] font-medium">Kepastian plafon kredit</span>
+              </div>
+
+              {/* Mobile Stage 04 */}
+              <div className="relative" role="listitem">
+                <span 
+                  className="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-[#F3EFE6] border-2 border-[#C5A568]" 
+                  aria-hidden="true" 
+                />
+                <span className="font-serif text-2xl text-[#C5A568] block mb-1 font-normal">04</span>
+                <h3 className="font-semibold text-sm text-[#262722] tracking-wide mb-1.5">
+                  Akad &amp; Serah Terima
+                </h3>
+                <p className="text-xs text-[#77766F] leading-relaxed mb-2">
+                  Penandatanganan akta di hadapan Notaris resmi perseroan dan serah terima kunci unit rumah kepada konsumen.
+                </p>
+                <span className="text-[11px] text-[#77766F] font-medium">Sertifikat Hak Milik (SHM)</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================= */}
+        {/* SECTION 5: INTERACTIVE KPR SIMULATOR (Dramatic Contrast Rhythm) */}
+        {/* Background: Charcoal #262722 */}
+        {/* ========================================================= */}
+        <section id="simulasi-kpr" className="py-20 sm:py-28 bg-[#262722] text-[#F3EFE6] border-b border-[#DDD8CE]/15">
+          <div className="container-editorial">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+              {/* Left Column: Context & Overview */}
+              <div className="lg:col-span-5 space-y-5">
+                <span className="text-xs uppercase tracking-[0.14em] text-[#C5A568] font-semibold block">
+                  Kalkulator Finansial
+                </span>
+                <h2 className="font-serif text-3xl sm:text-4xl text-[#F3EFE6] leading-tight">
+                  Simulasi Angsuran KPR Bersubsidi
+                </h2>
+                <p className="text-[15px] text-[#F3EFE6]/75 leading-relaxed">
+                  Hitung perkiraan angsuran bulanan rumah subsidi Puri Gunung Langgar melalui skema FLPP (Fasilitas Likuiditas Pembiayaan Perumahan) dengan suku bunga tetap 5% p.a.
+                </p>
+
+                <div className="pt-4 space-y-3 text-xs text-[#F3EFE6]/70">
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C5A568]" />
+                    <span>Suku Bunga Tetap (Flat) 5% sampai lunas</span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C5A568]" />
+                    <span>Bebas PPN dan premi asuransi bersubsidi</span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C5A568]" />
+                    <span>Pilihan jangka waktu fleksibel hingga 20 tahun</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Calculator Box */}
+              <div className="lg:col-span-7 bg-[#1E201A] p-6 sm:p-9 rounded-[4px] border border-white/10 shadow-xl space-y-6">
+                {/* Sliders */}
+                <div className="space-y-5">
+                  {/* Harga Unit */}
+                  <div>
+                    <div className="flex justify-between items-center text-xs text-[#F3EFE6]/80 mb-2">
+                      <span className="uppercase tracking-wider">Harga Rumah</span>
+                      <span className="font-mono text-sm font-semibold text-[#C5A568]">
+                        {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprHarga)}
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={140000000}
+                      max={200000000}
+                      step={1000000}
+                      value={kprHarga}
+                      onChange={(e) => setKprHarga(Number(e.target.value))}
+                      className="w-full accent-[#C5A568] cursor-pointer h-1.5 bg-white/10 rounded-none"
+                    />
+                  </div>
+
+                  {/* Uang Muka DP */}
+                  <div>
+                    <div className="flex justify-between items-center text-xs text-[#F3EFE6]/80 mb-2">
+                      <span className="uppercase tracking-wider">Uang Muka (DP)</span>
+                      <span className="font-mono text-sm font-semibold text-emerald-400">
+                        {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprDp)}
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={1000000}
+                      max={20000000}
+                      step={500000}
+                      value={kprDp}
+                      onChange={(e) => setKprDp(Number(e.target.value))}
+                      className="w-full accent-emerald-400 cursor-pointer h-1.5 bg-white/10 rounded-none"
+                    />
+                  </div>
+
+                  {/* Tenor */}
+                  <div>
+                    <div className="text-xs text-[#F3EFE6]/80 uppercase tracking-wider mb-2">
+                      Jangka Waktu Pinjaman
+                    </div>
+                    <div className="grid grid-cols-3 gap-2.5">
+                      {[10, 15, 20].map((yr) => (
+                        <button
+                          key={yr}
+                          type="button"
+                          onClick={() => setKprTenor(yr)}
+                          className={`py-2 px-3 rounded-[10px] text-xs font-semibold tracking-wider uppercase transition-all duration-200 hover:-translate-y-[1px] active:translate-y-0 ${
+                            kprTenor === yr
+                              ? 'bg-[#C5A568] text-[#262722] shadow-sm'
+                              : 'bg-white/[0.05] hover:bg-white/[0.1] text-[#F3EFE6]/75'
+                          }`}
+                        >
+                          {yr} Tahun
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Live Output Highlight */}
+                <div className="p-5 bg-black/30 rounded-[6px] border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+                  <div>
+                    <span className="text-[11px] uppercase tracking-wider text-[#77766F] block">
+                      Estimasi Angsuran Flat per Bulan
+                    </span>
+                    <div className="font-mono text-2xl sm:text-3xl font-bold text-[#C5A568] tracking-tight mt-0.5">
+                      {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprAngsuran)}
+                      <span className="text-xs text-[#F3EFE6]/60 font-sans font-normal"> / bulan</span>
+                    </div>
+                  </div>
+                  <div className="text-xs text-[#F3EFE6]/70 text-right">
+                    <div>Perkiraan harian: <strong className="text-white font-mono">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprPerHari)}/hari</strong></div>
+                    <div className="text-[11px] text-[#77766F] mt-0.5">Sisa pokok KPR: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprPokok)}</div>
+                  </div>
+                </div>
+
+                {/* Consultation Button */}
+                <a
+                  href={`${waUrl}?text=${encodeURIComponent(
+                    `Halo PT. TBK, saya tertarik dengan simulasi KPR Puri Gunung Langgar: Harga Unit Rp ${kprHarga.toLocaleString('id-ID')}, DP Rp ${kprDp.toLocaleString('id-ID')}, Tenor ${kprTenor} Tahun (Angsuran sekitar Rp ${kprAngsuran.toLocaleString('id-ID')}/bln). Mohon info ketersediaan unit dan persyaratan berkasnya.`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group w-full h-[46px] rounded-[12px] bg-[#C5A568] hover:bg-[#B69455] text-[#262722] font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-all duration-200 hover:-translate-y-[1.5px] active:translate-y-0 active:scale-[0.99] shadow-sm hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Konsultasi Simulasi Ini via WhatsApp</span>
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================= */}
+        {/* SECTION 6: KEGIATAN LAPANGAN (Dokumentasi Riil) */}
+        {/* Background: White #FFFFFF */}
+        {/* ========================================================= */}
+        <section id="kegiatan" className="py-20 sm:py-28 bg-white border-b border-[#DDD8CE]">
+          <div className="container-editorial">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12 sm:mb-16">
+              <div className="max-w-2xl">
+                <span className="text-xs uppercase tracking-[0.14em] text-[#C5A568] font-semibold block mb-2">
+                  Dokumentasi Riil
+                </span>
+                <h2 className="font-serif text-3xl sm:text-4xl text-[#262722] leading-tight">
+                  Progres Pekerjaan Lapangan
+                </h2>
+                <p className="text-[15px] sm:text-[16px] text-[#77766F] mt-3 leading-relaxed">
+                  Aktivitas fisik konstruksi kawasan perumahan Puri Gunung Langgar yang terpantau secara berkala.
+                </p>
+              </div>
+
+              <Link
+                href="/kegiatan"
+                prefetch={false}
+                className="group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#262722] hover:text-[#C5A568] transition-colors self-start sm:self-end"
+              >
+                <span>Lihat Seluruh Dokumentasi</span>
+                <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+              </Link>
+            </div>
+
+            {/* Photographic Grid (4 Items) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {(content.activities?.items?.slice(0, 4) || [
+                {
+                  title: 'Perataan Tanah & Akses Jalan',
+                  description: 'Pekerjaan cut and fill perataan kontur lahan dan pembukaan akses jalan utama perumahan.',
+                  image: '/assets/service-construction.jpg',
+                  tag: 'Tahap 1',
+                },
+                {
+                  title: 'Pengukuran & Pematokan',
+                  description: 'Pengukuran presisi batas tanah dan pematokan kavling unit hunian.',
+                  image: '/assets/service-residential.jpg',
+                  tag: 'Tahap 2',
+                },
+                {
+                  title: 'Pondasi & Struktur Bangunan',
+                  description: 'Pekerjaan konstruksi pondasi batu belah dan penegakan struktur dinding bata.',
+                  image: '/assets/service-interior.jpg',
+                  tag: 'Tahap 3',
+                },
+                {
+                  title: 'Infrastruktur Lingkungan',
+                  description: 'Pembangunan saluran drainase dan pengerasan jalan lingkungan kawasan.',
+                  image: '/assets/project-coastal.jpg',
+                  tag: 'Tahap 4',
+                },
+              ]).map((item, idx) => (
+                <div
+                  key={idx}
+                  className="group flex flex-col justify-between space-y-3"
+                >
+                  <div
+                    className="relative aspect-[4/3] w-full overflow-hidden rounded-[8px] bg-[#262722] cursor-pointer border border-[#DDD8CE]/60 shadow-sm"
+                    onClick={() =>
+                      setLightbox({
+                        open: true,
+                        image: item.image,
+                        caption: `${item.title}: ${item.description}`,
+                      })
+                    }
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                    />
+                    <div className="absolute top-2.5 left-2.5 bg-[#262722]/85 text-[#F3EFE6] text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-[3px] backdrop-blur-sm">
+                      {item.tag || `Tahap ${idx + 1}`}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5 pt-0.5">
+                    <h3 className="font-semibold text-sm text-[#262722] leading-snug group-hover:text-[#C5A568] transition-colors">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs text-[#77766F] leading-relaxed line-clamp-2">
+                      {item.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================= */}
+        {/* SECTION 7: LEGALITAS & TRANSPARANSI */}
+        {/* Background: Warm Ivory #F3EFE6 */}
+        {/* ========================================================= */}
+        <section id="legalitas" className="py-20 sm:py-28 bg-[#F3EFE6] border-b border-[#DDD8CE]">
+          <div className="container-editorial">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+              <div className="lg:col-span-5 space-y-4">
+                <span className="text-xs uppercase tracking-[0.14em] text-[#C5A568] font-semibold block">
+                  Kepastian Hukum
+                </span>
+                <h2 className="font-serif text-3xl sm:text-4xl text-[#262722] leading-tight">
+                  Legalitas Resmi Perseroan
+                </h2>
+                <p className="text-[15px] text-[#77766F] leading-relaxed">
+                  Setiap unit hunian dan pengembangan kawasan PT. Terbang Bersama Kawan berlandaskan kekuatan hukum resmi Republik Indonesia.
+                </p>
+
+                <div className="pt-2">
+                  <Link
+                    href="/legalitas"
+                    prefetch={false}
+                    className="group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#262722] hover:text-[#C5A568] transition-colors"
+                  >
+                    <span>Pelajari Dokumen Legalitas Selengkapnya</span>
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+                  </Link>
+                </div>
+              </div>
+
+              {/* Legal Certificate Fact Sheet (Open Editorial Specification Table) */}
+              <div className="lg:col-span-7 pt-1">
+                <div className="flex items-center justify-between pb-3.5 border-b border-[#DDD8CE]">
+                  <div className="flex items-center gap-2.5">
+                    <FileCheck2 className="w-5 h-5 text-[#C5A568] shrink-0" />
+                    <div>
+                      <h3 className="font-semibold text-sm text-[#262722]">PT. Terbang Bersama Kawan (PT. TBK)</h3>
+                      <span className="text-[11px] text-[#77766F]">Terdaftar resmi di Kemenkumham RI</span>
+                    </div>
+                  </div>
+                  <span className="text-[11px] font-semibold text-[#C5A568] uppercase tracking-wider font-mono">
+                    AHU Terverifikasi
+                  </span>
+                </div>
+
+                <dl className="divide-y divide-[#DDD8CE]/70 text-xs sm:text-[13px]">
+                  <div className="py-3.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
+                    <dt className="text-[#77766F] font-medium sm:w-1/3">Akta Notaris</dt>
+                    <dd className="font-medium text-[#262722] sm:w-2/3 sm:text-right">
+                      <span className="font-mono font-semibold text-[#262722]">{content.legal?.aktaNumber || 'No. 10'}</span>
+                      <span className="text-[#77766F] block text-[11px] mt-0.5">Tanggal {content.legal?.aktaDate || '18 Maret 2021'} &bull; Notaris: {content.legal?.notary || 'Eka Dian Anggraini, S.H., M.Kn.'}</span>
+                    </dd>
+                  </div>
+
+                  <div className="py-3.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
+                    <dt className="text-[#77766F] font-medium sm:w-1/3">SK Pengesahan Menkumham</dt>
+                    <dd className="font-medium text-[#262722] sm:w-2/3 sm:text-right">
+                      <span className="font-mono font-semibold text-[#262722] break-all">{content.legal?.skMenkumham || 'AHU-0016462.AH.01.01.TAHUN 2021'}</span>
+                      <span className="text-[#77766F] block text-[11px] mt-0.5">Tanggal SK: {content.legal?.skDate || '19 Maret 2021'}</span>
+                    </dd>
+                  </div>
+
+                  <div className="py-3.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
+                    <dt className="text-[#77766F] font-medium sm:w-1/3">Status Hak Lahan</dt>
+                    <dd className="font-medium text-[#262722] sm:w-2/3 sm:text-right">
+                      <span className="font-semibold text-[#262722]">Sertifikat Hak Milik (SHM)</span>
+                      <span className="text-[#77766F] block text-[11px] mt-0.5">Hak kepemilikan mutlak dan sah atas nama pembeli</span>
+                    </dd>
+                  </div>
+
+                  <div className="py-3.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
+                    <dt className="text-[#77766F] font-medium sm:w-1/3">Kewenangan Perseroan</dt>
+                    <dd className="font-medium text-[#262722] sm:w-2/3 sm:text-right">
+                      <span>Pengembang Resmi Perumahan</span>
+                      <span className="text-[#77766F] block text-[11px] mt-0.5">Wilayah operasional Kota Bandar Lampung &amp; Lampung Selatan</span>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================= */}
+        {/* SECTION 8: KONTAK & KONSULTASI RESMI */}
+        {/* Background: White #FFFFFF */}
+        {/* ========================================================= */}
+        <section id="kontak" className="py-20 sm:py-28 bg-white">
+          <div className="container-editorial">
+            <div className="max-w-2xl mb-12 sm:mb-16">
+              <span className="text-xs uppercase tracking-[0.14em] text-[#C5A568] font-semibold block mb-2">
+                Hubungi Kami
+              </span>
+              <h2 className="font-serif text-3xl sm:text-4xl text-[#262722] leading-tight">
+                Konsultasi & Layanan Informasi
+              </h2>
+              <p className="text-[15px] sm:text-[16px] text-[#77766F] mt-3 leading-relaxed">
+                Tim pemasaran resmi PT. Terbang Bersama Kawan siap memberikan informasi ketersediaan unit, tahapan berkas, dan pendampingan survei lokasi.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+              {/* Left Column: Direct Coordinates (Open Editorial Vertical List) */}
+              <div className="lg:col-span-5 space-y-8">
+                <div className="divide-y divide-[#DDD8CE]">
+                  <div className="py-4 first:pt-0">
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-[#C5A568] block mb-1">
+                      Alamat Kantor Pemasaran
+                    </span>
+                    <p className="text-xs sm:text-[13px] text-[#262722] font-medium leading-relaxed">
+                      {content.contact?.address || 'Bandar Lampung, Provinsi Lampung, Indonesia'}
+                    </p>
+                  </div>
+
+                  <div className="py-4">
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-[#C5A568] block mb-1">
+                      Layanan WhatsApp Resmi
+                    </span>
+                    <p className="font-mono text-sm sm:text-base font-semibold text-[#262722]">
+                      {content.contact?.whatsapp || '0812-7890-1234'}
+                    </p>
+                    <span className="text-[11px] text-[#77766F] block mt-0.5">Layanan respon cepat konsultasi calon konsumen</span>
+                  </div>
+
+                  <div className="py-4">
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-[#C5A568] block mb-1">
+                      Jam Pelayanan Kantor
+                    </span>
+                    <p className="text-xs sm:text-[13px] text-[#262722] font-medium">
+                      {content.contact?.operatingHours || 'Senin - Sabtu: 08.00 - 17.00 WIB'}
+                    </p>
+                    <span className="text-[11px] text-[#77766F] block mt-0.5">Survei hari Minggu dengan konfirmasi awal</span>
+                  </div>
+                </div>
+
+                {/* Refined Tasteful WhatsApp Action */}
+                <div>
+                  <a
+                    href={waUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-2.5 px-5 py-3 rounded-[12px] border border-emerald-700/30 hover:border-emerald-700 hover:bg-emerald-50 text-emerald-800 text-xs font-semibold tracking-wider uppercase transition-all duration-200 shadow-sm"
+                  >
+                    <MessageCircle className="w-4 h-4 text-emerald-700" />
+                    <span>Konsultasi WhatsApp Langsung</span>
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1 text-emerald-700" />
+                  </a>
+                </div>
+              </div>
+
+              {/* Right Column: Inquiry Form (Direct on Page Background, No Enclosing Outer Card) */}
+              <div className="lg:col-span-7">
+                <div className="mb-6">
+                  <h3 className="font-serif text-xl sm:text-2xl text-[#262722] mb-1.5">
+                    Formulir Konsultasi Proyek
+                  </h3>
+                  <p className="text-xs sm:text-[13px] text-[#77766F]">
+                    Silakan isi data diri Anda. Tim representatif kami akan memberikan informasi ketersediaan kavling dan pendampingan berkas KPR.
+                  </p>
+                </div>
+
+                {formSuccess && (
+                  <div className="mb-5 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-[8px] flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>Pesan berhasil dikirim. WhatsApp Anda akan terhubung langsung dengan tim representatif kami.</span>
+                  </div>
+                )}
+
+                {formError && (
+                  <div className="mb-5 p-4 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-[8px]">
+                    {formError}
+                  </div>
+                )}
+
+                <form onSubmit={handleInquirySubmit} className="space-y-4 text-xs">
+                  <div>
+                    <label htmlFor="form-name" className="block font-semibold text-[#262722] uppercase tracking-wider mb-1.5 text-[11px]">
                       Nama Lengkap *
                     </label>
                     <input
+                      id="form-name"
                       type="text"
                       required
-                      placeholder="Masukkan nama lengkap Anda"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 text-base sm:text-sm min-h-[46px]"
+                      placeholder="Contoh: Budi Santoso"
+                      className="w-full h-[44px] px-3.5 rounded-[8px] bg-white border border-[#DDD8CE] text-[#262722] placeholder-[#77766F]/50 focus:outline-none focus:border-[#C5A568] focus:ring-1 focus:ring-[#C5A568] transition-colors"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                        Nomor WhatsApp / HP *
+                      <label htmlFor="form-phone" className="block font-semibold text-[#262722] uppercase tracking-wider mb-1.5 text-[11px]">
+                        Nomor WhatsApp *
                       </label>
                       <input
+                        id="form-phone"
                         type="tel"
                         required
-                        placeholder="Contoh: 0812xxxxxxxx"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 text-base sm:text-sm min-h-[46px]"
+                        placeholder="Contoh: 08123456789"
+                        className="w-full h-[44px] px-3.5 rounded-[8px] bg-white border border-[#DDD8CE] text-[#262722] placeholder-[#77766F]/50 focus:outline-none focus:border-[#C5A568] focus:ring-1 focus:ring-[#C5A568] transition-colors font-mono"
                       />
                     </div>
+
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                      <label htmlFor="form-email" className="block font-semibold text-[#262722] uppercase tracking-wider mb-1.5 text-[11px]">
                         Alamat Email (Opsional)
                       </label>
                       <input
+                        id="form-email"
                         type="email"
-                        placeholder="nama@email.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 text-base sm:text-sm min-h-[46px]"
+                        placeholder="email@contoh.com"
+                        className="w-full h-[44px] px-3.5 rounded-[8px] bg-white border border-[#DDD8CE] text-[#262722] placeholder-[#77766F]/50 focus:outline-none focus:border-[#C5A568] focus:ring-1 focus:ring-[#C5A568] transition-colors"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                      Pesan / Keterangan Minat
+                    <label htmlFor="form-message" className="block font-semibold text-[#262722] uppercase tracking-wider mb-1.5 text-[11px]">
+                      Pesan atau Pertanyaan
                     </label>
                     <textarea
-                      rows={4}
-                      placeholder="Tuliskan pertanyaan Anda mengenai ketersediaan unit, simulasi angsuran, atau jadwal kunjungan lokasi..."
+                      id="form-message"
+                      rows={3}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 text-base sm:text-sm resize-none"
+                      placeholder="Tuliskan pertanyaan seputar kavling atau simulasi angsuran..."
+                      className="w-full p-3.5 rounded-[8px] bg-white border border-[#DDD8CE] text-[#262722] placeholder-[#77766F]/50 focus:outline-none focus:border-[#C5A568] focus:ring-1 focus:ring-[#C5A568] transition-colors resize-none"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={formSubmitting}
-                    className="w-full py-3.5 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm sm:text-base shadow-md shadow-emerald-950/20 transition-all flex items-center justify-center gap-2.5 disabled:opacity-50 min-h-[48px] active:scale-[0.98]"
+                    className="group w-full h-[46px] rounded-[12px] bg-[#C5A568] hover:bg-[#B69455] text-[#262722] font-semibold tracking-wider uppercase transition-all duration-200 hover:-translate-y-[1.5px] active:translate-y-0 active:scale-[0.99] shadow-sm hover:shadow flex items-center justify-center gap-2 disabled:opacity-50 disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#262722]"
                   >
-                    {formSubmitting ? (
-                      <span>Menyiapkan WhatsApp...</span>
-                    ) : (
-                      <>
-                        <MessageCircle className="w-5 h-5 fill-white" />
-                        <span>Kirim Langsung ke WhatsApp</span>
-                      </>
-                    )}
+                    <span>{formSubmitting ? 'Memproses...' : 'Kirim Pesan Konsultasi'}</span>
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
                   </button>
                 </form>
-              )}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      {/* FOOTER */}
-      <Footer content={content} />
-
-      {/* Floating Back to Top Button with Circular Progress Meter */}
-      <BackToTopButton />
-
-      {/* Lightbox Modal for High-Res Asset Inspection */}
+      {/* Lightbox Modal */}
       {lightbox.open && (
         <div
-          className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 animate-fade-in"
+          className="fixed inset-0 z-50 bg-[#262722]/95 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
           onClick={() => setLightbox({ open: false, image: '', caption: '' })}
           role="dialog"
           aria-modal="true"
         >
           <div
-            className="relative max-w-4xl w-full bg-[#0E1014] rounded-2xl overflow-hidden border border-white/20 shadow-2xl flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full bg-black overflow-hidden flex items-center justify-center">
-              <img
-                src={lightbox.image}
-                alt={lightbox.caption}
-                className="max-w-full max-h-full object-contain"
-              />
-              <button
-                type="button"
-                onClick={() => setLightbox({ open: false, image: '', caption: '' })}
-                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/60 hover:bg-black/90 text-white border border-white/20 flex items-center justify-center transition-all"
-                aria-label="Tutup foto"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="p-4 sm:p-5 bg-[#14161A] border-t border-white/10 flex items-center justify-between text-white text-xs sm:text-sm">
-              <span className="font-medium text-[#F4EFE6]">{lightbox.caption}</span>
-              <span className="text-xs text-[#C9A96A] font-semibold shrink-0 ml-4">PT. Terbang Bersama Kawan</span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Video Modal for Activities Documentation */}
-      {videoModal.open && (
-        <div
-          className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 animate-fade-in"
-          onClick={() => setVideoModal({ open: false, url: '', title: '' })}
-          role="dialog"
-          aria-modal="true"
-        >
-          <div
-            className="relative max-w-4xl w-full bg-black rounded-2xl overflow-hidden border border-white/20 shadow-2xl flex flex-col"
+            className="relative max-w-4xl w-full max-h-[90vh] flex flex-col items-center"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
-              onClick={() => setVideoModal({ open: false, url: '', title: '' })}
-              className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center transition-colors"
-              aria-label="Tutup video"
+              onClick={() => setLightbox({ open: false, image: '', caption: '' })}
+              className="absolute -top-10 right-0 text-white/70 hover:text-white transition-colors p-1"
+              aria-label="Tutup foto"
             >
-              <X className="w-5 h-5" />
+              <X className="w-6 h-6" />
             </button>
-            <div className="relative aspect-video w-full bg-black flex items-center justify-center">
-              {getYouTubeEmbedUrl(videoModal.url) ? (
-                <iframe
-                  src={`${getYouTubeEmbedUrl(videoModal.url)}?autoplay=1`}
-                  title={videoModal.title}
-                  className="w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              ) : (
-                <video
-                  src={videoModal.url}
-                  controls
-                  autoPlay
-                  className="w-full h-full"
-                />
-              )}
-            </div>
-            <div className="p-4 bg-slate-950 text-white text-xs sm:text-sm border-t border-white/10 flex items-center justify-between">
-              <span className="font-semibold text-white">{videoModal.title}</span>
-              <span className="text-[#C9A96A] font-semibold shrink-0 ml-4">Video Lapangan PT. TBK</span>
-            </div>
+            <img
+              src={lightbox.image}
+              alt={lightbox.caption}
+              className="max-h-[75vh] w-auto object-contain rounded-[3px] border border-white/20"
+            />
+            {lightbox.caption && (
+              <p className="mt-3 text-xs sm:text-sm text-[#F3EFE6]/90 text-center max-w-xl">
+                {lightbox.caption}
+              </p>
+            )}
           </div>
         </div>
       )}
 
-      {/* Floating Interactive WhatsApp Pop-Up Widget */}
+      {/* Footer */}
+      <Footer content={content} />
+
+      {/* WhatsApp Consultation Action */}
       <FloatingWhatsApp content={content} />
-
-      {/* Mobile Sticky Quick Action Dock (<640px) */}
-      <aside 
-        aria-label="Aksi Cepat Mobile"
-        className="fixed bottom-0 inset-x-0 z-30 bg-[#0E1014]/98 backdrop-blur-xl border-t border-white/10 px-3.5 py-2.5 flex items-center justify-between sm:hidden shadow-[0_-8px_24px_rgba(0,0,0,0.6)]"
-      >
-        <div className="flex flex-col min-w-0 pr-2">
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-            <span className="text-[11px] font-bold text-[#C9A96A] uppercase tracking-wider truncate">
-              Puri Gunung Langgar
-            </span>
-          </div>
-          <span className="text-[12px] font-semibold text-[#F4EFE6]/90 truncate">
-            Cicilan Subsidi ~Rp 1 Jt-an/bln
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            type="button"
-            onClick={() => {
-              setProjectRightTab('kpr');
-              const el = document.getElementById('proyek');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="h-[38px] px-3 rounded-lg bg-white/[0.08] hover:bg-white/[0.14] border border-white/15 text-[#F4EFE6] text-xs font-semibold flex items-center gap-1.5 transition-colors"
-          >
-            <Calculator className="w-3.5 h-3.5 text-amber-400" />
-            <span>KPR</span>
-          </button>
-
-          <a
-            href={waUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="h-[38px] px-3.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-emerald-950/40 transition-colors"
-          >
-            <MessageCircle className="w-3.5 h-3.5 fill-white" />
-            <span>Tanya WA</span>
-          </a>
-        </div>
-      </aside>
     </div>
-  );
-}
-
-function BackToTopButton() {
-  const [show, setShow] = useState(false);
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const total = document.documentElement.scrollHeight - window.innerHeight;
-          if (total > 0) {
-            setProgress((window.scrollY / total) * 100);
-          }
-          setShow(window.scrollY > 320);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  if (!show) return null;
-
-  return (
-    <button
-      type="button"
-      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      className="fixed bottom-[74px] left-3 sm:bottom-24 sm:right-6 sm:left-auto z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-950/90 hover:bg-slate-950 text-[#C9A96A] hover:text-white flex items-center justify-center shadow-xl backdrop-blur-md border border-white/15 transition-all duration-300 hover:scale-105 active:scale-95 group focus:outline-none focus:ring-2 focus:ring-[#C9A96A]"
-      aria-label="Kembali ke atas halaman"
-    >
-      <svg className="w-10 h-10 sm:w-11 sm:h-11 -rotate-90 absolute inset-0 pointer-events-none" viewBox="0 0 44 44">
-        <circle
-          cx="22"
-          cy="22"
-          r="18"
-          fill="none"
-          stroke="rgba(255,255,255,0.12)"
-          strokeWidth="2.5"
-        />
-        <circle
-          cx="22"
-          cy="22"
-          r="18"
-          fill="none"
-          stroke="#C9A96A"
-          strokeWidth="2.5"
-          strokeDasharray={113.1}
-          strokeDashoffset={113.1 - (113.1 * progress) / 100}
-          className="transition-all duration-150"
-        />
-      </svg>
-      <ArrowUp className="w-4 h-4 transition-transform group-hover:-translate-y-0.5" />
-    </button>
   );
 }
