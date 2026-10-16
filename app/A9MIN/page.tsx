@@ -393,8 +393,8 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0E1013] text-white flex items-center justify-center">
-        <div className="flex items-center gap-3 text-gold-400">
+      <div className="min-h-screen bg-[#F4F7FC] text-[#102D52] flex items-center justify-center">
+        <div className="flex items-center gap-3 text-[#FF9D2E]">
           <RefreshCw className="w-6 h-6 animate-spin" />
           <span className="font-syne font-semibold">Memuat Data Panel Admin...</span>
         </div>
@@ -403,9 +403,9 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0E1013] text-[#FBF9F5] selection:bg-gold-500 selection:text-white">
+    <div className="min-h-screen bg-[#F4F7FC] text-[#102D52] selection:bg-[#FF9D2E] selection:text-[#071C38]">
       {/* Top Admin Navbar */}
-      <nav className="sticky top-0 z-40 bg-[#14171C]/95 backdrop-blur-md border-b border-gold-500/20 px-4 sm:px-6 lg:px-8 py-3.5 shadow-xl shadow-black/40">
+      <nav className="sticky top-0 z-40 bg-[#073B78] border-b border-[#0A4B91] px-4 sm:px-6 lg:px-8 py-3.5 shadow-lg shadow-[#071C38]/20">
         <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-3.5 lg:gap-6">
           {/* Brand Left */}
           <div className="flex items-center justify-between lg:justify-start gap-4">
@@ -421,7 +421,7 @@ export default function AdminDashboard() {
                 <div className="font-syne font-bold text-sm sm:text-base text-white">
                   CMS Panel Administrasi
                 </div>
-                <div className="text-[11px] text-gold-400 font-medium">
+                <div className="text-[11px] text-[#FF9D2E] font-semibold">
                   PT. Terbang Bersama Kawan (PT. TBK)
                 </div>
               </div>
@@ -429,16 +429,16 @@ export default function AdminDashboard() {
 
             {/* Mobile-only User Pill & Logout */}
             <div className="flex lg:hidden items-center gap-2">
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/10 text-[11px] text-white">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#102D52] border border-[#1C5795] text-[11px] text-white">
                 <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                <span className="font-semibold text-gold-400 truncate max-w-[90px]">
+                <span className="font-semibold text-[#FF9D2E] truncate max-w-[90px]">
                   {adminUser?.name || 'Admin'}
                 </span>
               </div>
               <button
                 onClick={handleLogout}
                 disabled={loggingOut}
-                className="p-1.5 rounded-lg bg-white/[0.04] border border-white/10 hover:bg-rose-500/20 text-gray-300 hover:text-rose-300 transition-colors"
+                className="p-1.5 rounded-lg bg-[#102D52] border border-[#1C5795] hover:bg-rose-600 hover:border-rose-600 text-white/90 hover:text-white transition-colors"
                 title="Keluar"
               >
                 <LogOut className="w-4 h-4" />
@@ -449,10 +449,10 @@ export default function AdminDashboard() {
           {/* Action buttons bar */}
           <div className="flex items-center justify-between lg:justify-end gap-2 sm:gap-2.5 overflow-x-auto lg:overflow-visible pb-1 lg:pb-0">
             {/* Desktop User badge */}
-            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/10 text-xs text-white shrink-0">
+            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#102D52] border border-[#1C5795] text-xs text-white shrink-0">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-white/50 text-[11px]">Admin:</span>
-              <span className="font-semibold text-gold-400 truncate max-w-[140px]">
+              <span className="text-white/70 text-[11px]">Admin:</span>
+              <span className="font-semibold text-[#FF9D2E] truncate max-w-[140px]">
                 {adminUser?.name || 'Administrator'}
               </span>
             </div>
@@ -462,19 +462,19 @@ export default function AdminDashboard() {
               <Link
                 href="/"
                 target="_blank"
-                className="px-2.5 sm:px-3 py-2 rounded-lg bg-[#0E1013] border border-white/10 hover:border-gold-500/40 text-xs text-gray-300 hover:text-white flex items-center gap-1.5 transition-colors shrink-0"
+                className="px-2.5 sm:px-3 py-2 rounded-lg bg-[#102D52] border border-[#1C5795] hover:border-[#FF9D2E] hover:bg-[#163E70] text-xs text-white/90 hover:text-white flex items-center gap-1.5 transition-colors shrink-0"
               >
-                <ExternalLink className="w-3.5 h-3.5 text-gold-400" />
+                <ExternalLink className="w-3.5 h-3.5 text-[#FF9D2E]" />
                 <span className="hidden sm:inline">Lihat Website</span>
                 <span className="sm:hidden">Web</span>
               </Link>
 
               <button
                 onClick={() => setShowPasswordModal(true)}
-                className="px-2.5 sm:px-3 py-2 rounded-lg bg-[#0E1013] border border-white/10 hover:border-gold-500/40 text-xs text-gray-300 hover:text-white flex items-center gap-1.5 transition-colors shrink-0"
+                className="px-2.5 sm:px-3 py-2 rounded-lg bg-[#102D52] border border-[#1C5795] hover:border-[#FF9D2E] hover:bg-[#163E70] text-xs text-white/90 hover:text-white flex items-center gap-1.5 transition-colors shrink-0"
                 title="Ganti Kata Sandi Admin"
               >
-                <Key className="w-3.5 h-3.5 text-gold-400" />
+                <Key className="w-3.5 h-3.5 text-[#FF9D2E]" />
                 <span className="hidden sm:inline">Ganti Password</span>
                 <span className="sm:hidden">Sandi</span>
               </button>
@@ -482,7 +482,7 @@ export default function AdminDashboard() {
               <button
                 onClick={handleReset}
                 disabled={saving}
-                className="px-2.5 sm:px-3 py-2 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 hover:bg-rose-500/20 text-xs flex items-center gap-1.5 transition-colors disabled:opacity-50 shrink-0"
+                className="px-2.5 sm:px-3 py-2 rounded-lg bg-rose-500/20 border border-rose-400/40 text-rose-100 hover:bg-rose-500/30 text-xs flex items-center gap-1.5 transition-colors disabled:opacity-50 shrink-0"
                 title="Reset ke DATA RESMI default"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -496,7 +496,7 @@ export default function AdminDashboard() {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="px-4 sm:px-5 py-2 rounded-lg bg-gradient-to-r from-[#D4AF37] via-[#C9A96A] to-[#B88E3F] text-[#0E1014] font-bold text-xs flex items-center gap-1.5 hover:opacity-95 shadow-md shadow-gold-500/20 transition-all disabled:opacity-50 shrink-0"
+                className="px-4 sm:px-5 py-2 rounded-lg bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-[#071C38] font-bold text-xs flex items-center gap-1.5 hover:brightness-105 shadow-md shadow-[#FF9D2E]/30 transition-all disabled:opacity-50 shrink-0"
               >
                 {saving ? (
                   <>
@@ -515,7 +515,7 @@ export default function AdminDashboard() {
               <button
                 onClick={handleLogout}
                 disabled={loggingOut}
-                className="hidden lg:flex px-3 py-2 rounded-lg bg-white/[0.04] border border-white/10 hover:bg-rose-500/20 hover:border-rose-500/40 text-xs text-gray-300 hover:text-rose-300 items-center gap-1.5 transition-colors shrink-0"
+                className="hidden lg:flex px-3 py-2 rounded-lg bg-[#102D52] border border-[#1C5795] hover:bg-rose-600 hover:border-rose-600 text-xs text-white/90 hover:text-white items-center gap-1.5 transition-colors shrink-0"
                 title="Keluar dari Panel Admin"
               >
                 <LogOut className="w-3.5 h-3.5" />
@@ -532,8 +532,8 @@ export default function AdminDashboard() {
           <div
             className={`p-4 rounded-xl flex items-center gap-3 text-sm font-medium ${
               saveStatus.type === 'success'
-                ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
-                : 'bg-rose-500/10 border border-rose-500/30 text-rose-300'
+                ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
+                : 'bg-rose-50 border border-rose-200 text-rose-800'
             }`}
           >
             {saveStatus.type === 'success' ? (
@@ -550,12 +550,12 @@ export default function AdminDashboard() {
       <div className="max-w-[1400px] mx-auto px-3.5 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
           {/* Sidebar Tabs (Visible on Desktop >= lg) */}
-          <div className="hidden lg:block lg:col-span-3 space-y-4">
+          <div className="hidden lg:block lg:col-span-3 space-y-4 bg-[#0A2548] border border-[#1C5795]/50 rounded-2xl p-4 shadow-sm text-white">
             {/* GROUP 1: HALAMAN DEPAN (BERANDA) */}
             <div className="space-y-1">
-              <div className="text-[11px] uppercase font-bold text-gold-400/90 px-3 py-1 tracking-wider flex items-center justify-between">
+              <div className="text-[11px] uppercase font-bold text-[#FF9D2E] px-3 py-1 tracking-wider flex items-center justify-between">
                 <span>Tampilan Beranda</span>
-                <span className="text-[10px] text-gray-500 font-normal">5 Bagian</span>
+                <span className="text-[10px] text-white/60 font-semibold">5 Bagian</span>
               </div>
 
               <button
@@ -563,15 +563,15 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab('banners')}
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === 'banners'
-                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <Film className="w-4 h-4 shrink-0 text-gold-400" />
+                  <Film className="w-4 h-4 shrink-0 text-[#FF9D2E]" />
                   <span>Banner Promosi Atas</span>
                 </div>
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/10 text-gray-300 font-mono">
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/15 text-white font-mono font-semibold">
                   {content.bannerSlides?.length || 0}
                 </span>
               </button>
@@ -581,11 +581,11 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab('intro-features')}
                 className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === 'intro-features'
-                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
                 }`}
               >
-                <Sparkles className="w-4 h-4 shrink-0 text-gold-400" />
+                <Sparkles className="w-4 h-4 shrink-0 text-[#FF9D2E]" />
                 <span>Intro & 4 Keunggulan</span>
               </button>
 
@@ -594,8 +594,8 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab('hero')}
                 className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === 'hero'
-                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
                 }`}
               >
                 <Home className="w-4 h-4 shrink-0" />
@@ -607,15 +607,15 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab('buying-process')}
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === 'buying-process'
-                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
                   <FileText className="w-4 h-4 shrink-0" />
                   <span>Alur Pembelian Rumah</span>
                 </div>
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/10 text-gray-300 font-mono">
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/15 text-white font-mono font-semibold">
                   {content.buyingProcess?.steps?.length || 4}
                 </span>
               </button>
@@ -625,8 +625,8 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab('kpr-simulation')}
                 className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === 'kpr-simulation'
-                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
                 }`}
               >
                 <Calculator className="w-4 h-4 shrink-0" />
@@ -635,10 +635,10 @@ export default function AdminDashboard() {
             </div>
 
             {/* GROUP 2: PROFIL PERUSAHAAN */}
-            <div className="space-y-1 pt-2 border-t border-white/10">
-              <div className="text-[11px] uppercase font-bold text-gold-400/90 px-3 py-1 tracking-wider flex items-center justify-between">
+            <div className="space-y-1 pt-2 border-t border-[#1C5795]/40">
+              <div className="text-[11px] uppercase font-bold text-[#FF9D2E] px-3 py-1 tracking-wider flex items-center justify-between">
                 <span>Profil Perusahaan</span>
-                <span className="text-[10px] text-gray-500 font-normal">4 Bagian</span>
+                <span className="text-[10px] text-white/60 font-semibold">4 Bagian</span>
               </div>
 
               <button
@@ -646,11 +646,11 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab('branding')}
                 className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === 'branding'
-                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
                 }`}
               >
-                <Sparkles className="w-4 h-4 shrink-0 text-gold-400" />
+                <Sparkles className="w-4 h-4 shrink-0 text-[#FF9D2E]" />
                 <span>Branding, Logo & Footer</span>
               </button>
 
@@ -659,8 +659,8 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab('about')}
                 className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === 'about'
-                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
                 }`}
               >
                 <Building2 className="w-4 h-4 shrink-0" />
@@ -672,15 +672,15 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab('leadership')}
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === 'leadership'
-                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
                   <Users className="w-4 h-4 shrink-0" />
                   <span>Dewan Pengurus</span>
                 </div>
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/10 text-gray-300 font-mono">
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/15 text-white font-mono font-semibold">
                   {content.leadership?.members?.length || 0}
                 </span>
               </button>
@@ -690,8 +690,8 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab('legal')}
                 className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === 'legal'
-                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
                 }`}
               >
                 <ShieldCheck className="w-4 h-4 shrink-0" />
@@ -700,10 +700,10 @@ export default function AdminDashboard() {
             </div>
 
             {/* GROUP 3: PROYEK & DOKUMENTASI */}
-            <div className="space-y-1 pt-2 border-t border-white/10">
-              <div className="text-[11px] uppercase font-bold text-gold-400/90 px-3 py-1 tracking-wider flex items-center justify-between">
+            <div className="space-y-1 pt-2 border-t border-[#1C5795]/40">
+              <div className="text-[11px] uppercase font-bold text-[#FF9D2E] px-3 py-1 tracking-wider flex items-center justify-between">
                 <span>Proyek & Lapangan</span>
-                <span className="text-[10px] text-gray-500 font-normal">2 Bagian</span>
+                <span className="text-[10px] text-white/60 font-semibold">2 Bagian</span>
               </div>
 
               <button
@@ -711,8 +711,8 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab('project')}
                 className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === 'project'
-                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
                 }`}
               >
                 <Building className="w-4 h-4 shrink-0" />
@@ -724,25 +724,25 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab('activities')}
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === 'activities'
-                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
                   <HardHat className="w-4 h-4 shrink-0" />
                   <span>Kegiatan Lapangan Riil</span>
                 </div>
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/10 text-gray-300 font-mono">
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/15 text-white font-mono font-semibold">
                   {content.activities?.items?.length || 0}
                 </span>
               </button>
             </div>
 
             {/* GROUP 4: INTERAKSI & FORMULIR */}
-            <div className="space-y-1 pt-2 border-t border-white/10">
-              <div className="text-[11px] uppercase font-bold text-gold-400/90 px-3 py-1 tracking-wider flex items-center justify-between">
+            <div className="space-y-1 pt-2 border-t border-[#1C5795]/40">
+              <div className="text-[11px] uppercase font-bold text-[#FF9D2E] px-3 py-1 tracking-wider flex items-center justify-between">
                 <span>Interaksi & Kontak</span>
-                <span className="text-[10px] text-gray-500 font-normal">2 Bagian</span>
+                <span className="text-[10px] text-white/60 font-semibold">2 Bagian</span>
               </div>
 
               <button
@@ -750,8 +750,8 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab('contact')}
                 className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === 'contact'
-                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
                 }`}
               >
                 <PhoneCall className="w-4 h-4 shrink-0" />
@@ -763,8 +763,8 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab('inquiries')}
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === 'inquiries'
-                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
@@ -781,19 +781,19 @@ export default function AdminDashboard() {
           </div>
 
           {/* Mobile & Tablet Quick Navigation Selector (< lg) */}
-          <div className="lg:hidden col-span-1 space-y-3 bg-[#16191E] border border-gold-500/30 rounded-2xl p-4 shadow-lg">
-            <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
+          <div className="lg:hidden col-span-1 space-y-3 bg-[#0A2548] border border-[#1C5795]/50 rounded-2xl p-4 shadow-md text-white">
+            <div className="flex items-center justify-between gap-2 border-b border-[#DCE7F5] pb-3">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-gold-400" />
+                <Sparkles className="w-4 h-4 text-[#FF9D2E]" />
                 <span className="text-xs font-bold text-white uppercase tracking-wider">Bagian Konten Aktif</span>
               </div>
-              <span className="text-[11px] px-2 py-0.5 rounded-full bg-gold-500/20 text-gold-300 font-mono font-semibold">
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#FFF7EB] text-[#C76A08] border border-[#FF9D2E]/30 font-mono font-semibold">
                 13 Menu
               </span>
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="mobile-tab-select" className="text-[11px] text-gray-400 block font-medium">
+              <label htmlFor="mobile-tab-select" className="text-[11px] text-white/70 block font-medium">
                 Pilih bagian yang ingin Anda edit:
               </label>
               <div className="relative">
@@ -807,7 +807,7 @@ export default function AdminDashboard() {
                       editorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
                   }}
-                  className="w-full h-11 px-3.5 pr-10 rounded-xl bg-[#0E1013] border border-white/20 text-white font-semibold text-xs sm:text-sm focus:outline-none focus:border-gold-500 appearance-none cursor-pointer"
+                  className="w-full h-11 px-3.5 pr-10 rounded-xl bg-[#071C38] border border-[#1C5795] text-white font-semibold text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] appearance-none cursor-pointer"
                 >
                   <optgroup label="TAMPILAN BERANDA">
                     <option value="banners">Banner Promosi Atas ({content.bannerSlides?.length || 0})</option>
@@ -831,7 +831,7 @@ export default function AdminDashboard() {
                     <option value="inquiries">Pesan Masuk (Formulir) {inquiries.length > 0 ? `(${inquiries.length} baru)` : ''}</option>
                   </optgroup>
                 </select>
-                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gold-400">
+                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#FF9D2E]">
                   <ChevronDown className="w-4 h-4" />
                 </div>
               </div>
@@ -861,8 +861,8 @@ export default function AdminDashboard() {
                   }}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
                     activeTab === chip.id
-                      ? 'bg-gold-500/25 text-gold-300 border border-gold-500/40'
-                      : 'bg-[#0E1013] text-gray-400 hover:text-white border border-white/10'
+                      ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-xs'
+                      : 'bg-[#102D52] text-white/80 hover:text-white border border-[#1C5795]'
                   }`}
                 >
                   {chip.label}
@@ -872,17 +872,17 @@ export default function AdminDashboard() {
           </div>
 
           {/* Form Content Editor */}
-          <div id="admin-form-editor" className="lg:col-span-9 bg-[#16191E] border border-white/10 rounded-2xl p-4 sm:p-6 lg:p-8">
+          <div id="admin-form-editor" className="lg:col-span-9 bg-white border border-[#DCE7F5] rounded-2xl p-4 sm:p-6 lg:p-8 shadow-sm">
             {/* TAB: PROMO BANNERS CAROUSEL */}
             {activeTab === 'banners' && (
               <div className="space-y-6">
-                <div className="border-b border-white/10 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="border-b border-[#DCE7F5] pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
-                      <Film className="w-5 h-5 text-gold-400" />
+                    <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
+                      <Film className="w-5 h-5 text-[#FF9D2E]" />
                       Slide Banner Promosi Berjalan (Top Carousel)
                     </h2>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-[#526783] mt-1">
                       Kelola slide banner beranda di bagian paling atas (Puri Gunung Langgar, KPR FLPP 5%, Legalitas SHM, dll.).
                     </p>
                   </div>
@@ -906,7 +906,7 @@ export default function AdminDashboard() {
                       };
                       setContent({ ...content, bannerSlides: [...currentSlides, newSlide] });
                     }}
-                    className="px-4 py-2 rounded-xl bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-bold flex items-center gap-2 transition-all self-start sm:self-auto"
+                    className="px-4 py-2 rounded-xl bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-bold shadow-xs flex items-center gap-2 transition-all self-start sm:self-auto"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Tambah Slide Banner Baru</span>
@@ -916,22 +916,22 @@ export default function AdminDashboard() {
                 {/* Slides List */}
                 <div className="space-y-6">
                   {(!content.bannerSlides || content.bannerSlides.length === 0) ? (
-                    <div className="p-8 rounded-2xl bg-[#0E1013] border border-white/10 text-center text-gray-400 text-sm">
+                    <div className="p-8 rounded-2xl bg-[#F8FAFD] border border-[#DCE7F5] text-center text-[#526783] text-sm">
                       Belum ada slide banner kustom. Klik tombol di atas untuk menambahkan slide baru.
                     </div>
                   ) : (
                     content.bannerSlides.map((slide, sIdx) => (
                       <div
                         key={slide.id || sIdx}
-                        className="p-5 sm:p-6 rounded-2xl bg-[#0E1013] border border-white/10 hover:border-gold-500/40 transition-all space-y-5"
+                        className="p-5 sm:p-6 rounded-2xl bg-[#F8FAFD] border border-[#DCE7F5] hover:border-[#FF9D2E]/50 shadow-xs transition-all space-y-5"
                       >
                         {/* Slide Card Header */}
-                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
+                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#DCE7F5] pb-3">
                           <div className="flex items-center gap-2">
-                            <span className="w-7 h-7 rounded-lg bg-gold-500/20 text-gold-400 font-bold text-xs flex items-center justify-center">
+                            <span className="w-7 h-7 rounded-lg bg-[#073B78] text-[#FF9D2E] font-bold text-xs flex items-center justify-center shadow-xs">
                               {sIdx + 1}
                             </span>
-                            <span className="font-bold text-white text-sm">
+                            <span className="font-bold text-[#073B78] text-sm">
                               {slide.eyebrow || `Slide Banner #${sIdx + 1}`}
                             </span>
                           </div>
@@ -946,7 +946,7 @@ export default function AdminDashboard() {
                                 newSlides[sIdx - 1] = temp;
                                 setContent({ ...content, bannerSlides: newSlides });
                               }}
-                              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
+                              className="p-1.5 rounded-lg bg-white hover:bg-[#EBF3FC] text-[#073B78] border border-[#DCE7F5] disabled:opacity-30 disabled:cursor-not-allowed"
                               title="Geser Ke Atas"
                             >
                               <ArrowUp className="w-4 h-4" />
@@ -961,7 +961,7 @@ export default function AdminDashboard() {
                                 newSlides[sIdx + 1] = temp;
                                 setContent({ ...content, bannerSlides: newSlides });
                               }}
-                              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
+                              className="p-1.5 rounded-lg bg-white hover:bg-[#EBF3FC] text-[#073B78] border border-[#DCE7F5] disabled:opacity-30 disabled:cursor-not-allowed"
                               title="Geser Ke Bawah"
                             >
                               <ArrowDown className="w-4 h-4" />
@@ -978,7 +978,7 @@ export default function AdminDashboard() {
                                   });
                                 }
                               }}
-                              className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 ml-1"
+                              className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 ml-1"
                               title="Hapus Slide Ini"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -989,10 +989,10 @@ export default function AdminDashboard() {
                         {/* Banner Image Preview & Upload */}
                         <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
                           <div className="md:col-span-4 space-y-2">
-                            <label className="block text-xs font-semibold text-gray-300">
+                            <label className="block text-xs font-bold text-[#073B78]">
                               Foto Background Banner
                             </label>
-                            <div className="relative aspect-[16/9] rounded-xl overflow-hidden bg-[#16191E] border border-white/10 group">
+                            <div className="relative aspect-[16/9] rounded-xl overflow-hidden bg-[#F8FAFD] border border-[#DCE7F5] group">
                               <img
                                 src={slide.image || '/assets/hero-marketing.jpg'}
                                 alt={slide.imageAlt || 'Banner preview'}
@@ -1009,9 +1009,9 @@ export default function AdminDashboard() {
                                   newSlides[sIdx].image = e.target.value;
                                   setContent({ ...content, bannerSlides: newSlides });
                                 }}
-                                className="flex-1 px-3 py-1.5 rounded-lg bg-[#16191E] border border-white/10 text-xs text-white font-mono"
+                                className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono font-semibold"
                               />
-                              <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-semibold flex items-center gap-1.5 shrink-0">
+                              <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0">
                                 <Upload className="w-3.5 h-3.5" />
                                 <span>{uploadingKey === `banner-${sIdx}` ? '...' : 'Upload'}</span>
                                 <input
@@ -1035,7 +1035,7 @@ export default function AdminDashboard() {
                           {/* Banner Text Fields */}
                           <div className="md:col-span-8 space-y-3.5">
                             <div>
-                              <label className="block text-xs font-medium text-gray-300 mb-1">
+                              <label className="block text-xs font-bold text-[#073B78] mb-1">
                                 Label Atas (Eyebrow Badge)
                               </label>
                               <input
@@ -1047,13 +1047,13 @@ export default function AdminDashboard() {
                                   newSlides[sIdx].eyebrow = e.target.value;
                                   setContent({ ...content, bannerSlides: newSlides });
                                 }}
-                                className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs focus:outline-none focus:border-gold-500"
+                                className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                               />
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                               <div>
-                                <label className="block text-xs font-medium text-gray-300 mb-1">
+                                <label className="block text-xs font-bold text-[#073B78] mb-1">
                                   Headline Baris 1 (Putih)
                                 </label>
                                 <input
@@ -1065,11 +1065,11 @@ export default function AdminDashboard() {
                                     newSlides[sIdx].headlineFirstLine = e.target.value;
                                     setContent({ ...content, bannerSlides: newSlides });
                                   }}
-                                  className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs focus:outline-none focus:border-gold-500"
+                                  className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                                 />
                               </div>
                               <div>
-                                <label className="block text-xs font-medium text-gold-400 mb-1">
+                                <label className="block text-xs font-bold text-[#C76A08] mb-1">
                                   Headline Highlight (Warna Emas / Kuning)
                                 </label>
                                 <input
@@ -1081,13 +1081,13 @@ export default function AdminDashboard() {
                                     newSlides[sIdx].headlineHighlight = e.target.value;
                                     setContent({ ...content, bannerSlides: newSlides });
                                   }}
-                                  className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-gold-300 text-xs focus:outline-none focus:border-gold-500 font-semibold"
+                                  className="w-full px-3.5 py-2 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] text-[#C76A08] text-xs focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-bold"
                                 />
                               </div>
                             </div>
 
                             <div>
-                              <label className="block text-xs font-medium text-gray-300 mb-1">
+                              <label className="block text-xs font-bold text-[#073B78] mb-1">
                                 Deskripsi Pendukung (Paragraf Ringkas)
                               </label>
                               <textarea
@@ -1098,14 +1098,14 @@ export default function AdminDashboard() {
                                   newSlides[sIdx].supportingText = e.target.value;
                                   setContent({ ...content, bannerSlides: newSlides });
                                 }}
-                                className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs focus:outline-none focus:border-gold-500"
+                                className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                               />
                             </div>
 
                             {/* CTA Buttons */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-white/5">
-                              <div className="space-y-1.5 p-3 rounded-xl bg-[#16191E]/60 border border-white/5">
-                                <span className="text-[11px] font-bold text-gold-400 uppercase">Tombol Utama 1</span>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-[#DCE7F5]">
+                              <div className="space-y-1.5 p-3 rounded-xl bg-white border border-[#DCE7F5]">
+                                <span className="text-[11px] font-bold text-[#073B78] uppercase">Tombol Utama 1</span>
                                 <input
                                   type="text"
                                   placeholder="Label Tombol (misal: Lihat Proyek)"
@@ -1115,7 +1115,7 @@ export default function AdminDashboard() {
                                     newSlides[sIdx].primaryCtaText = e.target.value;
                                     setContent({ ...content, bannerSlides: newSlides });
                                   }}
-                                  className="w-full px-2.5 py-1.5 rounded-lg bg-[#0E1013] border border-white/10 text-xs text-white"
+                                  className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52]"
                                 />
                                 <input
                                   type="text"
@@ -1126,12 +1126,12 @@ export default function AdminDashboard() {
                                     newSlides[sIdx].primaryCtaHref = e.target.value;
                                     setContent({ ...content, bannerSlides: newSlides });
                                   }}
-                                  className="w-full px-2.5 py-1.5 rounded-lg bg-[#0E1013] border border-white/10 text-xs text-gray-300 font-mono"
+                                  className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783] font-mono"
                                 />
                               </div>
 
-                              <div className="space-y-1.5 p-3 rounded-xl bg-[#16191E]/60 border border-white/5">
-                                <span className="text-[11px] font-bold text-gold-400 uppercase">Tombol Sekunder 2</span>
+                              <div className="space-y-1.5 p-3 rounded-xl bg-white border border-[#DCE7F5]">
+                                <span className="text-[11px] font-bold text-[#073B78] uppercase">Tombol Sekunder 2</span>
                                 <input
                                   type="text"
                                   placeholder="Label Tombol (misal: Konsultasi WhatsApp)"
@@ -1141,7 +1141,7 @@ export default function AdminDashboard() {
                                     newSlides[sIdx].secondaryCtaText = e.target.value;
                                     setContent({ ...content, bannerSlides: newSlides });
                                   }}
-                                  className="w-full px-2.5 py-1.5 rounded-lg bg-[#0E1013] border border-white/10 text-xs text-white"
+                                  className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52]"
                                 />
                                 <input
                                   type="text"
@@ -1152,7 +1152,7 @@ export default function AdminDashboard() {
                                     newSlides[sIdx].secondaryCtaHref = e.target.value;
                                     setContent({ ...content, bannerSlides: newSlides });
                                   }}
-                                  className="w-full px-2.5 py-1.5 rounded-lg bg-[#0E1013] border border-white/10 text-xs text-gray-300 font-mono"
+                                  className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783] font-mono"
                                 />
                               </div>
                             </div>
@@ -1168,25 +1168,25 @@ export default function AdminDashboard() {
             {/* TAB: HOME INTRO & 4 FEATURES */}
             {activeTab === 'intro-features' && (
               <div className="space-y-6">
-                <div className="border-b border-white/10 pb-4">
-                  <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-gold-400" />
+                <div className="border-b border-[#DCE7F5] pb-4">
+                  <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-[#FF9D2E]" />
                     Intro Beranda & 4 Kartu Keunggulan
                   </h2>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-[#526783] mt-1">
                     Kelola teks narasi singkat di beranda (bawah banner) dan 4 kartu keunggulan utama PT. Terbang Bersama Kawan.
                   </p>
                 </div>
 
                 {/* Bagian Kiri: Headline & Intro Beranda */}
-                <div className="p-5 sm:p-6 rounded-2xl bg-[#0E1013] border border-white/10 space-y-4">
-                  <h3 className="text-sm font-bold text-gold-400 uppercase tracking-wider">
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-4 shadow-xs">
+                  <h3 className="text-sm font-bold text-[#073B78] uppercase tracking-wider">
                     Narasi Perkenalan Beranda (Kolom Kiri)
                   </h3>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Label Badge Kecil
                       </label>
                       <input
@@ -1198,11 +1198,11 @@ export default function AdminDashboard() {
                             about: { ...content.about, homeIntroBadge: e.target.value },
                           })
                         }
-                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                        className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Judul Baris 1
                       </label>
                       <input
@@ -1214,11 +1214,11 @@ export default function AdminDashboard() {
                             about: { ...content.about, homeIntroTitle: e.target.value },
                           })
                         }
-                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                        className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gold-400 mb-1">
+                      <label className="block text-xs font-bold text-[#C76A08] mb-1">
                         Judul Baris 2 (Highlight)
                       </label>
                       <input
@@ -1230,13 +1230,13 @@ export default function AdminDashboard() {
                             about: { ...content.about, homeIntroHighlight: e.target.value },
                           })
                         }
-                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-gold-300 text-xs font-semibold"
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] text-[#C76A08] text-xs font-bold"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Deskripsi Paragraf Singkat
                     </label>
                     <textarea
@@ -1248,13 +1248,13 @@ export default function AdminDashboard() {
                           about: { ...content.about, homeIntroText: e.target.value },
                         })
                       }
-                      className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                      className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Teks Tombol CTA
                       </label>
                       <input
@@ -1266,11 +1266,11 @@ export default function AdminDashboard() {
                             about: { ...content.about, homeIntroCtaText: e.target.value },
                           })
                         }
-                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                        className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Tautan Tombol CTA (Link)
                       </label>
                       <input
@@ -1282,19 +1282,19 @@ export default function AdminDashboard() {
                             about: { ...content.about, homeIntroCtaLink: e.target.value },
                           })
                         }
-                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-gray-300 text-xs font-mono"
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] text-[#526783] text-xs font-mono"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Kartu Keunggulan (Grid 2x2) */}
-                <div className="p-5 sm:p-6 rounded-2xl bg-[#0E1013] border border-white/10 space-y-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-4 shadow-xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#DCE7F5] pb-3">
                     <div>
-                      <h3 className="text-sm font-bold text-gold-400 uppercase tracking-wider flex items-center gap-2">
+                      <h3 className="text-sm font-bold text-[#073B78] uppercase tracking-wider flex items-center gap-2">
                         <span>Kartu Keunggulan Beranda</span>
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-gold-500/20 text-gold-300 border border-gold-500/30 font-sans font-semibold">
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-[#FFF7EB] text-[#C76A08] border border-[#FF9D2E]/30 font-sans font-semibold">
                           {(Array.isArray(content.about.features) ? content.about.features : [
                             { title: 'Hunian Berkualitas', desc: 'Rumah nyaman dengan infrastruktur yang memadai.', icon: 'home' },
                             { title: 'Harga Terjangkau', desc: 'Solusi hunian untuk keluarga Indonesia.', icon: 'shield' },
@@ -1303,7 +1303,7 @@ export default function AdminDashboard() {
                           ]).length} Kartu
                         </span>
                       </h3>
-                      <p className="text-xs text-gray-400 mt-0.5">
+                      <p className="text-xs text-[#526783] mt-0.5">
                         Kartu ringkas yang menampilkan keunggulan hunian bersubsidi PT. TBK di kolom kanan seksi Tentang Kami.
                       </p>
                     </div>
@@ -1334,7 +1334,7 @@ export default function AdminDashboard() {
                           },
                         });
                       }}
-                      className="px-3.5 py-1.5 rounded-xl bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-semibold flex items-center gap-1.5 transition-all self-start sm:self-auto"
+                      className="px-3.5 py-1.5 rounded-xl bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 transition-all self-start sm:self-auto"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Tambah Kartu Keunggulan</span>
@@ -1352,10 +1352,10 @@ export default function AdminDashboard() {
                           { title: 'Lingkungan Asri', desc: 'Hidup lebih sehat di lingkungan yang hijau.', icon: 'leaf' },
                         ]
                     ).length === 0 ? (
-                      <div className="sm:col-span-2 p-8 rounded-xl bg-[#16191E] border border-white/5 text-center text-gray-500 space-y-2">
-                        <Sparkles className="w-8 h-8 mx-auto text-gray-600" />
-                        <p className="text-xs font-medium text-gray-400">Belum ada kartu keunggulan.</p>
-                        <p className="text-[11px] text-gray-600">Klik &quot;Tambah Kartu Keunggulan&quot; di atas untuk menambahkan poin keunggulan baru.</p>
+                      <div className="sm:col-span-2 p-8 rounded-xl bg-white border border-[#DCE7F5] text-center text-[#526783] space-y-2">
+                        <Sparkles className="w-8 h-8 mx-auto text-[#526783]" />
+                        <p className="text-xs font-medium text-[#526783]">Belum ada kartu keunggulan.</p>
+                        <p className="text-[11px] text-[#526783]">Klik &quot;Tambah Kartu Keunggulan&quot; di atas untuk menambahkan poin keunggulan baru.</p>
                       </div>
                     ) : (
                       (Array.isArray(content.about.features)
@@ -1369,15 +1369,15 @@ export default function AdminDashboard() {
                       ).map((feature, fIdx) => (
                         <div
                           key={fIdx}
-                          className="p-4 rounded-xl bg-[#16191E] border border-white/10 space-y-3 relative group hover:border-gold-500/30 transition-colors"
+                          className="p-4 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-3 relative group hover:border-[#FF9D2E]/30 transition-colors"
                         >
-                          <div className="flex items-center justify-between gap-2 border-b border-white/5 pb-2">
-                            <span className="text-xs font-bold text-gold-400">
+                          <div className="flex items-center justify-between gap-2 border-b border-[#DCE7F5] pb-2">
+                            <span className="text-xs font-bold text-[#FF9D2E]">
                               Kartu #{fIdx + 1}
                             </span>
                             <div className="flex items-center gap-2">
                               <div className="flex items-center gap-1.5">
-                                <span className="text-[11px] text-gray-400">Ikon:</span>
+                                <span className="text-[11px] text-[#526783]">Ikon:</span>
                                 <select
                                   value={feature.icon || 'home'}
                                   onChange={(e) => {
@@ -1395,7 +1395,7 @@ export default function AdminDashboard() {
                                       about: { ...content.about, features: currentFeatures },
                                     });
                                   }}
-                                  className="px-2 py-1 rounded bg-[#0E1013] border border-white/10 text-xs text-white"
+                                  className="px-2 py-1 rounded bg-white border border-[#DCE7F5] text-xs text-[#102D52]"
                                 >
                                   <option value="home">Rumah (Home)</option>
                                   <option value="shield">Perlindungan / Harga (Shield)</option>
@@ -1429,7 +1429,7 @@ export default function AdminDashboard() {
                                     });
                                   }
                                 }}
-                                className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs flex items-center gap-1 transition-colors"
+                                className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs flex items-center gap-1 transition-colors"
                                 title="Hapus kartu ini"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
@@ -1439,7 +1439,7 @@ export default function AdminDashboard() {
                           </div>
 
                           <div>
-                            <label className="block text-[11px] font-medium text-gray-400 mb-1">
+                            <label className="block text-[11px] font-medium text-[#526783] mb-1">
                               Judul Keunggulan
                             </label>
                             <input
@@ -1460,12 +1460,12 @@ export default function AdminDashboard() {
                                   about: { ...content.about, features: currentFeatures },
                                 });
                               }}
-                              className="w-full px-3 py-1.5 rounded-lg bg-[#0E1013] border border-white/10 text-xs text-white"
+                              className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52]"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-[11px] font-medium text-gray-400 mb-1">
+                            <label className="block text-[11px] font-medium text-[#526783] mb-1">
                               Deskripsi Singkat
                             </label>
                             <textarea
@@ -1486,7 +1486,7 @@ export default function AdminDashboard() {
                                   about: { ...content.about, features: currentFeatures },
                                 });
                               }}
-                              className="w-full px-3 py-1.5 rounded-lg bg-[#0E1013] border border-white/10 text-xs text-white"
+                              className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52]"
                             />
                           </div>
                         </div>
@@ -1500,13 +1500,13 @@ export default function AdminDashboard() {
             {/* TAB: BUYING PROCESS STEPS */}
             {activeTab === 'buying-process' && (
               <div className="space-y-6">
-                <div className="border-b border-white/10 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="border-b border-[#DCE7F5] pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
-                      <FileText className="w-5 h-5 text-gold-400" />
+                    <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
+                      <FileText className="w-5 h-5 text-[#FF9D2E]" />
                       Tahapan Pembelian Rumah Subsidi (Panduan Konsumen)
                     </h2>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-[#526783] mt-1">
                       Kelola 4 langkah alur pengajuan dari pemilihan unit/kavling hingga serah terima kunci.
                     </p>
                   </div>
@@ -1531,7 +1531,7 @@ export default function AdminDashboard() {
                         },
                       });
                     }}
-                    className="px-4 py-2 rounded-xl bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-bold flex items-center gap-2 transition-all self-start sm:self-auto"
+                    className="px-4 py-2 rounded-xl bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-bold shadow-xs flex items-center gap-2 transition-all self-start sm:self-auto"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Tambah Langkah Baru</span>
@@ -1539,10 +1539,10 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Header Information */}
-                <div className="p-5 sm:p-6 rounded-2xl bg-[#0E1013] border border-white/10 space-y-4">
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-4 shadow-xs">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Label Badge Bagian
                       </label>
                       <input
@@ -1559,11 +1559,11 @@ export default function AdminDashboard() {
                             },
                           })
                         }
-                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                        className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Judul Utama Bagian
                       </label>
                       <input
@@ -1580,13 +1580,13 @@ export default function AdminDashboard() {
                             },
                           })
                         }
-                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                        className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Deskripsi Subtitle
                     </label>
                     <textarea
@@ -1603,7 +1603,7 @@ export default function AdminDashboard() {
                           },
                         })
                       }
-                      className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                      className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs"
                     />
                   </div>
                 </div>
@@ -1613,9 +1613,9 @@ export default function AdminDashboard() {
                   {(content.buyingProcess?.steps || []).map((stepItem, stepIdx) => (
                     <div
                       key={stepIdx}
-                      className="p-4 sm:p-5 rounded-2xl bg-[#0E1013] border border-white/10 hover:border-gold-500/30 transition-all space-y-3"
+                      className="p-4 sm:p-5 rounded-2xl bg-[#F8FAFD] border border-[#DCE7F5] hover:border-[#FF9D2E]/50 shadow-xs transition-all space-y-3"
                     >
-                      <div className="flex items-center justify-between gap-3 border-b border-white/5 pb-2.5">
+                      <div className="flex items-center justify-between gap-3 border-b border-[#DCE7F5] pb-2.5">
                         <div className="flex items-center gap-2.5">
                           <input
                             type="text"
@@ -1628,7 +1628,7 @@ export default function AdminDashboard() {
                                 buyingProcess: { ...content.buyingProcess!, steps: newSteps },
                               });
                             }}
-                            className="w-14 px-2.5 py-1 rounded-lg bg-[#16191E] border border-white/10 text-center font-mono font-bold text-gold-400 text-xs"
+                            className="w-14 px-2.5 py-1 rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] text-center font-mono font-bold text-[#FF9D2E] text-xs"
                             placeholder="01"
                           />
                           <input
@@ -1642,7 +1642,7 @@ export default function AdminDashboard() {
                                 buyingProcess: { ...content.buyingProcess!, steps: newSteps },
                               });
                             }}
-                            className="flex-1 px-3 py-1 rounded-lg bg-[#16191E] border border-white/10 text-white font-semibold text-xs"
+                            className="flex-1 px-3 py-1 rounded-lg bg-white border border-[#DCE7F5] text-[#102D52] font-semibold text-xs"
                             placeholder="Judul Tahapan"
                           />
                         </div>
@@ -1661,7 +1661,7 @@ export default function AdminDashboard() {
                                 buyingProcess: { ...content.buyingProcess!, steps: newSteps },
                               });
                             }}
-                            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white disabled:opacity-30"
+                            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-[#526783] hover:text-white disabled:opacity-30"
                             title="Geser Naik"
                           >
                             <ArrowUp className="w-3.5 h-3.5" />
@@ -1679,7 +1679,7 @@ export default function AdminDashboard() {
                                 buyingProcess: { ...content.buyingProcess!, steps: newSteps },
                               });
                             }}
-                            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white disabled:opacity-30"
+                            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-[#526783] hover:text-white disabled:opacity-30"
                             title="Geser Turun"
                           >
                             <ArrowDown className="w-3.5 h-3.5" />
@@ -1699,7 +1699,7 @@ export default function AdminDashboard() {
                                 });
                               }
                             }}
-                            className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 ml-1"
+                            className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 ml-1"
                             title="Hapus Langkah"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -1709,7 +1709,7 @@ export default function AdminDashboard() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-start">
                         <div className="sm:col-span-8">
-                          <label className="block text-[11px] font-medium text-gray-400 mb-1">
+                          <label className="block text-[11px] font-medium text-[#526783] mb-1">
                             Deskripsi Tahapan
                           </label>
                           <textarea
@@ -1723,11 +1723,11 @@ export default function AdminDashboard() {
                                 buyingProcess: { ...content.buyingProcess!, steps: newSteps },
                               });
                             }}
-                            className="w-full px-3 py-1.5 rounded-lg bg-[#16191E] border border-white/10 text-xs text-white"
+                            className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52]"
                           />
                         </div>
                         <div className="sm:col-span-4">
-                          <label className="block text-[11px] font-medium text-gray-400 mb-1">
+                          <label className="block text-[11px] font-medium text-[#526783] mb-1">
                             Pita Highlight Bawah
                           </label>
                           <input
@@ -1742,7 +1742,7 @@ export default function AdminDashboard() {
                               });
                             }}
                             placeholder="Contoh: Sertifikat Hak Milik (SHM)"
-                            className="w-full px-3 py-1.5 rounded-lg bg-[#16191E] border border-white/10 text-xs text-gold-300"
+                            className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#C76A08]"
                           />
                         </div>
                       </div>
@@ -1755,25 +1755,25 @@ export default function AdminDashboard() {
             {/* TAB: KPR SIMULATION CONFIG */}
             {activeTab === 'kpr-simulation' && (
               <div className="space-y-6">
-                <div className="border-b border-white/10 pb-4">
-                  <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
-                    <Calculator className="w-5 h-5 text-gold-400" />
+                <div className="border-b border-[#DCE7F5] pb-4">
+                  <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
+                    <Calculator className="w-5 h-5 text-[#FF9D2E]" />
                     Simulasi Angsuran KPR & Program Subsidi FLPP
                   </h2>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-[#526783] mt-1">
                     Kelola parameter kalkulator simulasi angsuran di beranda beserta daftar poin keuntungan program FLPP 5%.
                   </p>
                 </div>
 
                 {/* Headings */}
-                <div className="p-5 sm:p-6 rounded-2xl bg-[#0E1013] border border-white/10 space-y-4">
-                  <h3 className="text-sm font-bold text-gold-400 uppercase tracking-wider">
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-4 shadow-xs">
+                  <h3 className="text-sm font-bold text-[#073B78] uppercase tracking-wider">
                     Judul & Teks Bagian
                   </h3>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Label Badge Bagian
                       </label>
                       <input
@@ -1788,11 +1788,11 @@ export default function AdminDashboard() {
                             },
                           })
                         }
-                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                        className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Judul Utama
                       </label>
                       <input
@@ -1807,13 +1807,13 @@ export default function AdminDashboard() {
                             },
                           })
                         }
-                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                        className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Deskripsi Subtitle
                     </label>
                     <textarea
@@ -1828,20 +1828,20 @@ export default function AdminDashboard() {
                           },
                         })
                       }
-                      className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                      className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs"
                     />
                   </div>
                 </div>
 
                 {/* Parameter Kalkulator */}
-                <div className="p-5 sm:p-6 rounded-2xl bg-[#0E1013] border border-white/10 space-y-4">
-                  <h3 className="text-sm font-bold text-gold-400 uppercase tracking-wider">
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-4 shadow-xs">
+                  <h3 className="text-sm font-bold text-[#073B78] uppercase tracking-wider">
                     Nilai Default & Parameter Simulasi FLPP
                   </h3>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Harga Rumah Default (Rp)
                       </label>
                       <input
@@ -1856,11 +1856,11 @@ export default function AdminDashboard() {
                             },
                           })
                         }
-                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs font-mono"
+                        className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs font-mono"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Uang Muka (DP) Default (Rp)
                       </label>
                       <input
@@ -1875,11 +1875,11 @@ export default function AdminDashboard() {
                             },
                           })
                         }
-                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs font-mono"
+                        className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs font-mono"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Tenor Default (Tahun)
                       </label>
                       <input
@@ -1894,14 +1894,14 @@ export default function AdminDashboard() {
                             },
                           })
                         }
-                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs font-mono"
+                        className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs font-mono"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Suku Bunga Tetap Per Tahun (Desimal, misal 0.05 = 5%)
                       </label>
                       <input
@@ -1917,16 +1917,16 @@ export default function AdminDashboard() {
                             },
                           })
                         }
-                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-gold-300 text-xs font-mono font-bold"
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] text-[#C76A08] text-xs font-mono font-bold"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Benefits List */}
-                <div className="p-5 sm:p-6 rounded-2xl bg-[#0E1013] border border-white/10 space-y-4">
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-4 shadow-xs">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-gold-400 uppercase tracking-wider">
+                    <h3 className="text-sm font-bold text-[#073B78] uppercase tracking-wider">
                       Daftar Keuntungan / Benefit Program KPR Subsidi
                     </h3>
                     <button
@@ -1943,7 +1943,7 @@ export default function AdminDashboard() {
                           },
                         });
                       }}
-                      className="px-3 py-1.5 rounded-lg bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-semibold flex items-center gap-1.5"
+                      className="px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Tambah Poin</span>
@@ -1968,7 +1968,7 @@ export default function AdminDashboard() {
                               },
                             });
                           }}
-                          className="flex-1 px-3 py-2 rounded-xl bg-[#16191E] border border-white/10 text-xs text-white"
+                          className="flex-1 px-3 py-2 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#102D52]"
                         />
                         <button
                           type="button"
@@ -2000,27 +2000,27 @@ export default function AdminDashboard() {
             {/* TAB: BRANDING & IDENTITAS */}
             {activeTab === 'branding' && (
               <div className="space-y-6">
-                <div className="border-b border-white/10 pb-4">
-                  <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-gold-400" />
+                <div className="border-b border-[#DCE7F5] pb-4">
+                  <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-[#FF9D2E]" />
                     Branding, Logo & Informasi Footer
                   </h2>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-[#526783] mt-1">
                     Kelola logo resmi perusahaan, slogan/tagline, judul meta SEO, serta identitas yang tampil di navigasi dan footer website.
                   </p>
                 </div>
 
                 <div className="space-y-5">
                   {/* Logo Perusahaan Uploader */}
-                  <div className="p-4 sm:p-5 rounded-xl bg-[#0E1013] border border-gold-500/30 space-y-3">
-                    <label className="block text-xs font-bold text-gold-400 uppercase tracking-wider">
+                  <div className="p-4 sm:p-5 rounded-xl bg-[#F8FAFD] border border-[#FF9D2E]/40 shadow-xs space-y-3">
+                    <label className="block text-xs font-bold text-[#FF9D2E] uppercase tracking-wider">
                       Logo Resmi Perusahaan (PT. TBK)
                     </label>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-[#526783]">
                       Tampil di header navigasi utama, footer, serta panel admin. Disarankan format PNG transparan atau SVG.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center pt-1">
-                      <div className="h-16 w-36 rounded-xl bg-[#16191E] border border-white/10 p-2 flex items-center justify-center shrink-0">
+                      <div className="h-16 w-36 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] p-2 flex items-center justify-center shrink-0">
                         <img
                           src={content.meta?.logo || '/assets/logo-tbk.png'}
                           alt="Logo Preview"
@@ -2039,9 +2039,9 @@ export default function AdminDashboard() {
                                 meta: { ...content.meta, logo: e.target.value },
                               })
                             }
-                            className="flex-1 px-3 py-2 rounded-lg bg-[#16191E] border border-white/10 text-xs text-white focus:outline-none focus:border-gold-500 font-mono"
+                            className="flex-1 px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-mono"
                           />
-                          <label className="cursor-pointer px-3.5 py-2 rounded-lg bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-colors">
+                          <label className="cursor-pointer px-3.5 py-2 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0 transition-colors">
                             <Upload className="w-3.5 h-3.5" />
                             <span>{uploadingKey === 'company-logo' ? 'Mengupload...' : 'Upload Logo'}</span>
                             <input
@@ -2069,7 +2069,7 @@ export default function AdminDashboard() {
                   {/* Slogan & Meta SEO */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Slogan / Tagline Perusahaan
                       </label>
                       <input
@@ -2081,11 +2081,11 @@ export default function AdminDashboard() {
                             meta: { ...content.meta, tagline: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Judul Meta Browser (Title Tag SEO)
                       </label>
                       <input
@@ -2097,13 +2097,13 @@ export default function AdminDashboard() {
                             meta: { ...content.meta, title: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Deskripsi Meta SEO Website
                     </label>
                     <textarea
@@ -2115,19 +2115,19 @@ export default function AdminDashboard() {
                           meta: { ...content.meta, description: e.target.value },
                         })
                       }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                     />
                   </div>
 
                   {/* Pengaturan Footer */}
-                  <div className="pt-4 border-t border-white/10 space-y-4">
-                    <h3 className="text-sm font-bold text-gold-400 uppercase tracking-wider">
+                  <div className="pt-4 border-t border-[#DCE7F5] space-y-4">
+                    <h3 className="text-sm font-bold text-[#073B78] uppercase tracking-wider">
                       Informasi Footer Website
                     </h3>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-medium text-gray-300 mb-1">
+                        <label className="block text-xs font-bold text-[#073B78] mb-1">
                           Nama Lengkap Perusahaan di Footer
                         </label>
                         <input
@@ -2139,11 +2139,11 @@ export default function AdminDashboard() {
                               footer: { ...content.footer, companyName: e.target.value },
                             })
                           }
-                          className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                          className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-gray-300 mb-1">
+                        <label className="block text-xs font-bold text-[#073B78] mb-1">
                           Singkatan Nama Perusahaan
                         </label>
                         <input
@@ -2155,13 +2155,13 @@ export default function AdminDashboard() {
                               footer: { ...content.footer, shortName: e.target.value },
                             })
                           }
-                          className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                          className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Ringkasan Perusahaan di Footer
                       </label>
                       <textarea
@@ -2173,12 +2173,12 @@ export default function AdminDashboard() {
                             footer: { ...content.footer, summary: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Teks Hak Cipta (Copyright)
                       </label>
                       <input
@@ -2190,7 +2190,7 @@ export default function AdminDashboard() {
                             footer: { ...content.footer, copyrightText: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
                     </div>
                   </div>
@@ -2201,19 +2201,19 @@ export default function AdminDashboard() {
             {/* TAB: HERO */}
             {activeTab === 'hero' && (
               <div className="space-y-6">
-                <div className="border-b border-white/10 pb-4">
-                  <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-gold-400" />
+                <div className="border-b border-[#DCE7F5] pb-4">
+                  <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-[#FF9D2E]" />
                     Pengaturan Hero & Banner Utama
                   </h2>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-[#526783] mt-1">
                     Ubah teks judul, subjudul, tombol CTA, latar belakang, dan 4 kartu statistik di bagian atas website.
                   </p>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Label Badge Atas
                     </label>
                     <input
@@ -2225,12 +2225,12 @@ export default function AdminDashboard() {
                           hero: { ...content.hero, badge: e.target.value },
                         })
                       }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Judul Utama (Heading)
                     </label>
                     <input
@@ -2242,12 +2242,12 @@ export default function AdminDashboard() {
                           hero: { ...content.hero, heading: e.target.value },
                         })
                       }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Deskripsi / Subheading
                     </label>
                     <textarea
@@ -2259,13 +2259,13 @@ export default function AdminDashboard() {
                           hero: { ...content.hero, subheading: e.target.value },
                         })
                       }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Teks Tombol Utama
                       </label>
                       <input
@@ -2277,11 +2277,11 @@ export default function AdminDashboard() {
                             hero: { ...content.hero, primaryCtaText: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Link Tombol Utama (contoh: #proyek)
                       </label>
                       <input
@@ -2293,14 +2293,14 @@ export default function AdminDashboard() {
                             hero: { ...content.hero, primaryCtaLink: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Teks Tombol Sekunder
                       </label>
                       <input
@@ -2312,11 +2312,11 @@ export default function AdminDashboard() {
                             hero: { ...content.hero, secondaryCtaText: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Link Tombol Sekunder (contoh: #kontak)
                       </label>
                       <input
@@ -2328,18 +2328,18 @@ export default function AdminDashboard() {
                             hero: { ...content.hero, secondaryCtaLink: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
                     </div>
                   </div>
 
                   {/* Hero Background Image */}
-                  <div className="p-4 rounded-xl bg-[#0E1013] border border-white/10 space-y-3">
-                    <label className="block text-xs font-semibold text-gray-300">
+                  <div className="p-4 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-3">
+                    <label className="block text-xs font-bold text-[#073B78]">
                       Gambar Latar Belakang Hero (Full Header Background)
                     </label>
                     <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                      <div className="w-24 h-16 rounded-lg bg-black/40 border border-white/10 overflow-hidden shrink-0 flex items-center justify-center">
+                      <div className="w-24 h-16 rounded-lg bg-black/40 border border-[#DCE7F5] overflow-hidden shrink-0 flex items-center justify-center">
                         {content.hero.backgroundImage ? (
                           <img
                             src={content.hero.backgroundImage}
@@ -2347,7 +2347,7 @@ export default function AdminDashboard() {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <ImageIcon className="w-6 h-6 text-gray-600" />
+                          <ImageIcon className="w-6 h-6 text-[#526783]" />
                         )}
                       </div>
                       <div className="flex-1 w-full space-y-2">
@@ -2362,9 +2362,9 @@ export default function AdminDashboard() {
                                 hero: { ...content.hero, backgroundImage: e.target.value },
                               })
                             }
-                            className="flex-1 px-3 py-1.5 rounded-lg bg-[#16191E] border border-white/10 text-xs text-white focus:outline-none focus:border-gold-500 font-mono"
+                            className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-mono"
                           />
-                          <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-colors">
+                          <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0 transition-colors">
                             <Upload className="w-3.5 h-3.5" />
                             <span>{uploadingKey === 'hero-bg' ? 'Mengupload...' : 'Upload Foto'}</span>
                             <input
@@ -2416,7 +2416,7 @@ export default function AdminDashboard() {
                             {uploadError}
                           </div>
                         )}
-                        <p className="text-[11px] text-gray-500">
+                        <p className="text-[11px] text-[#526783]">
                           Format: JPG, PNG, atau WebP (disarankan orientasi lanskap 1920x1080).
                         </p>
                       </div>
@@ -2424,13 +2424,13 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* SLIDESHOW MANAGER UNTUK HERO */}
-                  <div className="pt-6 border-t border-white/10 space-y-4">
+                  <div className="pt-6 border-t border-[#DCE7F5] space-y-4">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div>
-                        <label className="block text-sm font-bold text-gold-400 uppercase tracking-wider">
+                        <label className="block text-sm font-bold text-[#073B78] uppercase tracking-wider">
                           Slideshow Foto Unit / Kawasan Hero (Otomatis)
                         </label>
-                        <p className="text-xs text-gray-400 mt-0.5">
+                        <p className="text-xs text-[#526783] mt-0.5">
                           Kelola foto-foto yang bergeser otomatis di bagian kanan hero website.
                         </p>
                       </div>
@@ -2474,7 +2474,7 @@ export default function AdminDashboard() {
                               },
                             });
                           }}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-semibold transition-all"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs transition-all"
                         >
                           <Plus className="w-3.5 h-3.5" />
                           <span>Tambah Slide</span>
@@ -2486,10 +2486,10 @@ export default function AdminDashboard() {
                       {(content.hero.slides || []).map((slide, idx) => (
                         <div
                           key={idx}
-                          className="p-4 bg-[#0E1013] rounded-xl border border-white/10 space-y-3 relative group"
+                          className="p-4 bg-[#F8FAFD] rounded-xl border border-[#DCE7F5] space-y-3 relative group"
                         >
-                          <div className="flex items-center justify-between border-b border-white/5 pb-2">
-                            <span className="text-xs font-bold text-gray-300">
+                          <div className="flex items-center justify-between border-b border-[#DCE7F5] pb-2">
+                            <span className="text-xs font-bold text-[#526783]">
                               Slide #{idx + 1}
                             </span>
                             <button
@@ -2517,7 +2517,7 @@ export default function AdminDashboard() {
                           <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
                             {/* Preview thumbnail */}
                             <div className="sm:col-span-3">
-                              <div className="aspect-[4/3] w-full rounded-lg bg-[#16191E] border border-white/10 overflow-hidden flex items-center justify-center">
+                              <div className="aspect-[4/3] w-full rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] overflow-hidden flex items-center justify-center">
                                 {slide.image && slide.image.trim() !== '' ? (
                                   <img
                                     src={slide.image}
@@ -2525,7 +2525,7 @@ export default function AdminDashboard() {
                                     className="w-full h-full object-cover"
                                   />
                                 ) : (
-                                  <span className="text-[11px] text-gray-500 text-center px-2">
+                                  <span className="text-[11px] text-[#526783] text-center px-2">
                                     [Kotak Abu Standar]
                                   </span>
                                 )}
@@ -2535,7 +2535,7 @@ export default function AdminDashboard() {
                             {/* Inputs */}
                             <div className="sm:col-span-9 space-y-2">
                               <div>
-                                <label className="block text-[11px] font-medium text-gray-400 mb-0.5">
+                                <label className="block text-[11px] font-medium text-[#526783] mb-0.5">
                                   Foto Slide (Upload dari perangkat atau masukkan URL)
                                 </label>
                                 <div className="flex items-center gap-2">
@@ -2551,9 +2551,9 @@ export default function AdminDashboard() {
                                         hero: { ...content.hero, slides: newSlides },
                                       });
                                     }}
-                                    className="flex-1 px-3 py-1.5 rounded-lg bg-[#16191E] border border-white/10 text-xs text-white focus:outline-none focus:border-gold-500 font-mono"
+                                    className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-mono"
                                   />
-                                  <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-colors">
+                                  <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0 transition-colors">
                                     <Upload className="w-3.5 h-3.5" />
                                     <span>{uploadingKey === `hero-slide-${idx}` ? 'Mengupload...' : 'Upload Foto'}</span>
                                     <input
@@ -2596,7 +2596,7 @@ export default function AdminDashboard() {
                               </div>
 
                               <div>
-                                <label className="block text-[11px] font-medium text-gray-400 mb-0.5">
+                                <label className="block text-[11px] font-medium text-[#526783] mb-0.5">
                                   Teks Caption di Bawah Foto (13px abu-abu)
                                 </label>
                                 <input
@@ -2611,7 +2611,7 @@ export default function AdminDashboard() {
                                       hero: { ...content.hero, slides: newSlides },
                                     });
                                   }}
-                                  className="w-full px-3 py-1.5 rounded-lg bg-[#16191E] border border-white/10 text-xs text-gray-300 focus:outline-none focus:border-gold-500"
+                                  className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                                 />
                               </div>
                             </div>
@@ -2620,20 +2620,20 @@ export default function AdminDashboard() {
                       ))}
 
                       {(!content.hero.slides || content.hero.slides.length === 0) && (
-                        <div className="p-4 bg-[#0E1013] rounded-xl border border-dashed border-white/10 text-center text-xs text-gray-400">
+                        <div className="p-4 bg-[#F8FAFD] rounded-xl border border-dashed border-[#DCE7F5] text-center text-xs text-[#526783]">
                           Belum ada slide khusus. Slideshow akan menampilkan slide standar default.
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-white/10">
-                    <label className="block text-xs font-bold text-gold-400 uppercase tracking-wider mb-3">
+                  <div className="pt-4 border-t border-[#DCE7F5]">
+                    <label className="block text-xs font-bold text-[#FF9D2E] uppercase tracking-wider mb-3">
                       4 Kartu Ringkasan Hero (Stats)
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {content.hero.stats?.map((stat, idx) => (
-                        <div key={idx} className="p-3 bg-[#0E1013] rounded-xl border border-white/5 space-y-2">
+                        <div key={idx} className="p-3 bg-[#F8FAFD] rounded-xl border border-[#DCE7F5] space-y-2">
                           <input
                             type="text"
                             placeholder="Label (contoh: Domisili)"
@@ -2646,7 +2646,7 @@ export default function AdminDashboard() {
                                 hero: { ...content.hero, stats: newStats },
                               });
                             }}
-                            className="w-full px-3 py-1.5 rounded-lg bg-[#16191E] border border-white/10 text-xs text-gray-300"
+                            className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783]"
                           />
                           <input
                             type="text"
@@ -2660,7 +2660,7 @@ export default function AdminDashboard() {
                                 hero: { ...content.hero, stats: newStats },
                               });
                             }}
-                            className="w-full px-3 py-1.5 rounded-lg bg-[#16191E] border border-white/10 text-xs text-gold-300 font-bold"
+                            className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#C76A08] font-bold"
                           />
                         </div>
                       ))}
@@ -2673,19 +2673,19 @@ export default function AdminDashboard() {
             {/* TAB: ABOUT & VISION MISSION */}
             {activeTab === 'about' && (
               <div className="space-y-6">
-                <div className="border-b border-white/10 pb-4">
-                  <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-gold-400" />
+                <div className="border-b border-[#DCE7F5] pb-4">
+                  <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-[#FF9D2E]" />
                     Tentang Perusahaan, Visi & Misi
                   </h2>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-[#526783] mt-1">
                     Kelola narasi profil perusahaan, visi, dan butir misi resmi PT. Terbang Bersama Kawan.
                   </p>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Label Badge
                     </label>
                     <input
@@ -2697,12 +2697,12 @@ export default function AdminDashboard() {
                           about: { ...content.about, badge: e.target.value },
                         })
                       }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Judul Bagian Tentang
                     </label>
                     <input
@@ -2714,12 +2714,12 @@ export default function AdminDashboard() {
                           about: { ...content.about, title: e.target.value },
                         })
                       }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Deskripsi Profil Perusahaan
                     </label>
                     <textarea
@@ -2731,12 +2731,12 @@ export default function AdminDashboard() {
                           about: { ...content.about, description: e.target.value },
                         })
                       }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                     />
                   </div>
 
-                  <div className="p-4 rounded-xl bg-[#0E1013] border border-gold-500/20 space-y-3">
-                    <div className="text-xs font-bold text-gold-400 uppercase tracking-wider">
+                  <div className="p-4 rounded-xl bg-[#F8FAFD] border border-[#FF9D2E]/30 shadow-xs space-y-3">
+                    <div className="text-xs font-bold text-[#FF9D2E] uppercase tracking-wider">
                       Visi Perusahaan
                     </div>
                     <input
@@ -2749,7 +2749,7 @@ export default function AdminDashboard() {
                         })
                       }
                       placeholder="Judul Visi"
-                      className="w-full px-3 py-2 rounded-lg bg-[#16191E] border border-white/10 text-xs text-gray-300"
+                      className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783]"
                     />
                     <textarea
                       rows={2}
@@ -2761,13 +2761,13 @@ export default function AdminDashboard() {
                         })
                       }
                       placeholder="Pernyataan Visi"
-                      className="w-full px-3 py-2 rounded-lg bg-[#16191E] border border-white/10 text-sm text-gold-300 italic font-playfair"
+                      className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-sm text-[#C76A08] italic font-playfair"
                     />
                   </div>
 
-                  <div className="p-4 rounded-xl bg-[#0E1013] border border-gold-500/20 space-y-3">
+                  <div className="p-4 rounded-xl bg-[#F8FAFD] border border-[#FF9D2E]/30 shadow-xs space-y-3">
                     <div className="flex items-center justify-between">
-                      <div className="text-xs font-bold text-gold-400 uppercase tracking-wider">
+                      <div className="text-xs font-bold text-[#FF9D2E] uppercase tracking-wider">
                         Misi Perusahaan ({content.about.missions?.length || 0} Butir)
                       </div>
                       <button
@@ -2781,7 +2781,7 @@ export default function AdminDashboard() {
                             },
                           });
                         }}
-                        className="px-2.5 py-1 rounded bg-gold-500/20 text-gold-300 hover:bg-gold-500/30 text-xs flex items-center gap-1"
+                        className="px-2.5 py-1 rounded bg-[#FFF7EB] text-[#C76A08] hover:bg-[#FF9D2E]/30 text-xs flex items-center gap-1"
                       >
                         <Plus className="w-3 h-3" /> Tambah Misi
                       </button>
@@ -2790,7 +2790,7 @@ export default function AdminDashboard() {
                     <div className="space-y-2">
                       {content.about.missions?.map((misi, idx) => (
                         <div key={idx} className="flex items-center gap-2">
-                          <span className="w-6 h-6 rounded bg-gold-500/20 text-gold-400 text-xs font-bold flex items-center justify-center shrink-0">
+                          <span className="w-6 h-6 rounded bg-[#FFF7EB] text-[#FF9D2E] text-xs font-bold flex items-center justify-center shrink-0">
                             {idx + 1}
                           </span>
                           <input
@@ -2804,7 +2804,7 @@ export default function AdminDashboard() {
                                 about: { ...content.about, missions: newMissions },
                               });
                             }}
-                            className="flex-1 px-3 py-2 rounded-lg bg-[#16191E] border border-white/10 text-xs text-white"
+                            className="flex-1 px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52]"
                           />
                           <button
                             type="button"
@@ -2830,16 +2830,16 @@ export default function AdminDashboard() {
             {/* TAB: LEADERSHIP */}
             {activeTab === 'leadership' && (
               <div className="space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#DCE7F5] pb-4">
                   <div>
-                    <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
-                      <Users className="w-5 h-5 text-gold-400" />
+                    <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
+                      <Users className="w-5 h-5 text-[#FF9D2E]" />
                       Dewan Pengurus (Pimpinan Resmi)
-                      <span className="text-xs px-2.5 py-0.5 rounded-full bg-gold-500/20 text-gold-300 border border-gold-500/30 font-sans font-semibold">
+                      <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#FFF7EB] text-[#C76A08] border border-[#FF9D2E]/30 font-sans font-semibold">
                         {content.leadership.members?.length || 0} Pengurus
                       </span>
                     </h2>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-[#526783] mt-1">
                       Susunan pengurus PT. Terbang Bersama Kawan sesuai dengan Akta Pendirian dan Anggaran Dasar (bisa tambah, ubah, urutkan, dan ganti foto).
                     </p>
                   </div>
@@ -2864,7 +2864,7 @@ export default function AdminDashboard() {
                         },
                       });
                     }}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gold-500 text-slate-950 font-bold text-xs hover:bg-gold-400 transition-all shrink-0 shadow-md shadow-gold-500/20"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#FF9D2E] text-[#071C38] font-bold text-xs hover:bg-[#F28A17] transition-all shrink-0 shadow-md shadow-[#FF9D2E]/25"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Tambah Pengurus Baru</span>
@@ -2874,7 +2874,7 @@ export default function AdminDashboard() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Label Badge Atas
                       </label>
                       <input
@@ -2886,11 +2886,11 @@ export default function AdminDashboard() {
                             leadership: { ...content.leadership, badge: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Judul Bagian Pimpinan
                       </label>
                       <input
@@ -2902,13 +2902,13 @@ export default function AdminDashboard() {
                             leadership: { ...content.leadership, title: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Subjudul / Deskripsi Bagian
                     </label>
                     <textarea
@@ -2920,16 +2920,16 @@ export default function AdminDashboard() {
                           leadership: { ...content.leadership, subtitle: e.target.value },
                         })
                       }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                     />
                   </div>
 
                   <div className="space-y-4 pt-2">
                     {content.leadership.members?.map((member, idx) => (
-                      <div key={idx} className="p-4 sm:p-5 rounded-xl bg-[#0E1013] border border-gold-500/20 space-y-3">
-                        <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
-                          <span className="text-xs font-bold text-gold-400 uppercase tracking-wider flex items-center gap-2">
-                            <span className="px-2 py-0.5 rounded bg-gold-500/20 text-gold-300 border border-gold-500/40">
+                      <div key={idx} className="p-4 sm:p-5 rounded-xl bg-[#F8FAFD] border border-[#FF9D2E]/30 shadow-xs space-y-3">
+                        <div className="flex items-center justify-between border-b border-[#DCE7F5] pb-2.5">
+                          <span className="text-xs font-bold text-[#FF9D2E] uppercase tracking-wider flex items-center gap-2">
+                            <span className="px-2 py-0.5 rounded bg-[#FFF7EB] text-[#C76A08] border border-[#FF9D2E]/30">
                               #{idx + 1}
                             </span>
                             <span>{member.role || 'Pengurus'}</span>
@@ -2949,7 +2949,7 @@ export default function AdminDashboard() {
                                   leadership: { ...content.leadership, members },
                                 });
                               }}
-                              className="p-1.5 rounded-lg bg-[#16191E] hover:bg-white/10 text-gray-400 hover:text-white disabled:opacity-30 disabled:hover:bg-[#16191E] transition-colors"
+                              className="p-1.5 rounded-lg bg-white hover:bg-[#EBF3FC] text-[#073B78] border border-[#DCE7F5] disabled:opacity-30 transition-colors"
                               title="Pindahkan ke atas"
                             >
                               <ArrowUp className="w-3.5 h-3.5" />
@@ -2968,7 +2968,7 @@ export default function AdminDashboard() {
                                   leadership: { ...content.leadership, members },
                                 });
                               }}
-                              className="p-1.5 rounded-lg bg-[#16191E] hover:bg-white/10 text-gray-400 hover:text-white disabled:opacity-30 disabled:hover:bg-[#16191E] transition-colors"
+                              className="p-1.5 rounded-lg bg-white hover:bg-[#EBF3FC] text-[#073B78] border border-[#DCE7F5] disabled:opacity-30 transition-colors"
                               title="Pindahkan ke bawah"
                             >
                               <ArrowDown className="w-3.5 h-3.5" />
@@ -3001,7 +3001,7 @@ export default function AdminDashboard() {
 
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                           <div>
-                            <label className="block text-[11px] text-gray-400 mb-1">Nama Lengkap</label>
+                            <label className="block text-[11px] text-[#526783] mb-1">Nama Lengkap</label>
                             <input
                               type="text"
                               value={member.name}
@@ -3013,11 +3013,11 @@ export default function AdminDashboard() {
                                   leadership: { ...content.leadership, members: newMembers },
                                 });
                               }}
-                              className="w-full px-3 py-2 rounded-lg bg-[#16191E] border border-white/10 text-xs sm:text-sm text-white focus:outline-none focus:border-gold-500"
+                              className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs sm:text-sm text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                             />
                           </div>
                           <div>
-                            <label className="block text-[11px] text-gray-400 mb-1">Jabatan Resmi</label>
+                            <label className="block text-[11px] text-[#526783] mb-1">Jabatan Resmi</label>
                             <input
                               type="text"
                               value={member.role}
@@ -3029,11 +3029,11 @@ export default function AdminDashboard() {
                                   leadership: { ...content.leadership, members: newMembers },
                                 });
                               }}
-                              className="w-full px-3 py-2 rounded-lg bg-[#16191E] border border-white/10 text-xs sm:text-sm text-gold-300 font-bold focus:outline-none focus:border-gold-500"
+                              className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs sm:text-sm text-[#C76A08] font-bold focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                             />
                           </div>
                           <div>
-                            <label className="block text-[11px] text-gray-400 mb-1">Divisi / Kategori</label>
+                            <label className="block text-[11px] text-[#526783] mb-1">Divisi / Kategori</label>
                             <input
                               type="text"
                               placeholder="Contoh: Divisi Keuangan"
@@ -3046,13 +3046,13 @@ export default function AdminDashboard() {
                                   leadership: { ...content.leadership, members: newMembers },
                                 });
                               }}
-                              className="w-full px-3 py-2 rounded-lg bg-[#16191E] border border-white/10 text-xs sm:text-sm text-white focus:outline-none focus:border-gold-500"
+                              className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs sm:text-sm text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                             />
                           </div>
                         </div>
 
                         <div>
-                          <label className="block text-[11px] text-gray-400 mb-1">Deskripsi Kewenangan / Peran</label>
+                          <label className="block text-[11px] text-[#526783] mb-1">Deskripsi Kewenangan / Peran</label>
                           <textarea
                             rows={2}
                             value={member.roleDescription}
@@ -3064,17 +3064,17 @@ export default function AdminDashboard() {
                                 leadership: { ...content.leadership, members: newMembers },
                               });
                             }}
-                            className="w-full px-3 py-2 rounded-lg bg-[#16191E] border border-white/10 text-xs text-gray-300 focus:outline-none focus:border-gold-500"
+                            className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                           />
                         </div>
 
-                        <div className="pt-2 border-t border-white/5 space-y-2">
-                          <label className="block text-[11px] font-semibold text-gray-300">
+                        <div className="pt-2 border-t border-[#DCE7F5] space-y-2">
+                          <label className="block text-[11px] font-semibold text-[#526783]">
                             Foto / Avatar Pengurus
                           </label>
                           <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
                             {/* Portrait Preview */}
-                            <div className="w-16 h-20 rounded-xl overflow-hidden border border-gold-500/50 bg-[#16191E] shrink-0 flex items-center justify-center shadow-md">
+                            <div className="w-16 h-20 rounded-xl overflow-hidden border border-[#FF9D2E]/40 bg-white shrink-0 flex items-center justify-center shadow-md">
                               {member.image && member.image.trim() !== '' ? (
                                 <img
                                   src={member.image}
@@ -3082,7 +3082,7 @@ export default function AdminDashboard() {
                                   className="w-full h-full object-cover object-top"
                                 />
                               ) : (
-                                <div className="text-gold-400 font-bold text-xs font-serif text-center px-1">
+                                <div className="text-[#FF9D2E] font-bold text-xs font-serif text-center px-1">
                                   {member.name ? member.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() : 'TBK'}
                                 </div>
                               )}
@@ -3103,9 +3103,9 @@ export default function AdminDashboard() {
                                       leadership: { ...content.leadership, members: newMembers },
                                     });
                                   }}
-                                  className="flex-1 px-3 py-1.5 rounded-lg bg-[#16191E] border border-white/10 text-xs text-white focus:outline-none focus:border-gold-500 font-mono"
+                                  className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-mono"
                                 />
-                                <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-colors">
+                                <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0 transition-colors">
                                   <Upload className="w-3.5 h-3.5" />
                                   <span>{uploadingKey === `leader-${idx}` ? 'Mengupload...' : 'Upload Foto'}</span>
                                   <input
@@ -3145,7 +3145,7 @@ export default function AdminDashboard() {
                                   </button>
                                 )}
                               </div>
-                              <span className="text-[10px] text-gray-500 block">
+                              <span className="text-[10px] text-[#526783] block">
                                 Format: JPG, PNG, atau WebP. Disarankan foto portrait vertikal (rasio 3:4 atau 4:5).
                               </span>
                             </div>
@@ -3178,7 +3178,7 @@ export default function AdminDashboard() {
                           },
                         });
                       }}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.04] hover:bg-gold-500/20 text-gold-300 border border-gold-500/40 text-xs font-semibold transition-all"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.04] hover:bg-[#FFF7EB] text-[#C76A08] border border-[#FF9D2E]/30 text-xs font-semibold transition-all"
                     >
                       <Plus className="w-4 h-4" />
                       <span>Tambah Pengurus Baru</span>
@@ -3191,12 +3191,12 @@ export default function AdminDashboard() {
             {/* TAB: LEGAL */}
             {activeTab === 'legal' && (
               <div className="space-y-6">
-                <div className="border-b border-white/10 pb-4">
-                  <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
-                    <ShieldCheck className="w-5 h-5 text-gold-400" />
+                <div className="border-b border-[#DCE7F5] pb-4">
+                  <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
+                    <ShieldCheck className="w-5 h-5 text-[#FF9D2E]" />
                     Legalitas & Pengesahan Perseroan
                   </h2>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-[#526783] mt-1">
                     Data akta pendirian, notaris rekanan, dan pengesahan Kemenkumham RI.
                   </p>
                 </div>
@@ -3204,7 +3204,7 @@ export default function AdminDashboard() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Nomor Akta Pendirian
                       </label>
                       <input
@@ -3216,11 +3216,11 @@ export default function AdminDashboard() {
                             legal: { ...content.legal, aktaNumber: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Tanggal Akta
                       </label>
                       <input
@@ -3232,13 +3232,13 @@ export default function AdminDashboard() {
                             legal: { ...content.legal, aktaDate: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Nama Notaris Lengkap Beserta Gelar
                     </label>
                     <input
@@ -3250,13 +3250,13 @@ export default function AdminDashboard() {
                           legal: { ...content.legal, notary: e.target.value },
                         })
                       }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Nomor SK Kemenkumham
                       </label>
                       <input
@@ -3268,11 +3268,11 @@ export default function AdminDashboard() {
                             legal: { ...content.legal, skMenkumham: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Tanggal Pengesahan SK
                       </label>
                       <input
@@ -3284,13 +3284,13 @@ export default function AdminDashboard() {
                             legal: { ...content.legal, skDate: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Ketentuan Kewenangan Direktur
                     </label>
                     <textarea
@@ -3302,13 +3302,13 @@ export default function AdminDashboard() {
                           legal: { ...content.legal, directorAuthority: e.target.value },
                         })
                       }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-white/10">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[#1C5795]/40">
                     <div>
-                      <label className="block text-xs font-medium text-gold-400 mb-1">
+                      <label className="block text-xs font-bold text-[#C76A08] mb-1">
                         Status Hak Atas Tanah & Sertifikat
                       </label>
                       <input
@@ -3320,12 +3320,12 @@ export default function AdminDashboard() {
                             legal: { ...content.legal, landStatus: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm font-semibold"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm font-semibold"
                         placeholder="Contoh: Sertifikat Hak Milik (SHM)"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Keterangan Legalitas Lahan
                       </label>
                       <input
@@ -3337,7 +3337,7 @@ export default function AdminDashboard() {
                             legal: { ...content.legal, landStatusDetail: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                         placeholder="Contoh: Hak kepemilikan mutlak dan sah atas nama pembeli"
                       />
                     </div>
@@ -3349,16 +3349,16 @@ export default function AdminDashboard() {
             {/* TAB: ACTIVITIES */}
             {activeTab === 'activities' && (
               <div className="space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#DCE7F5] pb-4">
                   <div>
-                    <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
-                      <HardHat className="w-5 h-5 text-gold-400" />
+                    <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
+                      <HardHat className="w-5 h-5 text-[#FF9D2E]" />
                       Kegiatan Lapangan Riil (CRUD)
-                      <span className="text-xs px-2.5 py-0.5 rounded-full bg-gold-500/20 text-gold-300 border border-gold-500/30 font-sans font-semibold">
+                      <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#FFF7EB] text-[#C76A08] border border-[#FF9D2E]/30 font-sans font-semibold">
                         {content.activities.items?.length || 0} Tahapan
                       </span>
                     </h2>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-[#526783] mt-1">
                       Dokumentasi resmi pekerjaan fisik di lapangan. Anda dapat menambah, mengubah, mengurutkan, menghapus, serta menyematkan foto dan video YouTube untuk setiap kegiatan.
                     </p>
                   </div>
@@ -3383,7 +3383,7 @@ export default function AdminDashboard() {
                         },
                       });
                     }}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gold-500 text-slate-950 font-bold text-xs hover:bg-gold-400 transition-all shrink-0 shadow-md shadow-gold-500/20"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#FF9D2E] text-[#071C38] font-bold text-xs hover:bg-[#F28A17] transition-all shrink-0 shadow-md shadow-[#FF9D2E]/25"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Tambah Kegiatan Baru</span>
@@ -3393,7 +3393,7 @@ export default function AdminDashboard() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Label Badge Bagian
                       </label>
                       <input
@@ -3405,11 +3405,11 @@ export default function AdminDashboard() {
                             activities: { ...content.activities, badge: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Judul Utama Bagian Kegiatan
                       </label>
                       <input
@@ -3421,13 +3421,13 @@ export default function AdminDashboard() {
                             activities: { ...content.activities, title: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Deskripsi / Subjudul Bagian Kegiatan
                     </label>
                     <textarea
@@ -3439,17 +3439,17 @@ export default function AdminDashboard() {
                           activities: { ...content.activities, subtitle: e.target.value },
                         })
                       }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                     />
                   </div>
 
                   <div className="space-y-4 pt-2">
                     {content.activities.items?.map((item, idx) => (
-                      <div key={idx} className="p-4 sm:p-5 rounded-xl bg-[#0E1013] border border-gold-500/25 space-y-4 hover:border-gold-500/40 transition-colors">
+                      <div key={idx} className="p-4 sm:p-5 rounded-xl bg-[#F8FAFD] border border-[#FF9D2E]/25 space-y-4 hover:border-[#FF9D2E]/30 transition-colors">
                         {/* Header bar with tag and reorder controls */}
-                        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                        <div className="flex items-center justify-between border-b border-[#DCE7F5] pb-3">
                           <div className="flex items-center gap-2">
-                            <span className="px-2 py-0.5 rounded bg-gold-500/20 text-gold-300 border border-gold-500/40 font-bold text-xs">
+                            <span className="px-2 py-0.5 rounded bg-[#FFF7EB] text-[#C76A08] border border-[#FF9D2E]/30 font-bold text-xs">
                               #{idx + 1}
                             </span>
                             <input
@@ -3464,7 +3464,7 @@ export default function AdminDashboard() {
                                   activities: { ...content.activities, items: newItems },
                                 });
                               }}
-                              className="px-3 py-1 rounded-lg bg-[#16191E] border border-white/10 text-xs text-gold-300 font-semibold w-28 sm:w-36 text-center"
+                              className="px-3 py-1 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#C76A08] font-semibold w-28 sm:w-36 text-center"
                             />
                           </div>
 
@@ -3483,7 +3483,7 @@ export default function AdminDashboard() {
                                   activities: { ...content.activities, items },
                                 });
                               }}
-                              className="p-1.5 rounded-lg bg-[#16191E] hover:bg-white/10 text-gray-400 hover:text-white disabled:opacity-30 disabled:hover:bg-[#16191E] transition-colors"
+                              className="p-1.5 rounded-lg bg-white hover:bg-[#EBF3FC] text-[#073B78] border border-[#DCE7F5] disabled:opacity-30 transition-colors"
                               title="Pindahkan ke atas (naikkan tahapan)"
                             >
                               <ArrowUp className="w-3.5 h-3.5" />
@@ -3503,7 +3503,7 @@ export default function AdminDashboard() {
                                   activities: { ...content.activities, items },
                                 });
                               }}
-                              className="p-1.5 rounded-lg bg-[#16191E] hover:bg-white/10 text-gray-400 hover:text-white disabled:opacity-30 disabled:hover:bg-[#16191E] transition-colors"
+                              className="p-1.5 rounded-lg bg-white hover:bg-[#EBF3FC] text-[#073B78] border border-[#DCE7F5] disabled:opacity-30 transition-colors"
                               title="Pindahkan ke bawah (turunkan tahapan)"
                             >
                               <ArrowDown className="w-3.5 h-3.5" />
@@ -3537,7 +3537,7 @@ export default function AdminDashboard() {
 
                         {/* Judul Kegiatan */}
                         <div>
-                          <label className="block text-xs font-medium text-gray-300 mb-1">
+                          <label className="block text-xs font-bold text-[#073B78] mb-1">
                             Judul Kegiatan Lapangan
                           </label>
                           <input
@@ -3551,13 +3551,13 @@ export default function AdminDashboard() {
                                 activities: { ...content.activities, items: newItems },
                               });
                             }}
-                            className="w-full px-3 py-2 rounded-lg bg-[#16191E] border border-white/10 text-xs sm:text-sm text-white focus:outline-none focus:border-gold-500"
+                            className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs sm:text-sm text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                           />
                         </div>
 
                         {/* Deskripsi Kegiatan */}
                         <div>
-                          <label className="block text-xs font-medium text-gray-300 mb-1">
+                          <label className="block text-xs font-bold text-[#073B78] mb-1">
                             Deskripsi Tahapan & Rincian Lapangan
                           </label>
                           <textarea
@@ -3571,18 +3571,18 @@ export default function AdminDashboard() {
                                 activities: { ...content.activities, items: newItems },
                               });
                             }}
-                            className="w-full px-3 py-2 rounded-lg bg-[#16191E] border border-white/10 text-xs sm:text-sm text-gray-300 focus:outline-none focus:border-gold-500"
+                            className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs sm:text-sm text-[#526783] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                           />
                         </div>
 
                         {/* Foto Dokumentasi Lapangan */}
-                        <div className="space-y-2 pt-2 border-t border-white/5">
-                          <label className="block text-xs font-semibold text-gray-300 flex items-center gap-1.5">
-                            <ImageIcon className="w-3.5 h-3.5 text-gold-400" />
+                        <div className="space-y-2 pt-2 border-t border-[#DCE7F5]">
+                          <label className="block text-xs font-bold text-[#073B78] flex items-center gap-1.5">
+                            <ImageIcon className="w-3.5 h-3.5 text-[#FF9D2E]" />
                             <span>Foto Dokumentasi Lapangan</span>
                           </label>
                           <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-                            <div className="w-24 h-16 rounded-lg bg-[#16191E] border border-white/10 overflow-hidden shrink-0 flex items-center justify-center">
+                            <div className="w-24 h-16 rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] overflow-hidden shrink-0 flex items-center justify-center">
                               {item.image && item.image.trim() !== '' ? (
                                 <img
                                   src={item.image}
@@ -3590,7 +3590,7 @@ export default function AdminDashboard() {
                                   className="w-full h-full object-cover"
                                 />
                               ) : (
-                                <span className="text-[10px] text-gray-500 text-center px-1">Tanpa Foto</span>
+                                <span className="text-[10px] text-[#526783] text-center px-1">Tanpa Foto</span>
                               )}
                             </div>
                             <div className="flex-1 w-full space-y-1">
@@ -3607,9 +3607,9 @@ export default function AdminDashboard() {
                                       activities: { ...content.activities, items: newItems },
                                     });
                                   }}
-                                  className="flex-1 px-3 py-1.5 rounded-lg bg-[#16191E] border border-white/10 text-xs text-white focus:outline-none focus:border-gold-500 font-mono"
+                                  className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-mono"
                                 />
-                                <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-colors">
+                                <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0 transition-colors">
                                   <Upload className="w-3.5 h-3.5" />
                                   <span>{uploadingKey === `act-${idx}` ? 'Mengupload...' : 'Upload Foto'}</span>
                                   <input
@@ -3649,7 +3649,7 @@ export default function AdminDashboard() {
                                   </button>
                                 )}
                               </div>
-                              <span className="text-[10px] text-gray-500 block">
+                              <span className="text-[10px] text-[#526783] block">
                                 Format: JPG, PNG, atau WebP. Gambar lanskap (16:10) disarankan.
                               </span>
                             </div>
@@ -3657,9 +3657,9 @@ export default function AdminDashboard() {
                         </div>
 
                         {/* Video Dokumentasi Lapangan (Opsional) */}
-                        <div className="space-y-2 pt-2 border-t border-white/5">
-                          <label className="block text-xs font-semibold text-gray-300 flex items-center gap-1.5">
-                            <Video className="w-3.5 h-3.5 text-gold-400" />
+                        <div className="space-y-2 pt-2 border-t border-[#DCE7F5]">
+                          <label className="block text-xs font-bold text-[#073B78] flex items-center gap-1.5">
+                            <Video className="w-3.5 h-3.5 text-[#FF9D2E]" />
                             <span>Link Video YouTube Dokumentasi Lapangan (Opsional)</span>
                           </label>
                           <div className="space-y-2">
@@ -3675,7 +3675,7 @@ export default function AdminDashboard() {
                                   activities: { ...content.activities, items: newItems },
                                 });
                               }}
-                              className="w-full px-3 py-1.5 rounded-lg bg-[#16191E] border border-white/10 text-xs text-white focus:outline-none focus:border-gold-500 font-mono"
+                              className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-mono"
                             />
                             {getYouTubeEmbedUrl(item.videoUrl) && (
                               <div className="pt-1">
@@ -3683,7 +3683,7 @@ export default function AdminDashboard() {
                                   <CheckCircle2 className="w-3 h-3" />
                                   <span>Preview Video Terdeteksi:</span>
                                 </span>
-                                <div className="relative aspect-video max-w-sm rounded-lg overflow-hidden border border-white/20 bg-black">
+                                <div className="relative aspect-video max-w-sm rounded-lg overflow-hidden border border-[#DCE7F5] bg-black">
                                   <iframe
                                     src={getYouTubeEmbedUrl(item.videoUrl)!}
                                     title={`Preview Video Kegiatan ${idx + 1}`}
@@ -3723,7 +3723,7 @@ export default function AdminDashboard() {
                           },
                         });
                       }}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.04] hover:bg-gold-500/20 text-gold-300 border border-gold-500/40 text-xs font-semibold transition-all"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.04] hover:bg-[#FFF7EB] text-[#C76A08] border border-[#FF9D2E]/30 text-xs font-semibold transition-all"
                     >
                       <Plus className="w-4 h-4" />
                       <span>Tambah Kegiatan Baru</span>
@@ -3736,12 +3736,12 @@ export default function AdminDashboard() {
             {/* TAB: PROJECT PURI GUNUNG LANGGAR */}
             {activeTab === 'project' && (
               <div className="space-y-6">
-                <div className="border-b border-white/10 pb-4">
-                  <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
-                    <Building className="w-5 h-5 text-gold-400" />
+                <div className="border-b border-[#DCE7F5] pb-4">
+                  <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
+                    <Building className="w-5 h-5 text-[#FF9D2E]" />
                     Proyek Resmi: Puri Gunung Langgar
                   </h2>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-[#526783] mt-1">
                     Kelola nama, status, lokasi, deskripsi, gambar, dan spesifikasi unit perumahan.
                   </p>
                 </div>
@@ -3749,7 +3749,7 @@ export default function AdminDashboard() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Nama Proyek
                       </label>
                       <input
@@ -3761,11 +3761,11 @@ export default function AdminDashboard() {
                             project: { ...content.project, name: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Jenis Proyek
                       </label>
                       <input
@@ -3777,14 +3777,14 @@ export default function AdminDashboard() {
                             project: { ...content.project, type: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Status Pembangunan
                       </label>
                       <input
@@ -3796,11 +3796,11 @@ export default function AdminDashboard() {
                             project: { ...content.project, status: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Desa / Kecamatan
                       </label>
                       <input
@@ -3812,11 +3812,11 @@ export default function AdminDashboard() {
                             project: { ...content.project, location: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Kabupaten
                       </label>
                       <input
@@ -3828,13 +3828,13 @@ export default function AdminDashboard() {
                             project: { ...content.project, district: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Deskripsi Proyek
                     </label>
                     <textarea
@@ -3846,17 +3846,17 @@ export default function AdminDashboard() {
                           project: { ...content.project, description: e.target.value },
                         })
                       }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                     />
                   </div>
 
                   {/* Foto Sampul Utama Proyek */}
-                  <div className="p-4 rounded-xl bg-[#0E1013] border border-white/10 space-y-3">
-                    <label className="block text-xs font-semibold text-gray-300">
+                  <div className="p-4 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-3">
+                    <label className="block text-xs font-bold text-[#073B78]">
                       Foto Sampul Utama Proyek (Thumbnail & Cover Card)
                     </label>
                     <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                      <div className="w-24 h-16 rounded-lg bg-[#16191E] border border-white/10 overflow-hidden shrink-0 flex items-center justify-center">
+                      <div className="w-24 h-16 rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] overflow-hidden shrink-0 flex items-center justify-center">
                         {content.project.image && content.project.image.trim() !== '' ? (
                           <img
                             src={content.project.image}
@@ -3864,7 +3864,7 @@ export default function AdminDashboard() {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <ImageIcon className="w-6 h-6 text-gray-600" />
+                          <ImageIcon className="w-6 h-6 text-[#526783]" />
                         )}
                       </div>
                       <div className="flex-1 w-full space-y-1.5">
@@ -3879,9 +3879,9 @@ export default function AdminDashboard() {
                                 project: { ...content.project, image: e.target.value },
                               })
                             }
-                            className="flex-1 px-3 py-1.5 rounded-lg bg-[#16191E] border border-white/10 text-xs text-white focus:outline-none focus:border-gold-500 font-mono"
+                            className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-mono"
                           />
-                          <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-colors">
+                          <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0 transition-colors">
                             <Upload className="w-3.5 h-3.5" />
                             <span>{uploadingCover ? 'Mengupload...' : 'Upload Foto'}</span>
                             <input
@@ -3917,20 +3917,20 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* PENGATURAN MEDIA PROYEK: FOTO SLIDESHOW ATAU VIDEO YOUTUBE */}
-                  <div className="pt-4 border-t border-white/10 space-y-4">
+                  <div className="pt-4 border-t border-[#DCE7F5] space-y-4">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div>
-                        <label className="block text-sm font-bold text-gold-400 uppercase tracking-wider flex items-center gap-2">
-                          <Layers className="w-4 h-4 text-gold-400" />
+                        <label className="block text-sm font-bold text-[#073B78] uppercase tracking-wider flex items-center gap-2">
+                          <Layers className="w-4 h-4 text-[#FF9D2E]" />
                           <span>Media Showcase Proyek (Video / Galeri Foto)</span>
                         </label>
-                        <p className="text-xs text-gray-400 mt-0.5">
+                        <p className="text-xs text-[#526783] mt-0.5">
                           Pilih format tampilan utama proyek: Galeri Foto yang bergeser otomatis (slideshow) atau Video YouTube.
                         </p>
                       </div>
 
                       {/* Format Selector Buttons */}
-                      <div className="flex items-center gap-2 bg-[#0E1013] p-1 rounded-xl border border-white/10 self-start sm:self-auto">
+                      <div className="flex items-center gap-2 bg-[#F8FAFD] p-1 rounded-xl border border-[#DCE7F5] self-start sm:self-auto">
                         <button
                           type="button"
                           onClick={() =>
@@ -3941,8 +3941,8 @@ export default function AdminDashboard() {
                           }
                           className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
                             content.project.mediaType !== 'video'
-                              ? 'bg-gold-500 text-slate-950 font-bold shadow'
-                              : 'text-gray-400 hover:text-white'
+                              ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow'
+                              : 'text-[#526783] hover:text-white'
                           }`}
                         >
                           <ImageIcon className="w-3.5 h-3.5" />
@@ -3958,8 +3958,8 @@ export default function AdminDashboard() {
                           }
                           className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
                             content.project.mediaType === 'video'
-                              ? 'bg-gold-500 text-slate-950 font-bold shadow'
-                              : 'text-gray-400 hover:text-white'
+                              ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow'
+                              : 'text-[#526783] hover:text-white'
                           }`}
                         >
                           <Video className="w-3.5 h-3.5" />
@@ -3977,17 +3977,17 @@ export default function AdminDashboard() {
 
                     {/* JIKA FORMAT VIDEO YOUTUBE TERPILIH */}
                     {content.project.mediaType === 'video' ? (
-                      <div className="p-5 rounded-xl bg-[#0E1013] border border-gold-500/30 space-y-4">
-                        <div className="flex items-center gap-2 text-xs font-bold text-gold-300 uppercase tracking-wider">
-                          <Film className="w-4 h-4 text-gold-400" />
+                      <div className="p-5 rounded-xl bg-[#F8FAFD] border border-[#FF9D2E]/40 shadow-xs space-y-4">
+                        <div className="flex items-center gap-2 text-xs font-bold text-[#C76A08] uppercase tracking-wider">
+                          <Film className="w-4 h-4 text-[#FF9D2E]" />
                           <span>Link Video YouTube (Ringan & Cepat)</span>
                         </div>
-                        <p className="text-xs text-gray-400 leading-relaxed">
+                        <p className="text-xs text-[#526783] leading-relaxed">
                           Cukup masukkan URL video YouTube di bawah ini (misalnya dokumentasi proyek, drone lapangan, atau video perumahan). Sistem otomatis meng-embed video langsung dari YouTube sehingga server tetap ringan, hemat bandwidth, dan loading sangat cepat!
                         </p>
 
                         <div>
-                          <label className="block text-xs font-medium text-gray-300 mb-1">
+                          <label className="block text-xs font-bold text-[#073B78] mb-1">
                             URL Video YouTube (bisa link biasa, share link youtu.be, atau embed)
                           </label>
                           <input
@@ -4000,7 +4000,7 @@ export default function AdminDashboard() {
                                 project: { ...content.project, videoUrl: e.target.value },
                               })
                             }
-                            className="w-full px-4 py-2.5 rounded-xl bg-[#16191E] border border-white/10 text-white text-sm focus:outline-none focus:border-gold-500 font-mono"
+                            className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-mono"
                           />
                         </div>
 
@@ -4011,7 +4011,7 @@ export default function AdminDashboard() {
                               <CheckCircle2 className="w-3.5 h-3.5" />
                               <span>Preview Video Terdeteksi:</span>
                             </span>
-                            <div className="relative aspect-video max-w-lg rounded-xl overflow-hidden border border-white/20 bg-black">
+                            <div className="relative aspect-video max-w-lg rounded-xl overflow-hidden border border-[#DCE7F5] bg-black">
                               <iframe
                                 src={getYouTubeEmbedUrl(content.project.videoUrl)!}
                                 title="Preview Video YouTube"
@@ -4029,14 +4029,14 @@ export default function AdminDashboard() {
                       </div>
                     ) : (
                       /* JIKA FORMAT FOTO / SLIDESHOW TERPILIH */
-                      <div className="p-5 rounded-xl bg-[#0E1013] border border-white/10 space-y-4">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                      <div className="p-5 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#DCE7F5] pb-3">
                           <div>
-                            <div className="text-xs font-bold text-gold-300 uppercase tracking-wider flex items-center gap-2">
-                              <ImageIcon className="w-4 h-4 text-gold-400" />
+                            <div className="text-xs font-bold text-[#C76A08] uppercase tracking-wider flex items-center gap-2">
+                              <ImageIcon className="w-4 h-4 text-[#FF9D2E]" />
                               <span>Galeri Slideshow Foto Proyek ({content.project.slides?.length || 0} Foto)</span>
                             </div>
-                            <p className="text-xs text-gray-400 mt-0.5">
+                            <p className="text-xs text-[#526783] mt-0.5">
                               Foto-foto ini akan otomatis bergeser (slideshow) setiap 5 detik di halaman depan dengan kontrol next/prev dan zoom.
                             </p>
                           </div>
@@ -4087,7 +4087,7 @@ export default function AdminDashboard() {
                                   },
                                 });
                               }}
-                              className="px-3 py-1.5 rounded-lg bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-semibold flex items-center gap-1.5 transition-all"
+                              className="px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 transition-all"
                             >
                               <Plus className="w-3.5 h-3.5" />
                               <span>Tambah Slide</span>
@@ -4100,10 +4100,10 @@ export default function AdminDashboard() {
                           {(content.project.slides || []).map((slide, idx) => (
                             <div
                               key={idx}
-                              className="p-3.5 rounded-xl bg-[#16191E] border border-white/10 space-y-3 relative group"
+                              className="p-3.5 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-3 relative group"
                             >
-                              <div className="flex items-center justify-between border-b border-white/5 pb-2">
-                                <span className="text-xs font-bold text-gold-400">
+                              <div className="flex items-center justify-between border-b border-[#DCE7F5] pb-2">
+                                <span className="text-xs font-bold text-[#FF9D2E]">
                                   Slide Proyek #{idx + 1}
                                 </span>
                                 <div className="flex items-center gap-1">
@@ -4120,7 +4120,7 @@ export default function AdminDashboard() {
                                         project: { ...content.project, slides },
                                       });
                                     }}
-                                    className="p-1 rounded hover:bg-white/10 text-gray-400 disabled:opacity-30 disabled:hover:bg-transparent"
+                                    className="p-1 rounded hover:bg-white/10 text-[#526783] disabled:opacity-30 disabled:hover:bg-transparent"
                                     title="Pindahkan ke atas"
                                   >
                                     <ArrowUp className="w-3.5 h-3.5" />
@@ -4138,7 +4138,7 @@ export default function AdminDashboard() {
                                         project: { ...content.project, slides },
                                       });
                                     }}
-                                    className="p-1 rounded hover:bg-white/10 text-gray-400 disabled:opacity-30 disabled:hover:bg-transparent"
+                                    className="p-1 rounded hover:bg-white/10 text-[#526783] disabled:opacity-30 disabled:hover:bg-transparent"
                                     title="Pindahkan ke bawah"
                                   >
                                     <ArrowDown className="w-3.5 h-3.5" />
@@ -4168,7 +4168,7 @@ export default function AdminDashboard() {
                               <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
                                 {/* Thumbnail */}
                                 <div className="sm:col-span-3">
-                                  <div className="aspect-[16/10] w-full rounded-lg bg-black border border-white/10 overflow-hidden flex items-center justify-center">
+                                  <div className="aspect-[16/10] w-full rounded-lg bg-black border border-[#DCE7F5] overflow-hidden flex items-center justify-center">
                                     {slide.image ? (
                                       <img
                                         src={slide.image}
@@ -4176,7 +4176,7 @@ export default function AdminDashboard() {
                                         className="w-full h-full object-cover"
                                       />
                                     ) : (
-                                      <span className="text-[10px] text-gray-500">Tanpa Foto</span>
+                                      <span className="text-[10px] text-[#526783]">Tanpa Foto</span>
                                     )}
                                   </div>
                                 </div>
@@ -4196,11 +4196,11 @@ export default function AdminDashboard() {
                                           project: { ...content.project, slides },
                                         });
                                       }}
-                                      className="flex-1 px-3 py-1.5 rounded-lg bg-[#0E1013] border border-white/10 text-xs text-white focus:outline-none focus:border-gold-500 font-mono"
+                                      className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-mono"
                                     />
                                     {/* Upload Foto Biasa Button */}
-                                    <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-colors">
-                                      <Upload className="w-3.5 h-3.5 text-gold-400" />
+                                    <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-[#102D52] text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-colors">
+                                      <Upload className="w-3.5 h-3.5 text-[#FF9D2E]" />
                                       <span>
                                         {uploadingSlide === idx ? 'Mengupload...' : 'Upload Foto'}
                                       </span>
@@ -4248,7 +4248,7 @@ export default function AdminDashboard() {
                                           project: { ...content.project, slides },
                                         });
                                       }}
-                                      className="w-full px-3 py-1.5 rounded-lg bg-[#0E1013] border border-white/10 text-xs text-gray-200 focus:outline-none focus:border-gold-500"
+                                      className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-gray-200 focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                                     />
                                   </div>
                                 </div>
@@ -4262,9 +4262,9 @@ export default function AdminDashboard() {
 
 
                   {/* Dynamic Specs Editor */}
-                  <div className="pt-4 border-t border-white/10 space-y-3">
+                  <div className="pt-4 border-t border-[#DCE7F5] space-y-3">
                     <div className="flex items-center justify-between">
-                      <label className="block text-xs font-bold text-gold-400 uppercase tracking-wider">
+                      <label className="block text-xs font-bold text-[#FF9D2E] uppercase tracking-wider">
                         Spesifikasi & Rincian Unit ({content.project.specs?.length || 0})
                       </label>
                       <button
@@ -4278,7 +4278,7 @@ export default function AdminDashboard() {
                             },
                           });
                         }}
-                        className="px-2.5 py-1 rounded bg-gold-500/20 text-gold-300 hover:bg-gold-500/30 text-xs flex items-center gap-1"
+                        className="px-2.5 py-1 rounded bg-[#FFF7EB] text-[#C76A08] hover:bg-[#FF9D2E]/30 text-xs flex items-center gap-1"
                       >
                         <Plus className="w-3 h-3" /> Tambah Rincian
                       </button>
@@ -4286,7 +4286,7 @@ export default function AdminDashboard() {
 
                     <div className="space-y-2">
                       {content.project.specs?.map((spec, idx) => (
-                        <div key={idx} className="flex items-center gap-2 p-2 rounded-xl bg-[#0E1013] border border-white/5">
+                        <div key={idx} className="flex items-center gap-2 p-2 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
                           <input
                             type="text"
                             placeholder="Label (contoh: Jumlah Unit)"
@@ -4299,7 +4299,7 @@ export default function AdminDashboard() {
                                 project: { ...content.project, specs: newSpecs },
                               });
                             }}
-                            className="w-1/3 px-3 py-2 rounded-lg bg-[#16191E] border border-white/10 text-xs text-gray-300"
+                            className="w-1/3 px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783]"
                           />
                           <input
                             type="text"
@@ -4313,7 +4313,7 @@ export default function AdminDashboard() {
                                 project: { ...content.project, specs: newSpecs },
                               });
                             }}
-                            className="flex-1 px-3 py-2 rounded-lg bg-[#16191E] border border-white/10 text-xs text-gold-300 font-semibold"
+                            className="flex-1 px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#C76A08] font-semibold"
                           />
                           <button
                             type="button"
@@ -4343,19 +4343,19 @@ export default function AdminDashboard() {
             {/* TAB: CONTACT */}
             {activeTab === 'contact' && (
               <div className="space-y-6">
-                <div className="border-b border-white/10 pb-4">
-                  <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
-                    <PhoneCall className="w-5 h-5 text-gold-400" />
+                <div className="border-b border-[#DCE7F5] pb-4">
+                  <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
+                    <PhoneCall className="w-5 h-5 text-[#FF9D2E]" />
                     Kontak, Alamat Kantor & Jam Operasional
                   </h2>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-[#526783] mt-1">
                     Atur kota domisili kantor, alamat resmi, nomor WhatsApp, email, dan jam pelayanan.
                   </p>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Kota Domisili Kantor
                     </label>
                     <input
@@ -4367,12 +4367,12 @@ export default function AdminDashboard() {
                           contact: { ...content.contact, city: e.target.value },
                         })
                       }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Alamat Kantor Lengkap
                     </label>
                     <textarea
@@ -4384,13 +4384,13 @@ export default function AdminDashboard() {
                           contact: { ...content.contact, address: e.target.value },
                         })
                       }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Nomor WhatsApp
                       </label>
                       <input
@@ -4402,11 +4402,11 @@ export default function AdminDashboard() {
                             contact: { ...content.contact, whatsapp: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Email Kantor
                       </label>
                       <input
@@ -4418,13 +4418,13 @@ export default function AdminDashboard() {
                             contact: { ...content.contact, email: e.target.value },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                    <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Jam Operasional Kantor
                     </label>
                     <input
@@ -4436,25 +4436,25 @@ export default function AdminDashboard() {
                           contact: { ...content.contact, operatingHours: e.target.value },
                         })
                       }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                     />
                   </div>
 
                   {/* Pengaturan Google Maps Kantor */}
-                  <div className="pt-4 border-t border-white/10 space-y-4">
+                  <div className="pt-4 border-t border-[#DCE7F5] space-y-4">
                     <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-gold-400" />
-                      <label className="block text-xs font-bold text-gold-400 uppercase tracking-wider">
+                      <MapPin className="w-4 h-4 text-[#FF9D2E]" />
+                      <label className="block text-xs font-bold text-[#FF9D2E] uppercase tracking-wider">
                         Peta Lokasi Kantor Google Maps (Tampil di Footer)
                       </label>
                     </div>
 
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <label className="text-xs font-medium text-gray-300">
+                        <label className="text-xs font-medium text-[#526783]">
                           URL Sematan Peta (Google Maps Embed iframe)
                         </label>
-                        <span className="text-[11px] text-gray-400">
+                        <span className="text-[11px] text-[#526783]">
                           Dari Google Maps: Bagikan &rarr; Sematkan peta &rarr; Salin link src
                         </span>
                       </div>
@@ -4474,12 +4474,12 @@ export default function AdminDashboard() {
                             contact: { ...content.contact, mapsEmbedUrl: val },
                           });
                         }}
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-gold-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs font-mono focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
                         Tautan Rute / Petunjuk Arah (Link Langsung Google Maps)
                       </label>
                       <input
@@ -4492,9 +4492,9 @@ export default function AdminDashboard() {
                             contact: { ...content.contact, mapsUrl: e.target.value.trim() },
                           })
                         }
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-gold-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs font-mono focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
-                      <span className="text-[10.5px] text-gray-400 block mt-1">
+                      <span className="text-[10.5px] text-[#526783] block mt-1">
                         Link ini akan dibuka saat pengunjung menekan tombol &quot;Petunjuk Arah&quot; atau &quot;Buka Maps&quot; di footer.
                       </span>
                     </div>
@@ -4506,7 +4506,7 @@ export default function AdminDashboard() {
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>Preview Peta Google Maps Terdeteksi:</span>
                         </span>
-                        <div className="relative w-full h-48 rounded-xl overflow-hidden border border-white/20 bg-[#16191E]">
+                        <div className="relative w-full h-48 rounded-xl overflow-hidden border border-[#DCE7F5] bg-white">
                           <iframe
                             src={content.contact.mapsEmbedUrl}
                             width="100%"
@@ -4532,18 +4532,18 @@ export default function AdminDashboard() {
             {/* TAB: INQUIRIES */}
             {activeTab === 'inquiries' && (
               <div className="space-y-6">
-                <div className="border-b border-white/10 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="border-b border-[#DCE7F5] pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
-                      <Inbox className="w-5 h-5 text-gold-400" />
+                    <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
+                      <Inbox className="w-5 h-5 text-[#FF9D2E]" />
                       Pesan Masuk dari Formulir Website
                       {inquiries.length > 0 && (
-                        <span className="text-xs px-2.5 py-0.5 rounded-full bg-gold-500/20 text-gold-300 border border-gold-500/30 font-sans font-semibold">
+                        <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#FFF7EB] text-[#C76A08] border border-[#FF9D2E]/30 font-sans font-semibold">
                           {inquiries.length} Pesan
                         </span>
                       )}
                     </h2>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-[#526783] mt-1">
                       Data kontak dan pertanyaan yang dikirimkan oleh pengunjung melalui formulir minat website.
                     </p>
                   </div>
@@ -4552,7 +4552,7 @@ export default function AdminDashboard() {
                       <button
                         type="button"
                         onClick={handleClearAllInquiries}
-                        className="p-2 px-3 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs flex items-center gap-1.5 transition-colors"
+                        className="p-2 px-3 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs flex items-center gap-1.5 transition-colors"
                         title="Kosongkan Semua Pesan Masuk"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -4563,7 +4563,7 @@ export default function AdminDashboard() {
                       type="button"
                       onClick={fetchInquiries}
                       disabled={inquiriesLoading}
-                      className="p-2 px-3 rounded-lg bg-[#0E1013] border border-white/10 text-gray-300 hover:text-white text-xs flex items-center gap-1.5 transition-colors"
+                      className="p-2 px-3 rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] text-[#526783] hover:text-[#102D52] text-xs flex items-center gap-1.5 transition-colors"
                     >
                       <RefreshCw className={`w-3.5 h-3.5 ${inquiriesLoading ? 'animate-spin' : ''}`} />
                       <span>Segarkan</span>
@@ -4572,29 +4572,29 @@ export default function AdminDashboard() {
                 </div>
 
                 {inquiries.length === 0 ? (
-                  <div className="p-12 text-center text-gray-500 rounded-xl bg-[#0E1013] border border-white/5">
-                    <Inbox className="w-10 h-10 mx-auto text-gray-600 mb-3" />
+                  <div className="p-12 text-center text-[#526783] rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
+                    <Inbox className="w-10 h-10 mx-auto text-[#526783] mb-3" />
                     <p className="text-sm font-medium">Belum ada pesan masuk.</p>
-                    <p className="text-xs text-gray-600 mt-1">
+                    <p className="text-xs text-[#526783] mt-1">
                       Setiap formulir minat yang disubmit pengunjung di landing page akan otomatis muncul di sini.
                     </p>
                   </div>
                 ) : (
                   <div className="space-y-3">
                     {inquiries.map((inq) => (
-                      <div key={inq.id} className="p-4 rounded-xl bg-[#0E1013] border border-white/10 space-y-2 relative group hover:border-gold-500/30 transition-all">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-white/5 pb-2">
-                          <div className="font-syne font-bold text-white text-sm flex items-center gap-2">
+                      <div key={inq.id} className="p-4 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-2 relative group hover:border-[#FF9D2E]/30 transition-all">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-[#DCE7F5] pb-2">
+                          <div className="font-syne font-bold text-[#073B78] text-sm flex items-center gap-2">
                             <span>{inq.name}</span>
                           </div>
                           <div className="flex items-center gap-3">
-                            <span className="text-[11px] text-gray-400">
+                            <span className="text-[11px] text-[#526783]">
                               {new Date(inq.created_at).toLocaleString('id-ID')}
                             </span>
                             <button
                               type="button"
                               onClick={() => handleDeleteInquiry(inq.id)}
-                              className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs flex items-center gap-1 transition-colors"
+                              className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs flex items-center gap-1 transition-colors"
                               title="Hapus pesan ini permanen"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -4602,12 +4602,12 @@ export default function AdminDashboard() {
                             </button>
                           </div>
                         </div>
-                        <div className="flex flex-wrap gap-3 text-xs text-gold-300">
-                          <div>WA/Telp: <span className="text-white font-mono">{inq.phone}</span></div>
-                          {inq.email && <div>Email: <span className="text-white">{inq.email}</span></div>}
+                        <div className="flex flex-wrap gap-3 text-xs text-[#C76A08]">
+                          <div>WA/Telp: <span className="text-[#102D52] font-mono font-semibold">{inq.phone}</span></div>
+                          {inq.email && <div>Email: <span className="text-[#102D52] font-medium">{inq.email}</span></div>}
                         </div>
                         {inq.message && (
-                          <div className="text-xs text-gray-300 bg-[#16191E] p-3 rounded-lg border border-white/5">
+                          <div className="text-xs text-[#526783] bg-white p-3 rounded-lg border border-[#DCE7F5]">
                             {inq.message}
                           </div>
                         )}
@@ -4623,17 +4623,17 @@ export default function AdminDashboard() {
 
       {/* Password Change Modal */}
       {showPasswordModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-          <div className="relative w-full max-w-md bg-[#16191E] border border-gold-500/30 rounded-2xl p-6 sm:p-7 shadow-2xl shadow-black/80">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#071C38]/70 backdrop-blur-sm animate-in fade-in">
+          <div className="relative w-full max-w-md bg-white border border-[#DCE7F5] rounded-2xl p-6 sm:p-7 shadow-2xl shadow-[#071C38]/30">
             {/* Header */}
-            <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/10">
+            <div className="flex items-center justify-between pb-4 mb-4 border-b border-[#DCE7F5]">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-lg bg-gold-500/10 text-gold-400">
+                <div className="p-2 rounded-lg bg-[#FFF7EB] text-[#FF9D2E]">
                   <Key className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-syne font-bold text-white text-base">Ganti Kata Sandi</h3>
-                  <p className="text-xs text-white/50">Ubah password akun admin Anda</p>
+                  <h3 className="font-syne font-bold text-[#073B78] text-base">Ganti Kata Sandi</h3>
+                  <p className="text-xs text-[#526783]">Ubah password akun admin Anda</p>
                 </div>
               </div>
               <button
@@ -4645,7 +4645,7 @@ export default function AdminDashboard() {
                   setNewPass('');
                   setConfirmPass('');
                 }}
-                className="p-1 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+                className="p-1 rounded-lg text-[#526783] hover:text-[#073B78] hover:bg-[#EBF3FC] transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -4672,7 +4672,7 @@ export default function AdminDashboard() {
             {/* Form */}
             <form onSubmit={handleChangePassword} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-white/80 mb-1">
+                <label className="block text-xs font-bold text-[#073B78] mb-1">
                   Kata Sandi Saat Ini
                 </label>
                 <input
@@ -4682,12 +4682,12 @@ export default function AdminDashboard() {
                   onChange={(e) => setCurrPass(e.target.value)}
                   placeholder="Masukkan password saat ini..."
                   disabled={passChangeLoading}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white placeholder-white/30 text-xs sm:text-sm focus:outline-none focus:border-gold-400 focus:ring-1 focus:ring-gold-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] placeholder-[#526783]/50 text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-white/80 mb-1">
+                <label className="block text-xs font-bold text-[#073B78] mb-1">
                   Kata Sandi Baru (Minimal 6 Karakter)
                 </label>
                 <input
@@ -4697,12 +4697,12 @@ export default function AdminDashboard() {
                   onChange={(e) => setNewPass(e.target.value)}
                   placeholder="Masukkan password baru..."
                   disabled={passChangeLoading}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white placeholder-white/30 text-xs sm:text-sm focus:outline-none focus:border-gold-400 focus:ring-1 focus:ring-gold-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] placeholder-[#526783]/50 text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-white/80 mb-1">
+                <label className="block text-xs font-bold text-[#073B78] mb-1">
                   Konfirmasi Kata Sandi Baru
                 </label>
                 <input
@@ -4712,7 +4712,7 @@ export default function AdminDashboard() {
                   onChange={(e) => setConfirmPass(e.target.value)}
                   placeholder="Ketik ulang password baru..."
                   disabled={passChangeLoading}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white placeholder-white/30 text-xs sm:text-sm focus:outline-none focus:border-gold-400 focus:ring-1 focus:ring-gold-400"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] placeholder-[#526783]/50 text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                 />
               </div>
 
@@ -4721,14 +4721,14 @@ export default function AdminDashboard() {
                   type="button"
                   onClick={() => setShowPasswordModal(false)}
                   disabled={passChangeLoading}
-                  className="px-4 py-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-xs font-semibold text-white/80 transition-colors"
+                  className="px-4 py-2 rounded-xl bg-[#F4F7FC] hover:bg-[#EBF3FC] text-xs font-semibold text-[#526783] border border-[#DCE7F5] transition-colors"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={passChangeLoading}
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#D4AF37] via-[#C9A96A] to-[#B88E3F] text-[#0E1014] font-bold text-xs uppercase tracking-wider hover:opacity-95 shadow-md shadow-gold-500/20 transition-all flex items-center gap-1.5"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-[#071C38] font-bold text-xs uppercase tracking-wider hover:brightness-105 shadow-md shadow-[#FF9D2E]/25 transition-all flex items-center gap-1.5"
                 >
                   {passChangeLoading ? (
                     <>
