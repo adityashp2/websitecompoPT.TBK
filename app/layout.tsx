@@ -3,7 +3,7 @@ import './globals.css';
 import MobileBottomNav from './components/MobileBottomNav';
 
 export const viewport: Viewport = {
-  themeColor: '#262722',
+  themeColor: '#073B78',
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
@@ -110,7 +110,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="bg-[#F3EFE6] text-[#262722] font-sans antialiased selection:bg-[#C5A568] selection:text-[#262722] min-h-screen pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:pb-0">
+      <body className="bg-white text-[#102D52] font-sans antialiased selection:bg-[#FF9D2E] selection:text-[#102D52] min-h-screen pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:pb-0">
         {children}
         <MobileBottomNav />
       </body>

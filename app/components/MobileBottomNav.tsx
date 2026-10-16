@@ -63,7 +63,7 @@ export default function MobileBottomNav() {
     <nav
       aria-label="Navigasi Bawah Seluler"
       role="navigation"
-      className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#1D1E1A]/95 backdrop-blur-xl border-t border-white/[0.08] shadow-[0_-8px_24px_rgba(0,0,0,0.35)] pb-[max(0.5rem,env(safe-area-inset-bottom))]"
+      className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#102D52]/95 backdrop-blur-xl border-t border-white/10 shadow-[0_-8px_24px_rgba(7,59,120,0.25)] pb-[max(0.5rem,env(safe-area-inset-bottom))]"
     >
       <div className="grid grid-cols-5 h-[58px] max-w-lg mx-auto px-1 items-center">
         {navItems.map((item) => {
@@ -75,29 +75,29 @@ export default function MobileBottomNav() {
               key={item.href}
               href={item.href}
               aria-current={active ? 'page' : undefined}
-              className={`group flex flex-col items-center justify-center py-1 px-1 transition-all duration-200 select-none relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A568] rounded-[8px] ${
+              className={`group flex flex-col items-center justify-center py-1 px-1 transition-all duration-200 select-none relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] rounded-[8px] ${
                 active
-                  ? 'text-[#C5A568]'
-                  : 'text-[#DDD8CE]/65 hover:text-[#F3EFE6] active:scale-95'
+                  ? 'text-[#FF9D2E]'
+                  : 'text-white/65 hover:text-white active:scale-95'
               }`}
             >
-              {/* Active gold indicator pip on top */}
+              {/* Active orange indicator pip on top */}
               {active && (
                 <span
-                  className="absolute -top-1 w-5 h-0.5 rounded-full bg-[#C5A568] shadow-[0_0_8px_rgba(197,165,104,0.6)] animate-in fade-in zoom-in-75 duration-200"
+                  className="absolute -top-1 w-5 h-0.5 rounded-full bg-[#FF9D2E] shadow-[0_0_8px_rgba(255,157,46,0.6)] animate-in fade-in zoom-in-75 duration-200"
                   aria-hidden="true"
                 />
               )}
 
               <Icon
-                className={`w-[18px] h-[18px] transition-transform duration-200 ${
+                className={`w-[19px] h-[19px] transition-transform duration-200 ${
                   active ? 'scale-110 stroke-[2.25]' : 'group-hover:scale-105 stroke-[1.75]'
                 }`}
               />
 
               <span
-                className={`text-[10px] tracking-tight mt-1 font-medium transition-colors ${
-                  active ? 'font-semibold text-[#C5A568]' : 'text-[#DDD8CE]/70'
+                className={`text-[10.5px] tracking-tight mt-1 font-medium transition-colors ${
+                  active ? 'font-bold text-[#FF9D2E]' : 'text-white/70'
                 }`}
               >
                 {item.label}

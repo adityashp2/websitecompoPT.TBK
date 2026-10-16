@@ -60,27 +60,27 @@ export default function FloatingWhatsApp({ content }: FloatingWhatsAppProps) {
     <div className="fixed bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] md:bottom-6 right-4 sm:right-6 z-40 flex flex-col items-end pointer-events-none">
       {/* Consultation Notification Bubble */}
       {showPopup && !dismissed && (
-        <div className="mb-2.5 w-[calc(100vw-32px)] max-w-[300px] bg-white rounded-[4px] shadow-lg border border-[#DDD8CE] p-3.5 text-[#262722] relative z-50 font-sans select-none pointer-events-auto animate-fade-in">
+        <div className="mb-2.5 w-[calc(100vw-32px)] max-w-[310px] bg-white rounded-xl shadow-xl border border-[#DCE7F5] p-4 text-[#102D52] relative z-50 font-sans select-none pointer-events-auto animate-fade-in">
           <button
             type="button"
             onClick={handleDismiss}
-            className="absolute top-2 right-2 w-5 h-5 rounded-[2px] text-[#77766F] hover:text-[#262722] flex items-center justify-center transition-colors text-xs"
+            className="absolute top-2.5 right-2.5 w-6 h-6 rounded-full text-[#526783] hover:text-[#102D52] hover:bg-[#F4F7FC] flex items-center justify-center transition-colors text-xs"
             aria-label="Tutup pesan"
           >
-            <X className="w-3.5 h-3.5" />
+            <X className="w-4 h-4" />
           </button>
 
-          <div className="flex items-center gap-2 mb-1.5">
-            <div className="w-6 h-6 rounded-full bg-[#25D366] text-white flex items-center justify-center shrink-0">
-              <MessageCircle className="w-3.5 h-3.5 fill-white" />
+          <div className="flex items-center gap-2.5 mb-2">
+            <div className="w-7 h-7 rounded-full bg-[#15966A] text-white flex items-center justify-center shrink-0 shadow-sm">
+              <MessageCircle className="w-4 h-4 fill-white" />
             </div>
             <div>
-              <div className="text-xs font-semibold text-[#262722] leading-tight">Layanan WhatsApp Resmi</div>
-              <div className="text-[10px] text-emerald-600 font-medium">Online & Siap Melayani</div>
+              <div className="text-[12.5px] font-bold text-[#102D52] leading-tight">Layanan WhatsApp Resmi</div>
+              <div className="text-[10px] text-[#15966A] font-semibold">Online &amp; Siap Melayani</div>
             </div>
           </div>
 
-          <p className="text-[11.5px] text-[#77766F] leading-relaxed mb-2.5">
+          <p className="text-[12px] text-[#526783] leading-relaxed mb-3">
             Butuh info ketersediaan unit atau tahapan berkas KPR di <strong>Puri Gunung Langgar</strong>?
           </p>
 
@@ -89,25 +89,25 @@ export default function FloatingWhatsApp({ content }: FloatingWhatsAppProps) {
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleDismiss}
-            className="w-full h-7 px-3 rounded-[3px] bg-[#25D366] hover:bg-[#1EBE5D] text-white font-semibold text-[11px] flex items-center justify-center gap-1.5 transition-colors"
+            className="w-full h-8 px-3 rounded-lg bg-[#15966A] hover:bg-[#117a56] text-white font-bold text-[11.5px] flex items-center justify-center gap-1.5 transition-colors shadow-sm"
           >
-            <span>Tanya Pemasaran</span>
-            <Send className="w-3 h-3" />
+            <span>Tanya Tim Pemasaran</span>
+            <Send className="w-3.5 h-3.5" />
           </a>
         </div>
       )}
 
-      {/* Restrained WhatsApp Floating Button (Clean & Compact) */}
+      {/* WhatsApp Floating Button */}
       <div className="relative group pointer-events-auto">
         <a
           href={waUrl}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Hubungi kami melalui WhatsApp"
-          className="w-[42px] h-[42px] sm:w-[44px] sm:h-[44px] rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-md shadow-black/25 hover:bg-[#1EBE5D] hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2"
+          className="w-[46px] h-[46px] sm:w-[48px] sm:h-[48px] rounded-full bg-[#15966A] text-white flex items-center justify-center shadow-lg shadow-[#073B78]/20 hover:bg-[#117a56] hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#15966A] focus:ring-offset-2"
         >
           <svg
-            className="w-5 h-5 fill-current"
+            className="w-6 h-6 fill-current"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"

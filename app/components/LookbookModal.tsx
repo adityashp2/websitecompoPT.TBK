@@ -8,9 +8,7 @@ import {
   MessageCircle,
   ShieldCheck,
   CheckCircle2,
-  Calendar,
   Layers,
-  ExternalLink,
 } from 'lucide-react';
 
 export interface LookbookItem {
@@ -69,7 +67,6 @@ export default function LookbookModal({
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    // Lock background body scroll
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
@@ -81,7 +78,6 @@ export default function LookbookModal({
 
   if (!isOpen || !currentItem) return null;
 
-  // Format WhatsApp Link with custom pre-filled message
   const cleanPhone = (whatsappNumber || '').replace(/\D/g, '');
   const formattedWa = cleanPhone.startsWith('0')
     ? `62${cleanPhone.slice(1)}`
@@ -98,51 +94,51 @@ export default function LookbookModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col justify-between bg-[#141512]/95 backdrop-blur-xl p-3 sm:p-5 md:p-6 transition-all duration-300"
+      className="fixed inset-0 z-50 flex flex-col justify-between bg-[#071C38]/95 backdrop-blur-xl p-3 sm:p-5 md:p-6 transition-all duration-300"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-label="Dokumentasi Visual Proyek"
     >
-      {/* Ambient warm radial glow */}
+      {/* Ambient navy/orange radial glow */}
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(197,165,104,0.08)_0%,transparent_70%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(7,59,120,0.4)_0%,transparent_70%)]"
         aria-hidden="true"
       />
 
       {/* TOP BAR: Brand Identity, Counter & Controls */}
       <header
-        className="relative z-10 flex items-center justify-between pb-3 sm:pb-4 border-b border-white/[0.08] shrink-0"
+        className="relative z-10 flex items-center justify-between pb-3 sm:pb-4 border-b border-white/10 shrink-0"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Left: Project identity & brand badge */}
         <div className="flex items-center gap-2.5 sm:gap-3">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider bg-[#C5A568]/15 text-[#C5A568] border border-[#C5A568]/30">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider bg-[#FF9D2E]/20 text-[#FF9D2E] border border-[#FF9D2E]/40">
             <Layers className="w-3 h-3" />
             <span>Dokumentasi Resmi</span>
           </span>
           <div className="hidden sm:block">
-            <span className="text-xs sm:text-sm font-medium text-[#F3EFE6] tracking-wide block">
+            <span className="text-xs sm:text-sm font-bold text-white tracking-wide block">
               {projectName}
             </span>
-            <span className="text-[10px] text-[#DDD8CE]/60 tracking-wider uppercase block">
+            <span className="text-[10px] text-[#DCE7F5]/70 tracking-wider uppercase block">
               PT. Terbang Bersama Kawan
             </span>
           </div>
         </div>
 
         {/* Center: Slide Counter */}
-        <div className="px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-[#F3EFE6] font-mono text-xs tracking-wider flex items-center gap-1.5">
-          <span className="text-[#C5A568] font-bold">
+        <div className="px-3.5 py-1 rounded-full bg-white/10 border border-white/15 text-white font-mono text-xs tracking-wider flex items-center gap-1.5">
+          <span className="text-[#FF9D2E] font-bold">
             {String(currentIndex + 1).padStart(2, '0')}
           </span>
           <span className="text-white/30">/</span>
-          <span className="text-white/60">
+          <span className="text-white/70">
             {String(items.length).padStart(2, '0')}
           </span>
         </div>
 
-        {/* Right: Keyboard navigation tip & Close button */}
+        {/* Right: Keyboard tip & Close button */}
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="hidden lg:flex items-center gap-1 text-[11px] font-mono text-white/50">
             <kbd className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 text-[10px]">←</kbd>
@@ -154,7 +150,7 @@ export default function LookbookModal({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/10 hover:bg-[#C5A568] hover:text-[#262722] text-[#F3EFE6] transition-all duration-200 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A568]"
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/10 hover:bg-[#FF9D2E] hover:text-[#102D52] text-white transition-all duration-200 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E]"
             aria-label="Tutup lookbook"
           >
             <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -167,20 +163,18 @@ export default function LookbookModal({
         className="relative z-10 flex-1 flex items-center justify-center my-2 sm:my-3 min-h-0 select-none"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Previous Slide Button */}
         {items.length > 1 && (
           <button
             type="button"
             onClick={handlePrev}
-            className="absolute left-1 sm:left-3 md:left-6 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#262722]/85 hover:bg-[#C5A568] hover:text-[#262722] text-[#F3EFE6] border border-white/15 backdrop-blur-md shadow-2xl flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A568]"
+            className="absolute left-1 sm:left-3 md:left-6 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#102D52]/85 hover:bg-[#FF9D2E] hover:text-[#102D52] text-white border border-white/20 backdrop-blur-md shadow-2xl flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E]"
             aria-label="Foto sebelumnya"
           >
             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         )}
 
-        {/* Main Image Stage */}
-        <div className="relative max-h-[46vh] sm:max-h-[50vh] md:max-h-[54vh] max-w-full flex items-center justify-center rounded-xl overflow-hidden border border-white/10 bg-[#1A1B17] shadow-2xl group">
+        <div className="relative max-h-[46vh] sm:max-h-[50vh] md:max-h-[54vh] max-w-full flex items-center justify-center rounded-2xl overflow-hidden border border-white/15 bg-[#071C38] shadow-2xl group">
           <img
             key={currentItem.image}
             src={currentItem.image}
@@ -189,12 +183,11 @@ export default function LookbookModal({
           />
         </div>
 
-        {/* Next Slide Button */}
         {items.length > 1 && (
           <button
             type="button"
             onClick={handleNext}
-            className="absolute right-1 sm:right-3 md:right-6 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#262722]/85 hover:bg-[#C5A568] hover:text-[#262722] text-[#F3EFE6] border border-white/15 backdrop-blur-md shadow-2xl flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A568]"
+            className="absolute right-1 sm:right-3 md:right-6 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#102D52]/85 hover:bg-[#FF9D2E] hover:text-[#102D52] text-white border border-white/20 backdrop-blur-md shadow-2xl flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E]"
             aria-label="Foto berikutnya"
           >
             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -202,75 +195,47 @@ export default function LookbookModal({
         )}
       </div>
 
-      {/* BOTTOM SECTION: Editorial Card & Interactive Thumbnail Lookbook Strip */}
+      {/* BOTTOM SECTION: Metadata Card & Lookbook Strip */}
       <footer
         className="relative z-10 shrink-0 space-y-3 pt-2"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Editorial Metadata Card */}
-        <div className="bg-[#20211D]/90 border border-white/10 rounded-xl p-3 sm:p-4 md:p-5 backdrop-blur-md shadow-xl">
+        <div className="bg-[#102D52]/90 border border-white/15 rounded-2xl p-4 sm:p-5 backdrop-blur-md shadow-xl text-white">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
-            {/* Left: Tag, Title, Description, and Specs */}
             <div className="space-y-1.5 flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 {currentItem.tag && (
-                  <span className="px-2 py-0.5 rounded-[4px] text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider bg-[#C5A568]/20 text-[#C5A568] border border-[#C5A568]/30">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider bg-[#FF9D2E]/25 text-[#FF9D2E] border border-[#FF9D2E]/30">
                     {currentItem.tag}
                   </span>
                 )}
-                {(() => {
-                  const isConceptual =
-                    (currentItem.tag || '').toLowerCase().includes('konsep') ||
-                    (currentItem.title || '').toLowerCase().includes('visualisasi') ||
-                    (currentItem.title || '').toLowerCase().includes('perencanaan');
-
-                  if (isConceptual) {
-                    return (
-                      <>
-                        <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] text-amber-300 font-medium bg-amber-950/60 border border-amber-500/30 px-2 py-0.5 rounded-[4px]">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                          <span>Visualisasi Arsitektural • Ilustrasi Konsep</span>
-                        </span>
-                        <span className="hidden sm:inline-flex items-center gap-1 text-[10px] sm:text-[11px] text-white/60 bg-white/[0.05] border border-white/10 px-2 py-0.5 rounded-[4px]">
-                          <span>Rencana Master Plan PT. TBK</span>
-                        </span>
-                      </>
-                    );
-                  }
-
-                  return (
-                    <>
-                      <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] text-emerald-400 font-medium bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded-[4px]">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                        <span>Dokumentasi Fisik Lapangan Terverifikasi</span>
-                      </span>
-                      <span className="hidden sm:inline-flex items-center gap-1 text-[10px] sm:text-[11px] text-white/60 bg-white/[0.05] border border-white/10 px-2 py-0.5 rounded-[4px]">
-                        <ShieldCheck className="w-3 h-3 text-[#C5A568]" />
-                        <span>Standar Teknis PUPR</span>
-                      </span>
-                    </>
-                  );
-                })()}
+                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] text-[#15966A] font-semibold bg-[#15966A]/20 border border-[#15966A]/30 px-2.5 py-0.5 rounded-full">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>Dokumentasi Lapangan Terverifikasi</span>
+                </span>
+                <span className="hidden sm:inline-flex items-center gap-1 text-[10px] sm:text-[11px] text-[#DCE7F5]/80 bg-white/10 border border-white/10 px-2.5 py-0.5 rounded-full">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#FF9D2E]" />
+                  <span>Standar Teknis PUPR</span>
+                </span>
               </div>
 
-              <h2 className="font-serif text-base sm:text-lg md:text-xl text-[#F3EFE6] font-semibold tracking-tight truncate">
+              <h2 className="font-sans text-base sm:text-lg md:text-xl text-white font-bold tracking-tight truncate">
                 {currentItem.title}
               </h2>
 
               {currentItem.description && (
-                <p className="text-xs sm:text-[13px] text-[#DDD8CE]/80 leading-relaxed line-clamp-2">
+                <p className="text-xs sm:text-[13px] text-[#DCE7F5]/85 leading-relaxed line-clamp-2">
                   {currentItem.description}
                 </p>
               )}
             </div>
 
-            {/* Right: Action CTA Buttons */}
             <div className="flex items-center gap-2 sm:gap-3 shrink-0 pt-1 md:pt-0">
               <a
                 href={waUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-[10px] bg-[#C5A568] hover:bg-[#B69455] text-[#262722] font-semibold text-xs sm:text-sm tracking-wide transition-all duration-200 shadow-md hover:shadow-lg active:scale-95"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] font-bold text-xs sm:text-sm tracking-wide transition-all shadow-md active:scale-95"
               >
                 <MessageCircle className="w-4 h-4 fill-current" />
                 <span>Tanya Progres Ini</span>
@@ -279,7 +244,7 @@ export default function LookbookModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-[10px] bg-white/[0.07] hover:bg-white/[0.12] text-[#DDD8CE] text-xs sm:text-sm border border-white/10 transition-colors"
+                className="px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm border border-white/15 transition-colors font-semibold"
               >
                 Tutup
               </button>
@@ -287,7 +252,7 @@ export default function LookbookModal({
           </div>
         </div>
 
-        {/* Thumbnail Lookbook Strip (Quick Navigation) */}
+        {/* Thumbnail Lookbook Strip */}
         {items.length > 1 && (
           <div className="flex items-center justify-center gap-2 sm:gap-3 overflow-x-auto py-1 scrollbar-none px-1">
             {items.map((item, idx) => {
@@ -297,10 +262,10 @@ export default function LookbookModal({
                   key={idx}
                   type="button"
                   onClick={() => onIndexChange(idx)}
-                  className={`relative group/thumb shrink-0 w-14 sm:w-20 md:w-24 aspect-[4/3] rounded-[6px] overflow-hidden transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A568] ${
+                  className={`relative group/thumb shrink-0 w-14 sm:w-20 md:w-24 aspect-[4/3] rounded-lg overflow-hidden transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] ${
                     isActive
-                      ? 'ring-2 ring-[#C5A568] border-transparent scale-105 opacity-100 shadow-lg'
-                      : 'opacity-40 hover:opacity-90 hover:scale-100 border border-white/15'
+                      ? 'ring-2 ring-[#FF9D2E] border-transparent scale-105 opacity-100 shadow-lg'
+                      : 'opacity-40 hover:opacity-90 hover:scale-100 border border-white/20'
                   }`}
                   aria-label={`Lihat foto ${idx + 1}: ${item.title}`}
                 >

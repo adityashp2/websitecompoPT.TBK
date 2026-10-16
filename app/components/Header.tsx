@@ -1,25 +1,87 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, MessageCircle, ArrowRight } from 'lucide-react';
+import { Menu, X, Search, MessageCircle, ArrowRight, Compass, Calculator, ShieldCheck, Building2, Phone, Calendar } from 'lucide-react';
 import { SiteContent } from '@/lib/initialData';
 
 interface HeaderProps {
   content: SiteContent;
 }
 
+interface SearchItem {
+  title: string;
+  category: string;
+  href: string;
+  description: string;
+  keywords: string[];
+}
+
+const SEARCH_DATABASE: SearchItem[] = [
+  {
+    title: 'Puri Gunung Langgar',
+    category: 'Proyek Perumahan',
+    href: '/proyek',
+    description: 'Perumahan subsidi Type 36/72 di Sabah Balau, Tanjung Bintang, Lampung Selatan.',
+    keywords: ['puri', 'gunung', 'langgar', 'proyek', 'rumah', 'subsidi', 'tipe 36', 'tanjung bintang', 'lampung selatan', 'harga', 'shm', 'kavling']
+  },
+  {
+    title: 'Simulasi KPR FLPP 5%',
+    category: 'Kalkulator Finansial',
+    href: '/simulasi-kpr',
+    description: 'Hitung estimasi angsuran bulanan KPR subsidi pemerintah suku bunga tetap 5%.',
+    keywords: ['simulasi', 'kpr', 'flpp', 'cicilan', 'angsuran', 'dp', 'uang muka', 'tenor', 'bunga 5%', 'hitung']
+  },
+  {
+    title: 'Profil & Tentang PT. TBK',
+    category: 'Tentang Perusahaan',
+    href: '/tentang',
+    description: 'Sejarah perseroan, visi misi, komitmen mutu, dan nilai tata kelola perusahaan.',
+    keywords: ['tentang', 'profil', 'pt tbk', 'terbang bersama kawan', 'visi', 'misi', 'sejarah', 'developer']
+  },
+  {
+    title: 'Dewan Direksi & Pimpinan',
+    category: 'Struktur Manajemen',
+    href: '/pimpinan',
+    description: 'Profil jajaran Komisaris, Direktur Utama, dan tata kelola perseroan.',
+    keywords: ['pimpinan', 'direksi', 'komisaris', 'direktur', 'manajemen', 'struktur', 'pengurus']
+  },
+  {
+    title: 'Dokumentasi & Progres Proyek',
+    category: 'Aktivitas Lapangan',
+    href: '/kegiatan',
+    description: 'Foto dan video progres pembangunan infrastruktur serta unit Puri Gunung Langgar.',
+    keywords: ['kegiatan', 'progres', 'lapangan', 'konstruksi', 'foto', 'video', 'dokumentasi', 'infrastruktur']
+  },
+  {
+    title: 'Legalitas & Dokumen Resmi',
+    category: 'Kepastian Hukum',
+    href: '/legalitas',
+    description: 'Akta Notaris, SK Pengesahan Kemenkumham RI, NIB, dan kepastian sertifikat SHM.',
+    keywords: ['legalitas', 'akta', 'notaris', 'kemenkumham', 'nib', 'izin', 'shm', 'hukum', 'sertifikat']
+  },
+  {
+    title: 'Kontak & Kantor Pemasaran',
+    category: 'Layanan Konsumen',
+    href: '/kontak',
+    description: 'Alamat kantor pusat di Bandar Lampung, WhatsApp resmi, dan formulir konsultasi.',
+    keywords: ['kontak', 'hubungi', 'whatsapp', 'alamat', 'telepon', 'lokasi', 'kantor', 'survei', 'email']
+  }
+];
+
 export default function Header({ content }: HeaderProps) {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Track scroll position to toggle transparent vs solid architectural header
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 15);
     };
 
     handleScroll();
@@ -27,9 +89,9 @@ export default function Header({ content }: HeaderProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is active
+  // Lock body scroll when mobile menu or search modal is open
   useEffect(() => {
-    if (mobileMenuOpen) {
+    if (mobileMenuOpen || searchOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -37,22 +99,35 @@ export default function Header({ content }: HeaderProps) {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, searchOpen]);
 
-  // Close mobile drawer on route change or Escape
   useEffect(() => {
     setMobileMenuOpen(false);
+    setSearchOpen(false);
   }, [pathname]);
 
+  // Focus search input when opened
+  useEffect(() => {
+    if (searchOpen) {
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 100);
+    } else {
+      setSearchQuery('');
+    }
+  }, [searchOpen]);
+
+  // Handle Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && mobileMenuOpen) {
-        setMobileMenuOpen(false);
+      if (e.key === 'Escape') {
+        if (searchOpen) setSearchOpen(false);
+        if (mobileMenuOpen) setMobileMenuOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, searchOpen]);
 
   const rawWa = content.contact?.whatsapp || '0812-7890-1234';
   const cleanPhone = rawWa.replace(/\D/g, '');
@@ -63,13 +138,26 @@ export default function Header({ content }: HeaderProps) {
     : `62${cleanPhone}`;
   const waUrl = `https://wa.me/${formattedWa}?text=${encodeURIComponent('Halo PT. TBK, saya ingin berkonsultasi mengenai perumahan Puri Gunung Langgar.')}`;
 
-  // Main Navigation Items including Pimpinan (Dewan Pengurus)
+  // Filtered search results
+  const filteredSearch = searchQuery.trim() === ''
+    ? SEARCH_DATABASE
+    : SEARCH_DATABASE.filter(item => {
+        const q = searchQuery.toLowerCase();
+        return (
+          item.title.toLowerCase().includes(q) ||
+          item.description.toLowerCase().includes(q) ||
+          item.category.toLowerCase().includes(q) ||
+          item.keywords.some(k => k.includes(q))
+        );
+      });
+
+  // Main Navigation Items
   const navItems = [
     { label: 'Beranda', href: '/' },
     { label: 'Tentang', href: '/tentang' },
     { label: 'Proyek', href: '/proyek' },
+    { label: 'Simulasi', href: '/simulasi-kpr' },
     { label: 'Pimpinan', href: '/pimpinan' },
-    { label: 'Simulasi KPR', href: '/simulasi-kpr' },
     { label: 'Kegiatan', href: '/kegiatan' },
     { label: 'Legalitas', href: '/legalitas' },
     { label: 'Kontak', href: '/kontak' },
@@ -77,51 +165,56 @@ export default function Header({ content }: HeaderProps) {
 
   return (
     <>
-      {/* Skip to Main Content Link */}
+      {/* Skip to Main Content */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:bg-[#C5A568] focus:text-[#262722] focus:rounded focus:font-semibold focus:shadow-md focus:outline-none focus:ring-2 focus:ring-white"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:bg-[#FF9D2E] focus:text-[#102D52] focus:rounded focus:font-semibold focus:shadow-md focus:outline-none focus:ring-2 focus:ring-white"
       >
         Menuju ke konten utama
       </a>
 
-      {/* Spacer for non-homepage views with dark background */}
+      {/* Spacer for non-homepage views */}
       {!isHomePage && (
-        <div className="h-[58px] min-[980px]:h-[64px] bg-[#262722]" aria-hidden="true" />
+        <div className="h-[60px] min-[980px]:h-[68px] bg-[#073B78]" aria-hidden="true" />
       )}
 
-      {/* Main Architectural Header with guaranteed solid charcoal background */}
+      {/* Main Corporate Header: ICC-Inspired Full-Width Navy Blue */}
       <header
-        style={{ backgroundColor: '#262722' }}
-        className="fixed top-0 inset-x-0 z-50 h-[58px] min-[980px]:h-[64px] w-full bg-[#262722] border-b border-white/[0.08] shadow-sm transition-all duration-200 ease-out"
+        className={`fixed top-0 inset-x-0 z-50 h-[60px] min-[980px]:h-[68px] w-full transition-all duration-200 ease-out border-b border-white/10 ${
+          isScrolled || !isHomePage
+            ? 'bg-[#073B78] shadow-md'
+            : 'bg-[#073B78]'
+        }`}
       >
-        <div className="container-editorial h-full flex items-center justify-between">
-          {/* Left: Brand Identity & Logo */}
+        <div className="w-full max-w-[1360px] mx-auto h-full px-4 sm:px-6 flex items-center justify-between">
+          {/* Left: Brand Identity with existing logo asset */}
           <Link
             href="/"
             prefetch={false}
-            className="flex items-center gap-2.5 shrink-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C5A568] rounded py-1 group"
+            className="flex items-center gap-2.5 sm:gap-3 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] rounded-lg py-1 group"
             aria-label="PT. Terbang Bersama Kawan - Beranda"
           >
-            <img
-              src={content.meta?.logo || '/assets/logo-tbk.png'}
-              alt="Logo PT. Terbang Bersama Kawan"
-              className="h-7 min-[980px]:h-8 w-auto object-contain shrink-0"
-              width="32"
-              height="32"
-            />
+            {/* Logo Image Asset */}
+            <div className="h-8 sm:h-9 w-auto flex items-center shrink-0">
+              <img
+                src="/assets/logo-tbk.png"
+                alt="Logo PT. Terbang Bersama Kawan"
+                className="h-8 sm:h-9 w-auto object-contain brightness-0 invert"
+              />
+            </div>
+
             <div className="flex flex-col text-left">
-              <span className="text-[11.5px] min-[980px]:text-[12.5px] font-bold tracking-[0.08em] text-[#F3EFE6] uppercase group-hover:text-[#C5A568] transition-colors leading-tight">
+              <span className="text-[13.5px] sm:text-[15px] font-black tracking-[0.06em] text-white uppercase group-hover:text-[#FF9D2E] transition-colors leading-tight">
                 PT. TBK
               </span>
-              <span className="text-[9.5px] text-[#C5A568] font-medium tracking-[0.04em] uppercase leading-tight mt-0.5">
+              <span className="text-[9.5px] sm:text-[10.5px] text-[#FF9D2E] font-semibold tracking-[0.05em] uppercase leading-tight mt-0.5">
                 Terbang Bersama Kawan
               </span>
             </div>
           </Link>
 
-          {/* Center-Right: Editorial Main Navigation (Desktop) with crisp high contrast */}
-          <nav aria-label="Menu utama" className="hidden min-[980px]:flex items-center gap-3.5 min-[1100px]:gap-5">
+          {/* Center-Right: Desktop Navigation Menu */}
+          <nav aria-label="Menu utama" className="hidden min-[980px]:flex items-center gap-4 min-[1120px]:gap-6">
             {navItems.map((item) => {
               const isActive = item.href === '/'
                 ? pathname === '/'
@@ -132,16 +225,16 @@ export default function Header({ content }: HeaderProps) {
                   key={item.href}
                   href={item.href}
                   prefetch={false}
-                  className={`text-[12px] min-[1100px]:text-[12.5px] font-medium tracking-[0.01em] transition-colors relative py-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C5A568] rounded whitespace-nowrap ${
+                  className={`text-[13px] min-[1120px]:text-[13.5px] font-medium transition-all relative py-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9D2E] rounded whitespace-nowrap ${
                     isActive
-                      ? 'text-[#C5A568] font-bold'
-                      : 'text-[#F3EFE6]/85 hover:text-[#C5A568]'
+                      ? 'text-[#FF9D2E] font-bold'
+                      : 'text-white/85 hover:text-white'
                   }`}
                 >
                   {item.label}
                   {isActive && (
                     <span
-                      className="absolute -bottom-[4px] left-0 right-0 h-[2px] bg-[#C5A568]"
+                      className="absolute -bottom-[6px] left-0 right-0 h-[2.5px] bg-[#FF9D2E] rounded-full"
                       aria-hidden="true"
                     />
                   )}
@@ -150,49 +243,141 @@ export default function Header({ content }: HeaderProps) {
             })}
           </nav>
 
-          {/* Right Action: Understated Architectural CTA Proportional to Header */}
-          <div className="hidden min-[980px]:flex items-center">
+          {/* Right Action Icons & Controls */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Interactive Search Icon Button */}
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="w-9 h-9 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg text-white/90 hover:text-white bg-white/10 hover:bg-white/20 border border-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] transition-all"
+              aria-label="Cari di website"
+            >
+              <Search className="w-4 h-4" />
+            </button>
+
+            {/* Desktop CTA Button */}
             <Link
               href="/kontak"
               prefetch={false}
-              className="group h-[36px] px-4 rounded-[10px] bg-[#C5A568] hover:bg-[#B69455] text-[#262722] text-[12px] font-semibold tracking-wider uppercase transition-all duration-200 hover:-translate-y-[1px] active:translate-y-0 active:scale-[0.99] shadow-sm hover:shadow flex items-center justify-center gap-1.5 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              className="hidden min-[980px]:flex group h-[38px] px-5 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-[12px] font-bold tracking-wider uppercase transition-all duration-200 hover:-translate-y-[1px] active:scale-[0.99] shadow-sm hover:shadow items-center justify-center gap-1.5 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               <span>Hubungi Kami</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
-          </div>
 
-          {/* Mobile Hamburger Toggle (<980px) */}
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="min-[980px]:hidden w-10 h-10 flex items-center justify-center rounded-[4px] text-[#F3EFE6] bg-white/[0.04] border border-white/10 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C5A568] shrink-0 transition-colors"
-            aria-label={mobileMenuOpen ? 'Tutup navigasi' : 'Buka navigasi'}
-            aria-expanded={mobileMenuOpen}
-            aria-controls="mobile-nav-panel"
-          >
-            {mobileMenuOpen ? <X className="w-4 h-4 text-[#C5A568]" /> : <Menu className="w-4 h-4" />}
-          </button>
+            {/* Mobile Hamburger Toggle (ICC Approach: compact, comfortable right alignment) */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="min-[980px]:hidden w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg text-white bg-white/10 border border-white/15 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] shrink-0 transition-colors"
+              aria-label={mobileMenuOpen ? 'Tutup navigasi' : 'Buka navigasi'}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-nav-panel"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5 text-[#FF9D2E]" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Mobile Drawer (<980px) */}
+      {/* ========================================================= */}
+      {/* SEARCH MODAL (Interactive & Functional)                   */}
+      {/* ========================================================= */}
+      {searchOpen && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150">
+          <div
+            className="w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-[#DCE7F5] overflow-hidden animate-in zoom-in-95 duration-150"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Pencarian Website"
+          >
+            {/* Search Input Bar */}
+            <div className="p-3.5 sm:p-4 bg-[#F4F7FC] border-b border-[#DCE7F5] flex items-center gap-3">
+              <Search className="w-5 h-5 text-[#073B78] shrink-0" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Cari proyek, KPR, syarat, legalitas, pimpinan..."
+                className="w-full bg-transparent text-[#102D52] placeholder-[#526783] text-[14px] sm:text-[15px] font-medium outline-none"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="p-1 rounded-md text-[#526783] hover:text-[#102D52]"
+                  aria-label="Hapus teks pencarian"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => setSearchOpen(false)}
+                className="text-xs font-semibold px-2.5 py-1 rounded-md bg-white border border-[#DCE7F5] text-[#526783] hover:text-[#102D52]"
+              >
+                ESC
+              </button>
+            </div>
+
+            {/* Results List */}
+            <div className="max-h-[60vh] overflow-y-auto p-2 sm:p-3 divide-y divide-[#DCE7F5]/60">
+              {filteredSearch.length === 0 ? (
+                <div className="py-8 text-center text-[#526783] text-sm">
+                  Tidak ada hasil untuk &ldquo;{searchQuery}&rdquo;. Silakan coba kata kunci lain.
+                </div>
+              ) : (
+                filteredSearch.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setSearchOpen(false)}
+                    className="p-3 rounded-xl hover:bg-[#F4F7FC] flex items-start gap-3 transition-colors group block"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-[#073B78]/10 text-[#073B78] group-hover:bg-[#FF9D2E] group-hover:text-[#102D52] flex items-center justify-center shrink-0 mt-0.5 transition-colors">
+                      <ArrowRight className="w-4 h-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[13.5px] font-bold text-[#102D52] group-hover:text-[#073B78]">
+                          {item.title}
+                        </span>
+                        <span className="text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-[#DCE7F5] text-[#073B78]">
+                          {item.category}
+                        </span>
+                      </div>
+                      <p className="text-xs text-[#526783] mt-0.5 line-clamp-1">
+                        {item.description}
+                      </p>
+                    </div>
+                  </Link>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* MOBILE DRAWER: ICC-Inspired Off-Canvas Layout             */}
+      {/* ========================================================= */}
       {mobileMenuOpen && (
         <div
           id="mobile-nav-panel"
-          className="fixed top-[58px] inset-x-0 bottom-0 bg-[#262722]/98 backdrop-blur-xl z-40 px-6 py-6 flex flex-col justify-between overflow-y-auto min-[980px]:hidden border-t border-white/[0.08]"
+          className="fixed top-[60px] inset-x-0 bottom-0 bg-[#073B78] z-40 px-5 py-5 flex flex-col justify-between overflow-y-auto min-[980px]:hidden border-t border-white/10 animate-in slide-in-from-top-4 duration-200"
         >
-          {/* Project Status Banner */}
-          <div className="p-3 rounded-[4px] bg-white/[0.03] border border-white/10 flex items-center justify-between text-xs">
+          {/* Project Status Pill */}
+          <div className="p-3 rounded-xl bg-white/10 border border-white/15 flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
-              <span className="font-semibold text-[#F3EFE6] tracking-wide">Puri Gunung Langgar</span>
+              <span className="w-2 h-2 rounded-full bg-[#FF9D2E] animate-pulse" />
+              <span className="font-semibold text-white tracking-wide">Puri Gunung Langgar</span>
             </div>
-            <span className="text-[11px] text-[#C5A568] uppercase font-medium tracking-wider">Tahap Aktif</span>
+            <span className="text-[11px] text-[#FF9D2E] uppercase font-bold tracking-wider">Proyek Berjalan</span>
           </div>
 
           {/* Navigation Links */}
-          <nav aria-label="Menu seluler" className="space-y-1 my-auto py-4">
+          <nav aria-label="Menu seluler" className="space-y-1.5 my-3 py-2">
             {navItems.map((item) => {
               const isActive = item.href === '/'
                 ? pathname === '/'
@@ -204,15 +389,15 @@ export default function Header({ content }: HeaderProps) {
                   href={item.href}
                   prefetch={false}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`min-h-[44px] px-3.5 rounded-[4px] flex items-center justify-between text-[13.5px] transition-colors ${
+                  className={`min-h-[44px] px-4 rounded-xl flex items-center justify-between text-[14px] transition-colors ${
                     isActive
-                      ? 'bg-white/[0.06] text-[#F3EFE6] font-semibold border-l-2 border-[#C5A568]'
-                      : 'text-[#F3EFE6]/80 hover:bg-white/[0.03] hover:text-[#F3EFE6]'
+                      ? 'bg-white/15 text-white font-bold border-l-4 border-[#FF9D2E]'
+                      : 'text-white/85 hover:bg-white/10 hover:text-white'
                   }`}
                 >
                   <span>{item.label}</span>
                   {isActive && (
-                    <span className="text-[11px] text-[#C5A568] uppercase font-mono">Aktif</span>
+                    <span className="text-[11px] text-[#FF9D2E] uppercase font-bold">Aktif</span>
                   )}
                 </Link>
               );
@@ -220,23 +405,23 @@ export default function Header({ content }: HeaderProps) {
           </nav>
 
           {/* Bottom Actions */}
-          <div className="pt-4 border-t border-white/[0.08] space-y-2.5">
+          <div className="pt-3 border-t border-white/10 space-y-2.5">
             <Link
               href="/kontak"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full min-h-[42px] px-4 rounded-[10px] bg-[#C5A568] hover:bg-[#B69455] active:scale-[0.99] text-[#262722] font-semibold text-[12.5px] tracking-wider uppercase flex items-center justify-center gap-2 transition-all duration-200"
+              className="w-full min-h-[42px] px-4 rounded-xl bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] font-bold text-[13px] tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow"
             >
               <span>Hubungi Kami</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-4 h-4" />
             </Link>
             <a
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full min-h-[42px] px-4 rounded-[10px] border border-white/20 hover:border-[#C5A568] hover:bg-[#C5A568]/10 active:scale-[0.99] text-[#F3EFE6] text-[12.5px] font-medium flex items-center justify-center gap-2 transition-all duration-200"
+              className="w-full min-h-[42px] px-4 rounded-xl border border-white/30 hover:border-[#FF9D2E] hover:bg-[#FF9D2E]/10 text-white text-[13px] font-semibold flex items-center justify-center gap-2 transition-all"
             >
-              <MessageCircle className="w-4 h-4 text-[#C5A568]" />
+              <MessageCircle className="w-4 h-4 text-[#FF9D2E]" />
               <span>Konsultasi WhatsApp</span>
             </a>
           </div>
