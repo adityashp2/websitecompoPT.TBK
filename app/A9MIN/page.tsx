@@ -950,8 +950,10 @@ export default function AdminDashboard() {
                         secondaryCtaText: 'Konsultasi WhatsApp',
                         secondaryCtaHref: 'https://wa.me/6281278901234',
                         isSecondaryExternal: true,
-                        image: '/assets/hero-marketing.jpg',
-                        imageAlt: 'Perumahan Subsidi PT. Terbang Bersama Kawan',
+                        image: '',
+                        imageAlt: '',
+                        mediaType: 'image',
+                        videoUrl: '',
                       };
                       setContent({ ...content, bannerSlides: [...currentSlides, newSlide] });
                     }}
@@ -1035,50 +1037,209 @@ export default function AdminDashboard() {
                           </div>
                         </div>
 
-                        {/* Banner Image Preview & Upload */}
+                        {/* Banner Media (Foto atau Video) */}
                         <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
-                          <div className="md:col-span-4 space-y-2">
-                            <label className="block text-xs font-bold text-[#073B78]">
-                              Foto Background Banner
-                            </label>
-                            <div className="relative aspect-[16/9] rounded-xl overflow-hidden bg-[#F8FAFD] border border-[#DCE7F5] group">
-                              <img
-                                src={slide.image || '/assets/hero-marketing.jpg'}
-                                alt={slide.imageAlt || 'Banner preview'}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            <div className="flex items-center gap-2 pt-1">
-                              <input
-                                type="text"
-                                placeholder="/assets/... atau URL gambar"
-                                value={slide.image}
-                                onChange={(e) => {
-                                  const newSlides = [...(content.bannerSlides || [])];
-                                  newSlides[sIdx].image = e.target.value;
-                                  setContent({ ...content, bannerSlides: newSlides });
-                                }}
-                                className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono font-semibold"
-                              />
-                              <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0">
-                                <Upload className="w-3.5 h-3.5" />
-                                <span>{uploadingKey === `banner-${sIdx}` ? '...' : 'Upload'}</span>
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  className="hidden"
-                                  onChange={(e) => {
-                                    if (e.target.files && e.target.files[0]) {
-                                      handleGenericFileUpload(e.target.files[0], `banner-${sIdx}`, (url) => {
-                                        const newSlides = [...(content.bannerSlides || [])];
-                                        newSlides[sIdx].image = url;
-                                        setContent({ ...content, bannerSlides: newSlides });
-                                      });
-                                    }
-                                  }}
-                                />
+                          <div className="md:col-span-5 space-y-3">
+                            <div className="flex items-center justify-between">
+                              <label className="block text-xs font-bold text-[#073B78]">
+                                Media Background Banner
                               </label>
+                              {/* Toggle Foto vs Video */}
+                              <div className="inline-flex rounded-lg bg-[#EBF3FC] p-0.5 border border-[#DCE7F5]">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const newSlides = [...(content.bannerSlides || [])];
+                                    newSlides[sIdx].mediaType = 'image';
+                                    setContent({ ...content, bannerSlides: newSlides });
+                                  }}
+                                  className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all flex items-center gap-1 ${
+                                    (slide.mediaType || 'image') === 'image'
+                                      ? 'bg-[#073B78] text-white shadow-xs'
+                                      : 'text-[#073B78] hover:text-[#0A4B91]'
+                                  }`}
+                                >
+                                  <ImageIcon className="w-3 h-3" />
+                                  <span>Foto</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const newSlides = [...(content.bannerSlides || [])];
+                                    newSlides[sIdx].mediaType = 'video';
+                                    setContent({ ...content, bannerSlides: newSlides });
+                                  }}
+                                  className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all flex items-center gap-1 ${
+                                    slide.mediaType === 'video'
+                                      ? 'bg-[#FF9D2E] text-[#071C38] shadow-xs'
+                                      : 'text-[#073B78] hover:text-[#0A4B91]'
+                                  }`}
+                                >
+                                  <Video className="w-3 h-3" />
+                                  <span>Video</span>
+                                </button>
+                              </div>
                             </div>
+
+                            {/* PREVIEW CONTAINER */}
+                            <div className="relative aspect-[16/9] rounded-xl overflow-hidden bg-black border border-[#DCE7F5] group">
+                              {slide.mediaType === 'video' && slide.videoUrl ? (
+                                getYouTubeEmbedUrl(slide.videoUrl) ? (
+                                  <iframe
+                                    src={getYouTubeEmbedUrl(slide.videoUrl)!}
+                                    title="Preview YouTube Banner"
+                                    className="w-full h-full"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  />
+                                ) : (
+                                  <video
+                                    src={slide.videoUrl}
+                                    controls
+                                    poster={slide.image || undefined}
+                                    className="w-full h-full object-cover"
+                                  />
+                                )
+                              ) : slide.image ? (
+                                <img
+                                  src={slide.image}
+                                  alt={slide.imageAlt || 'Banner preview'}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex flex-col items-center justify-center bg-[#F4F7FC] text-[#526783] text-xs p-4 text-center">
+                                  <ImageIcon className="w-8 h-8 text-[#526783]/40 mb-1.5" />
+                                  <span className="font-semibold text-[#073B78]">Belum Ada Foto / Media</span>
+                                  <span className="text-[10.5px] text-[#526783]">Upload foto atau masukkan link video</span>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* VIDEO CONTROLS */}
+                            {slide.mediaType === 'video' ? (
+                              <div className="space-y-2 pt-1">
+                                <div className="space-y-1">
+                                  <label className="text-[11px] font-semibold text-[#073B78] block">
+                                    Link Video (YouTube atau URL MP4)
+                                  </label>
+                                  <div className="flex items-center gap-2">
+                                    <input
+                                      type="text"
+                                      placeholder="https://youtube.com/watch?v=... atau /uploads/...mp4"
+                                      value={slide.videoUrl || ''}
+                                      onChange={(e) => {
+                                        let val = e.target.value;
+                                        if (val.includes('<iframe') || /src=["']/i.test(val)) {
+                                          const match = val.match(/src=["']([^"']+)["']/i);
+                                          if (match && match[1]) val = match[1];
+                                        }
+                                        const newSlides = [...(content.bannerSlides || [])];
+                                        newSlides[sIdx].videoUrl = val;
+                                        newSlides[sIdx].mediaType = 'video';
+                                        setContent({ ...content, bannerSlides: newSlides });
+                                      }}
+                                      className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono font-semibold"
+                                    />
+                                    <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#FF9D2E] hover:bg-[#F28A17] text-[#071C38] text-xs font-bold shadow-xs flex items-center gap-1.5 shrink-0 transition-colors">
+                                      <Upload className="w-3.5 h-3.5" />
+                                      <span>{uploadingKey === `banner-video-${sIdx}` ? 'Uploading...' : 'Upload MP4'}</span>
+                                      <input
+                                        type="file"
+                                        accept="video/mp4,video/webm,video/ogg,video/quicktime"
+                                        className="hidden"
+                                        onChange={(e) => {
+                                          if (e.target.files && e.target.files[0]) {
+                                            handleGenericFileUpload(e.target.files[0], `banner-video-${sIdx}`, (url) => {
+                                              const newSlides = [...(content.bannerSlides || [])];
+                                              newSlides[sIdx].videoUrl = url;
+                                              newSlides[sIdx].mediaType = 'video';
+                                              setContent({ ...content, bannerSlides: newSlides });
+                                            });
+                                          }
+                                        }}
+                                      />
+                                    </label>
+                                  </div>
+                                </div>
+
+                                {/* Poster Fallback Image */}
+                                <div className="space-y-1 pt-1">
+                                  <label className="text-[11px] text-[#526783] block font-medium">
+                                    Foto Cover / Poster (Muncul saat video loading):
+                                  </label>
+                                  <div className="flex items-center gap-2">
+                                    <input
+                                      type="text"
+                                      placeholder="URL Cover (Opsional)"
+                                      value={slide.image || ''}
+                                      onChange={(e) => {
+                                        const newSlides = [...(content.bannerSlides || [])];
+                                        newSlides[sIdx].image = e.target.value;
+                                        setContent({ ...content, bannerSlides: newSlides });
+                                      }}
+                                      className="flex-1 px-3 py-1 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono"
+                                    />
+                                    <label className="cursor-pointer px-2.5 py-1 rounded-lg bg-white hover:bg-slate-50 border border-[#DCE7F5] text-xs text-[#073B78] font-semibold flex items-center gap-1 shrink-0">
+                                      <Upload className="w-3 h-3" />
+                                      <span>Poster</span>
+                                      <input
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={(e) => {
+                                          if (e.target.files && e.target.files[0]) {
+                                            handleGenericFileUpload(e.target.files[0], `banner-poster-${sIdx}`, (url) => {
+                                              const newSlides = [...(content.bannerSlides || [])];
+                                              newSlides[sIdx].image = url;
+                                              setContent({ ...content, bannerSlides: newSlides });
+                                            });
+                                          }
+                                        }}
+                                      />
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              /* FOTO / GAMBAR CONTROLS */
+                              <div className="flex items-center gap-2 pt-1">
+                                <input
+                                  type="text"
+                                  placeholder="/assets/... atau URL gambar"
+                                  value={slide.image}
+                                  onChange={(e) => {
+                                    let val = e.target.value;
+                                    const isVideoLink = val.includes('youtube.com') || val.includes('youtu.be') || val.endsWith('.mp4') || val.endsWith('.webm');
+                                    const newSlides = [...(content.bannerSlides || [])];
+                                    if (isVideoLink) {
+                                      newSlides[sIdx].videoUrl = val;
+                                      newSlides[sIdx].mediaType = 'video';
+                                    } else {
+                                      newSlides[sIdx].image = val;
+                                    }
+                                    setContent({ ...content, bannerSlides: newSlides });
+                                  }}
+                                  className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono font-semibold"
+                                />
+                                <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0">
+                                  <Upload className="w-3.5 h-3.5" />
+                                  <span>{uploadingKey === `banner-${sIdx}` ? '...' : 'Upload'}</span>
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={(e) => {
+                                      if (e.target.files && e.target.files[0]) {
+                                        handleGenericFileUpload(e.target.files[0], `banner-${sIdx}`, (url) => {
+                                          const newSlides = [...(content.bannerSlides || [])];
+                                          newSlides[sIdx].image = url;
+                                          setContent({ ...content, bannerSlides: newSlides });
+                                        });
+                                      }
+                                    }}
+                                  />
+                                </label>
+                              </div>
+                            )}
                           </div>
 
                           {/* Banner Text Fields */}
@@ -4419,72 +4580,6 @@ export default function AdminDashboard() {
                       }
                       className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm"
                     />
-                  </div>
-
-                  {/* Foto Sampul Utama Proyek */}
-                  <div className="p-4 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-3">
-                    <label className="block text-xs font-bold text-[#073B78]">
-                      Foto Sampul Utama Proyek (Thumbnail & Cover Card)
-                    </label>
-                    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                      <div className="w-24 h-16 rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] overflow-hidden shrink-0 flex items-center justify-center">
-                        {content.project.image && content.project.image.trim() !== '' ? (
-                          <img
-                            src={content.project.image}
-                            alt="Cover Proyek"
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <ImageIcon className="w-6 h-6 text-[#526783]" />
-                        )}
-                      </div>
-                      <div className="flex-1 w-full space-y-1.5">
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="text"
-                            placeholder="URL atau path foto cover proyek"
-                            value={content.project.image || ''}
-                            onChange={(e) =>
-                              setContent({
-                                ...content,
-                                project: { ...content.project, image: e.target.value },
-                              })
-                            }
-                            className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-mono"
-                          />
-                          <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0 transition-colors">
-                            <Upload className="w-3.5 h-3.5" />
-                            <span>{uploadingCover ? 'Mengupload...' : 'Upload Foto'}</span>
-                            <input
-                              type="file"
-                              accept="image/*"
-                              className="hidden"
-                              disabled={uploadingCover}
-                              onChange={(e) => {
-                                if (e.target.files && e.target.files[0]) {
-                                  handleUploadProjectImage(e.target.files[0]);
-                                }
-                              }}
-                            />
-                          </label>
-                          {content.project.image && (
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setContent({
-                                  ...content,
-                                  project: { ...content.project, image: '' },
-                                })
-                              }
-                              className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-colors"
-                              title="Hapus foto cover"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
                   </div>
 
                   {/* PENGATURAN MEDIA PROYEK: FOTO SLIDESHOW ATAU VIDEO YOUTUBE */}

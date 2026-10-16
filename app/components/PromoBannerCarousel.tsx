@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, ArrowRight, MessageCircle } from 'lucide-react';
 
-import { BannerSlide, defaultBannerSlides } from '@/lib/initialData';
+import { BannerSlide, defaultBannerSlides, getYouTubeEmbedUrl } from '@/lib/initialData';
 export type { BannerSlide };
 
 interface PromoBannerCarouselProps {
@@ -146,16 +146,37 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
               aria-roledescription="slide"
               aria-label={`Slide ${idx + 1} dari ${slides.length}: ${slide.eyebrow}`}
             >
-              {/* Full-Width Residential Background Image Covering the Entire Hero */}
-              <div className="absolute inset-0 z-0">
-                <img
-                  src={slide.image}
-                  alt={slide.imageAlt}
-                  className={`w-full h-full object-cover object-center transition-transform duration-1000 ${
-                    isActive ? 'scale-105' : 'scale-100'
-                  }`}
-                  loading={idx === 0 ? 'eager' : 'lazy'}
-                />
+              {/* Full-Width Residential Background Media (Video or Image) */}
+              <div className="absolute inset-0 z-0 overflow-hidden">
+                {slide.mediaType === 'video' && slide.videoUrl ? (
+                  getYouTubeEmbedUrl(slide.videoUrl) ? (
+                    <iframe
+                      src={`${getYouTubeEmbedUrl(slide.videoUrl)}?autoplay=1&mute=1&loop=1&playlist=${getYouTubeEmbedUrl(slide.videoUrl)?.split('/').pop()}&controls=0&showinfo=0&rel=0`}
+                      className="w-full h-full object-cover pointer-events-none scale-125"
+                      allow="autoplay; encrypted-media"
+                      title={slide.eyebrow}
+                    />
+                  ) : (
+                    <video
+                      src={slide.videoUrl}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      poster={slide.image || undefined}
+                      className="w-full h-full object-cover object-center"
+                    />
+                  )
+                ) : (
+                  <img
+                    src={slide.image}
+                    alt={slide.imageAlt}
+                    className={`w-full h-full object-cover object-center transition-transform duration-1000 ${
+                      isActive ? 'scale-105' : 'scale-100'
+                    }`}
+                    loading={idx === 0 ? 'eager' : 'lazy'}
+                  />
+                )}
               </div>
 
               {/* Dark Left-to-Right Corporate Navy Gradient Overlay */}
@@ -294,8 +315,8 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Full-width banner container with calibrated promotional aspect ratio */}
-        <div className="relative w-full min-h-[330px] sm:h-[360px] md:h-[390px] overflow-hidden">
+        {/* Full-width banner container: fills viewport with stats bar so initial fold is solid blue */}
+        <div className="relative w-full min-h-[calc(100dvh-58px-86px)] sm:min-h-[440px] md:h-[480px] overflow-hidden flex flex-col justify-center">
           {slides.map((slide, idx) => {
             const isActive = idx === currentIndex;
             return (
@@ -309,14 +330,35 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
                 aria-roledescription="slide"
                 aria-label={`Slide ${idx + 1} dari ${slides.length}: ${slide.eyebrow}`}
               >
-                {/* Full-Bleed Residential Photography */}
-                <div className="absolute inset-0 z-0">
-                  <img
-                    src={slide.image}
-                    alt={slide.imageAlt}
-                    className="w-full h-full object-cover object-center"
-                    loading={idx === 0 ? 'eager' : 'lazy'}
-                  />
+                {/* Full-Bleed Residential Photography or Video */}
+                <div className="absolute inset-0 z-0 overflow-hidden">
+                  {slide.mediaType === 'video' && slide.videoUrl ? (
+                    getYouTubeEmbedUrl(slide.videoUrl) ? (
+                      <iframe
+                        src={`${getYouTubeEmbedUrl(slide.videoUrl)}?autoplay=1&mute=1&loop=1&playlist=${getYouTubeEmbedUrl(slide.videoUrl)?.split('/').pop()}&controls=0&showinfo=0&rel=0`}
+                        className="w-full h-full object-cover pointer-events-none scale-125"
+                        allow="autoplay; encrypted-media"
+                        title={slide.eyebrow}
+                      />
+                    ) : (
+                      <video
+                        src={slide.videoUrl}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        poster={slide.image || undefined}
+                        className="w-full h-full object-cover object-center"
+                      />
+                    )
+                  ) : (
+                    <img
+                      src={slide.image}
+                      alt={slide.imageAlt}
+                      className="w-full h-full object-cover object-center"
+                      loading={idx === 0 ? 'eager' : 'lazy'}
+                    />
+                  )}
                 </div>
 
                 {/* ICC-Inspired Multi-Stop Navy Gradient Overlay */}

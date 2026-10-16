@@ -11,6 +11,8 @@ export interface BannerSlide {
   isSecondaryExternal?: boolean;
   image: string;
   imageAlt: string;
+  mediaType?: 'image' | 'video';
+  videoUrl?: string;
 }
 
 export interface FeatureCard {

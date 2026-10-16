@@ -192,11 +192,18 @@ export default function Header({ content }: HeaderProps) {
 
       {/* Main Corporate Header: ICC-Inspired Full-Width Navy Blue */}
       <header
-        className={`fixed top-0 inset-x-0 z-50 h-[58px] min-[980px]:h-[68px] w-full transition-all duration-200 ease-out border-b border-white/10 ${
+        className={`fixed top-0 inset-x-0 z-[900] h-[58px] min-[980px]:h-[68px] w-full transition-all duration-200 ease-out border-b border-white/10 ${
           isScrolled || !isHomePage
             ? 'bg-[#073B78] shadow-md'
             : 'bg-[#073B78]'
         }`}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 900,
+        }}
       >
         <div className="w-full max-w-[1360px] mx-auto h-full px-3.5 sm:px-6 flex items-center justify-between gap-2">
           {/* Left: Brand Identity with existing logo asset */}
@@ -269,11 +276,11 @@ export default function Header({ content }: HeaderProps) {
               <Search className="w-4 h-4" />
             </button>
 
-            {/* Menu Hamburger Toggle (Hidden on desktop min-[980px], visible on mobile & tablet) */}
+            {/* Menu Hamburger Toggle (Visible on Desktop & Mobile matching ICC design reference) */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="min-[980px]:hidden w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg text-white bg-white/10 border border-white/15 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] shrink-0 transition-colors"
+              className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg text-white bg-white/10 border border-white/15 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] shrink-0 transition-colors"
               aria-label={mobileMenuOpen ? 'Tutup navigasi' : 'Buka navigasi'}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-nav-panel"
@@ -288,7 +295,7 @@ export default function Header({ content }: HeaderProps) {
       {/* SEARCH MODAL (Interactive & Functional)                   */}
       {/* ========================================================= */}
       {searchOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150">
+        <div className="fixed inset-0 z-[950] flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150">
           <div
             className="w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-[#DCE7F5] overflow-hidden animate-in zoom-in-95 duration-150"
             role="dialog"
@@ -364,13 +371,21 @@ export default function Header({ content }: HeaderProps) {
       )}
 
       {/* ========================================================= */}
-      {/* MOBILE DRAWER: ICC-Inspired Off-Canvas Layout             */}
+      {/* MOBILE & DESKTOP SLIDE DRAWER: ICC-Inspired Layout        */}
       {/* ========================================================= */}
       {mobileMenuOpen && (
-        <div
-          id="mobile-nav-panel"
-          className="fixed top-[58px] min-[980px]:top-[68px] inset-x-0 bottom-0 bg-[#073B78] z-50 px-5 py-5 pb-28 flex flex-col justify-between overflow-y-auto min-[980px]:hidden border-t border-white/10 animate-in slide-in-from-top-4 duration-200"
-        >
+        <>
+          {/* Subtle backdrop overlay */}
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-xs z-[880] transition-opacity"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+
+          <div
+            id="mobile-nav-panel"
+            className="fixed top-[58px] min-[980px]:top-[68px] inset-x-0 min-[980px]:left-auto min-[980px]:right-0 min-[980px]:w-[380px] min-[980px]:border-l min-[980px]:shadow-2xl bottom-0 bg-[#073B78] z-[890] px-5 py-5 pb-28 min-[980px]:pb-8 flex flex-col justify-between overflow-y-auto border-t min-[980px]:border-t-0 border-white/10 animate-in slide-in-from-right-4 duration-200"
+          >
           {/* Project Status Pill */}
           <div className="p-3 rounded-xl bg-white/10 border border-white/15 flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
@@ -432,6 +447,7 @@ export default function Header({ content }: HeaderProps) {
             </a>
           </div>
         </div>
+        </>
       )}
     </>
   );
