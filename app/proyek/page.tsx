@@ -128,7 +128,7 @@ export default async function ProyekPage() {
         </section>
 
         {/* Visual Gallery Grid */}
-        <section className="py-16 sm:py-24 bg-white">
+        <section id="galeri" className="py-16 sm:py-24 bg-white scroll-mt-20">
           <div className="container-editorial space-y-10">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#DCE7F5] pb-6">
               <div>

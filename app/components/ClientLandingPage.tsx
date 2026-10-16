@@ -509,7 +509,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                           <img
                             src={slide.image}
                             alt={slide.caption || `Foto ${sIdx + 1}`}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-contain p-1"
                           />
                         </button>
                       );
@@ -566,7 +566,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
 
                 <div className="pt-6 border-t border-[#DCE7F5] space-y-3">
                   <Link
-                    href="/proyek"
+                    href="/proyek#galeri"
                     prefetch={false}
                     className="interactive-btn group w-full h-[46px] rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-xs font-semibold tracking-normal flex items-center justify-center gap-2 shadow-sm hover:shadow"
                   >

@@ -73,12 +73,12 @@ export default function ClientProyekGallery({
               aria-label={`Lihat foto ${idx + 1}: ${s.caption || 'Dokumentasi Proyek'}`}
               className="group text-left space-y-3.5 bg-[#F4F7FC] hover:bg-white p-4 sm:p-5 rounded-2xl border border-[#DCE7F5] hover:border-[#FF9D2E]/60 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#FF9D2E]"
             >
-              {/* Photo Display Stage (Tall & Elegant 4:5 Aspect Ratio, No Squashed/Bantet Crop) */}
-              <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] overflow-hidden rounded-xl border border-[#DCE7F5] bg-[#EBF1F9] flex items-center justify-center">
+              {/* Photo Display Stage (Clean Object-Contain, No Cropped / Cutoff Center) */}
+              <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] overflow-hidden rounded-xl border border-[#DCE7F5] bg-[#F4F7FC] flex items-center justify-center p-2">
                 <img
                   src={s.image}
                   alt={s.caption || `Foto Proyek ${idx + 1}`}
-                  className="w-full h-full object-contain sm:object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                   loading="lazy"
                 />
 

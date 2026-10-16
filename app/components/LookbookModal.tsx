@@ -138,7 +138,7 @@ export default function LookbookModal({
           key={currentItem.image}
           src={currentItem.image}
           alt={currentItem.title}
-          className="max-h-[72vh] sm:max-h-[76vh] max-w-[92vw] w-auto h-auto object-contain rounded-xl shadow-2xl block mx-auto border border-white/15 animate-in fade-in zoom-in-95 duration-200"
+          className="max-h-[80vh] sm:max-h-[82vh] max-w-[94vw] w-auto h-auto object-contain rounded-xl shadow-2xl block mx-auto border border-white/15 animate-in fade-in zoom-in-95 duration-200"
         />
 
         {items.length > 1 && (
