@@ -12,7 +12,6 @@ import {
   ShieldCheck, 
   AlertCircle, 
   Loader2, 
-  Sparkles,
   KeyRound,
   CheckCircle2
 } from 'lucide-react';
@@ -115,11 +114,6 @@ function LoginFormContent() {
     }
   };
 
-  const fillDefaultCredentials = () => {
-    setIdentifier('admin');
-    setPassword('admin123');
-    setErrorMsg('');
-  };
 
   return (
     <div className="min-h-screen bg-[#0A0C10] text-[#F4EFE6] relative flex flex-col justify-between overflow-hidden selection:bg-[#C9A96A] selection:text-[#0E1014]">
@@ -288,34 +282,6 @@ function LoginFormContent() {
               </button>
             </form>
 
-            {/* Default Credentials Helper Box */}
-            <div className="mt-6 pt-5 border-t border-white/[0.08]">
-              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-[11px] font-semibold text-[#C9A96A] uppercase tracking-wider">
-                    <Sparkles className="w-3.5 h-3.5 text-[#C9A96A]" />
-                    <span>Kredensial Default Sistem</span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={fillDefaultCredentials}
-                    className="text-[10.5px] text-[#C9A96A] hover:underline font-semibold tracking-wide"
-                  >
-                    Gunakan Akun Ini &rarr;
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 gap-2 text-xs font-mono bg-[#0E1014]/60 p-2 rounded-lg border border-white/[0.04]">
-                  <div>
-                    <span className="text-white/40 block text-[10px] uppercase font-sans">Username:</span>
-                    <span className="text-white font-semibold">admin</span>
-                  </div>
-                  <div>
-                    <span className="text-white/40 block text-[10px] uppercase font-sans">Password:</span>
-                    <span className="text-white font-semibold">admin123</span>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Footer note */}
