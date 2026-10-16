@@ -1,7 +1,9 @@
+import React from 'react';
 import type { Metadata, Viewport } from 'next';
 import { DM_Serif_Display, DM_Sans, Cormorant_Garamond } from 'next/font/google';
 import './globals.css';
 import MobileBottomNav from './components/MobileBottomNav';
+import RouteProgressBar from './components/RouteProgressBar';
 
 const dmSerifDisplay = DM_Serif_Display({
   weight: ['400'],
@@ -134,6 +136,9 @@ export default function RootLayout({
         />
       </head>
       <body className={`${dmSans.className} bg-white text-[#102D52] font-sans antialiased selection:bg-[#FF9D2E] selection:text-[#102D52] min-h-screen pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:pb-0`}>
+        <React.Suspense fallback={null}>
+          <RouteProgressBar />
+        </React.Suspense>
         {children}
         <MobileBottomNav />
       </body>
