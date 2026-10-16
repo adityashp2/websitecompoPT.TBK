@@ -10,12 +10,9 @@ import {
   ShieldCheck, 
   Award, 
   CheckCircle2, 
-  MapPin, 
   FileCheck2, 
   Users, 
-  ArrowRight,
-  Sparkles,
-  PhoneCall
+  ArrowRight
 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -26,8 +23,8 @@ export const metadata: Metadata = {
   description: 'Profil resmi PT. Terbang Bersama Kawan, pengembang perumahan bersubsidi terpercaya di Bandar Lampung. Visi, misi, legalitas Kemenkumham, dan komitmen mutu pembangunan.',
 };
 
-export default function TentangPage() {
-  const content = getSiteContent();
+export default async function TentangPage() {
+  const content = await getSiteContent();
 
   const values = [
     {

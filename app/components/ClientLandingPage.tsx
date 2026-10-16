@@ -12,21 +12,15 @@ import {
   X,
   FileCheck2,
   ArrowRight,
-  Check,
   Maximize2,
-  Calculator,
   MessageCircle,
   ShieldCheck,
   Building2,
-  Compass,
   Home,
   CheckCircle2,
-  Sparkles,
   TreePine,
   Wallet,
-  Building,
   Leaf,
-  Users,
   Briefcase
 } from 'lucide-react';
 import Header from './Header';
@@ -35,6 +29,39 @@ import FloatingWhatsApp from './FloatingWhatsApp';
 import PromoBannerCarousel from './PromoBannerCarousel';
 import LookbookModal, { LookbookItem } from './LookbookModal';
 import { SiteContent, initialSiteContent } from '@/lib/initialData';
+
+const featureColorClasses = [
+  { bg: 'bg-[#EBF3FC]', text: 'text-[#073B78]', hover: 'group-hover:text-[#073B78]' },
+  { bg: 'bg-[#F3EBF9]', text: 'text-[#7C3AED]', hover: 'group-hover:text-[#7C3AED]' },
+  { bg: 'bg-[#E6F7F3]', text: 'text-[#059669]', hover: 'group-hover:text-[#059669]' },
+  { bg: 'bg-[#FEF5E7]', text: 'text-[#D97706]', hover: 'group-hover:text-[#D97706]' },
+];
+
+function getFeatureIcon(iconName?: string) {
+  switch ((iconName || '').toLowerCase()) {
+    case 'shield':
+    case 'harga':
+    case 'keamanan':
+      return <ShieldCheck className="w-6 h-6 stroke-[2]" />;
+    case 'map':
+    case 'lokasi':
+      return <MapPin className="w-6 h-6 stroke-[2]" />;
+    case 'leaf':
+    case 'lingkungan':
+    case 'asri':
+      return <Leaf className="w-6 h-6 stroke-[2]" />;
+    case 'building':
+      return <Building2 className="w-6 h-6 stroke-[2]" />;
+    case 'wallet':
+      return <Wallet className="w-6 h-6 stroke-[2]" />;
+    case 'tree':
+      return <TreePine className="w-6 h-6 stroke-[2]" />;
+    case 'home':
+    case 'hunian':
+    default:
+      return <Home className="w-6 h-6 stroke-[2]" />;
+  }
+}
 
 function sanitize(val: string | undefined, fallback: string): string {
   if (!val || val.includes('[ISI:') || val === 'aadad' || val === '23232433') {
@@ -136,13 +163,23 @@ export default function ClientLandingPage({ initialContent }: { initialContent: 
     items: [],
   });
 
-  // Mortgage / KPR Simulator State (Subsidized FLPP 5% Flat)
-  const [kprHarga, setKprHarga] = useState(166000000);
-  const [kprDp, setKprDp] = useState(2000000);
-  const [kprTenor, setKprTenor] = useState(20);
+  // Mortgage / KPR Simulator State
+  const kprConfig = content.kprSimulation;
+  const [kprHarga, setKprHarga] = useState(kprConfig?.defaultPrice || 166000000);
+  const [kprDp, setKprDp] = useState(kprConfig?.defaultDp || 2000000);
+  const [kprTenor, setKprTenor] = useState(kprConfig?.defaultTenor || 20);
 
+  useEffect(() => {
+    if (content.kprSimulation) {
+      if (content.kprSimulation.defaultPrice) setKprHarga(content.kprSimulation.defaultPrice);
+      if (content.kprSimulation.defaultDp) setKprDp(content.kprSimulation.defaultDp);
+      if (content.kprSimulation.defaultTenor) setKprTenor(content.kprSimulation.defaultTenor);
+    }
+  }, [content.kprSimulation]);
+
+  const kprAnnualRate = content.kprSimulation?.annualInterestRate || 0.05;
   const kprPokok = Math.max(0, kprHarga - kprDp);
-  const kprRate = 0.05 / 12; // 5% flat annual for FLPP
+  const kprRate = kprAnnualRate / 12; // monthly rate
   const kprMonths = kprTenor * 12;
   const kprAngsuran = Math.round(
     (kprPokok * (kprRate * Math.pow(1 + kprRate, kprMonths))) / (Math.pow(1 + kprRate, kprMonths) - 1)
@@ -231,8 +268,42 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
         {/* Edge-to-edge, over-the-banner orange arrows, bottom dots   */}
         {/* ========================================================= */}
         <div className="w-full pt-[58px] min-[980px]:pt-[68px]">
-          <PromoBannerCarousel whatsappUrl={waUrl} />
+          <PromoBannerCarousel slides={content.bannerSlides} whatsappUrl={waUrl} />
         </div>
+
+        {/* ========================================================= */}
+        {/* STATISTIK & REKAM JEJAK UTAMA PERSEROAN                   */}
+        {/* Responsive 4-metric editorial bar on mobile, tablet & desktop */}
+        {/* ========================================================= */}
+        {(() => {
+          const statsList = Array.isArray(content.hero?.stats) && content.hero.stats.length > 0
+            ? content.hero.stats
+            : [
+                { label: "Domisili Perusahaan", value: "Bandar Lampung" },
+                { label: "Pengesahan Kemenkumham", value: "2021" },
+                { label: "Proyek Utama", value: "Puri Gunung Langgar" },
+                { label: "Kategori Pembangunan", value: "Hunian Bersubsidi" },
+              ];
+
+          return (
+            <section aria-label="Statistik Utama Perseroan" className="w-full bg-[#073B78] text-white border-b border-[#0A4B91]/80">
+              <div className="w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-white/15 py-4 sm:py-5">
+                  {statsList.map((st, sIdx) => (
+                    <div key={sIdx} className="px-3 sm:px-6 py-2.5 sm:py-1 flex flex-col justify-center">
+                      <span className="font-serif font-normal text-lg sm:text-xl lg:text-2xl text-[#FF9D2E] leading-tight tracking-tight">
+                        {st.value}
+                      </span>
+                      <span className="text-[10.5px] sm:text-xs text-white/75 font-medium uppercase tracking-wider mt-1">
+                        {st.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          );
+        })()}
 
         {/* ======================================================================= */}
         {/* SECTION 1: ABOUT PT. TBK & VALUE PROPOSITIONS                           */}
@@ -248,25 +319,25 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
               <div className="lg:col-span-5 space-y-4 sm:space-y-5 reveal-left-on-scroll">
                 <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider">
                   <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                  <span>Tentang Kami</span>
+                  <span>{content.about?.homeIntroBadge || 'Tentang Kami'}</span>
                 </div>
 
                 <h2 className="font-serif font-normal text-2xl sm:text-3xl lg:text-[38px] text-[#102D52] leading-[1.18] tracking-tight">
-                  Membangun Rumah,<br />
-                  <span className="text-[#073B78] font-serif">Mewujudkan Masa Depan.</span>
+                  {content.about?.homeIntroTitle || 'Membangun Rumah,'}<br />
+                  <span className="text-[#073B78] font-serif">{content.about?.homeIntroHighlight || 'Mewujudkan Masa Depan.'}</span>
                 </h2>
 
                 <p className="font-sans text-[15px] sm:text-[16px] text-[#526783] leading-relaxed">
-                  Kami hadir untuk menyediakan hunian berkualitas dengan harga terjangkau, khususnya bagi keluarga Indonesia. Dengan pengalaman dan komitmen tinggi, PT. Terbang Bersama Kawan terus berinovasi dalam menghadirkan lingkungan yang nyaman, aman, dan berkelanjutan.
+                  {content.about?.homeIntroText || 'Kami hadir untuk menyediakan hunian berkualitas dengan harga terjangkau, khususnya bagi keluarga Indonesia. Dengan pengalaman dan komitmen tinggi, PT. Terbang Bersama Kawan terus berinovasi dalam menghadirkan lingkungan yang nyaman, aman, dan berkelanjutan.'}
                 </p>
 
                 <div className="pt-2">
                   <Link
-                    href="/tentang"
+                    href={content.about?.homeIntroCtaLink || '/tentang'}
                     prefetch={false}
                     className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full border-2 border-[#073B78] hover:bg-[#073B78] hover:text-white text-[#073B78] font-semibold text-xs tracking-normal transition-all duration-200 shadow-sm active:scale-95 group"
                   >
-                    <span>Kenal Lebih Dekat</span>
+                    <span>{content.about?.homeIntroCtaText || 'Kenal Lebih Dekat'}</span>
                     <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
                   </Link>
                 </div>
@@ -274,65 +345,35 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
 
               {/* Right Column: 2x2 Feature Cards Grid */}
               <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 reveal-right-on-scroll delay-100">
-                {/* 1. Hunian Berkualitas */}
-                <div className="p-5 sm:p-6 rounded-2xl bg-white border border-[#DCE7F5] hover:border-[#FF9D2E]/60 hover:shadow-md transition-all duration-200 flex items-start gap-4 group">
-                  <div className="w-12 h-12 rounded-full bg-[#EBF3FC] text-[#073B78] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    <Home className="w-6 h-6 stroke-[2]" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-[#102D52] text-[15px] sm:text-[16px] group-hover:text-[#073B78] transition-colors">
-                      Hunian Berkualitas
-                    </h3>
-                    <p className="text-xs sm:text-[13px] text-[#526783] mt-1 leading-relaxed">
-                      Rumah nyaman dengan infrastruktur yang memadai.
-                    </p>
-                  </div>
-                </div>
-
-                {/* 2. Harga Terjangkau */}
-                <div className="p-5 sm:p-6 rounded-2xl bg-white border border-[#DCE7F5] hover:border-[#FF9D2E]/60 hover:shadow-md transition-all duration-200 flex items-start gap-4 group">
-                  <div className="w-12 h-12 rounded-full bg-[#F3EBF9] text-[#7C3AED] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    <ShieldCheck className="w-6 h-6 stroke-[2]" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-[#102D52] text-[15px] sm:text-[16px] group-hover:text-[#7C3AED] transition-colors">
-                      Harga Terjangkau
-                    </h3>
-                    <p className="text-xs sm:text-[13px] text-[#526783] mt-1 leading-relaxed">
-                      Solusi hunian untuk keluarga Indonesia.
-                    </p>
-                  </div>
-                </div>
-
-                {/* 3. Lokasi Strategis */}
-                <div className="p-5 sm:p-6 rounded-2xl bg-white border border-[#DCE7F5] hover:border-[#FF9D2E]/60 hover:shadow-md transition-all duration-200 flex items-start gap-4 group">
-                  <div className="w-12 h-12 rounded-full bg-[#E6F7F3] text-[#059669] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    <MapPin className="w-6 h-6 stroke-[2]" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-[#102D52] text-[15px] sm:text-[16px] group-hover:text-[#059669] transition-colors">
-                      Lokasi Strategis
-                    </h3>
-                    <p className="text-xs sm:text-[13px] text-[#526783] mt-1 leading-relaxed">
-                      Mudah diakses dan dekat dengan fasilitas umum.
-                    </p>
-                  </div>
-                </div>
-
-                {/* 4. Lingkungan Asri */}
-                <div className="p-5 sm:p-6 rounded-2xl bg-white border border-[#DCE7F5] hover:border-[#FF9D2E]/60 hover:shadow-md transition-all duration-200 flex items-start gap-4 group">
-                  <div className="w-12 h-12 rounded-full bg-[#FEF5E7] text-[#D97706] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    <Leaf className="w-6 h-6 stroke-[2]" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-[#102D52] text-[15px] sm:text-[16px] group-hover:text-[#D97706] transition-colors">
-                      Lingkungan Asri
-                    </h3>
-                    <p className="text-xs sm:text-[13px] text-[#526783] mt-1 leading-relaxed">
-                      Hidup lebih sehat di lingkungan yang hijau.
-                    </p>
-                  </div>
-                </div>
+                {(Array.isArray(content.about?.features)
+                  ? content.about.features
+                  : [
+                      { title: 'Hunian Berkualitas', desc: 'Rumah nyaman dengan infrastruktur yang memadai.', icon: 'home' },
+                      { title: 'Harga Terjangkau', desc: 'Solusi hunian untuk keluarga Indonesia.', icon: 'shield' },
+                      { title: 'Lokasi Strategis', desc: 'Mudah diakses dan dekat dengan fasilitas umum.', icon: 'map' },
+                      { title: 'Lingkungan Asri', desc: 'Hidup lebih sehat di lingkungan yang hijau.', icon: 'leaf' },
+                    ]
+                ).map((card, idx) => {
+                  const style = featureColorClasses[idx % featureColorClasses.length];
+                  return (
+                    <div
+                      key={idx}
+                      className="p-5 sm:p-6 rounded-2xl bg-white border border-[#DCE7F5] hover:border-[#FF9D2E]/60 hover:shadow-md transition-all duration-200 flex items-start gap-4 group"
+                    >
+                      <div className={`w-12 h-12 rounded-full ${style.bg} ${style.text} flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform`}>
+                        {getFeatureIcon(card.icon)}
+                      </div>
+                      <div>
+                        <h3 className={`font-semibold text-[#102D52] text-[15px] sm:text-[16px] ${style.hover} transition-colors`}>
+                          {card.title}
+                        </h3>
+                        <p className="text-xs sm:text-[13px] text-[#526783] mt-1 leading-relaxed">
+                          {card.desc}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -754,15 +795,15 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                       </div>
                     )}
 
-                    {/* Role Badge */}
-                    <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md border border-[#FF9D2E]/60 text-[#FF9D2E] text-[11px] font-medium tracking-wide shadow-sm">
-                      <span>{member.role}</span>
-                    </div>
-
-                    {/* Legal Verified Badge */}
-                    <div className="absolute top-4 right-4 z-10 px-3 py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md text-[#15966A] text-[11px] font-medium border border-[#15966A]/40 flex items-center gap-1.5 shadow-sm">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#15966A]" />
-                      <span>SK Kemenkumham</span>
+                    {/* Responsive Badges Header (Role & Legal Verified) */}
+                    <div className="absolute top-3 sm:top-4 inset-x-3 sm:inset-x-4 z-10 flex flex-wrap items-center justify-between gap-1.5 pointer-events-none">
+                      <div className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md border border-[#FF9D2E]/60 text-[#FF9D2E] text-[10px] sm:text-[11px] font-medium tracking-wide shadow-sm pointer-events-auto">
+                        <span>{member.role}</span>
+                      </div>
+                      <div className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md text-[#15966A] text-[10px] sm:text-[11px] font-medium border border-[#15966A]/40 flex items-center gap-1 shadow-sm pointer-events-auto">
+                        <CheckCircle2 className="w-3 h-3 text-[#15966A]" />
+                        <span>SK Kemenkumham</span>
+                      </div>
                     </div>
 
                     {/* Name at bottom of portrait */}
@@ -884,18 +925,18 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
             <div className="max-w-2xl mb-12 sm:mb-16 reveal-on-scroll">
               <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
                 <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                <span>Panduan Konsumen</span>
+                <span>{content.buyingProcess?.badge || 'Panduan Konsumen'}</span>
               </div>
               <h2 className="font-serif font-normal text-3xl sm:text-4xl text-[#102D52] leading-tight">
-                Tahapan Pembelian Rumah Subsidi
+                {content.buyingProcess?.title || 'Tahapan Pembelian Rumah Subsidi'}
               </h2>
               <p className="font-sans text-[15px] sm:text-[16px] text-[#526783] mt-2.5 leading-relaxed">
-                Alur pengajuan yang transparan dan terstruktur bagi masyarakat, dari pemilihan kavling hingga serah terima kunci.
+                {content.buyingProcess?.subtitle || 'Alur pengajuan yang transparan dan terstruktur bagi masyarakat, dari pemilihan kavling hingga serah terima kunci.'}
               </p>
             </div>
 
             {(() => {
-              const purchaseSteps = [
+              const defaultSteps = [
                 {
                   step: '01',
                   title: 'Pilih Unit & Konsultasi',
@@ -926,6 +967,13 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                 },
               ];
 
+              const steps = Array.isArray(content.buyingProcess?.steps) && content.buyingProcess.steps.length > 0
+                ? content.buyingProcess.steps.map((s, i) => ({
+                    ...s,
+                    delayClass: `delay-${((i % 4) + 1) * 100}`,
+                  }))
+                : defaultSteps;
+
               return (
                 <div className="relative pt-2">
                   <div
@@ -934,7 +982,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   />
 
                   <ol className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-10 relative z-10 pl-6 md:pl-0 border-l-2 border-[#DCE7F5] md:border-l-0 ml-2 md:ml-0">
-                    {purchaseSteps.map((item, idx) => (
+                    {steps.map((item, idx) => (
                       <li key={idx} className={`relative flex flex-col justify-between reveal-on-scroll ${item.delayClass}`}>
                         <span
                           className="md:hidden absolute -left-[32px] top-1 w-4 h-4 rounded-full bg-white border-4 border-[#FF9D2E]"
@@ -980,28 +1028,29 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
               <div className="lg:col-span-5 space-y-5 reveal-left-on-scroll">
                 <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider">
                   <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                  <span>Kalkulator Finansial</span>
+                  <span>{content.kprSimulation?.badge || 'Kalkulator Finansial'}</span>
                 </div>
                 <h2 className="font-serif font-normal text-3xl sm:text-4xl text-white leading-tight">
-                  Simulasi Angsuran KPR Bersubsidi
+                  {content.kprSimulation?.title || 'Simulasi Angsuran KPR Bersubsidi'}
                 </h2>
                 <p className="font-sans text-[15px] sm:text-[16px] text-white/85 leading-relaxed">
-                  Hitung perkiraan angsuran bulanan rumah subsidi Puri Gunung Langgar melalui skema FLPP dengan suku bunga tetap 5% p.a.
+                  {content.kprSimulation?.subtitle || 'Hitung perkiraan angsuran bulanan rumah subsidi Puri Gunung Langgar melalui skema FLPP dengan suku bunga tetap 5% p.a.'}
                 </p>
 
                 <div className="pt-4 space-y-3 text-xs sm:text-[13px] text-white/80">
-                  <div className="flex items-center gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-[#FF9D2E] shrink-0" />
-                    <span>Suku Bunga Tetap (Anuitas) 5% sampai lunas</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-[#FF9D2E] shrink-0" />
-                    <span>Bebas PPN dan premi asuransi bersubsidi</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-[#FF9D2E] shrink-0" />
-                    <span>Pilihan jangka waktu fleksibel hingga 20 tahun</span>
-                  </div>
+                  {(Array.isArray(content.kprSimulation?.benefits) && content.kprSimulation.benefits.length > 0
+                    ? content.kprSimulation.benefits
+                    : [
+                        'Suku Bunga Tetap (Anuitas) 5% sampai lunas',
+                        'Bebas PPN dan premi asuransi bersubsidi',
+                        'Pilihan jangka waktu fleksibel hingga 20 tahun'
+                      ]
+                  ).map((b, bIdx) => (
+                    <div key={bIdx} className="flex items-center gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-[#FF9D2E] shrink-0" />
+                      <span>{b}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
 

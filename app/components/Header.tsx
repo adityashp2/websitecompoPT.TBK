@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Search, MessageCircle, ArrowRight, Compass, Calculator, ShieldCheck, Building2, Phone, Calendar } from 'lucide-react';
+import { Menu, X, Search, MessageCircle, ArrowRight } from 'lucide-react';
 import { SiteContent } from '@/lib/initialData';
 
 interface HeaderProps {
@@ -151,11 +151,13 @@ export default function Header({ content }: HeaderProps) {
         );
       });
 
-  // Main Navigation Items (matching PT. TBK desktop concept)
+  // Main Navigation Items (matching complete PT. TBK navigation)
   const mainNavItems = [
     { label: 'Beranda', href: '/' },
     { label: 'Tentang', href: '/tentang' },
     { label: 'Proyek', href: '/proyek' },
+    { label: 'Legalitas', href: '/legalitas' },
+    { label: 'Kegiatan', href: '/kegiatan' },
     { label: 'Pimpinan', href: isHomePage ? '#pimpinan' : '/#pimpinan' },
     { label: 'Simulasi', href: '/simulasi-kpr' },
     { label: 'Kontak', href: '/kontak' },
@@ -166,10 +168,10 @@ export default function Header({ content }: HeaderProps) {
     { label: 'Beranda', href: '/' },
     { label: 'Tentang', href: '/tentang' },
     { label: 'Proyek', href: '/proyek' },
+    { label: 'Legalitas', href: '/legalitas' },
+    { label: 'Kegiatan', href: '/kegiatan' },
     { label: 'Pimpinan', href: isHomePage ? '#pimpinan' : '/#pimpinan' },
     { label: 'Simulasi', href: '/simulasi-kpr' },
-    { label: 'Kegiatan', href: '/kegiatan' },
-    { label: 'Legalitas', href: '/legalitas' },
     { label: 'Kontak', href: '/kontak' },
   ];
 
@@ -196,35 +198,35 @@ export default function Header({ content }: HeaderProps) {
             : 'bg-[#073B78]'
         }`}
       >
-        <div className="w-full max-w-[1360px] mx-auto h-full px-4 sm:px-6 flex items-center justify-between">
+        <div className="w-full max-w-[1360px] mx-auto h-full px-3.5 sm:px-6 flex items-center justify-between gap-2">
           {/* Left: Brand Identity with existing logo asset */}
           <Link
             href="/"
             prefetch={false}
-            className="flex items-center gap-2.5 sm:gap-3 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] rounded-lg py-1 group"
+            className="flex items-center gap-2 sm:gap-3 min-w-0 max-w-[calc(100%-86px)] min-[980px]:max-w-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] rounded-lg py-1 group"
             aria-label="PT. Terbang Bersama Kawan - Beranda"
           >
             {/* Logo Image Asset */}
             <div className="h-8 sm:h-9 w-auto flex items-center shrink-0">
               <img
-                src="/assets/logo-tbk.png"
-                alt="Logo PT. Terbang Bersama Kawan"
+                src={content.meta?.logo || '/assets/logo-tbk.png'}
+                alt={`Logo ${content.footer?.companyName || 'PT. Terbang Bersama Kawan'}`}
                 className="h-8 sm:h-9 w-auto object-contain brightness-0 invert"
               />
             </div>
 
-            <div className="flex flex-col text-left">
-              <span className="text-[13.5px] sm:text-[15px] font-bold tracking-[0.04em] text-white uppercase group-hover:text-[#FF9D2E] transition-colors leading-tight">
-                PT. TBK
+            <div className="flex flex-col text-left min-w-0 overflow-hidden">
+              <span className="text-[13px] sm:text-[15px] font-bold tracking-[0.04em] text-white uppercase group-hover:text-[#FF9D2E] transition-colors leading-tight truncate">
+                {content.footer?.shortName || 'PT. TBK'}
               </span>
-              <span className="text-[9.5px] sm:text-[10.5px] text-[#FF9D2E] font-medium tracking-[0.04em] uppercase leading-tight mt-0.5">
-                Terbang Bersama Kawan
+              <span className="text-[9px] sm:text-[10.5px] text-[#FF9D2E] font-medium tracking-[0.03em] uppercase leading-tight mt-0.5 truncate">
+                {content.meta?.tagline || 'Terbang Bersama Kawan'}
               </span>
             </div>
           </Link>
 
           {/* Center-Right: Desktop Navigation Menu */}
-          <nav aria-label="Menu utama" className="hidden min-[980px]:flex items-center gap-6 lg:gap-8">
+          <nav aria-label="Menu utama" className="hidden min-[980px]:flex items-center gap-3.5 min-[1120px]:gap-5 lg:gap-6 xl:gap-7">
             {mainNavItems.map((item) => {
               const isActive = item.href === '/'
                 ? pathname === '/'
@@ -237,7 +239,7 @@ export default function Header({ content }: HeaderProps) {
                   key={item.href}
                   href={item.href}
                   prefetch={false}
-                  className={`text-[13.5px] lg:text-[14px] font-medium transition-all relative py-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9D2E] rounded whitespace-nowrap ${
+                  className={`text-[12.5px] min-[1120px]:text-[13.5px] lg:text-[14px] font-medium transition-all relative py-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9D2E] rounded whitespace-nowrap ${
                     isActive
                       ? 'text-[#FF9D2E] font-bold'
                       : 'text-white/85 hover:text-white'
@@ -256,22 +258,22 @@ export default function Header({ content }: HeaderProps) {
           </nav>
 
           {/* Right Action Icons & Controls */}
-          <div className="flex items-center gap-2 sm:gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             {/* Interactive Search Icon Button */}
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="w-9 h-9 flex items-center justify-center rounded-lg text-white/90 hover:text-white bg-white/10 hover:bg-white/20 border border-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] transition-all"
+              className="w-9 h-9 flex items-center justify-center rounded-lg text-white/90 hover:text-white bg-white/10 hover:bg-white/20 border border-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] transition-all shrink-0"
               aria-label="Cari di website"
             >
               <Search className="w-4 h-4" />
             </button>
 
-            {/* Menu Hamburger Toggle (Visible on Desktop & Mobile matching design reference) */}
+            {/* Menu Hamburger Toggle (Hidden on desktop min-[980px], visible on mobile & tablet) */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg text-white bg-white/10 border border-white/15 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] shrink-0 transition-colors"
+              className="min-[980px]:hidden w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg text-white bg-white/10 border border-white/15 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] shrink-0 transition-colors"
               aria-label={mobileMenuOpen ? 'Tutup navigasi' : 'Buka navigasi'}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-nav-panel"
@@ -367,7 +369,7 @@ export default function Header({ content }: HeaderProps) {
       {mobileMenuOpen && (
         <div
           id="mobile-nav-panel"
-          className="fixed top-[60px] inset-x-0 bottom-0 bg-[#073B78] z-40 px-5 py-5 flex flex-col justify-between overflow-y-auto min-[980px]:hidden border-t border-white/10 animate-in slide-in-from-top-4 duration-200"
+          className="fixed top-[58px] min-[980px]:top-[68px] inset-x-0 bottom-0 bg-[#073B78] z-50 px-5 py-5 pb-28 flex flex-col justify-between overflow-y-auto min-[980px]:hidden border-t border-white/10 animate-in slide-in-from-top-4 duration-200"
         >
           {/* Project Status Pill */}
           <div className="p-3 rounded-xl bg-white/10 border border-white/15 flex items-center justify-between text-xs">

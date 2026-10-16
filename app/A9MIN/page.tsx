@@ -3,9 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { SiteContent, initialSiteContent, getYouTubeEmbedUrl, getYouTubeThumbnailUrl } from '@/lib/initialData';
+import { SiteContent, initialSiteContent, BannerSlide, PurchaseStep, getYouTubeEmbedUrl } from '@/lib/initialData';
 import {
-  SlidersHorizontal,
   Save,
   RotateCcw,
   ExternalLink,
@@ -26,7 +25,6 @@ import {
   Upload,
   Video,
   Image as ImageIcon,
-  Play,
   ArrowUp,
   ArrowDown,
   Layers,
@@ -34,10 +32,11 @@ import {
   Check,
   LogOut,
   Key,
-  Lock,
-  UserCheck,
   MapPin,
-  X
+  X,
+  Calculator,
+  Building2,
+  ChevronDown
 } from 'lucide-react';
 
 interface Inquiry {
@@ -48,6 +47,21 @@ interface Inquiry {
   message?: string;
   created_at: string;
 }
+
+export type AdminTab =
+  | 'banners'
+  | 'intro-features'
+  | 'hero'
+  | 'buying-process'
+  | 'kpr-simulation'
+  | 'branding'
+  | 'about'
+  | 'leadership'
+  | 'legal'
+  | 'project'
+  | 'activities'
+  | 'contact'
+  | 'inquiries';
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -64,7 +78,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-  const [activeTab, setActiveTab] = useState<'branding' | 'hero' | 'about' | 'leadership' | 'legal' | 'activities' | 'project' | 'contact' | 'inquiries'>('branding');
+  const [activeTab, setActiveTab] = useState<AdminTab>('banners');
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [inquiriesLoading, setInquiriesLoading] = useState(false);
   const [uploadingSlide, setUploadingSlide] = useState<number | null>(null);
@@ -257,6 +271,68 @@ export default function AdminDashboard() {
       console.error(err);
     } finally {
       setInquiriesLoading(false);
+    }
+  };
+
+  const handleDeleteInquiry = async (id: number) => {
+    if (!window.confirm('Hapus pesan ini secara permanen dari database?')) {
+      return;
+    }
+    try {
+      const res = await fetch(`/api/inquiries?id=${id}`, { method: 'DELETE' });
+      const json = await res.json();
+      if (json.success) {
+        setInquiries((prev) => prev.filter((i) => i.id !== id));
+        setSaveStatus({
+          type: 'success',
+          message: 'Pesan berhasil dihapus permanen dari database.',
+        });
+        setTimeout(() => setSaveStatus(null), 4000);
+      } else {
+        setSaveStatus({
+          type: 'error',
+          message: json.error || 'Gagal menghapus pesan.',
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      setSaveStatus({
+        type: 'error',
+        message: 'Terjadi kesalahan saat menghapus pesan.',
+      });
+    }
+  };
+
+  const handleClearAllInquiries = async () => {
+    if (
+      !window.confirm(
+        'PERINGATAN: Apakah Anda yakin ingin mengosongkan SELURUH pesan masuk? Data yang dihapus tidak dapat dipulihkan.'
+      )
+    ) {
+      return;
+    }
+    try {
+      const res = await fetch('/api/inquiries?all=true', { method: 'DELETE' });
+      const json = await res.json();
+      if (json.success) {
+        setInquiries([]);
+        setSaveStatus({
+          type: 'success',
+          message: 'Seluruh pesan masuk berhasil dikosongkan dari database.',
+        });
+        setTimeout(() => setSaveStatus(null), 4000);
+      } else {
+        setSaveStatus({
+          type: 'error',
+          message: json.error || 'Gagal mengosongkan pesan.',
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      setSaveStatus({
+        type: 'error',
+        message: 'Terjadi kesalahan saat mengosongkan pesan masuk.',
+      });
     }
   };
 
@@ -471,127 +547,1456 @@ export default function AdminDashboard() {
       )}
 
       {/* Main Admin Content */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Sidebar Tabs */}
-          <div className="lg:col-span-3 space-y-1.5">
-            <div className="text-xs uppercase font-bold text-gold-400 px-3 mb-2 tracking-wider">
-              Identitas & Konten
-            </div>
+      <div className="max-w-[1400px] mx-auto px-3.5 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+          {/* Sidebar Tabs (Visible on Desktop >= lg) */}
+          <div className="hidden lg:block lg:col-span-3 space-y-4">
+            {/* GROUP 1: HALAMAN DEPAN (BERANDA) */}
+            <div className="space-y-1">
+              <div className="text-[11px] uppercase font-bold text-gold-400/90 px-3 py-1 tracking-wider flex items-center justify-between">
+                <span>Tampilan Beranda</span>
+                <span className="text-[10px] text-gray-500 font-normal">5 Bagian</span>
+              </div>
 
-            <button
-              onClick={() => setActiveTab('branding')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeTab === 'branding'
-                  ? 'bg-gold-500/20 text-gold-300 border border-gold-500/40 shadow-sm'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <Sparkles className="w-4 h-4 shrink-0 text-gold-400" />
-              <span>Branding, Logo & Footer</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('hero')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeTab === 'hero'
-                  ? 'bg-gold-500/20 text-gold-300 border border-gold-500/40 shadow-sm'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <Home className="w-4 h-4 shrink-0" />
-              <span>Hero & Banner Utama</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('about')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeTab === 'about'
-                  ? 'bg-gold-500/20 text-gold-300 border border-gold-500/40 shadow-sm'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <FileText className="w-4 h-4 shrink-0" />
-              <span>Tentang, Visi & Misi</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('leadership')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeTab === 'leadership'
-                  ? 'bg-gold-500/20 text-gold-300 border border-gold-500/40 shadow-sm'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <Users className="w-4 h-4 shrink-0" />
-              <span>Dewan Pengurus ({content.leadership?.members?.length || 0})</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('legal')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeTab === 'legal'
-                  ? 'bg-gold-500/20 text-gold-300 border border-gold-500/40 shadow-sm'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <ShieldCheck className="w-4 h-4 shrink-0" />
-              <span>Legalitas & Notaris</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('activities')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeTab === 'activities'
-                  ? 'bg-gold-500/20 text-gold-300 border border-gold-500/40 shadow-sm'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <HardHat className="w-4 h-4 shrink-0" />
-              <span>Kegiatan Lapangan Riil ({content.activities?.items?.length || 0})</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('project')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeTab === 'project'
-                  ? 'bg-gold-500/20 text-gold-300 border border-gold-500/40 shadow-sm'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <Building className="w-4 h-4 shrink-0" />
-              <span>Proyek Puri Gunung Langgar</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('contact')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeTab === 'contact'
-                  ? 'bg-gold-500/20 text-gold-300 border border-gold-500/40 shadow-sm'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <PhoneCall className="w-4 h-4 shrink-0" />
-              <span>Kontak & Alamat Kantor</span>
-            </button>
-
-            <div className="pt-4 mt-4 border-t border-white/10">
               <button
-                onClick={() => setActiveTab('inquiries')}
-                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                  activeTab === 'inquiries'
-                    ? 'bg-gold-500/20 text-gold-300 border border-gold-500/40 shadow-sm'
+                type="button"
+                onClick={() => setActiveTab('banners')}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  activeTab === 'banners'
+                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
                 }`}
               >
-                <Inbox className="w-4 h-4 shrink-0" />
-                <span>Pesan Masuk (Formulir)</span>
+                <div className="flex items-center gap-2.5">
+                  <Film className="w-4 h-4 shrink-0 text-gold-400" />
+                  <span>Banner Promosi Atas</span>
+                </div>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/10 text-gray-300 font-mono">
+                  {content.bannerSlides?.length || 0}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('intro-features')}
+                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  activeTab === 'intro-features'
+                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Sparkles className="w-4 h-4 shrink-0 text-gold-400" />
+                <span>Intro & 4 Keunggulan</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('hero')}
+                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  activeTab === 'hero'
+                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Home className="w-4 h-4 shrink-0" />
+                <span>Hero & Statistik Utama</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('buying-process')}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  activeTab === 'buying-process'
+                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <FileText className="w-4 h-4 shrink-0" />
+                  <span>Alur Pembelian Rumah</span>
+                </div>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/10 text-gray-300 font-mono">
+                  {content.buyingProcess?.steps?.length || 4}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('kpr-simulation')}
+                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  activeTab === 'kpr-simulation'
+                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Calculator className="w-4 h-4 shrink-0" />
+                <span>Simulasi KPR FLPP 5%</span>
+              </button>
+            </div>
+
+            {/* GROUP 2: PROFIL PERUSAHAAN */}
+            <div className="space-y-1 pt-2 border-t border-white/10">
+              <div className="text-[11px] uppercase font-bold text-gold-400/90 px-3 py-1 tracking-wider flex items-center justify-between">
+                <span>Profil Perusahaan</span>
+                <span className="text-[10px] text-gray-500 font-normal">4 Bagian</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('branding')}
+                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  activeTab === 'branding'
+                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Sparkles className="w-4 h-4 shrink-0 text-gold-400" />
+                <span>Branding, Logo & Footer</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('about')}
+                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  activeTab === 'about'
+                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Building2 className="w-4 h-4 shrink-0" />
+                <span>Tentang, Visi & Misi</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('leadership')}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  activeTab === 'leadership'
+                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <Users className="w-4 h-4 shrink-0" />
+                  <span>Dewan Pengurus</span>
+                </div>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/10 text-gray-300 font-mono">
+                  {content.leadership?.members?.length || 0}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('legal')}
+                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  activeTab === 'legal'
+                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <ShieldCheck className="w-4 h-4 shrink-0" />
+                <span>Legalitas & Notaris</span>
+              </button>
+            </div>
+
+            {/* GROUP 3: PROYEK & DOKUMENTASI */}
+            <div className="space-y-1 pt-2 border-t border-white/10">
+              <div className="text-[11px] uppercase font-bold text-gold-400/90 px-3 py-1 tracking-wider flex items-center justify-between">
+                <span>Proyek & Lapangan</span>
+                <span className="text-[10px] text-gray-500 font-normal">2 Bagian</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('project')}
+                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  activeTab === 'project'
+                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Building className="w-4 h-4 shrink-0" />
+                <span>Proyek Puri Gunung Langgar</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('activities')}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  activeTab === 'activities'
+                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <HardHat className="w-4 h-4 shrink-0" />
+                  <span>Kegiatan Lapangan Riil</span>
+                </div>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/10 text-gray-300 font-mono">
+                  {content.activities?.items?.length || 0}
+                </span>
+              </button>
+            </div>
+
+            {/* GROUP 4: INTERAKSI & FORMULIR */}
+            <div className="space-y-1 pt-2 border-t border-white/10">
+              <div className="text-[11px] uppercase font-bold text-gold-400/90 px-3 py-1 tracking-wider flex items-center justify-between">
+                <span>Interaksi & Kontak</span>
+                <span className="text-[10px] text-gray-500 font-normal">2 Bagian</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('contact')}
+                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  activeTab === 'contact'
+                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <PhoneCall className="w-4 h-4 shrink-0" />
+                <span>Kontak & Alamat Kantor</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('inquiries')}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  activeTab === 'inquiries'
+                    ? 'bg-gradient-to-r from-gold-500/25 to-gold-500/10 text-gold-300 border border-gold-500/40 shadow-sm'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <Inbox className="w-4 h-4 shrink-0" />
+                  <span>Pesan Masuk (Formulir)</span>
+                </div>
+                {inquiries.length > 0 && (
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono font-bold animate-pulse">
+                    {inquiries.length}
+                  </span>
+                )}
               </button>
             </div>
           </div>
 
+          {/* Mobile & Tablet Quick Navigation Selector (< lg) */}
+          <div className="lg:hidden col-span-1 space-y-3 bg-[#16191E] border border-gold-500/30 rounded-2xl p-4 shadow-lg">
+            <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-gold-400" />
+                <span className="text-xs font-bold text-white uppercase tracking-wider">Bagian Konten Aktif</span>
+              </div>
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-gold-500/20 text-gold-300 font-mono font-semibold">
+                13 Menu
+              </span>
+            </div>
+
+            <div className="space-y-1.5">
+              <label htmlFor="mobile-tab-select" className="text-[11px] text-gray-400 block font-medium">
+                Pilih bagian yang ingin Anda edit:
+              </label>
+              <div className="relative">
+                <select
+                  id="mobile-tab-select"
+                  value={activeTab}
+                  onChange={(e) => {
+                    setActiveTab(e.target.value as any);
+                    const editorEl = document.getElementById('admin-form-editor');
+                    if (editorEl) {
+                      editorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className="w-full h-11 px-3.5 pr-10 rounded-xl bg-[#0E1013] border border-white/20 text-white font-semibold text-xs sm:text-sm focus:outline-none focus:border-gold-500 appearance-none cursor-pointer"
+                >
+                  <optgroup label="TAMPILAN BERANDA">
+                    <option value="banners">Banner Promosi Atas ({content.bannerSlides?.length || 0})</option>
+                    <option value="intro-features">Intro & 4 Keunggulan</option>
+                    <option value="hero">Hero & Statistik Utama</option>
+                    <option value="buying-process">Alur Pembelian Rumah</option>
+                    <option value="kpr-simulation">Simulasi KPR FLPP 5%</option>
+                  </optgroup>
+                  <optgroup label="PROFIL PERUSAHAAN">
+                    <option value="branding">Branding, Logo & Footer</option>
+                    <option value="about">Tentang, Visi & Misi</option>
+                    <option value="leadership">Dewan Pengurus ({content.leadership?.members?.length || 0})</option>
+                    <option value="legal">Legalitas & Notaris</option>
+                  </optgroup>
+                  <optgroup label="PROYEK & LAPANGAN">
+                    <option value="project">Proyek Puri Gunung Langgar</option>
+                    <option value="activities">Kegiatan Lapangan Riil ({content.activities?.items?.length || 0})</option>
+                  </optgroup>
+                  <optgroup label="INTERAKSI & KONTAK">
+                    <option value="contact">Kontak & Alamat Kantor</option>
+                    <option value="inquiries">Pesan Masuk (Formulir) {inquiries.length > 0 ? `(${inquiries.length} baru)` : ''}</option>
+                  </optgroup>
+                </select>
+                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gold-400">
+                  <ChevronDown className="w-4 h-4" />
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Category Chips for Fast 1-Tap Switching */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1">
+              {[
+                { id: 'banners', label: 'Banner' },
+                { id: 'hero', label: 'Statistik' },
+                { id: 'about', label: 'Tentang' },
+                { id: 'project', label: 'Proyek' },
+                { id: 'activities', label: 'Kegiatan' },
+                { id: 'legal', label: 'Legalitas' },
+                { id: 'contact', label: 'Kontak' },
+                { id: 'inquiries', label: `Pesan ${inquiries.length > 0 ? `(${inquiries.length})` : ''}` },
+              ].map((chip) => (
+                <button
+                  key={chip.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveTab(chip.id as any);
+                    const editorEl = document.getElementById('admin-form-editor');
+                    if (editorEl) {
+                      editorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                    activeTab === chip.id
+                      ? 'bg-gold-500/25 text-gold-300 border border-gold-500/40'
+                      : 'bg-[#0E1013] text-gray-400 hover:text-white border border-white/10'
+                  }`}
+                >
+                  {chip.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Form Content Editor */}
-          <div className="lg:col-span-9 bg-[#16191E] border border-white/10 rounded-2xl p-6 sm:p-8">
+          <div id="admin-form-editor" className="lg:col-span-9 bg-[#16191E] border border-white/10 rounded-2xl p-4 sm:p-6 lg:p-8">
+            {/* TAB: PROMO BANNERS CAROUSEL */}
+            {activeTab === 'banners' && (
+              <div className="space-y-6">
+                <div className="border-b border-white/10 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
+                      <Film className="w-5 h-5 text-gold-400" />
+                      Slide Banner Promosi Berjalan (Top Carousel)
+                    </h2>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Kelola slide banner beranda di bagian paling atas (Puri Gunung Langgar, KPR FLPP 5%, Legalitas SHM, dll.).
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const currentSlides = Array.isArray(content.bannerSlides) ? content.bannerSlides : [];
+                      const newSlide: BannerSlide = {
+                        id: `slide-${Date.now()}`,
+                        eyebrow: 'PROMO UNGGULAN • TERBARU',
+                        headlineFirstLine: 'Hunian Nyaman Impian Anda,',
+                        headlineHighlight: 'bersama PT. TBK Lampung.',
+                        supportingText: 'Perumahan bersubsidi berkualitas dengan kemudahan akses, angsuran terjangkau, dan legalitas resmi terjamin.',
+                        primaryCtaText: 'Lihat Detail',
+                        primaryCtaHref: '/proyek',
+                        secondaryCtaText: 'Konsultasi WhatsApp',
+                        secondaryCtaHref: 'https://wa.me/6281278901234',
+                        isSecondaryExternal: true,
+                        image: '/assets/hero-marketing.jpg',
+                        imageAlt: 'Perumahan Subsidi PT. Terbang Bersama Kawan',
+                      };
+                      setContent({ ...content, bannerSlides: [...currentSlides, newSlide] });
+                    }}
+                    className="px-4 py-2 rounded-xl bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-bold flex items-center gap-2 transition-all self-start sm:self-auto"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Tambah Slide Banner Baru</span>
+                  </button>
+                </div>
+
+                {/* Slides List */}
+                <div className="space-y-6">
+                  {(!content.bannerSlides || content.bannerSlides.length === 0) ? (
+                    <div className="p-8 rounded-2xl bg-[#0E1013] border border-white/10 text-center text-gray-400 text-sm">
+                      Belum ada slide banner kustom. Klik tombol di atas untuk menambahkan slide baru.
+                    </div>
+                  ) : (
+                    content.bannerSlides.map((slide, sIdx) => (
+                      <div
+                        key={slide.id || sIdx}
+                        className="p-5 sm:p-6 rounded-2xl bg-[#0E1013] border border-white/10 hover:border-gold-500/40 transition-all space-y-5"
+                      >
+                        {/* Slide Card Header */}
+                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
+                          <div className="flex items-center gap-2">
+                            <span className="w-7 h-7 rounded-lg bg-gold-500/20 text-gold-400 font-bold text-xs flex items-center justify-center">
+                              {sIdx + 1}
+                            </span>
+                            <span className="font-bold text-white text-sm">
+                              {slide.eyebrow || `Slide Banner #${sIdx + 1}`}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              type="button"
+                              disabled={sIdx === 0}
+                              onClick={() => {
+                                const newSlides = [...(content.bannerSlides || [])];
+                                const temp = newSlides[sIdx];
+                                newSlides[sIdx] = newSlides[sIdx - 1];
+                                newSlides[sIdx - 1] = temp;
+                                setContent({ ...content, bannerSlides: newSlides });
+                              }}
+                              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
+                              title="Geser Ke Atas"
+                            >
+                              <ArrowUp className="w-4 h-4" />
+                            </button>
+                            <button
+                              type="button"
+                              disabled={sIdx === (content.bannerSlides?.length || 1) - 1}
+                              onClick={() => {
+                                const newSlides = [...(content.bannerSlides || [])];
+                                const temp = newSlides[sIdx];
+                                newSlides[sIdx] = newSlides[sIdx + 1];
+                                newSlides[sIdx + 1] = temp;
+                                setContent({ ...content, bannerSlides: newSlides });
+                              }}
+                              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
+                              title="Geser Ke Bawah"
+                            >
+                              <ArrowDown className="w-4 h-4" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (window.confirm(`Hapus slide banner "${slide.eyebrow}"?`)) {
+                                  const newSlides = (content.bannerSlides || []).filter((_, i) => i !== sIdx);
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                  setSaveStatus({
+                                    type: 'success',
+                                    message: 'Slide banner berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan perubahan secara permanen.',
+                                  });
+                                }
+                              }}
+                              className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 ml-1"
+                              title="Hapus Slide Ini"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Banner Image Preview & Upload */}
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
+                          <div className="md:col-span-4 space-y-2">
+                            <label className="block text-xs font-semibold text-gray-300">
+                              Foto Background Banner
+                            </label>
+                            <div className="relative aspect-[16/9] rounded-xl overflow-hidden bg-[#16191E] border border-white/10 group">
+                              <img
+                                src={slide.image || '/assets/hero-marketing.jpg'}
+                                alt={slide.imageAlt || 'Banner preview'}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="flex items-center gap-2 pt-1">
+                              <input
+                                type="text"
+                                placeholder="/assets/... atau URL gambar"
+                                value={slide.image}
+                                onChange={(e) => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].image = e.target.value;
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="flex-1 px-3 py-1.5 rounded-lg bg-[#16191E] border border-white/10 text-xs text-white font-mono"
+                              />
+                              <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-semibold flex items-center gap-1.5 shrink-0">
+                                <Upload className="w-3.5 h-3.5" />
+                                <span>{uploadingKey === `banner-${sIdx}` ? '...' : 'Upload'}</span>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    if (e.target.files && e.target.files[0]) {
+                                      handleGenericFileUpload(e.target.files[0], `banner-${sIdx}`, (url) => {
+                                        const newSlides = [...(content.bannerSlides || [])];
+                                        newSlides[sIdx].image = url;
+                                        setContent({ ...content, bannerSlides: newSlides });
+                                      });
+                                    }
+                                  }}
+                                />
+                              </label>
+                            </div>
+                          </div>
+
+                          {/* Banner Text Fields */}
+                          <div className="md:col-span-8 space-y-3.5">
+                            <div>
+                              <label className="block text-xs font-medium text-gray-300 mb-1">
+                                Label Atas (Eyebrow Badge)
+                              </label>
+                              <input
+                                type="text"
+                                value={slide.eyebrow}
+                                placeholder="Contoh: Puri Gunung Langgar • Proyek Berjalan"
+                                onChange={(e) => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].eyebrow = e.target.value;
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs focus:outline-none focus:border-gold-500"
+                              />
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <div>
+                                <label className="block text-xs font-medium text-gray-300 mb-1">
+                                  Headline Baris 1 (Putih)
+                                </label>
+                                <input
+                                  type="text"
+                                  value={slide.headlineFirstLine}
+                                  placeholder="Contoh: Hunian bersubsidi yang layak,"
+                                  onChange={(e) => {
+                                    const newSlides = [...(content.bannerSlides || [])];
+                                    newSlides[sIdx].headlineFirstLine = e.target.value;
+                                    setContent({ ...content, bannerSlides: newSlides });
+                                  }}
+                                  className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs focus:outline-none focus:border-gold-500"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium text-gold-400 mb-1">
+                                  Headline Highlight (Warna Emas / Kuning)
+                                </label>
+                                <input
+                                  type="text"
+                                  value={slide.headlineHighlight}
+                                  placeholder="Contoh: dibangun dari Lampung."
+                                  onChange={(e) => {
+                                    const newSlides = [...(content.bannerSlides || [])];
+                                    newSlides[sIdx].headlineHighlight = e.target.value;
+                                    setContent({ ...content, bannerSlides: newSlides });
+                                  }}
+                                  className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-gold-300 text-xs focus:outline-none focus:border-gold-500 font-semibold"
+                                />
+                              </div>
+                            </div>
+
+                            <div>
+                              <label className="block text-xs font-medium text-gray-300 mb-1">
+                                Deskripsi Pendukung (Paragraf Ringkas)
+                              </label>
+                              <textarea
+                                rows={2}
+                                value={slide.supportingText}
+                                onChange={(e) => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].supportingText = e.target.value;
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs focus:outline-none focus:border-gold-500"
+                              />
+                            </div>
+
+                            {/* CTA Buttons */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-white/5">
+                              <div className="space-y-1.5 p-3 rounded-xl bg-[#16191E]/60 border border-white/5">
+                                <span className="text-[11px] font-bold text-gold-400 uppercase">Tombol Utama 1</span>
+                                <input
+                                  type="text"
+                                  placeholder="Label Tombol (misal: Lihat Proyek)"
+                                  value={slide.primaryCtaText}
+                                  onChange={(e) => {
+                                    const newSlides = [...(content.bannerSlides || [])];
+                                    newSlides[sIdx].primaryCtaText = e.target.value;
+                                    setContent({ ...content, bannerSlides: newSlides });
+                                  }}
+                                  className="w-full px-2.5 py-1.5 rounded-lg bg-[#0E1013] border border-white/10 text-xs text-white"
+                                />
+                                <input
+                                  type="text"
+                                  placeholder="Tujuan Link (misal: /proyek)"
+                                  value={slide.primaryCtaHref}
+                                  onChange={(e) => {
+                                    const newSlides = [...(content.bannerSlides || [])];
+                                    newSlides[sIdx].primaryCtaHref = e.target.value;
+                                    setContent({ ...content, bannerSlides: newSlides });
+                                  }}
+                                  className="w-full px-2.5 py-1.5 rounded-lg bg-[#0E1013] border border-white/10 text-xs text-gray-300 font-mono"
+                                />
+                              </div>
+
+                              <div className="space-y-1.5 p-3 rounded-xl bg-[#16191E]/60 border border-white/5">
+                                <span className="text-[11px] font-bold text-gold-400 uppercase">Tombol Sekunder 2</span>
+                                <input
+                                  type="text"
+                                  placeholder="Label Tombol (misal: Konsultasi WhatsApp)"
+                                  value={slide.secondaryCtaText}
+                                  onChange={(e) => {
+                                    const newSlides = [...(content.bannerSlides || [])];
+                                    newSlides[sIdx].secondaryCtaText = e.target.value;
+                                    setContent({ ...content, bannerSlides: newSlides });
+                                  }}
+                                  className="w-full px-2.5 py-1.5 rounded-lg bg-[#0E1013] border border-white/10 text-xs text-white"
+                                />
+                                <input
+                                  type="text"
+                                  placeholder="Tujuan Link (misal: /kontak atau wa URL)"
+                                  value={slide.secondaryCtaHref}
+                                  onChange={(e) => {
+                                    const newSlides = [...(content.bannerSlides || [])];
+                                    newSlides[sIdx].secondaryCtaHref = e.target.value;
+                                    setContent({ ...content, bannerSlides: newSlides });
+                                  }}
+                                  className="w-full px-2.5 py-1.5 rounded-lg bg-[#0E1013] border border-white/10 text-xs text-gray-300 font-mono"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* TAB: HOME INTRO & 4 FEATURES */}
+            {activeTab === 'intro-features' && (
+              <div className="space-y-6">
+                <div className="border-b border-white/10 pb-4">
+                  <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-gold-400" />
+                    Intro Beranda & 4 Kartu Keunggulan
+                  </h2>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Kelola teks narasi singkat di beranda (bawah banner) dan 4 kartu keunggulan utama PT. Terbang Bersama Kawan.
+                  </p>
+                </div>
+
+                {/* Bagian Kiri: Headline & Intro Beranda */}
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#0E1013] border border-white/10 space-y-4">
+                  <h3 className="text-sm font-bold text-gold-400 uppercase tracking-wider">
+                    Narasi Perkenalan Beranda (Kolom Kiri)
+                  </h3>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                        Label Badge Kecil
+                      </label>
+                      <input
+                        type="text"
+                        value={content.about.homeIntroBadge || 'Tentang Kami'}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            about: { ...content.about, homeIntroBadge: e.target.value },
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                        Judul Baris 1
+                      </label>
+                      <input
+                        type="text"
+                        value={content.about.homeIntroTitle || 'Membangun Rumah,'}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            about: { ...content.about, homeIntroTitle: e.target.value },
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gold-400 mb-1">
+                        Judul Baris 2 (Highlight)
+                      </label>
+                      <input
+                        type="text"
+                        value={content.about.homeIntroHighlight || 'Mewujudkan Masa Depan.'}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            about: { ...content.about, homeIntroHighlight: e.target.value },
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-gold-300 text-xs font-semibold"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                      Deskripsi Paragraf Singkat
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={content.about.homeIntroText || ''}
+                      onChange={(e) =>
+                        setContent({
+                          ...content,
+                          about: { ...content.about, homeIntroText: e.target.value },
+                        })
+                      }
+                      className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                        Teks Tombol CTA
+                      </label>
+                      <input
+                        type="text"
+                        value={content.about.homeIntroCtaText || 'Kenal Lebih Dekat'}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            about: { ...content.about, homeIntroCtaText: e.target.value },
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                        Tautan Tombol CTA (Link)
+                      </label>
+                      <input
+                        type="text"
+                        value={content.about.homeIntroCtaLink || '/tentang'}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            about: { ...content.about, homeIntroCtaLink: e.target.value },
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-gray-300 text-xs font-mono"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Kartu Keunggulan (Grid 2x2) */}
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#0E1013] border border-white/10 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                    <div>
+                      <h3 className="text-sm font-bold text-gold-400 uppercase tracking-wider flex items-center gap-2">
+                        <span>Kartu Keunggulan Beranda</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-gold-500/20 text-gold-300 border border-gold-500/30 font-sans font-semibold">
+                          {(Array.isArray(content.about.features) ? content.about.features : [
+                            { title: 'Hunian Berkualitas', desc: 'Rumah nyaman dengan infrastruktur yang memadai.', icon: 'home' },
+                            { title: 'Harga Terjangkau', desc: 'Solusi hunian untuk keluarga Indonesia.', icon: 'shield' },
+                            { title: 'Lokasi Strategis', desc: 'Mudah diakses dan dekat dengan fasilitas umum.', icon: 'map' },
+                            { title: 'Lingkungan Asri', desc: 'Hidup lebih sehat di lingkungan yang hijau.', icon: 'leaf' },
+                          ]).length} Kartu
+                        </span>
+                      </h3>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        Kartu ringkas yang menampilkan keunggulan hunian bersubsidi PT. TBK di kolom kanan seksi Tentang Kami.
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const currentFeatures = Array.isArray(content.about.features)
+                          ? [...content.about.features]
+                          : [
+                              { title: 'Hunian Berkualitas', desc: 'Rumah nyaman dengan infrastruktur yang memadai.', icon: 'home' },
+                              { title: 'Harga Terjangkau', desc: 'Solusi hunian untuk keluarga Indonesia.', icon: 'shield' },
+                              { title: 'Lokasi Strategis', desc: 'Mudah diakses dan dekat dengan fasilitas umum.', icon: 'map' },
+                              { title: 'Lingkungan Asri', desc: 'Hidup lebih sehat di lingkungan yang hijau.', icon: 'leaf' },
+                            ];
+                        setContent({
+                          ...content,
+                          about: {
+                            ...content.about,
+                            features: [
+                              ...currentFeatures,
+                              {
+                                title: 'Keunggulan Baru',
+                                desc: 'Deskripsi singkat keunggulan perumahan...',
+                                icon: 'home',
+                              },
+                            ],
+                          },
+                        });
+                      }}
+                      className="px-3.5 py-1.5 rounded-xl bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-semibold flex items-center gap-1.5 transition-all self-start sm:self-auto"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Tambah Kartu Keunggulan</span>
+                    </button>
+                  </div>
+
+                  {/* Feature Cards Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    {(Array.isArray(content.about.features)
+                      ? content.about.features
+                      : [
+                          { title: 'Hunian Berkualitas', desc: 'Rumah nyaman dengan infrastruktur yang memadai.', icon: 'home' },
+                          { title: 'Harga Terjangkau', desc: 'Solusi hunian untuk keluarga Indonesia.', icon: 'shield' },
+                          { title: 'Lokasi Strategis', desc: 'Mudah diakses dan dekat dengan fasilitas umum.', icon: 'map' },
+                          { title: 'Lingkungan Asri', desc: 'Hidup lebih sehat di lingkungan yang hijau.', icon: 'leaf' },
+                        ]
+                    ).length === 0 ? (
+                      <div className="sm:col-span-2 p-8 rounded-xl bg-[#16191E] border border-white/5 text-center text-gray-500 space-y-2">
+                        <Sparkles className="w-8 h-8 mx-auto text-gray-600" />
+                        <p className="text-xs font-medium text-gray-400">Belum ada kartu keunggulan.</p>
+                        <p className="text-[11px] text-gray-600">Klik &quot;Tambah Kartu Keunggulan&quot; di atas untuk menambahkan poin keunggulan baru.</p>
+                      </div>
+                    ) : (
+                      (Array.isArray(content.about.features)
+                        ? content.about.features
+                        : [
+                            { title: 'Hunian Berkualitas', desc: 'Rumah nyaman dengan infrastruktur yang memadai.', icon: 'home' },
+                            { title: 'Harga Terjangkau', desc: 'Solusi hunian untuk keluarga Indonesia.', icon: 'shield' },
+                            { title: 'Lokasi Strategis', desc: 'Mudah diakses dan dekat dengan fasilitas umum.', icon: 'map' },
+                            { title: 'Lingkungan Asri', desc: 'Hidup lebih sehat di lingkungan yang hijau.', icon: 'leaf' },
+                          ]
+                      ).map((feature, fIdx) => (
+                        <div
+                          key={fIdx}
+                          className="p-4 rounded-xl bg-[#16191E] border border-white/10 space-y-3 relative group hover:border-gold-500/30 transition-colors"
+                        >
+                          <div className="flex items-center justify-between gap-2 border-b border-white/5 pb-2">
+                            <span className="text-xs font-bold text-gold-400">
+                              Kartu #{fIdx + 1}
+                            </span>
+                            <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-[11px] text-gray-400">Ikon:</span>
+                                <select
+                                  value={feature.icon || 'home'}
+                                  onChange={(e) => {
+                                    const currentFeatures = Array.isArray(content.about.features)
+                                      ? [...content.about.features]
+                                      : [
+                                          { title: 'Hunian Berkualitas', desc: 'Rumah nyaman dengan infrastruktur yang memadai.', icon: 'home' },
+                                          { title: 'Harga Terjangkau', desc: 'Solusi hunian untuk keluarga Indonesia.', icon: 'shield' },
+                                          { title: 'Lokasi Strategis', desc: 'Mudah diakses dan dekat dengan fasilitas umum.', icon: 'map' },
+                                          { title: 'Lingkungan Asri', desc: 'Hidup lebih sehat di lingkungan yang hijau.', icon: 'leaf' },
+                                        ];
+                                    currentFeatures[fIdx].icon = e.target.value;
+                                    setContent({
+                                      ...content,
+                                      about: { ...content.about, features: currentFeatures },
+                                    });
+                                  }}
+                                  className="px-2 py-1 rounded bg-[#0E1013] border border-white/10 text-xs text-white"
+                                >
+                                  <option value="home">Rumah (Home)</option>
+                                  <option value="shield">Perlindungan / Harga (Shield)</option>
+                                  <option value="map">Lokasi Strategis (MapPin)</option>
+                                  <option value="leaf">Lingkungan Asri (Leaf)</option>
+                                  <option value="wallet">Finansial / Angsuran (Wallet)</option>
+                                  <option value="building">Kawasan (Building)</option>
+                                </select>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (window.confirm(`Hapus kartu keunggulan "${feature.title}"?`)) {
+                                    const currentFeatures = Array.isArray(content.about.features)
+                                      ? [...content.about.features]
+                                      : [
+                                          { title: 'Hunian Berkualitas', desc: 'Rumah nyaman dengan infrastruktur yang memadai.', icon: 'home' },
+                                          { title: 'Harga Terjangkau', desc: 'Solusi hunian untuk keluarga Indonesia.', icon: 'shield' },
+                                          { title: 'Lokasi Strategis', desc: 'Mudah diakses dan dekat dengan fasilitas umum.', icon: 'map' },
+                                          { title: 'Lingkungan Asri', desc: 'Hidup lebih sehat di lingkungan yang hijau.', icon: 'leaf' },
+                                        ];
+                                    const newFeatures = currentFeatures.filter((_, i) => i !== fIdx);
+                                    setContent({
+                                      ...content,
+                                      about: { ...content.about, features: newFeatures },
+                                    });
+                                    setSaveStatus({
+                                      type: 'success',
+                                      message: 'Kartu keunggulan berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan perubahan.',
+                                    });
+                                  }
+                                }}
+                                className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs flex items-center gap-1 transition-colors"
+                                title="Hapus kartu ini"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                                <span className="hidden sm:inline">Hapus</span>
+                              </button>
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="block text-[11px] font-medium text-gray-400 mb-1">
+                              Judul Keunggulan
+                            </label>
+                            <input
+                              type="text"
+                              value={feature.title}
+                              onChange={(e) => {
+                                const currentFeatures = Array.isArray(content.about.features)
+                                  ? [...content.about.features]
+                                  : [
+                                      { title: 'Hunian Berkualitas', desc: 'Rumah nyaman dengan infrastruktur yang memadai.', icon: 'home' },
+                                      { title: 'Harga Terjangkau', desc: 'Solusi hunian untuk keluarga Indonesia.', icon: 'shield' },
+                                      { title: 'Lokasi Strategis', desc: 'Mudah diakses dan dekat dengan fasilitas umum.', icon: 'map' },
+                                      { title: 'Lingkungan Asri', desc: 'Hidup lebih sehat di lingkungan yang hijau.', icon: 'leaf' },
+                                    ];
+                                currentFeatures[fIdx].title = e.target.value;
+                                setContent({
+                                  ...content,
+                                  about: { ...content.about, features: currentFeatures },
+                                });
+                              }}
+                              className="w-full px-3 py-1.5 rounded-lg bg-[#0E1013] border border-white/10 text-xs text-white"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-[11px] font-medium text-gray-400 mb-1">
+                              Deskripsi Singkat
+                            </label>
+                            <textarea
+                              rows={2}
+                              value={feature.desc}
+                              onChange={(e) => {
+                                const currentFeatures = Array.isArray(content.about.features)
+                                  ? [...content.about.features]
+                                  : [
+                                      { title: 'Hunian Berkualitas', desc: 'Rumah nyaman dengan infrastruktur yang memadai.', icon: 'home' },
+                                      { title: 'Harga Terjangkau', desc: 'Solusi hunian untuk keluarga Indonesia.', icon: 'shield' },
+                                      { title: 'Lokasi Strategis', desc: 'Mudah diakses dan dekat dengan fasilitas umum.', icon: 'map' },
+                                      { title: 'Lingkungan Asri', desc: 'Hidup lebih sehat di lingkungan yang hijau.', icon: 'leaf' },
+                                    ];
+                                currentFeatures[fIdx].desc = e.target.value;
+                                setContent({
+                                  ...content,
+                                  about: { ...content.about, features: currentFeatures },
+                                });
+                              }}
+                              className="w-full px-3 py-1.5 rounded-lg bg-[#0E1013] border border-white/10 text-xs text-white"
+                            />
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB: BUYING PROCESS STEPS */}
+            {activeTab === 'buying-process' && (
+              <div className="space-y-6">
+                <div className="border-b border-white/10 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
+                      <FileText className="w-5 h-5 text-gold-400" />
+                      Tahapan Pembelian Rumah Subsidi (Panduan Konsumen)
+                    </h2>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Kelola 4 langkah alur pengajuan dari pemilihan unit/kavling hingga serah terima kunci.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const currentSteps = Array.isArray(content.buyingProcess?.steps) ? content.buyingProcess.steps : [];
+                      const stepNumber = String(currentSteps.length + 1).padStart(2, '0');
+                      const newStep: PurchaseStep = {
+                        step: stepNumber,
+                        title: 'Langkah Pembelian Baru',
+                        desc: 'Deskripsi penjelasan tahapan pengajuan yang perlu dipersiapkan oleh konsumen.',
+                        highlight: 'Didampingi tim admin resmi',
+                      };
+                      setContent({
+                        ...content,
+                        buyingProcess: {
+                          badge: content.buyingProcess?.badge || 'PANDUAN KONSUMEN',
+                          title: content.buyingProcess?.title || 'Tahapan Pembelian Rumah Subsidi',
+                          subtitle: content.buyingProcess?.subtitle || 'Alur pengajuan yang transparan dan terstruktur bagi masyarakat, dari pemilihan kavling hingga serah terima kunci.',
+                          steps: [...currentSteps, newStep],
+                        },
+                      });
+                    }}
+                    className="px-4 py-2 rounded-xl bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-bold flex items-center gap-2 transition-all self-start sm:self-auto"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Tambah Langkah Baru</span>
+                  </button>
+                </div>
+
+                {/* Header Information */}
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#0E1013] border border-white/10 space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                        Label Badge Bagian
+                      </label>
+                      <input
+                        type="text"
+                        value={content.buyingProcess?.badge || 'PANDUAN KONSUMEN'}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            buyingProcess: {
+                              badge: e.target.value,
+                              title: content.buyingProcess?.title || 'Tahapan Pembelian Rumah Subsidi',
+                              subtitle: content.buyingProcess?.subtitle || '',
+                              steps: content.buyingProcess?.steps || [],
+                            },
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                        Judul Utama Bagian
+                      </label>
+                      <input
+                        type="text"
+                        value={content.buyingProcess?.title || 'Tahapan Pembelian Rumah Subsidi'}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            buyingProcess: {
+                              badge: content.buyingProcess?.badge || 'PANDUAN KONSUMEN',
+                              title: e.target.value,
+                              subtitle: content.buyingProcess?.subtitle || '',
+                              steps: content.buyingProcess?.steps || [],
+                            },
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                      Deskripsi Subtitle
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={content.buyingProcess?.subtitle || ''}
+                      onChange={(e) =>
+                        setContent({
+                          ...content,
+                          buyingProcess: {
+                            badge: content.buyingProcess?.badge || 'PANDUAN KONSUMEN',
+                            title: content.buyingProcess?.title || 'Tahapan Pembelian Rumah Subsidi',
+                            subtitle: e.target.value,
+                            steps: content.buyingProcess?.steps || [],
+                          },
+                        })
+                      }
+                      className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                    />
+                  </div>
+                </div>
+
+                {/* Steps Cards */}
+                <div className="space-y-4">
+                  {(content.buyingProcess?.steps || []).map((stepItem, stepIdx) => (
+                    <div
+                      key={stepIdx}
+                      className="p-4 sm:p-5 rounded-2xl bg-[#0E1013] border border-white/10 hover:border-gold-500/30 transition-all space-y-3"
+                    >
+                      <div className="flex items-center justify-between gap-3 border-b border-white/5 pb-2.5">
+                        <div className="flex items-center gap-2.5">
+                          <input
+                            type="text"
+                            value={stepItem.step}
+                            onChange={(e) => {
+                              const newSteps = [...(content.buyingProcess?.steps || [])];
+                              newSteps[stepIdx].step = e.target.value;
+                              setContent({
+                                ...content,
+                                buyingProcess: { ...content.buyingProcess!, steps: newSteps },
+                              });
+                            }}
+                            className="w-14 px-2.5 py-1 rounded-lg bg-[#16191E] border border-white/10 text-center font-mono font-bold text-gold-400 text-xs"
+                            placeholder="01"
+                          />
+                          <input
+                            type="text"
+                            value={stepItem.title}
+                            onChange={(e) => {
+                              const newSteps = [...(content.buyingProcess?.steps || [])];
+                              newSteps[stepIdx].title = e.target.value;
+                              setContent({
+                                ...content,
+                                buyingProcess: { ...content.buyingProcess!, steps: newSteps },
+                              });
+                            }}
+                            className="flex-1 px-3 py-1 rounded-lg bg-[#16191E] border border-white/10 text-white font-semibold text-xs"
+                            placeholder="Judul Tahapan"
+                          />
+                        </div>
+
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            disabled={stepIdx === 0}
+                            onClick={() => {
+                              const newSteps = [...(content.buyingProcess?.steps || [])];
+                              const temp = newSteps[stepIdx];
+                              newSteps[stepIdx] = newSteps[stepIdx - 1];
+                              newSteps[stepIdx - 1] = temp;
+                              setContent({
+                                ...content,
+                                buyingProcess: { ...content.buyingProcess!, steps: newSteps },
+                              });
+                            }}
+                            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white disabled:opacity-30"
+                            title="Geser Naik"
+                          >
+                            <ArrowUp className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            disabled={stepIdx === (content.buyingProcess?.steps?.length || 1) - 1}
+                            onClick={() => {
+                              const newSteps = [...(content.buyingProcess?.steps || [])];
+                              const temp = newSteps[stepIdx];
+                              newSteps[stepIdx] = newSteps[stepIdx + 1];
+                              newSteps[stepIdx + 1] = temp;
+                              setContent({
+                                ...content,
+                                buyingProcess: { ...content.buyingProcess!, steps: newSteps },
+                              });
+                            }}
+                            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white disabled:opacity-30"
+                            title="Geser Turun"
+                          >
+                            <ArrowDown className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (window.confirm(`Hapus langkah "${stepItem.title}"?`)) {
+                                const newSteps = (content.buyingProcess?.steps || []).filter((_, i) => i !== stepIdx);
+                                setContent({
+                                  ...content,
+                                  buyingProcess: { ...content.buyingProcess!, steps: newSteps },
+                                });
+                                setSaveStatus({
+                                  type: 'success',
+                                  message: 'Langkah tahapan berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan perubahan secara permanen.',
+                                });
+                              }
+                            }}
+                            className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 ml-1"
+                            title="Hapus Langkah"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-start">
+                        <div className="sm:col-span-8">
+                          <label className="block text-[11px] font-medium text-gray-400 mb-1">
+                            Deskripsi Tahapan
+                          </label>
+                          <textarea
+                            rows={2}
+                            value={stepItem.desc}
+                            onChange={(e) => {
+                              const newSteps = [...(content.buyingProcess?.steps || [])];
+                              newSteps[stepIdx].desc = e.target.value;
+                              setContent({
+                                ...content,
+                                buyingProcess: { ...content.buyingProcess!, steps: newSteps },
+                              });
+                            }}
+                            className="w-full px-3 py-1.5 rounded-lg bg-[#16191E] border border-white/10 text-xs text-white"
+                          />
+                        </div>
+                        <div className="sm:col-span-4">
+                          <label className="block text-[11px] font-medium text-gray-400 mb-1">
+                            Pita Highlight Bawah
+                          </label>
+                          <input
+                            type="text"
+                            value={stepItem.highlight}
+                            onChange={(e) => {
+                              const newSteps = [...(content.buyingProcess?.steps || [])];
+                              newSteps[stepIdx].highlight = e.target.value;
+                              setContent({
+                                ...content,
+                                buyingProcess: { ...content.buyingProcess!, steps: newSteps },
+                              });
+                            }}
+                            placeholder="Contoh: Sertifikat Hak Milik (SHM)"
+                            className="w-full px-3 py-1.5 rounded-lg bg-[#16191E] border border-white/10 text-xs text-gold-300"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* TAB: KPR SIMULATION CONFIG */}
+            {activeTab === 'kpr-simulation' && (
+              <div className="space-y-6">
+                <div className="border-b border-white/10 pb-4">
+                  <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
+                    <Calculator className="w-5 h-5 text-gold-400" />
+                    Simulasi Angsuran KPR & Program Subsidi FLPP
+                  </h2>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Kelola parameter kalkulator simulasi angsuran di beranda beserta daftar poin keuntungan program FLPP 5%.
+                  </p>
+                </div>
+
+                {/* Headings */}
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#0E1013] border border-white/10 space-y-4">
+                  <h3 className="text-sm font-bold text-gold-400 uppercase tracking-wider">
+                    Judul & Teks Bagian
+                  </h3>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                        Label Badge Bagian
+                      </label>
+                      <input
+                        type="text"
+                        value={content.kprSimulation?.badge || 'KALKULATOR FINANSIAL'}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            kprSimulation: {
+                              ...content.kprSimulation!,
+                              badge: e.target.value,
+                            },
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                        Judul Utama
+                      </label>
+                      <input
+                        type="text"
+                        value={content.kprSimulation?.title || 'Simulasi Angsuran KPR Bersubsidi'}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            kprSimulation: {
+                              ...content.kprSimulation!,
+                              title: e.target.value,
+                            },
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                      Deskripsi Subtitle
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={content.kprSimulation?.subtitle || ''}
+                      onChange={(e) =>
+                        setContent({
+                          ...content,
+                          kprSimulation: {
+                            ...content.kprSimulation!,
+                            subtitle: e.target.value,
+                          },
+                        })
+                      }
+                      className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs"
+                    />
+                  </div>
+                </div>
+
+                {/* Parameter Kalkulator */}
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#0E1013] border border-white/10 space-y-4">
+                  <h3 className="text-sm font-bold text-gold-400 uppercase tracking-wider">
+                    Nilai Default & Parameter Simulasi FLPP
+                  </h3>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                        Harga Rumah Default (Rp)
+                      </label>
+                      <input
+                        type="number"
+                        value={content.kprSimulation?.defaultPrice || 166000000}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            kprSimulation: {
+                              ...content.kprSimulation!,
+                              defaultPrice: Number(e.target.value),
+                            },
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                        Uang Muka (DP) Default (Rp)
+                      </label>
+                      <input
+                        type="number"
+                        value={content.kprSimulation?.defaultDp || 2000000}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            kprSimulation: {
+                              ...content.kprSimulation!,
+                              defaultDp: Number(e.target.value),
+                            },
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                        Tenor Default (Tahun)
+                      </label>
+                      <input
+                        type="number"
+                        value={content.kprSimulation?.defaultTenor || 20}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            kprSimulation: {
+                              ...content.kprSimulation!,
+                              defaultTenor: Number(e.target.value),
+                            },
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-white text-xs font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                        Suku Bunga Tetap Per Tahun (Desimal, misal 0.05 = 5%)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.005"
+                        value={content.kprSimulation?.annualInterestRate || 0.05}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            kprSimulation: {
+                              ...content.kprSimulation!,
+                              annualInterestRate: Number(e.target.value),
+                            },
+                          })
+                        }
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#16191E] border border-white/10 text-gold-300 text-xs font-mono font-bold"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Benefits List */}
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#0E1013] border border-white/10 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-gold-400 uppercase tracking-wider">
+                      Daftar Keuntungan / Benefit Program KPR Subsidi
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const currentBenefits = Array.isArray(content.kprSimulation?.benefits)
+                          ? content.kprSimulation.benefits
+                          : [];
+                        setContent({
+                          ...content,
+                          kprSimulation: {
+                            ...content.kprSimulation!,
+                            benefits: [...currentBenefits, 'Keuntungan baru program KPR bersubsidi'],
+                          },
+                        });
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-semibold flex items-center gap-1.5"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Tambah Poin</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-2.5 pt-1">
+                    {(content.kprSimulation?.benefits || []).map((benefit, bIdx) => (
+                      <div key={bIdx} className="flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <input
+                          type="text"
+                          value={benefit}
+                          onChange={(e) => {
+                            const newBenefits = [...(content.kprSimulation?.benefits || [])];
+                            newBenefits[bIdx] = e.target.value;
+                            setContent({
+                              ...content,
+                              kprSimulation: {
+                                ...content.kprSimulation!,
+                                benefits: newBenefits,
+                              },
+                            });
+                          }}
+                          className="flex-1 px-3 py-2 rounded-xl bg-[#16191E] border border-white/10 text-xs text-white"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newBenefits = (content.kprSimulation?.benefits || []).filter((_, i) => i !== bIdx);
+                            setContent({
+                              ...content,
+                              kprSimulation: {
+                                ...content.kprSimulation!,
+                                benefits: newBenefits,
+                              },
+                            });
+                            setSaveStatus({
+                              type: 'success',
+                              message: 'Poin keuntungan KPR berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan perubahan secara permanen.',
+                            });
+                          }}
+                          className="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* TAB: BRANDING & IDENTITAS */}
             {activeTab === 'branding' && (
               <div className="space-y-6">
@@ -1039,6 +2444,10 @@ export default function AdminDashboard() {
                                   ...content,
                                   hero: { ...content.hero, slides: [] },
                                 });
+                                setSaveStatus({
+                                  type: 'success',
+                                  message: 'Semua foto slideshow hero dikosongkan! Klik "Simpan ke SQL" di kanan atas untuk menyimpan secara permanen.',
+                                });
                               }
                             }}
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-semibold transition-all"
@@ -1091,6 +2500,10 @@ export default function AdminDashboard() {
                                 setContent({
                                   ...content,
                                   hero: { ...content.hero, slides: newSlides },
+                                });
+                                setSaveStatus({
+                                  type: 'success',
+                                  message: 'Slide foto hero berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan secara permanen.',
                                 });
                               }}
                               className="text-red-400 hover:text-red-300 p-1 rounded hover:bg-red-500/10 transition-colors text-xs flex items-center gap-1"
@@ -1571,6 +2984,10 @@ export default function AdminDashboard() {
                                     ...content,
                                     leadership: { ...content.leadership, members: newMembers },
                                   });
+                                  setSaveStatus({
+                                    type: 'success',
+                                    message: 'Data pengurus berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan secara permanen.',
+                                  });
                                 }
                               }}
                               className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs flex items-center gap-1 transition-colors border border-red-500/20 ml-1"
@@ -1888,6 +3305,43 @@ export default function AdminDashboard() {
                       className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
                     />
                   </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-white/10">
+                    <div>
+                      <label className="block text-xs font-medium text-gold-400 mb-1">
+                        Status Hak Atas Tanah & Sertifikat
+                      </label>
+                      <input
+                        type="text"
+                        value={content.legal.landStatus || 'Sertifikat Hak Milik (SHM)'}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            legal: { ...content.legal, landStatus: e.target.value },
+                          })
+                        }
+                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm font-semibold"
+                        placeholder="Contoh: Sertifikat Hak Milik (SHM)"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-300 mb-1">
+                        Keterangan Legalitas Lahan
+                      </label>
+                      <input
+                        type="text"
+                        value={content.legal.landStatusDetail || 'Hak kepemilikan mutlak dan sah atas nama pembeli'}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            legal: { ...content.legal, landStatusDetail: e.target.value },
+                          })
+                        }
+                        className="w-full px-4 py-2.5 rounded-xl bg-[#0E1013] border border-white/10 text-white text-sm"
+                        placeholder="Contoh: Hak kepemilikan mutlak dan sah atas nama pembeli"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -2065,6 +3519,10 @@ export default function AdminDashboard() {
                                   setContent({
                                     ...content,
                                     activities: { ...content.activities, items: newItems },
+                                  });
+                                  setSaveStatus({
+                                    type: 'success',
+                                    message: 'Kegiatan lapangan berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan secara permanen.',
                                   });
                                 }
                               }}
@@ -2597,6 +4055,10 @@ export default function AdminDashboard() {
                                         slides: [],
                                       },
                                     });
+                                    setSaveStatus({
+                                      type: 'success',
+                                      message: 'Semua foto galeri proyek dikosongkan! Klik "Simpan ke SQL" di kanan atas untuk menyimpan secara permanen.',
+                                    });
                                   }
                                 }}
                                 className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all"
@@ -2689,6 +4151,10 @@ export default function AdminDashboard() {
                                       setContent({
                                         ...content,
                                         project: { ...content.project, slides },
+                                      });
+                                      setSaveStatus({
+                                        type: 'success',
+                                        message: 'Foto slide proyek berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan secara permanen.',
                                       });
                                     }}
                                     className="p-1 rounded hover:bg-red-500/20 text-red-400 text-xs ml-1"
@@ -2856,6 +4322,10 @@ export default function AdminDashboard() {
                               setContent({
                                 ...content,
                                 project: { ...content.project, specs: newSpecs },
+                              });
+                              setSaveStatus({
+                                type: 'success',
+                                message: 'Spesifikasi unit berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan secara permanen.',
                               });
                             }}
                             className="p-2 text-rose-400 hover:bg-rose-500/10 rounded-lg"
@@ -3062,24 +4532,43 @@ export default function AdminDashboard() {
             {/* TAB: INQUIRIES */}
             {activeTab === 'inquiries' && (
               <div className="space-y-6">
-                <div className="border-b border-white/10 pb-4 flex items-center justify-between">
+                <div className="border-b border-white/10 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
                     <h2 className="font-syne text-xl font-bold text-white flex items-center gap-2">
                       <Inbox className="w-5 h-5 text-gold-400" />
                       Pesan Masuk dari Formulir Website
+                      {inquiries.length > 0 && (
+                        <span className="text-xs px-2.5 py-0.5 rounded-full bg-gold-500/20 text-gold-300 border border-gold-500/30 font-sans font-semibold">
+                          {inquiries.length} Pesan
+                        </span>
+                      )}
                     </h2>
                     <p className="text-xs text-gray-400 mt-1">
                       Data kontak dan pertanyaan yang dikirimkan oleh pengunjung melalui formulir minat website.
                     </p>
                   </div>
-                  <button
-                    onClick={fetchInquiries}
-                    disabled={inquiriesLoading}
-                    className="p-2 rounded-lg bg-[#0E1013] border border-white/10 text-gray-300 hover:text-white text-xs flex items-center gap-1.5"
-                  >
-                    <RefreshCw className={`w-3.5 h-3.5 ${inquiriesLoading ? 'animate-spin' : ''}`} />
-                    Segarkan
-                  </button>
+                  <div className="flex items-center gap-2 self-start sm:self-auto">
+                    {inquiries.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={handleClearAllInquiries}
+                        className="p-2 px-3 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs flex items-center gap-1.5 transition-colors"
+                        title="Kosongkan Semua Pesan Masuk"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Kosongkan Semua</span>
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={fetchInquiries}
+                      disabled={inquiriesLoading}
+                      className="p-2 px-3 rounded-lg bg-[#0E1013] border border-white/10 text-gray-300 hover:text-white text-xs flex items-center gap-1.5 transition-colors"
+                    >
+                      <RefreshCw className={`w-3.5 h-3.5 ${inquiriesLoading ? 'animate-spin' : ''}`} />
+                      <span>Segarkan</span>
+                    </button>
+                  </div>
                 </div>
 
                 {inquiries.length === 0 ? (
@@ -3093,13 +4582,24 @@ export default function AdminDashboard() {
                 ) : (
                   <div className="space-y-3">
                     {inquiries.map((inq) => (
-                      <div key={inq.id} className="p-4 rounded-xl bg-[#0E1013] border border-white/10 space-y-2">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                          <div className="font-syne font-bold text-white text-sm">
-                            {inq.name}
+                      <div key={inq.id} className="p-4 rounded-xl bg-[#0E1013] border border-white/10 space-y-2 relative group hover:border-gold-500/30 transition-all">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-white/5 pb-2">
+                          <div className="font-syne font-bold text-white text-sm flex items-center gap-2">
+                            <span>{inq.name}</span>
                           </div>
-                          <div className="text-[11px] text-gray-400">
-                            {new Date(inq.created_at).toLocaleString('id-ID')}
+                          <div className="flex items-center gap-3">
+                            <span className="text-[11px] text-gray-400">
+                              {new Date(inq.created_at).toLocaleString('id-ID')}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteInquiry(inq.id)}
+                              className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs flex items-center gap-1 transition-colors"
+                              title="Hapus pesan ini permanen"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                              <span className="hidden sm:inline">Hapus</span>
+                            </button>
                           </div>
                         </div>
                         <div className="flex flex-wrap gap-3 text-xs text-gold-300">

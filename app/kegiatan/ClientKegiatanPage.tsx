@@ -10,18 +10,10 @@ import { SiteContent, initialSiteContent, getYouTubeEmbedUrl } from '@/lib/initi
 import { 
   HardHat, 
   Maximize2, 
-  CheckCircle2, 
-  MapPin, 
-  Calendar, 
   X, 
-  Phone, 
   ArrowRight, 
-  ShieldCheck, 
   Check,
-  ImageIcon,
-  Play,
-  Video,
-  Film
+  Play
 } from 'lucide-react';
 
 export default function ClientKegiatanPage({ content }: { content: SiteContent }) {

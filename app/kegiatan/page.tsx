@@ -12,10 +12,10 @@ export const metadata: Metadata = {
   description: 'Dokumentasi tahapan pembangunan fisik perumahan subsidi Puri Gunung Langgar oleh PT. Terbang Bersama Kawan di Desa Sabah Balau, Tanjung Bintang, Lampung Selatan.',
 };
 
-export default function KegiatanPage() {
+export default async function KegiatanPage() {
   let content = initialSiteContent;
   try {
-    const fetched = getSiteContent();
+    const fetched = await getSiteContent();
     if (fetched) content = fetched;
   } catch (err) {
     console.error('Failed to getSiteContent on KegiatanPage:', err);

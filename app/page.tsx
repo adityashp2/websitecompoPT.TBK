@@ -4,7 +4,7 @@ import ClientLandingPage from './components/ClientLandingPage';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default function HomePage() {
-  const content = getSiteContent();
+export default async function HomePage() {
+  const content = await getSiteContent();
   return <ClientLandingPage initialContent={content} />;
 }

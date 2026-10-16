@@ -10,16 +10,12 @@ import {
   Home, 
   MapPin, 
   CheckCircle2, 
-  Sparkles, 
   Calculator, 
   Phone, 
   ShieldCheck, 
   HardHat, 
-  Maximize2,
-  FileText,
-  Compass,
-  ArrowRight,
-  ExternalLink,
+  Compass, 
+  ArrowRight, 
   Image as ImageIcon
 } from 'lucide-react';
 
@@ -31,8 +27,8 @@ export const metadata: Metadata = {
   description: 'Informasi lengkap perumahan subsidi Puri Gunung Langgar di Desa Sabah Balau, Tanjung Bintang, Lampung Selatan. Spesifikasi unit tipe 36/72, fasilitas, lokasi strategis, dan KPR FLPP.',
 };
 
-export default function ProyekPage() {
-  const content = getSiteContent();
+export default async function ProyekPage() {
+  const content = await getSiteContent();
 
   const slides = (content.project?.slides || []).filter(s => s && s.image && s.image.trim() !== '');
   const ytEmbedUrl = getYouTubeEmbedUrl(content.project?.videoUrl);

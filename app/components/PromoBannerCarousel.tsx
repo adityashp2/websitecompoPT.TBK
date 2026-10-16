@@ -4,73 +4,16 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, ArrowRight, MessageCircle } from 'lucide-react';
 
-export interface BannerSlide {
-  id: string;
-  eyebrow: string;
-  headlineFirstLine: string;
-  headlineHighlight: string;
-  supportingText: string;
-  primaryCtaText: string;
-  primaryCtaHref: string;
-  secondaryCtaText: string;
-  secondaryCtaHref: string;
-  isSecondaryExternal?: boolean;
-  image: string;
-  imageAlt: string;
-}
+import { BannerSlide, defaultBannerSlides } from '@/lib/initialData';
+export type { BannerSlide };
 
 interface PromoBannerCarouselProps {
+  slides?: BannerSlide[];
   whatsappUrl?: string;
 }
 
-export default function PromoBannerCarousel({ whatsappUrl }: PromoBannerCarouselProps) {
-  const defaultWa = whatsappUrl || 'https://wa.me/6281278901234';
-
-  const slides: BannerSlide[] = [
-    {
-      id: 'slide-puri-gunung-langgar',
-      eyebrow: 'Puri Gunung Langgar • Proyek Berjalan',
-      headlineFirstLine: 'Hunian bersubsidi yang layak,',
-      headlineHighlight: 'dibangun dari Lampung.',
-      supportingText:
-        'PT. Terbang Bersama Kawan adalah pengembang perumahan di Bandar Lampung. Saat ini kami sedang membangun Puri Gunung Langgar di Tanjung Bintang, Lampung Selatan.',
-      primaryCtaText: 'Lihat Proyek',
-      primaryCtaHref: '/proyek',
-      secondaryCtaText: 'Hubungi Kami',
-      secondaryCtaHref: '/kontak',
-      image: '/assets/hero-marketing.jpg',
-      imageAlt: 'Perumahan Puri Gunung Langgar PT. Terbang Bersama Kawan',
-    },
-    {
-      id: 'slide-kpr-flpp',
-      eyebrow: 'KPR Bersubsidi FLPP • Bunga Tetap 5%',
-      headlineFirstLine: 'Cicilan ringan mulai 1 jutaan,',
-      headlineHighlight: 'proses mudah sampai serah kunci.',
-      supportingText:
-        'Miliki rumah impian subsidi pemerintah dengan bunga tetap 5% hingga 20 tahun, bebas PPN, dan pendampingan berkas lengkap hingga akad kredit.',
-      primaryCtaText: 'Simulasi KPR',
-      primaryCtaHref: '/simulasi-kpr',
-      secondaryCtaText: 'Konsultasi WhatsApp',
-      secondaryCtaHref: `${defaultWa}?text=${encodeURIComponent('Halo PT. TBK, saya ingin berkonsultasi mengenai program KPR FLPP Puri Gunung Langgar.')}`,
-      isSecondaryExternal: true,
-      image: '/assets/project-workspace.jpg',
-      imageAlt: 'Master Plan Kawasan Perumahan Puri Gunung Langgar',
-    },
-    {
-      id: 'slide-legalitas-lokasi',
-      eyebrow: 'Legalitas SHM Pasti • Tanjung Bintang',
-      headlineFirstLine: 'Kawasan asri terencana dengan,',
-      headlineHighlight: 'kepastian hukum nyata.',
-      supportingText:
-        'Lokasi strategis di Sabah Balau, dekat fasilitas umum, jalan lingkungan paving lebar, jaringan listrik PLN, dan instalasi air bersih siap huni.',
-      primaryCtaText: 'Detail Legalitas',
-      primaryCtaHref: '/legalitas',
-      secondaryCtaText: 'Survei Lokasi',
-      secondaryCtaHref: '/kontak',
-      image: '/assets/service-residential.jpg',
-      imageAlt: 'Pekerjaan Pembangunan Fisik Unit Rumah Subsidi',
-    },
-  ];
+export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerCarouselProps) {
+  const slides: BannerSlide[] = Array.isArray(propSlides) && propSlides.length > 0 ? propSlides : defaultBannerSlides;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -352,7 +295,7 @@ export default function PromoBannerCarousel({ whatsappUrl }: PromoBannerCarousel
         onTouchEnd={handleTouchEnd}
       >
         {/* Full-width banner container with calibrated promotional aspect ratio */}
-        <div className="relative w-full h-[290px] sm:h-[330px] md:h-[370px] overflow-hidden">
+        <div className="relative w-full min-h-[330px] sm:h-[360px] md:h-[390px] overflow-hidden">
           {slides.map((slide, idx) => {
             const isActive = idx === currentIndex;
             return (
@@ -388,37 +331,46 @@ export default function PromoBannerCarousel({ whatsappUrl }: PromoBannerCarousel
                   aria-hidden="true"
                 />
 
-                {/* Coherent Promotional Content on Banner */}
-                <div className="relative z-10 w-full h-full flex flex-col justify-center px-6 sm:px-10 pr-12">
+                {/* Coherent Promotional Content on Banner with safe side padding to clear arrows */}
+                <div className="relative z-10 w-full h-full flex flex-col justify-center px-10 sm:px-14 py-4">
                   {/* Status Badge */}
                   <div className="mb-2">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#102D52]/90 border border-white/20 text-[#FF9D2E] text-[11px] font-medium tracking-wide">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#102D52]/90 border border-white/20 text-[#FF9D2E] text-[10.5px] sm:text-[11px] font-medium tracking-wide">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#FF9D2E] animate-pulse" />
                       {slide.eyebrow.split('•')[0].trim()}
                     </span>
                   </div>
 
                   {/* Punchy Promotional Headline with DM Serif Display */}
-                  <h1 className="font-serif font-normal text-[clamp(2.1rem,7vw,2.5rem)] leading-[1.14] text-white tracking-tight max-w-[320px] sm:max-w-md">
+                  <h1 className="font-serif font-normal text-[clamp(1.35rem,5.2vw,1.85rem)] sm:text-[clamp(1.75rem,5vw,2.2rem)] leading-[1.2] text-white tracking-tight max-w-[340px] sm:max-w-md">
                     <span>{slide.headlineFirstLine}</span>{' '}
                     <span className="text-[#FF9D2E] font-serif">{slide.headlineHighlight}</span>
                   </h1>
 
-                  {/* Compact Benefit Message in DM Sans */}
-                  <p className="font-sans text-[13.5px] sm:text-[15px] text-white/85 line-clamp-1 sm:line-clamp-2 mt-1.5 max-w-sm leading-normal">
+                  {/* Compact Benefit Message in DM Sans (2 lines readable) */}
+                  <p className="font-sans text-[12px] sm:text-[14px] text-white/90 line-clamp-2 mt-1.5 max-w-xs sm:max-w-sm leading-snug">
                     {slide.supportingText}
                   </p>
 
-                  {/* Compact CTA Button in Natural Case */}
-                  <div className="mt-3.5 flex items-center gap-2">
+                  {/* Responsive CTA Buttons */}
+                  <div className="mt-3.5 flex flex-wrap items-center gap-2">
                     <Link
                       href={slide.primaryCtaHref}
                       prefetch={false}
-                      className="h-[36px] px-5 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-[12px] font-semibold tracking-normal inline-flex items-center gap-1.5 shadow-md active:scale-95"
+                      className="h-[34px] sm:h-[36px] px-4 sm:px-5 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-[11.5px] sm:text-[12px] font-bold tracking-normal inline-flex items-center gap-1.5 shadow-md active:scale-95 shrink-0"
                     >
                       <span>{slide.primaryCtaText}</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
+                    {slide.secondaryCtaText && (
+                      <Link
+                        href={slide.secondaryCtaHref}
+                        prefetch={false}
+                        className="h-[34px] sm:h-[36px] px-3.5 sm:px-4 rounded-full bg-white/15 hover:bg-white/25 text-white border border-white/25 text-[11px] sm:text-[12px] font-medium tracking-normal inline-flex items-center gap-1.5 shadow-sm active:scale-95 shrink-0"
+                      >
+                        <span>{slide.secondaryCtaText}</span>
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>

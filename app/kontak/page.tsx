@@ -8,14 +8,8 @@ import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import { initialSiteContent, SiteContent } from '@/lib/initialData';
 import { 
   Phone, 
-  MapPin, 
-  Mail, 
-  Clock, 
-  Send, 
   CheckCircle2, 
-  ExternalLink,
-  MessageCircle,
-  HelpCircle,
+  MessageCircle, 
   ArrowRight
 } from 'lucide-react';
 
@@ -112,7 +106,7 @@ export default function KontakPage() {
           <div className="container-editorial">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
               {/* Left Contact Information */}
-              <div className="lg:col-span-5 bg-[#F4F7FC] p-6 sm:p-8 rounded-2xl border border-[#DCE7F5] shadow-sm space-y-8">
+              <div className="lg:col-span-5 bg-[#F4F7FC] p-4 sm:p-7 lg:p-8 rounded-2xl border border-[#DCE7F5] shadow-sm space-y-6 sm:space-y-8">
                 <div>
                   <div className="flex items-center gap-2 text-[#FF9D2E] font-semibold text-xs tracking-wider mb-2">
                     <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
@@ -189,7 +183,7 @@ export default function KontakPage() {
               </div>
 
               {/* Right Interactive Form */}
-              <div className="lg:col-span-7 bg-[#F4F7FC] p-6 sm:p-9 rounded-2xl border border-[#DCE7F5] shadow-sm">
+              <div className="lg:col-span-7 bg-[#F4F7FC] p-4 sm:p-7 lg:p-9 rounded-2xl border border-[#DCE7F5] shadow-sm">
                 <div className="mb-6">
                   <div className="flex items-center gap-2 text-[#FF9D2E] font-semibold text-xs tracking-wider mb-2">
                     <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />

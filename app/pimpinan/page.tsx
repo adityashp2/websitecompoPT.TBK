@@ -8,12 +8,10 @@ import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import { 
   Users, 
   ShieldCheck, 
-  Award, 
   Building2, 
   CheckCircle2, 
   ArrowRight,
   Briefcase,
-  Layers,
   Landmark,
   FileCheck2,
   HardHat,
@@ -29,8 +27,8 @@ export const metadata: Metadata = {
   description: 'Struktur dewan komisaris, direksi utama, dan jajaran manajemen operasional resmi PT. Terbang Bersama Kawan. Berintegritas membangun kawasan perumahan Puri Gunung Langgar di Lampung.',
 };
 
-export default function PimpinanPage() {
-  const content = getSiteContent();
+export default async function PimpinanPage() {
+  const content = await getSiteContent();
   const members = content.leadership?.members || [];
 
   const primaryLeaders = members.filter(
@@ -120,15 +118,15 @@ export default function PimpinanPage() {
                       </div>
                     )}
 
-                    {/* Role Badge */}
-                    <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md border border-[#FF9D2E]/60 text-[#FF9D2E] text-[11px] font-medium tracking-wide">
-                      <span>{member.role}</span>
-                    </div>
-
-                    {/* Official SK Status Badge */}
-                    <div className="absolute top-4 right-4 z-10 px-3 py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md text-[#15966A] text-[11px] font-medium border border-[#15966A]/40 flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#15966A]" />
-                      <span>SK Kemenkumham</span>
+                    {/* Responsive Badges Header (Role & Legal Verified) */}
+                    <div className="absolute top-3 sm:top-4 inset-x-3 sm:inset-x-4 z-10 flex flex-wrap items-center justify-between gap-1.5 pointer-events-none">
+                      <div className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md border border-[#FF9D2E]/60 text-[#FF9D2E] text-[10px] sm:text-[11px] font-medium tracking-wide shadow-sm pointer-events-auto">
+                        <span>{member.role}</span>
+                      </div>
+                      <div className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md text-[#15966A] text-[10px] sm:text-[11px] font-medium border border-[#15966A]/40 flex items-center gap-1 shadow-sm pointer-events-auto">
+                        <CheckCircle2 className="w-3 h-3 text-[#15966A]" />
+                        <span>SK Kemenkumham</span>
+                      </div>
                     </div>
 
                     {/* Name at bottom of portrait */}

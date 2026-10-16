@@ -1,27 +1,21 @@
 'use client';
 
-import React, { useState, useEffect, useId } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import { SiteContent } from '@/lib/initialData';
 import {
-  FileText,
   ShieldCheck,
   CheckCircle2,
   ArrowRight,
   ExternalLink,
-  Lock,
   Scale,
-  Building2,
   Phone,
-  Compass,
   X,
   FileCheck,
   Info,
-  Calendar,
-  MapPin,
   ChevronDown
 } from 'lucide-react';
 
@@ -307,7 +301,7 @@ export default function ClientLegalitasArchive({ content }: { content: SiteConte
                 </div>
 
                 <div className="space-y-3">
-                  <h1 className="font-serif font-normal text-6xl sm:text-7xl lg:text-[92px] leading-[0.92] text-[#0B2D50] tracking-tight">
+                  <h1 className="font-serif font-normal text-4xl min-[360px]:text-5xl sm:text-7xl lg:text-[92px] leading-[0.95] sm:leading-[0.92] text-[#0B2D50] tracking-tight break-words">
                     LEGALITAS
                   </h1>
                   {/* Subtle animated orange drafting line */}
@@ -417,7 +411,7 @@ export default function ClientLegalitasArchive({ content }: { content: SiteConte
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
               {/* Left Column (7 Columns): Numbered Editorial Document List */}
               <div className="lg:col-span-7 space-y-3">
-                {records.map((rec, index) => {
+                {records.map((rec) => {
                   const isActive = activeRecordId === rec.id;
                   return (
                     <div

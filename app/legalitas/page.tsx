@@ -16,10 +16,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function LegalitasPage() {
+export default async function LegalitasPage() {
   let content = initialSiteContent;
   try {
-    const fetched = getSiteContent();
+    const fetched = await getSiteContent();
     if (fetched) content = fetched;
   } catch (err) {
     console.error('Failed to getSiteContent on LegalitasPage:', err);

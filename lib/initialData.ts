@@ -1,3 +1,46 @@
+export interface BannerSlide {
+  id: string;
+  eyebrow: string;
+  headlineFirstLine: string;
+  headlineHighlight: string;
+  supportingText: string;
+  primaryCtaText: string;
+  primaryCtaHref: string;
+  secondaryCtaText: string;
+  secondaryCtaHref: string;
+  isSecondaryExternal?: boolean;
+  image: string;
+  imageAlt: string;
+}
+
+export interface FeatureCard {
+  title: string;
+  desc: string;
+  icon?: string;
+}
+
+export interface PurchaseStep {
+  step: string;
+  title: string;
+  desc: string;
+  highlight: string;
+}
+
+export interface KprSimulationConfig {
+  badge: string;
+  title: string;
+  subtitle: string;
+  defaultPrice: number;
+  minPrice: number;
+  maxPrice: number;
+  defaultDp: number;
+  minDp: number;
+  maxDp: number;
+  defaultTenor: number;
+  annualInterestRate: number;
+  benefits: string[];
+}
+
 export interface SiteContent {
   meta: {
     title: string;
@@ -5,6 +48,7 @@ export interface SiteContent {
     tagline: string;
     logo?: string;
   };
+  bannerSlides?: BannerSlide[];
   hero: {
     badge: string;
     heading: string;
@@ -36,11 +80,22 @@ export interface SiteContent {
     commitmentTitle?: string;
     commitmentBody?: string;
     commitmentPoints?: Array<{ title: string; subtitle: string }>;
+    officeImage?: string;
+    officeCaption?: string;
+    homeIntroBadge?: string;
+    homeIntroTitle?: string;
+    homeIntroHighlight?: string;
+    homeIntroText?: string;
+    homeIntroCtaText?: string;
+    homeIntroCtaLink?: string;
+    features?: FeatureCard[];
   };
   leadership: {
     badge: string;
     title: string;
     subtitle: string;
+    operationalTitle?: string;
+    operationalSubtitle?: string;
     members: Array<{
       name: string;
       role: string;
@@ -49,6 +104,13 @@ export interface SiteContent {
       department?: string;
     }>;
   };
+  buyingProcess?: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    steps: PurchaseStep[];
+  };
+  kprSimulation?: KprSimulationConfig;
   legal: {
     badge: string;
     title: string;
@@ -59,6 +121,8 @@ export interface SiteContent {
     skMenkumham: string;
     skDate: string;
     directorAuthority: string;
+    landStatus?: string;
+    landStatusDetail?: string;
   };
   activities: {
     badge: string;
@@ -108,6 +172,54 @@ export interface SiteContent {
   };
 }
 
+export const defaultBannerSlides: BannerSlide[] = [
+  {
+    id: 'slide-puri-gunung-langgar',
+    eyebrow: 'Puri Gunung Langgar • Proyek Berjalan',
+    headlineFirstLine: 'Hunian bersubsidi yang layak,',
+    headlineHighlight: 'dibangun dari Lampung.',
+    supportingText:
+      'PT. Terbang Bersama Kawan adalah pengembang perumahan di Bandar Lampung. Saat ini kami sedang membangun Puri Gunung Langgar di Tanjung Bintang, Lampung Selatan.',
+    primaryCtaText: 'Lihat Proyek',
+    primaryCtaHref: '/proyek',
+    secondaryCtaText: 'Hubungi Kami',
+    secondaryCtaHref: '/kontak',
+    isSecondaryExternal: false,
+    image: '/assets/hero-marketing.jpg',
+    imageAlt: 'Perumahan Puri Gunung Langgar PT. Terbang Bersama Kawan',
+  },
+  {
+    id: 'slide-kpr-flpp',
+    eyebrow: 'KPR Bersubsidi FLPP • Bunga Tetap 5%',
+    headlineFirstLine: 'Cicilan ringan mulai 1 jutaan,',
+    headlineHighlight: 'proses mudah sampai serah kunci.',
+    supportingText:
+      'Miliki rumah impian subsidi pemerintah dengan bunga tetap 5% hingga 20 tahun, bebas PPN, dan pendampingan berkas lengkap hingga akad kredit.',
+    primaryCtaText: 'Simulasi KPR',
+    primaryCtaHref: '/simulasi-kpr',
+    secondaryCtaText: 'Konsultasi WhatsApp',
+    secondaryCtaHref: 'https://wa.me/6281278901234?text=Halo%20PT.%20TBK%2C%20saya%20ingin%20berkonsultasi%20mengenai%20program%20KPR%20FLPP%20Puri%20Gunung%20Langgar.',
+    isSecondaryExternal: true,
+    image: '/assets/project-workspace.jpg',
+    imageAlt: 'Master Plan Kawasan Perumahan Puri Gunung Langgar',
+  },
+  {
+    id: 'slide-legalitas-lokasi',
+    eyebrow: 'Legalitas SHM Pasti • Tanjung Bintang',
+    headlineFirstLine: 'Kawasan asri terencana dengan,',
+    headlineHighlight: 'kepastian hukum nyata.',
+    supportingText:
+      'Lokasi strategis di Sabah Balau, dekat fasilitas umum, jalan lingkungan paving lebar, jaringan listrik PLN, dan instalasi air bersih siap huni.',
+    primaryCtaText: 'Detail Legalitas',
+    primaryCtaHref: '/legalitas',
+    secondaryCtaText: 'Survei Lokasi',
+    secondaryCtaHref: '/kontak',
+    isSecondaryExternal: false,
+    image: '/assets/service-residential.jpg',
+    imageAlt: 'Pekerjaan Pembangunan Fisik Unit Rumah Subsidi',
+  },
+];
+
 export const initialSiteContent: SiteContent = {
   meta: {
     title: "PT. Terbang Bersama Kawan (PT. TBK) | Pengembang Perumahan Berkualitas & Terpercaya",
@@ -115,6 +227,7 @@ export const initialSiteContent: SiteContent = {
     tagline: "Perusahaan properti yang berkualitas dan terpercaya",
     logo: "/assets/logo-tbk.png",
   },
+  bannerSlides: defaultBannerSlides,
   hero: {
     badge: "PENGEMBANG PROPERTI RESMI & TERPERCAYA",
     heading: "Hunian Berkualitas, Aman, Nyaman, dan Terjangkau",
@@ -183,11 +296,43 @@ export const initialSiteContent: SiteContent = {
       { title: "Akses Strategis", subtitle: "Dekat fasilitas umum & transportasi" },
       { title: "Kemitraan Perbankan", subtitle: "Kemudahan fasilitas KPR bersubsidi" }
     ],
+    officeImage: "/assets/project-identity.jpg",
+    officeCaption: "Kantor Pusat - Bandar Lampung, Provinsi Lampung",
+    homeIntroBadge: "Tentang Kami",
+    homeIntroTitle: "Membangun Rumah,",
+    homeIntroHighlight: "Mewujudkan Masa Depan.",
+    homeIntroText: "Kami hadir untuk menyediakan hunian berkualitas dengan harga terjangkau, khususnya bagi keluarga Indonesia. Dengan pengalaman dan komitmen tinggi, PT. Terbang Bersama Kawan terus berinovasi dalam menghadirkan lingkungan yang nyaman, aman, dan berkelanjutan.",
+    homeIntroCtaText: "Kenal Lebih Dekat",
+    homeIntroCtaLink: "/tentang",
+    features: [
+      {
+        title: "Hunian Berkualitas",
+        desc: "Rumah nyaman dengan infrastruktur yang memadai.",
+        icon: "home"
+      },
+      {
+        title: "Harga Terjangkau",
+        desc: "Solusi hunian untuk keluarga Indonesia.",
+        icon: "shield"
+      },
+      {
+        title: "Lokasi Strategis",
+        desc: "Mudah diakses dan dekat dengan fasilitas umum.",
+        icon: "map"
+      },
+      {
+        title: "Lingkungan Asri",
+        desc: "Hidup lebih sehat di lingkungan yang hijau.",
+        icon: "leaf"
+      }
+    ],
   },
   leadership: {
     badge: "STRUKTUR PENGURUS RESMI",
     title: "Dewan Pengurus & Manajemen Perseroan",
     subtitle: "Dikelola oleh pengurus resmi yang tercantum dalam Anggaran Dasar, Akta Pendirian, serta tim manajemen profesional yang berdedikasi membangun kawasan perumahan berkualitas di Lampung.",
+    operationalTitle: "Kepala Divisi & Pelaksana Teknis",
+    operationalSubtitle: "Memastikan kelancaran proses verifikasi KPR FLPP, pengawasan fisik konstruksi, dan sertifikasi tanah secara tepat waktu.",
     members: [
       {
         name: "Riski Apriadi",
@@ -233,6 +378,55 @@ export const initialSiteContent: SiteContent = {
       },
     ],
   },
+  buyingProcess: {
+    badge: "PANDUAN KONSUMEN",
+    title: "Tahapan Pembelian Rumah Subsidi",
+    subtitle: "Alur pengajuan yang transparan dan terstruktur bagi masyarakat, dari pemilihan kavling hingga serah terima kunci.",
+    steps: [
+      {
+        step: "01",
+        title: "Pilih Unit & Konsultasi",
+        desc: "Kunjungi kantor pemasaran atau lokasi proyek untuk memilih nomor kavling yang tersedia dan melakukan konsultasi syarat KPR.",
+        highlight: "Survei kavling langsung"
+      },
+      {
+        step: "02",
+        title: "Pemberkasan Dokumen",
+        desc: "Menyiapkan berkas identitas (KTP, KK, NPWP, Slip Gaji atau Keterangan Usaha) untuk verifikasi kelayakan subsidi FLPP.",
+        highlight: "Didampingi tim admin"
+      },
+      {
+        step: "03",
+        title: "Wawancara & Analisis Bank",
+        desc: "Proses persetujuan pembiayaan oleh perbankan mitra penyalur KPR bersubsidi dengan suku bunga 5% tetap pemerintah.",
+        highlight: "Kepastian plafon kredit"
+      },
+      {
+        step: "04",
+        title: "Akad & Serah Terima",
+        desc: "Penandatanganan akta di hadapan Notaris resmi perseroan dan serah terima kunci unit rumah kepada konsumen.",
+        highlight: "Sertifikat Hak Milik (SHM)"
+      }
+    ]
+  },
+  kprSimulation: {
+    badge: "KALKULATOR FINANSIAL",
+    title: "Simulasi Angsuran KPR Bersubsidi",
+    subtitle: "Hitung perkiraan angsuran bulanan rumah subsidi Puri Gunung Langgar melalui skema FLPP dengan suku bunga tetap 5% p.a.",
+    defaultPrice: 166000000,
+    minPrice: 140000000,
+    maxPrice: 200000000,
+    defaultDp: 2000000,
+    minDp: 1000000,
+    maxDp: 20000000,
+    defaultTenor: 20,
+    annualInterestRate: 0.05,
+    benefits: [
+      "Suku Bunga Tetap (Anuitas) 5% sampai lunas",
+      "Bebas PPN dan premi asuransi bersubsidi",
+      "Pilihan jangka waktu fleksibel hingga 20 tahun"
+    ]
+  },
   legal: {
     badge: "LEGALITAS & TRANSPARANSI PERUSAHAAN",
     title: "Dokumen Resmi Perseroan",
@@ -243,6 +437,8 @@ export const initialSiteContent: SiteContent = {
     skMenkumham: "AHU-0016462.AH.01.01.TAHUN 2021",
     skDate: "19 Maret 2021",
     directorAuthority: "Direktur berhak bertindak untuk dan atas nama Direksi serta mewakili Perseroan",
+    landStatus: "Sertifikat Hak Milik (SHM)",
+    landStatusDetail: "Hak kepemilikan mutlak dan sah atas nama pembeli"
   },
   activities: {
     badge: "KEGIATAN LAPANGAN RESMI",
@@ -291,7 +487,7 @@ export const initialSiteContent: SiteContent = {
     badge: "PROYEK RESMI PERSEROAN",
     name: "Puri Gunung Langgar",
     type: "Perumahan Subsidi",
-    status: "Tahap Pembangunan",
+    status: "Tahap Konstruksi",
     location: "Desa Sabah Balau / Tanjung Bintang",
     district: "Kabupaten Lampung Selatan",
     province: "Provinsi Lampung",
@@ -326,12 +522,14 @@ export const initialSiteContent: SiteContent = {
       }
     ],
     specs: [
-      { label: "Status Proyek", value: "Tahap Pembangunan (Aktif)" },
-      { label: "Jenis Hunian", value: "Rumah Tapak Bersubsidi" },
+      { label: "Status Proyek", value: "Tahap Konstruksi (Aktif)" },
+      { label: "Kategori Proyek", value: "Rumah Tapak Bersubsidi" },
       { label: "Tipe Bangunan", value: "Tipe 36 / 72 m²" },
-      { label: "Legalitas Tanah", value: "Sertifikat Hak Milik (SHM)" },
-      { label: "Fasilitas Utama", value: "Jalan Lingkungan Paving, Listrik & Air Bersih" },
-      { label: "Skema Pembiayaan", value: "KPR FLPP Bersubsidi & Mandiri" },
+      { label: "Luas Bangunan", value: "36 m²" },
+      { label: "Luas Tanah", value: "72 m²" },
+      { label: "Legalitas Lahan", value: "Sertifikat Hak Milik (SHM)" },
+      { label: "Fasilitas Dasar", value: "Jalan Lingkungan Paving, Listrik PLN, Air Bersih" },
+      { label: "Skema Pembiayaan", value: "KPR FLPP Bersubsidi 5% & Mandiri" },
       { label: "Lokasi Strategis", value: "Akses Cepat ke Pusat Kota Bandar Lampung" }
     ],
   },
