@@ -2823,6 +2823,98 @@ export default function AdminDashboard() {
                       ))}
                     </div>
                   </div>
+
+                  {/* Foto Kantor Pusat */}
+                  <div className="p-4 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-3">
+                    <label className="block text-xs font-bold text-[#073B78]">
+                      Foto Kantor Pusat (Tampil di Beranda)
+                    </label>
+                    <p className="text-[11px] text-[#526783]">
+                      Foto ini ditampilkan di halaman utama (beranda) pada bagian &quot;Tentang Kami&quot; sebagai visual kantor perusahaan.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                      <div className="w-28 h-20 rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] overflow-hidden shrink-0 flex items-center justify-center">
+                        {content.about.officeImage && content.about.officeImage.trim() !== '' ? (
+                          <img
+                            src={content.about.officeImage}
+                            alt="Kantor Pusat"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-[10px] text-[#526783]">Belum ada foto</span>
+                        )}
+                      </div>
+                      <div className="flex-1 space-y-2">
+                        <input
+                          type="text"
+                          value={content.about.officeImage || ''}
+                          onChange={(e) =>
+                            setContent({
+                              ...content,
+                              about: { ...content.about, officeImage: e.target.value },
+                            })
+                          }
+                          placeholder="URL atau path foto kantor (/assets/... atau /uploads/...)"
+                          className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                        />
+                        <div className="flex items-center gap-2">
+                          <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-colors shadow-sm">
+                            <Upload className="w-3.5 h-3.5" />
+                            <span>{uploadingKey === 'officeImage' ? 'Mengupload...' : 'Upload Foto Kantor'}</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              disabled={uploadingKey === 'officeImage'}
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                  handleGenericFileUpload(e.target.files[0], 'officeImage', (url) => {
+                                    setContent({
+                                      ...content,
+                                      about: { ...content.about, officeImage: url },
+                                    });
+                                  });
+                                }
+                              }}
+                            />
+                          </label>
+                          {content.about.officeImage && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setContent({
+                                  ...content,
+                                  about: { ...content.about, officeImage: '' },
+                                })
+                              }
+                              className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-colors"
+                              title="Hapus foto kantor"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
+                        Caption / Keterangan Foto Kantor
+                      </label>
+                      <input
+                        type="text"
+                        value={content.about.officeCaption || ''}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            about: { ...content.about, officeCaption: e.target.value },
+                          })
+                        }
+                        placeholder="Contoh: Kantor Pusat - Bandar Lampung, Provinsi Lampung"
+                        className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             )}

@@ -1,4 +1,4 @@
-﻿# Dependencies
+# Dependencies
 node_modules/
 /.pnp
 .pnp.js
@@ -46,4 +46,6 @@ public/assets/video_files/*.mp4
 public/assets/video_files/*.mov
 public/assets/video_files/*.avi
 public/assets/video_files/*.mkv
+*.download
+
 

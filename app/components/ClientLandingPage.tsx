@@ -701,17 +701,17 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
               <div className="lg:col-span-5 space-y-6 reveal-right-on-scroll delay-150">
                 <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-[#DCE7F5] shadow-sm bg-[#102D52] interactive-card">
                   <img
-                    src="/assets/project-identity.jpg"
-                    alt="Kantor & Perencanaan PT. TBK"
+                    src={content.about.officeImage || '/assets/project-identity.jpg'}
+                    alt={content.about.officeCaption || 'Kantor & Perencanaan PT. TBK'}
                     className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#102D52]/80 via-transparent to-transparent" />
                   <div className="absolute bottom-4 left-4 right-4 text-white text-xs">
                     <span className="font-semibold text-[#FF9D2E] tracking-wider block text-[10.5px]">
-                      Kantor Pusat
+                      {(content.about.officeCaption || 'Kantor Pusat').split(' - ')[0] || 'Kantor Pusat'}
                     </span>
-                    Bandar Lampung, Provinsi Lampung
+                    {(content.about.officeCaption || 'Kantor Pusat - Bandar Lampung, Provinsi Lampung').split(' - ').slice(1).join(' - ') || 'Bandar Lampung, Provinsi Lampung'}
                   </div>
                 </div>
 
