@@ -156,6 +156,7 @@ export default function Header({ content }: HeaderProps) {
     { label: 'Beranda', href: '/' },
     { label: 'Tentang', href: '/tentang' },
     { label: 'Proyek', href: '/proyek' },
+    { label: 'Pimpinan', href: isHomePage ? '#pimpinan' : '/#pimpinan' },
     { label: 'Simulasi', href: '/simulasi-kpr' },
     { label: 'Kontak', href: '/kontak' },
   ];
@@ -165,8 +166,8 @@ export default function Header({ content }: HeaderProps) {
     { label: 'Beranda', href: '/' },
     { label: 'Tentang', href: '/tentang' },
     { label: 'Proyek', href: '/proyek' },
+    { label: 'Pimpinan', href: isHomePage ? '#pimpinan' : '/#pimpinan' },
     { label: 'Simulasi', href: '/simulasi-kpr' },
-    { label: 'Pimpinan', href: '/pimpinan' },
     { label: 'Kegiatan', href: '/kegiatan' },
     { label: 'Legalitas', href: '/legalitas' },
     { label: 'Kontak', href: '/kontak' },
@@ -227,6 +228,8 @@ export default function Header({ content }: HeaderProps) {
             {mainNavItems.map((item) => {
               const isActive = item.href === '/'
                 ? pathname === '/'
+                : item.href.includes('#')
+                ? false
                 : pathname?.startsWith(item.href);
 
               return (
@@ -380,6 +383,8 @@ export default function Header({ content }: HeaderProps) {
             {allNavItems.map((item) => {
               const isActive = item.href === '/'
                 ? pathname === '/'
+                : item.href.includes('#')
+                ? false
                 : pathname?.startsWith(item.href);
 
               return (
