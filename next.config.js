@@ -4,6 +4,19 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['better-sqlite3'],
   },
+  webpack: (config) => {
+    config.infrastructureLogging = {
+      ...config.infrastructureLogging,
+      level: 'error',
+    };
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings || []),
+      /PackFileCacheStrategy/,
+      /FileSystemInfo/,
+      /@next\/swc-/,
+    ];
+    return config;
+  },
   async headers() {
     return [
       {
