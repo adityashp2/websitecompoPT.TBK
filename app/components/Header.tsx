@@ -151,8 +151,17 @@ export default function Header({ content }: HeaderProps) {
         );
       });
 
-  // Main Navigation Items
-  const navItems = [
+  // Main Navigation Items (matching PT. TBK desktop concept)
+  const mainNavItems = [
+    { label: 'Beranda', href: '/' },
+    { label: 'Tentang', href: '/tentang' },
+    { label: 'Proyek', href: '/proyek' },
+    { label: 'Simulasi', href: '/simulasi-kpr' },
+    { label: 'Kontak', href: '/kontak' },
+  ];
+
+  // Complete navigation items for slide-over drawer
+  const allNavItems = [
     { label: 'Beranda', href: '/' },
     { label: 'Tentang', href: '/tentang' },
     { label: 'Proyek', href: '/proyek' },
@@ -175,12 +184,12 @@ export default function Header({ content }: HeaderProps) {
 
       {/* Spacer for non-homepage views */}
       {!isHomePage && (
-        <div className="h-[60px] min-[980px]:h-[68px] bg-[#073B78]" aria-hidden="true" />
+        <div className="h-[58px] min-[980px]:h-[68px] bg-[#073B78]" aria-hidden="true" />
       )}
 
       {/* Main Corporate Header: ICC-Inspired Full-Width Navy Blue */}
       <header
-        className={`fixed top-0 inset-x-0 z-50 h-[60px] min-[980px]:h-[68px] w-full transition-all duration-200 ease-out border-b border-white/10 ${
+        className={`fixed top-0 inset-x-0 z-50 h-[58px] min-[980px]:h-[68px] w-full transition-all duration-200 ease-out border-b border-white/10 ${
           isScrolled || !isHomePage
             ? 'bg-[#073B78] shadow-md'
             : 'bg-[#073B78]'
@@ -214,8 +223,8 @@ export default function Header({ content }: HeaderProps) {
           </Link>
 
           {/* Center-Right: Desktop Navigation Menu */}
-          <nav aria-label="Menu utama" className="hidden min-[980px]:flex items-center gap-4 min-[1120px]:gap-6">
-            {navItems.map((item) => {
+          <nav aria-label="Menu utama" className="hidden min-[980px]:flex items-center gap-6 lg:gap-8">
+            {mainNavItems.map((item) => {
               const isActive = item.href === '/'
                 ? pathname === '/'
                 : pathname?.startsWith(item.href);
@@ -225,7 +234,7 @@ export default function Header({ content }: HeaderProps) {
                   key={item.href}
                   href={item.href}
                   prefetch={false}
-                  className={`text-[13px] min-[1120px]:text-[13.5px] font-medium transition-all relative py-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9D2E] rounded whitespace-nowrap ${
+                  className={`text-[13.5px] lg:text-[14px] font-medium transition-all relative py-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9D2E] rounded whitespace-nowrap ${
                     isActive
                       ? 'text-[#FF9D2E] font-bold'
                       : 'text-white/85 hover:text-white'
@@ -244,32 +253,22 @@ export default function Header({ content }: HeaderProps) {
           </nav>
 
           {/* Right Action Icons & Controls */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-2.5">
             {/* Interactive Search Icon Button */}
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="w-9 h-9 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg text-white/90 hover:text-white bg-white/10 hover:bg-white/20 border border-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] transition-all"
+              className="w-9 h-9 flex items-center justify-center rounded-lg text-white/90 hover:text-white bg-white/10 hover:bg-white/20 border border-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] transition-all"
               aria-label="Cari di website"
             >
               <Search className="w-4 h-4" />
             </button>
 
-            {/* Desktop CTA Button */}
-            <Link
-              href="/kontak"
-              prefetch={false}
-              className="hidden min-[980px]:flex group h-[38px] px-5 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-[12px] font-bold tracking-wider uppercase transition-all duration-200 hover:-translate-y-[1px] active:scale-[0.99] shadow-sm hover:shadow items-center justify-center gap-1.5 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-            >
-              <span>Hubungi Kami</span>
-              <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-            </Link>
-
-            {/* Mobile Hamburger Toggle (ICC Approach: compact, comfortable right alignment) */}
+            {/* Menu Hamburger Toggle (Visible on Desktop & Mobile matching design reference) */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="min-[980px]:hidden w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg text-white bg-white/10 border border-white/15 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] shrink-0 transition-colors"
+              className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg text-white bg-white/10 border border-white/15 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] shrink-0 transition-colors"
               aria-label={mobileMenuOpen ? 'Tutup navigasi' : 'Buka navigasi'}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-nav-panel"
@@ -378,7 +377,7 @@ export default function Header({ content }: HeaderProps) {
 
           {/* Navigation Links */}
           <nav aria-label="Menu seluler" className="space-y-1.5 my-3 py-2">
-            {navItems.map((item) => {
+            {allNavItems.map((item) => {
               const isActive = item.href === '/'
                 ? pathname === '/'
                 : pathname?.startsWith(item.href);
