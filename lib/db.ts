@@ -298,12 +298,12 @@ export async function updateSiteContent(newContent: SiteContent): Promise<SiteCo
             updated_at: new Date().toISOString(),
           });
 
-        if (error) {
+        if (error && error.code !== '42501') {
           console.error('Supabase updateSiteContent error:', error);
         }
       }
     } catch (err) {
-      console.error('Supabase updateSiteContent exception:', err);
+      // Background sync error ignored, SQLite is primary
     }
   }
 
