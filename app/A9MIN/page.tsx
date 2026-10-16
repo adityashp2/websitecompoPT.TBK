@@ -548,9 +548,9 @@ export default function AdminDashboard() {
 
       {/* Main Admin Content */}
       <div className="max-w-[1400px] mx-auto px-3.5 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-          {/* Sidebar Tabs (Visible on Desktop >= lg) */}
-          <div className="hidden lg:block lg:col-span-3 space-y-4 bg-[#0A2548] border border-[#1C5795]/50 rounded-2xl p-4 shadow-sm text-white">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+          {/* Sidebar Tabs (Visible on Desktop >= lg) - Pinned Sticky Sidebar */}
+          <div className="hidden lg:block lg:col-span-3 space-y-4 bg-[#0A2548] border border-[#1C5795]/50 rounded-2xl p-4 shadow-sm text-white sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto admin-sidebar-scroll">
             {/* GROUP 1: HALAMAN DEPAN (BERANDA) */}
             <div className="space-y-1">
               <div className="text-[11px] uppercase font-bold text-[#FF9D2E] px-3 py-1 tracking-wider flex items-center justify-between">
@@ -780,8 +780,8 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Mobile & Tablet Quick Navigation Selector (< lg) */}
-          <div className="lg:hidden col-span-1 space-y-3 bg-[#0A2548] border border-[#1C5795]/50 rounded-2xl p-4 shadow-md text-white">
+          {/* Mobile & Tablet Quick Navigation Selector (< lg) - Sticky Navigation */}
+          <div className="lg:hidden col-span-1 space-y-3 bg-[#0A2548] border border-[#1C5795]/50 rounded-2xl p-4 shadow-lg text-white sticky top-16 z-30 backdrop-blur-md">
             <div className="flex items-center justify-between gap-2 border-b border-[#DCE7F5] pb-3">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-[#FF9D2E]" />
