@@ -24,7 +24,7 @@ if (!adminUsers || adminUsers.length === 0) {
   adminUsers = [{
     username: 'admin',
     email: 'admin@terbangbersamakawan.co.id',
-    password_hash: '33e1b2baa4bcb70e19f400f9b4af8b6d64e98761ce67259c67a1715d773d5ae4b6725c348f780a3222a99ad21a88e30ecb9b242e16f70f8acd81ff76b2261b27',
+    password_hash: '3a50d944f28399603d7eff1b215fd539fb5455aae6c2f1aa167f70ac40865c799c7f4c68783c51ff19bf0406970412d68da33585f8263975a1a9f5cf200be5b8',
     salt: '0f9ddce5bb354370cd92ff1c14eabcf2',
     name: 'Administrator PT. TBK',
     role: 'superadmin'

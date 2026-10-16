@@ -112,12 +112,14 @@ INSERT INTO public.admin_users (username, email, password_hash, salt, name, role
 VALUES (
   'admin',
   'admin@terbangbersamakawan.co.id',
-  '33e1b2baa4bcb70e19f400f9b4af8b6d64e98761ce67259c67a1715d773d5ae4b6725c348f780a3222a99ad21a88e30ecb9b242e16f70f8acd81ff76b2261b27',
+  '3a50d944f28399603d7eff1b215fd539fb5455aae6c2f1aa167f70ac40865c799c7f4c68783c51ff19bf0406970412d68da33585f8263975a1a9f5cf200be5b8',
   '0f9ddce5bb354370cd92ff1c14eabcf2',
   'Administrator PT. TBK',
   'superadmin'
 )
-ON CONFLICT (username) DO NOTHING;
+ON CONFLICT (username) DO UPDATE 
+SET password_hash = EXCLUDED.password_hash, 
+    salt = EXCLUDED.salt;
 
 -- Seed Data Resmi Website PT. TBK
 INSERT INTO public.site_content (id, data, updated_at)
