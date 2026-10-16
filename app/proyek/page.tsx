@@ -6,6 +6,7 @@ import { getYouTubeEmbedUrl } from '@/lib/initialData';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
+import ClientProyekGallery from './ClientProyekGallery';
 import { 
   Home, 
   MapPin, 
@@ -144,49 +145,12 @@ export default async function ProyekPage() {
               </p>
             </div>
 
-            {slides.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                {slides.map((s, idx) => (
-                  <div
-                    key={idx}
-                    className="group space-y-3 bg-[#F4F7FC] p-4 rounded-2xl border border-[#DCE7F5] shadow-sm hover:shadow-md transition-shadow"
-                  >
-                    <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-[#DCE7F5] bg-[#073B78]">
-                      <img
-                        src={s.image}
-                        alt={s.caption || `Foto ${idx + 1}`}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        loading="lazy"
-                      />
-                      <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-[#073B78]/85 backdrop-blur-sm text-[11px] font-mono font-bold text-white">
-                        {String(idx + 1).padStart(2, '0')}
-                      </div>
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-xs sm:text-[13.5px] text-[#102D52] font-semibold leading-relaxed">
-                        {s.caption || 'Dokumentasi kawasan resmi Puri Gunung Langgar, Tanjung Bintang, Lampung Selatan.'}
-                      </p>
-                      <div className="flex items-center justify-between text-[11px] text-[#526783] pt-1">
-                        <span>PT. Terbang Bersama Kawan</span>
-                        {(s.caption || '').toLowerCase().includes('ilustrasi') || (s.caption || '').toLowerCase().includes('visualisasi') ? (
-                          <span className="text-[#FF9D2E] font-bold">Ilustrasi Konsep</span>
-                        ) : (
-                          <span className="text-[#15966A] font-bold">Dokumen Lapangan</span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="p-12 text-center space-y-3 border border-dashed border-[#DCE7F5] rounded-2xl">
-                <ImageIcon className="w-10 h-10 text-[#526783]/50 mx-auto" />
-                <h3 className="font-bold text-lg text-[#102D52]">Belum Ada Foto Galeri</h3>
-                <p className="text-xs sm:text-sm text-[#526783] max-w-md mx-auto">
-                  Dokumentasi foto kawasan belum ditambahkan.
-                </p>
-              </div>
-            )}
+            {/* Interactive Lightbox Visual Gallery (Taller, Proportional, Click to Enlarge) */}
+            <ClientProyekGallery
+              slides={slides}
+              projectName={content.project?.name || 'Puri Gunung Langgar'}
+              whatsappNumber={content.contact?.whatsapp}
+            />
 
             {/* Video Showcase jika ada */}
             {ytEmbedUrl && (

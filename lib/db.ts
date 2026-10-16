@@ -23,6 +23,10 @@ function getDb(): Database.Database {
   const dbPath = path.join(dataDir, 'content.db');
   const dbInstance = new Database(dbPath);
   dbInstance.pragma('journal_mode = WAL');
+  dbInstance.pragma('synchronous = NORMAL');
+  dbInstance.pragma('temp_store = MEMORY');
+  dbInstance.pragma('mmap_size = 268435456');
+  dbInstance.pragma('cache_size = -16000');
   dbInstance.pragma('busy_timeout = 5000');
   global.__sqliteDbInstance = dbInstance;
 
@@ -43,6 +47,8 @@ function getDb(): Database.Database {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
+    CREATE INDEX IF NOT EXISTS idx_inquiries_created ON inquiries(created_at DESC);
+
     CREATE TABLE IF NOT EXISTS admin_users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       username TEXT UNIQUE NOT NULL,
@@ -62,6 +68,8 @@ function getDb(): Database.Database {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES admin_users(id) ON DELETE CASCADE
     );
+
+    CREATE INDEX IF NOT EXISTS idx_admin_sessions_token_exp ON admin_sessions(token, expires_at);
   `);
 
   // Check if default admin exists, if not seed default admin (username: admin, pass: admin123)
