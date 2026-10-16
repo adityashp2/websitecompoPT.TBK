@@ -33,7 +33,7 @@ export default function PromoBannerCarousel({ whatsappUrl }: PromoBannerCarousel
       headlineFirstLine: 'Hunian bersubsidi yang layak,',
       headlineHighlight: 'dibangun dari Lampung.',
       supportingText:
-        'PT. Terbang Bersama Kawan adalah pengembang perumahan di Bandar Lampung. Saat ini kami sedang membangun Puri Gunung Langgar di Lampung Selatan.',
+        'PT. Terbang Bersama Kawan adalah pengembang perumahan di Bandar Lampung. Saat ini kami sedang membangun Puri Gunung Langgar di Tanjung Bintang, Lampung Selatan.',
       primaryCtaText: 'LIHAT PROYEK',
       primaryCtaHref: '/proyek',
       secondaryCtaText: 'HUBUNGI KAMI',
@@ -65,7 +65,7 @@ export default function PromoBannerCarousel({ whatsappUrl }: PromoBannerCarousel
         'Lokasi strategis di Sabah Balau, dekat fasilitas umum, jalan lingkungan paving lebar, jaringan listrik PLN, dan instalasi air bersih siap huni.',
       primaryCtaText: 'DETAIL LEGALITAS',
       primaryCtaHref: '/legalitas',
-      secondaryCtaText: 'HUBUNGI KAMI',
+      secondaryCtaText: 'SURVEI LOKASI',
       secondaryCtaHref: '/kontak',
       image: '/assets/service-residential.jpg',
       imageAlt: 'Pekerjaan Pembangunan Fisik Unit Rumah Subsidi',
@@ -168,8 +168,6 @@ export default function PromoBannerCarousel({ whatsappUrl }: PromoBannerCarousel
     setTouchEndX(null);
   };
 
-  const currentSlide = slides[currentIndex];
-
   return (
     <section
       id="beranda"
@@ -183,168 +181,178 @@ export default function PromoBannerCarousel({ whatsappUrl }: PromoBannerCarousel
       aria-label="Promosi Unggulan PT. Terbang Bersama Kawan"
     >
       {/* ======================================================================= */}
-      {/* 1. DESKTOP HERO: EXACT MATCH TO PT. TBK DESIGN CONCEPT (>= 980px)      */}
-      {/* Left: pill, split bold headline with orange highlight, text, 2 buttons  */}
-      {/* Right: residential photograph with marketing officer & diagonal accents */}
-      {/* Controls: bottom-right circular arrows & 3 pagination dots              */}
+      {/* 1. DESKTOP HERO: FULL-WIDTH BACKGROUND HERO (>= 1024px)                 */}
+      {/* - One full-width residential background image covering the entire hero  */}
+      {/* - Dark left-to-right gradient overlay                                   */}
+      {/* - Project badge, headline, description, and CTA buttons on the left     */}
+      {/* - White text with muted gold/orange highlights                          */}
+      {/* - Carousel counter & navigation arrows in the bottom-right corner       */}
+      {/* - NO separate rounded image card on the right                           */}
       {/* ======================================================================= */}
-      <div className="hidden min-[980px]:block relative w-full bg-gradient-to-r from-[#073B78] via-[#084284] to-[#0A4B91] overflow-hidden">
-        {/* Subtle Architectural Grid Texture in deep background */}
-        <div
-          className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px]"
-          aria-hidden="true"
-        />
-
-        <div className="w-full max-w-[1360px] mx-auto px-6 lg:px-8 py-10 lg:py-14 min-h-[520px] lg:min-h-[560px] flex items-center">
-          <div className="w-full grid grid-cols-12 gap-8 lg:gap-10 items-center">
-            {/* Left Column: Headline & Promotional Copy */}
-            <div className="col-span-7 z-10 space-y-5 lg:space-y-6">
-              {/* Pill Status Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#102D52] border border-white/20 text-white text-[11px] font-bold tracking-wider uppercase shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-[#FF9D2E] animate-pulse" />
-                <span>{currentSlide.eyebrow}</span>
+      <div className="hidden lg:block relative w-full min-h-[580px] xl:min-h-[640px] overflow-hidden">
+        {slides.map((slide, idx) => {
+          const isActive = idx === currentIndex;
+          return (
+            <div
+              key={`desktop-${slide.id}`}
+              className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+                isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+              }`}
+              aria-hidden={!isActive}
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`Slide ${idx + 1} dari ${slides.length}: ${slide.eyebrow}`}
+            >
+              {/* Full-Width Residential Background Image Covering the Entire Hero */}
+              <div className="absolute inset-0 z-0">
+                <img
+                  src={slide.image}
+                  alt={slide.imageAlt}
+                  className={`w-full h-full object-cover object-center transition-transform duration-1000 ${
+                    isActive ? 'scale-105' : 'scale-100'
+                  }`}
+                  loading={idx === 0 ? 'eager' : 'lazy'}
+                />
               </div>
 
-              {/* Headline with Orange Highlight */}
-              <h1 className="font-sans font-black text-[34px] lg:text-[44px] xl:text-[48px] leading-[1.16] tracking-tight text-white">
-                <span>{currentSlide.headlineFirstLine}</span>
-                <span className="block text-[#FF9D2E] mt-1">
-                  {currentSlide.headlineHighlight}
-                </span>
-              </h1>
+              {/* Dark Left-to-Right Corporate Navy Gradient Overlay */}
+              <div
+                className="absolute inset-0 z-[1] bg-gradient-to-r from-[#073B78] via-[#073B78]/90 to-[#073B78]/40 xl:to-transparent"
+                aria-hidden="true"
+              />
 
-              {/* Supporting Text */}
-              <p className="text-[15px] lg:text-[16px] text-white/85 leading-relaxed max-w-xl">
-                {currentSlide.supportingText}
-              </p>
-
-              {/* Action Buttons */}
-              <div className="flex items-center gap-4 pt-2">
-                <Link
-                  href={currentSlide.primaryCtaHref}
-                  prefetch={false}
-                  className="group h-[48px] px-8 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-[12.5px] font-black tracking-wider uppercase transition-all duration-200 hover:-translate-y-0.5 active:scale-95 shadow-lg shadow-[#FF9D2E]/25 flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                >
-                  <span>{currentSlide.primaryCtaText}</span>
-                  <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
-                </Link>
-
-                {currentSlide.isSecondaryExternal ? (
-                  <a
-                    href={currentSlide.secondaryCtaHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="h-[48px] px-8 rounded-full border-2 border-white/40 hover:border-white hover:bg-white/10 text-white text-[12.5px] font-bold tracking-wider uppercase transition-all duration-200 hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                  >
-                    <MessageCircle className="w-4 h-4 text-[#FF9D2E]" />
-                    <span>{currentSlide.secondaryCtaText}</span>
-                  </a>
-                ) : (
-                  <Link
-                    href={currentSlide.secondaryCtaHref}
-                    prefetch={false}
-                    className="h-[48px] px-8 rounded-full border-2 border-white/40 hover:border-white hover:bg-white/10 text-white text-[12.5px] font-bold tracking-wider uppercase transition-all duration-200 hover:-translate-y-0.5 active:scale-95 flex items-center justify-center whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                  >
-                    {currentSlide.secondaryCtaText}
-                  </Link>
-                )}
-              </div>
-            </div>
-
-            {/* Right Column: Visual Composition with Geometric Accents */}
-            <div className="col-span-5 relative flex items-center justify-center">
-              {/* Geometric Diagonal Ribbons matching PT. TBK design concept */}
-              <div className="absolute -left-10 bottom-6 z-10 pointer-events-none transform -rotate-45 space-y-3">
-                <div className="w-36 lg:w-44 h-5 lg:h-6 bg-[#FF9D2E] rounded-full shadow-lg" />
-                <div className="w-24 lg:w-32 h-4 lg:h-5 bg-[#1C5795] rounded-full opacity-90 shadow-md ml-4" />
+              {/* Geometric Diagonal Ribbons Connecting Left to Right Visually */}
+              <div
+                className="absolute inset-0 z-[2] pointer-events-none overflow-hidden opacity-30"
+                aria-hidden="true"
+              >
+                <div className="absolute -bottom-10 left-1/2 w-64 h-8 bg-[#FF9D2E] rounded-full transform -rotate-45 shadow-xl" />
+                <div className="absolute -top-8 right-1/4 w-48 h-6 bg-[#1C5795] rounded-full transform -rotate-45" />
               </div>
 
-              {/* Main Residential Photograph Frame */}
-              <div className="relative w-full aspect-[4/3] lg:aspect-[15/11] rounded-3xl overflow-hidden shadow-2xl border-2 border-white/15 bg-[#102D52]">
-                {slides.map((slide, sIdx) => {
-                  const isActive = sIdx === currentIndex;
-                  return (
-                    <div
-                      key={slide.id}
-                      className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-                        isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-                      }`}
-                    >
-                      <img
-                        src={slide.image}
-                        alt={slide.imageAlt}
-                        className={`w-full h-full object-cover object-center transition-transform duration-1000 ${
-                          isActive ? 'scale-105' : 'scale-100'
-                        }`}
-                        loading={sIdx === 0 ? 'eager' : 'lazy'}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#073B78]/60 via-transparent to-transparent pointer-events-none" />
-                    </div>
-                  );
-                })}
-
-                {/* Bottom Right Carousel Controls (Dots + Circular Arrows) */}
-                <div className="absolute bottom-4 right-4 z-20 flex items-center gap-3 bg-[#102D52]/85 backdrop-blur-md px-3.5 py-2 rounded-full border border-white/20 shadow-lg">
-                  {/* 3 Pagination Dots */}
-                  <div className="flex items-center gap-1.5 mr-1">
-                    {slides.map((_, dotIdx) => {
-                      const isCurrent = dotIdx === currentIndex;
-                      return (
-                        <button
-                          key={dotIdx}
-                          type="button"
-                          onClick={() => goToSlide(dotIdx)}
-                          className={`transition-all duration-300 rounded-full ${
-                            isCurrent
-                              ? 'w-5 h-2 bg-[#FF9D2E]'
-                              : 'w-2 h-2 bg-white/40 hover:bg-white/70'
-                          }`}
-                          aria-label={`Pindah ke slide ${dotIdx + 1}`}
-                          aria-current={isCurrent ? 'true' : 'false'}
-                        />
-                      );
-                    })}
+              {/* Left-Aligned Overlay Content Block */}
+              <div className="relative z-10 w-full max-w-[1360px] mx-auto px-8 lg:px-12 h-full min-h-[580px] xl:min-h-[640px] flex items-center">
+                <div className="max-w-2xl space-y-5 lg:space-y-6">
+                  {/* Project Status Pill Badge */}
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#102D52]/90 border border-white/20 text-white text-[11px] font-bold tracking-wider uppercase shadow-sm backdrop-blur-sm">
+                    <span className="w-2 h-2 rounded-full bg-[#FF9D2E] animate-pulse" />
+                    <span>{slide.eyebrow}</span>
                   </div>
 
-                  {/* Circular Prev/Next Arrow Buttons */}
-                  <div className="flex items-center gap-1.5 border-l border-white/20 pl-2">
-                    <button
-                      type="button"
-                      onClick={goToPrev}
-                      className="w-7 h-7 rounded-full bg-white/10 hover:bg-[#FF9D2E] hover:text-[#102D52] text-white flex items-center justify-center transition-all duration-150 active:scale-95 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white"
-                      aria-label="Slide sebelumnya"
+                  {/* Headline with Muted Gold / Orange Highlight */}
+                  <h1 className="font-sans font-black text-4xl lg:text-[48px] xl:text-[54px] leading-[1.14] tracking-tight text-white">
+                    <span>{slide.headlineFirstLine}</span><br />
+                    <span className="text-[#FF9D2E]">{slide.headlineHighlight}</span>
+                  </h1>
+
+                  {/* Supporting Description */}
+                  <p className="text-[16px] lg:text-[17px] text-white/90 leading-relaxed max-w-xl">
+                    {slide.supportingText}
+                  </p>
+
+                  {/* Action CTA Buttons */}
+                  <div className="flex items-center gap-4 pt-3">
+                    <Link
+                      href={slide.primaryCtaHref}
+                      prefetch={false}
+                      className="group h-[50px] px-8 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-[13px] font-black tracking-wider uppercase transition-all duration-200 hover:-translate-y-0.5 active:scale-95 shadow-xl shadow-[#FF9D2E]/30 flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                     >
-                      <ChevronLeft className="w-4 h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={goToNext}
-                      className="w-7 h-7 rounded-full bg-white/10 hover:bg-[#FF9D2E] hover:text-[#102D52] text-white flex items-center justify-center transition-all duration-150 active:scale-95 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white"
-                      aria-label="Slide selanjutnya"
-                    >
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
+                      <span>{slide.primaryCtaText}</span>
+                      <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                    </Link>
+
+                    {slide.isSecondaryExternal ? (
+                      <a
+                        href={slide.secondaryCtaHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="h-[50px] px-8 rounded-full border-2 border-white/40 hover:border-white hover:bg-white/10 text-white text-[13px] font-bold tracking-wider uppercase transition-all duration-200 hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                      >
+                        <MessageCircle className="w-4 h-4 text-[#FF9D2E]" />
+                        <span>{slide.secondaryCtaText}</span>
+                      </a>
+                    ) : (
+                      <Link
+                        href={slide.secondaryCtaHref}
+                        prefetch={false}
+                        className="h-[50px] px-8 rounded-full border-2 border-white/40 hover:border-white hover:bg-white/10 text-white text-[13px] font-bold tracking-wider uppercase transition-all duration-200 hover:-translate-y-0.5 active:scale-95 flex items-center justify-center whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                      >
+                        {slide.secondaryCtaText}
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
+          );
+        })}
+
+        {/* Carousel Counter & Navigation Arrows in Bottom-Right Corner */}
+        <div className="absolute bottom-8 right-8 xl:right-12 z-20 flex items-center gap-4 bg-[#102D52]/85 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/20 shadow-2xl">
+          {/* Slide Counter */}
+          <div className="text-xs font-mono font-bold text-white tracking-widest">
+            <span className="text-[#FF9D2E]">0{currentIndex + 1}</span>
+            <span className="text-white/40 mx-1.5">/</span>
+            <span>0{slides.length}</span>
+          </div>
+
+          {/* Pagination Dots */}
+          <div className="flex items-center gap-1.5 border-l border-white/20 pl-3.5">
+            {slides.map((_, dotIdx) => (
+              <button
+                key={dotIdx}
+                type="button"
+                onClick={() => goToSlide(dotIdx)}
+                className={`transition-all duration-300 rounded-full ${
+                  dotIdx === currentIndex
+                    ? 'w-6 h-2 bg-[#FF9D2E]'
+                    : 'w-2 h-2 bg-white/40 hover:bg-white/70'
+                }`}
+                aria-label={`Slide ${dotIdx + 1}`}
+                aria-current={dotIdx === currentIndex ? 'true' : 'false'}
+              />
+            ))}
+          </div>
+
+          {/* Navigation Arrows */}
+          <div className="flex items-center gap-2 border-l border-white/20 pl-3.5">
+            <button
+              type="button"
+              onClick={goToPrev}
+              className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#FF9D2E] hover:text-[#102D52] text-white flex items-center justify-center transition-all duration-150 active:scale-95 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white"
+              aria-label="Slide sebelumnya"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={goToNext}
+              className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#FF9D2E] hover:text-[#102D52] text-white flex items-center justify-center transition-all duration-150 active:scale-95 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white"
+              aria-label="Slide selanjutnya"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </div>
 
       {/* ======================================================================= */}
-      {/* 2. MOBILE HERO: FULL-WIDTH PROMOTIONAL BANNER CAROUSEL (< 980px)        */}
-      {/* Edge-to-edge, compact height, orange arrows over banner, bottom dots    */}
-      {/* Replaces the vertical stack with a banner-first promotional experience */}
+      {/* 2. MOBILE HERO: ICC-INSPIRED PROMOTIONAL BANNER (< 1024px)              */}
+      {/* - Full-width promotional banner immediately below navbar                */}
+      {/* - Width: 100%, NO horizontal margins                                    */}
+      {/* - Banner artwork with residential photography & orange accents          */}
+      {/* - Previous / Next arrows overlaid on the banner                         */}
+      {/* - Pagination dots beneath or within the banner                          */}
+      {/* - Clean content section begins directly below banner                    */}
       {/* ======================================================================= */}
       <div
-        className="block min-[980px]:hidden relative w-full overflow-hidden bg-[#073B78]"
+        className="block lg:hidden relative w-full overflow-hidden bg-[#073B78]"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Banner container with calibrated promotional aspect ratio */}
-        <div className="relative w-full h-[250px] sm:h-[300px] md:h-[360px] overflow-hidden">
+        {/* Full-width banner container with calibrated promotional aspect ratio */}
+        <div className="relative w-full h-[250px] sm:h-[300px] md:h-[350px] overflow-hidden">
           {slides.map((slide, idx) => {
             const isActive = idx === currentIndex;
             return (
@@ -358,7 +366,7 @@ export default function PromoBannerCarousel({ whatsappUrl }: PromoBannerCarousel
                 aria-roledescription="slide"
                 aria-label={`Slide ${idx + 1} dari ${slides.length}: ${slide.eyebrow}`}
               >
-                {/* Background Residential Image */}
+                {/* Full-Bleed Residential Photography */}
                 <div className="absolute inset-0 z-0">
                   <img
                     src={slide.image}
