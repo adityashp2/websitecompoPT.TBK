@@ -230,17 +230,17 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
               {/* Left Column: Headline & Editorial Mission */}
               <div className="lg:col-span-5 space-y-4 sm:space-y-5 reveal-left-on-scroll">
-                <div className="flex items-center gap-2 text-[#FF9D2E] font-bold text-xs uppercase tracking-[0.14em]">
+                <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider">
                   <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
                   <span>Tentang Kami</span>
                 </div>
 
-                <h2 className="font-sans font-black text-2xl sm:text-3xl lg:text-[38px] text-[#102D52] leading-[1.18] tracking-tight">
+                <h2 className="font-serif font-normal text-2xl sm:text-3xl lg:text-[38px] text-[#102D52] leading-[1.18] tracking-tight">
                   Membangun Rumah,<br />
-                  <span className="text-[#073B78]">Mewujudkan Masa Depan.</span>
+                  <span className="text-[#073B78] font-serif">Mewujudkan Masa Depan.</span>
                 </h2>
 
-                <p className="text-[14px] sm:text-[15.5px] text-[#526783] leading-relaxed">
+                <p className="font-sans text-[15px] sm:text-[16px] text-[#526783] leading-relaxed">
                   Kami hadir untuk menyediakan hunian berkualitas dengan harga terjangkau, khususnya bagi keluarga Indonesia. Dengan pengalaman dan komitmen tinggi, PT. Terbang Bersama Kawan terus berinovasi dalam menghadirkan lingkungan yang nyaman, aman, dan berkelanjutan.
                 </p>
 
@@ -248,7 +248,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   <Link
                     href="/tentang"
                     prefetch={false}
-                    className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full border-2 border-[#073B78] hover:bg-[#073B78] hover:text-white text-[#073B78] font-bold text-xs uppercase tracking-wider transition-all duration-200 shadow-sm active:scale-95 group"
+                    className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full border-2 border-[#073B78] hover:bg-[#073B78] hover:text-white text-[#073B78] font-semibold text-xs tracking-normal transition-all duration-200 shadow-sm active:scale-95 group"
                   >
                     <span>Kenal Lebih Dekat</span>
                     <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
@@ -264,7 +264,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                     <Home className="w-6 h-6 stroke-[2]" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#102D52] text-[15px] sm:text-[16px] group-hover:text-[#073B78] transition-colors">
+                    <h3 className="font-semibold text-[#102D52] text-[15px] sm:text-[16px] group-hover:text-[#073B78] transition-colors">
                       Hunian Berkualitas
                     </h3>
                     <p className="text-xs sm:text-[13px] text-[#526783] mt-1 leading-relaxed">
@@ -279,7 +279,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                     <ShieldCheck className="w-6 h-6 stroke-[2]" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#102D52] text-[15px] sm:text-[16px] group-hover:text-[#7C3AED] transition-colors">
+                    <h3 className="font-semibold text-[#102D52] text-[15px] sm:text-[16px] group-hover:text-[#7C3AED] transition-colors">
                       Harga Terjangkau
                     </h3>
                     <p className="text-xs sm:text-[13px] text-[#526783] mt-1 leading-relaxed">
@@ -294,7 +294,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                     <MapPin className="w-6 h-6 stroke-[2]" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#102D52] text-[15px] sm:text-[16px] group-hover:text-[#059669] transition-colors">
+                    <h3 className="font-semibold text-[#102D52] text-[15px] sm:text-[16px] group-hover:text-[#059669] transition-colors">
                       Lokasi Strategis
                     </h3>
                     <p className="text-xs sm:text-[13px] text-[#526783] mt-1 leading-relaxed">
@@ -309,7 +309,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                     <Leaf className="w-6 h-6 stroke-[2]" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#102D52] text-[15px] sm:text-[16px] group-hover:text-[#D97706] transition-colors">
+                    <h3 className="font-semibold text-[#102D52] text-[15px] sm:text-[16px] group-hover:text-[#D97706] transition-colors">
                       Lingkungan Asri
                     </h3>
                     <p className="text-xs sm:text-[13px] text-[#526783] mt-1 leading-relaxed">
@@ -330,14 +330,14 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
           <div className="container-editorial">
             {/* Section Header */}
             <div className="max-w-2xl mb-10 sm:mb-14 reveal-on-scroll">
-              <div className="flex items-center gap-2 text-[#FF9D2E] font-bold text-xs uppercase tracking-[0.14em] mb-2">
+              <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
                 <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
                 <span>Proyek Unggulan</span>
               </div>
-              <h2 className="font-sans font-bold text-3xl sm:text-4xl text-[#102D52] leading-tight">
+              <h2 className="font-serif font-normal text-3xl sm:text-4xl text-[#102D52] leading-tight">
                 Puri Gunung Langgar
               </h2>
-              <p className="text-[15px] sm:text-[16px] text-[#526783] mt-2.5 leading-relaxed">
+              <p className="font-sans text-[15px] sm:text-[16px] text-[#526783] mt-2.5 leading-relaxed">
                 Kawasan perumahan subsidi terencana di Tanjung Bintang, Lampung Selatan. Menghadirkan rumah tapak berkualitas dengan kepastian legalitas dan lingkungan yang asri.
               </p>
             </div>
@@ -541,7 +541,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   <Link
                     href="/proyek"
                     prefetch={false}
-                    className="interactive-btn group w-full h-[46px] rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-xs font-black tracking-wider uppercase flex items-center justify-center gap-2 shadow-sm hover:shadow"
+                    className="interactive-btn group w-full h-[46px] rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-xs font-semibold tracking-normal flex items-center justify-center gap-2 shadow-sm hover:shadow"
                   >
                     <span>Lihat Detail Spesifikasi Proyek</span>
                     <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
@@ -551,7 +551,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                     href={waUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="interactive-btn w-full h-[46px] rounded-full border border-[#073B78] hover:bg-[#073B78] hover:text-white text-[#073B78] text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-2"
+                    className="interactive-btn w-full h-[46px] rounded-full border border-[#073B78] hover:bg-[#073B78] hover:text-white text-[#073B78] text-xs font-semibold tracking-normal flex items-center justify-center gap-2"
                   >
                     <MessageCircle className="w-4 h-4 text-[#FF9D2E]" />
                     <span>Tanya Ketersediaan Kavling</span>
@@ -572,30 +572,30 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
               {/* Left Column: Heading, Company Profile, 3 Strengths */}
               <div className="lg:col-span-7 space-y-6 reveal-left-on-scroll">
                 <div>
-                  <div className="flex items-center gap-2 text-[#FF9D2E] font-bold text-xs uppercase tracking-[0.14em] mb-2">
+                  <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
                     <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
                     <span>Profil Pengembang</span>
                   </div>
-                  <h2 className="font-sans font-bold text-3xl sm:text-4xl text-[#102D52] leading-tight">
+                  <h2 className="font-serif font-normal text-3xl sm:text-4xl text-[#102D52] leading-tight">
                     Membangun dengan Komitmen &amp; Legalitas Nyata
                   </h2>
                 </div>
 
-                <p className="text-[15px] sm:text-[16px] text-[#102D52]/85 leading-relaxed">
+                <p className="font-sans text-[15px] sm:text-[16px] text-[#102D52]/85 leading-relaxed">
                   PT. Terbang Bersama Kawan (PT. TBK) adalah perusahaan pengembang properti dan real estat yang berbasis di Bandar Lampung. Didirikan secara sah dengan Akta Notaris No. 10 tanggal 18 Maret 2021 dan disahkan oleh Kementerian Hukum dan HAM RI pada 19 Maret 2021.
                 </p>
 
-                <p className="text-[14.5px] text-[#526783] leading-relaxed">
+                <p className="font-sans text-[14.5px] text-[#526783] leading-relaxed">
                   Sebagai pengembang perumahan resmi di Provinsi Lampung, PT. Terbang Bersama Kawan mengutamakan kepastian hukum, keterbukaan informasi, dan mutu konstruksi terbaik agar masyarakat berpenghasilan rendah hingga menengah dapat memiliki rumah impian dengan rasa tenang.
                 </p>
 
                 {/* 3 Pillars in Clean Layout with Staggered Delays */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 pt-6 border-t border-[#DCE7F5]">
                   <div className="reveal-on-scroll delay-100">
-                    <span className="font-sans text-2xl font-black text-[#FF9D2E] block mb-1.5">
+                    <span className="font-serif text-2xl sm:text-3xl text-[#FF9D2E] block mb-1.5">
                       01
                     </span>
-                    <h3 className="font-bold text-[13.5px] text-[#102D52] uppercase tracking-wider mb-1.5">
+                    <h3 className="font-semibold text-[15px] text-[#102D52] tracking-normal mb-1.5">
                       Kepastian Hukum
                     </h3>
                     <p className="text-xs text-[#526783] leading-relaxed">
@@ -604,10 +604,10 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   </div>
 
                   <div className="sm:border-l sm:border-[#DCE7F5] sm:pl-6 reveal-on-scroll delay-200">
-                    <span className="font-sans text-2xl font-black text-[#FF9D2E] block mb-1.5">
+                    <span className="font-serif text-2xl sm:text-3xl text-[#FF9D2E] block mb-1.5">
                       02
                     </span>
-                    <h3 className="font-bold text-[13.5px] text-[#102D52] uppercase tracking-wider mb-1.5">
+                    <h3 className="font-semibold text-[15px] text-[#102D52] tracking-normal mb-1.5">
                       Mutu Konstruksi
                     </h3>
                     <p className="text-xs text-[#526783] leading-relaxed">
@@ -616,10 +616,10 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   </div>
 
                   <div className="sm:border-l sm:border-[#DCE7F5] sm:pl-6 reveal-on-scroll delay-300">
-                    <span className="font-sans text-2xl font-black text-[#FF9D2E] block mb-1.5">
+                    <span className="font-serif text-2xl sm:text-3xl text-[#FF9D2E] block mb-1.5">
                       03
                     </span>
-                    <h3 className="font-bold text-[13.5px] text-[#102D52] uppercase tracking-wider mb-1.5">
+                    <h3 className="font-semibold text-[15px] text-[#102D52] tracking-normal mb-1.5">
                       Kemudahan KPR
                     </h3>
                     <p className="text-xs text-[#526783] leading-relaxed">
@@ -632,7 +632,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   <Link
                     href="/tentang"
                     prefetch={false}
-                    className="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#073B78] hover:text-[#FF9D2E] transition-colors"
+                    className="group inline-flex items-center gap-2 text-xs font-semibold tracking-normal text-[#073B78] hover:text-[#FF9D2E] transition-colors"
                   >
                     <span>Baca Selengkapnya Tentang PT. TBK</span>
                     <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -651,7 +651,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#102D52]/80 via-transparent to-transparent" />
                   <div className="absolute bottom-4 left-4 right-4 text-white text-xs">
-                    <span className="font-bold text-[#FF9D2E] uppercase tracking-wider block text-[10.5px]">
+                    <span className="font-semibold text-[#FF9D2E] tracking-wider block text-[10.5px]">
                       Kantor Pusat
                     </span>
                     Bandar Lampung, Provinsi Lampung
@@ -659,10 +659,10 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                 </div>
 
                 <div className="pt-1 border-l-4 border-[#FF9D2E] pl-4 sm:pl-5 space-y-1">
-                  <span className="text-[11px] uppercase tracking-widest text-[#FF9D2E] font-bold block">
+                  <span className="text-[11px] tracking-wider text-[#FF9D2E] font-medium block">
                     Visi Perseroan
                   </span>
-                  <blockquote className="font-sans italic text-base sm:text-lg text-[#102D52] font-semibold leading-snug">
+                  <blockquote className="font-serif italic text-lg sm:text-xl text-[#102D52] font-normal leading-relaxed">
                     &ldquo;Perusahaan properti yang berkualitas dan terpercaya.&rdquo;
                   </blockquote>
                 </div>
@@ -678,14 +678,14 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
         <section className="py-16 sm:py-24 bg-[#F4F7FC] border-b border-[#DCE7F5]">
           <div className="container-editorial">
             <div className="max-w-2xl mb-12 sm:mb-16 reveal-on-scroll">
-              <div className="flex items-center gap-2 text-[#FF9D2E] font-bold text-xs uppercase tracking-[0.14em] mb-2">
+              <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
                 <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
                 <span>Panduan Konsumen</span>
               </div>
-              <h2 className="font-sans font-bold text-3xl sm:text-4xl text-[#102D52] leading-tight">
+              <h2 className="font-serif font-normal text-3xl sm:text-4xl text-[#102D52] leading-tight">
                 Tahapan Pembelian Rumah Subsidi
               </h2>
-              <p className="text-[15px] sm:text-[16px] text-[#526783] mt-2.5 leading-relaxed">
+              <p className="font-sans text-[15px] sm:text-[16px] text-[#526783] mt-2.5 leading-relaxed">
                 Alur pengajuan yang transparan dan terstruktur bagi masyarakat, dari pemilihan kavling hingga serah terima kunci.
               </p>
             </div>
@@ -740,12 +740,12 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                         <div>
                           <div className="hidden md:flex items-center gap-3 mb-4">
                             <span className="w-4 h-4 rounded-full bg-white border-4 border-[#FF9D2E] shrink-0" aria-hidden="true" />
-                            <span className="font-extrabold text-3xl lg:text-4xl text-[#073B78] leading-none">{item.step}</span>
+                            <span className="font-serif text-3xl lg:text-4xl text-[#073B78] leading-none">{item.step}</span>
                           </div>
 
-                          <span className="md:hidden font-extrabold text-2xl text-[#073B78] block mb-1">{item.step}</span>
+                          <span className="md:hidden font-serif text-2xl text-[#073B78] block mb-1">{item.step}</span>
 
-                          <h3 className="font-bold text-[16px] text-[#102D52] tracking-tight mb-2">
+                          <h3 className="font-semibold text-[16px] text-[#102D52] tracking-normal mb-2">
                             {item.title}
                           </h3>
                           <p className="text-xs lg:text-[13px] text-[#526783] leading-relaxed mb-3">
@@ -753,7 +753,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                           </p>
                         </div>
 
-                        <div className="pt-2.5 border-t border-[#DCE7F5] text-[11.5px] text-[#073B78] font-bold">
+                        <div className="pt-2.5 border-t border-[#DCE7F5] text-[11.5px] text-[#073B78] font-semibold">
                           {item.highlight}
                         </div>
                       </li>
@@ -774,14 +774,14 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
               {/* Left Column: Context & Overview */}
               <div className="lg:col-span-5 space-y-5 reveal-left-on-scroll">
-                <div className="flex items-center gap-2 text-[#FF9D2E] font-bold text-xs uppercase tracking-[0.14em]">
+                <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider">
                   <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
                   <span>Kalkulator Finansial</span>
                 </div>
-                <h2 className="font-sans font-extrabold text-3xl sm:text-4xl text-white leading-tight">
+                <h2 className="font-serif font-normal text-3xl sm:text-4xl text-white leading-tight">
                   Simulasi Angsuran KPR Bersubsidi
                 </h2>
-                <p className="text-[15px] sm:text-[16px] text-white/85 leading-relaxed">
+                <p className="font-sans text-[15px] sm:text-[16px] text-white/85 leading-relaxed">
                   Hitung perkiraan angsuran bulanan rumah subsidi Puri Gunung Langgar melalui skema FLPP dengan suku bunga tetap 5% p.a.
                 </p>
 
@@ -806,8 +806,8 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                 <div className="space-y-5">
                   {/* Harga Unit */}
                   <div>
-                    <div className="flex justify-between items-center text-xs text-[#526783] mb-2 font-semibold">
-                      <span className="uppercase tracking-wider">Harga Rumah</span>
+                    <div className="flex justify-between items-center text-xs text-[#526783] mb-2 font-medium">
+                      <span>Harga Rumah</span>
                       <span className="font-mono text-sm font-bold text-[#073B78]">
                         {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprHarga)}
                       </span>
@@ -825,8 +825,8 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
 
                   {/* Uang Muka DP */}
                   <div>
-                    <div className="flex justify-between items-center text-xs text-[#526783] mb-2 font-semibold">
-                      <span className="uppercase tracking-wider">Uang Muka (DP)</span>
+                    <div className="flex justify-between items-center text-xs text-[#526783] mb-2 font-medium">
+                      <span>Uang Muka (DP)</span>
                       <span className="font-mono text-sm font-bold text-[#15966A]">
                         {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprDp)}
                       </span>
@@ -844,7 +844,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
 
                   {/* Tenor */}
                   <div>
-                    <div className="text-xs text-[#526783] uppercase tracking-wider mb-2 font-semibold">
+                    <div className="text-xs text-[#526783] mb-2 font-medium">
                       Jangka Waktu Pinjaman
                     </div>
                     <div className="grid grid-cols-3 gap-3">
@@ -853,7 +853,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                           key={yr}
                           type="button"
                           onClick={() => setKprTenor(yr)}
-                          className={`py-2.5 px-3 rounded-xl text-xs font-bold tracking-wider uppercase transition-all duration-200 active:scale-95 ${
+                          className={`py-2.5 px-3 rounded-xl text-xs font-semibold tracking-normal transition-all duration-200 active:scale-95 ${
                             kprTenor === yr
                               ? 'bg-[#073B78] text-white shadow-md'
                               : 'bg-[#F4F7FC] hover:bg-[#DCE7F5] text-[#526783]'
@@ -869,10 +869,10 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                 {/* Live Output Highlight */}
                 <div className="p-5 bg-gradient-to-r from-[#073B78] to-[#102D52] rounded-xl text-white flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-md">
                   <div>
-                    <span className="text-[11px] uppercase tracking-wider text-white/80 block font-semibold">
+                    <span className="text-[11px] text-white/80 block font-medium">
                       Estimasi Angsuran Tetap per Bulan (FLPP 5%)
                     </span>
-                    <div className="font-mono text-2xl sm:text-3xl font-extrabold text-[#FF9D2E] tracking-tight mt-0.5">
+                    <div className="font-mono text-2xl sm:text-3xl font-bold text-[#FF9D2E] tracking-tight mt-0.5">
                       {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(kprAngsuran)}
                       <span className="text-xs text-white/70 font-sans font-normal"> / bulan</span>
                     </div>
@@ -890,7 +890,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="interactive-btn group w-full h-[48px] rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] font-black text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+                  className="interactive-btn group w-full h-[48px] rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] font-semibold text-xs tracking-normal flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
                 >
                   <MessageCircle className="w-4 h-4" />
                   <span>Konsultasi Simulasi Ini via WhatsApp</span>
@@ -909,14 +909,14 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
           <div className="container-editorial">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-14 reveal-on-scroll">
               <div className="max-w-2xl">
-                <div className="flex items-center gap-2 text-[#FF9D2E] font-bold text-xs uppercase tracking-[0.14em] mb-2">
+                <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
                   <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
                   <span>Dokumentasi Riil</span>
                 </div>
-                <h2 className="font-sans font-bold text-3xl sm:text-4xl text-[#102D52] leading-tight">
+                <h2 className="font-serif font-normal text-3xl sm:text-4xl text-[#102D52] leading-tight">
                   Progres Pekerjaan Lapangan
                 </h2>
-                <p className="text-[15px] sm:text-[16px] text-[#526783] mt-2.5 leading-relaxed">
+                <p className="font-sans text-[15px] sm:text-[16px] text-[#526783] mt-2.5 leading-relaxed">
                   Aktivitas fisik konstruksi kawasan perumahan Puri Gunung Langgar yang terpantau secara berkala.
                 </p>
               </div>
@@ -924,7 +924,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
               <Link
                 href="/kegiatan"
                 prefetch={false}
-                className="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#073B78] hover:text-[#FF9D2E] transition-colors self-start sm:self-end"
+                className="group inline-flex items-center gap-2 text-xs font-semibold tracking-normal text-[#073B78] hover:text-[#FF9D2E] transition-colors self-start sm:self-end"
               >
                 <span>Lihat Seluruh Dokumentasi Progres</span>
                 <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -995,13 +995,13 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                           loading="lazy"
                         />
-                        <div className="absolute top-2.5 left-2.5 bg-[#073B78]/90 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full backdrop-blur-sm">
+                        <div className="absolute top-2.5 left-2.5 bg-[#073B78]/90 text-white text-[10px] font-medium tracking-wide px-2.5 py-1 rounded-full backdrop-blur-sm">
                           {item.tag || `Tahap ${idx + 1}`}
                         </div>
                       </div>
 
                       <div className="space-y-1.5 pt-1">
-                        <h3 className="font-bold text-[15px] text-[#102D52] leading-snug group-hover:text-[#073B78] transition-colors">
+                        <h3 className="font-semibold text-[15px] text-[#102D52] leading-snug group-hover:text-[#073B78] transition-colors">
                           {item.title}
                         </h3>
                         <p className="text-xs text-[#526783] leading-relaxed line-clamp-2">
@@ -1024,14 +1024,14 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
           <div className="container-editorial">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
               <div className="lg:col-span-5 space-y-4 reveal-left-on-scroll">
-                <div className="flex items-center gap-2 text-[#FF9D2E] font-bold text-xs uppercase tracking-[0.14em]">
+                <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
                   <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
                   <span>Kepastian Hukum</span>
                 </div>
-                <h2 className="font-sans font-bold text-3xl sm:text-4xl text-[#102D52] leading-tight">
+                <h2 className="font-serif font-normal text-3xl sm:text-4xl text-[#102D52] leading-tight">
                   Legalitas Resmi Perseroan
                 </h2>
-                <p className="text-[15px] sm:text-[16px] text-[#526783] leading-relaxed">
+                <p className="font-sans text-[15px] sm:text-[16px] text-[#526783] leading-relaxed">
                   Setiap unit hunian dan pengembangan kawasan PT. Terbang Bersama Kawan berlandaskan kekuatan hukum resmi Republik Indonesia.
                 </p>
 
@@ -1039,7 +1039,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   <Link
                     href="/legalitas"
                     prefetch={false}
-                    className="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#073B78] hover:text-[#FF9D2E] transition-colors"
+                    className="group inline-flex items-center gap-2 text-xs font-semibold tracking-normal text-[#073B78] hover:text-[#FF9D2E] transition-colors"
                   >
                     <span>Pelajari Dokumen Legalitas Selengkapnya</span>
                     <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -1053,11 +1053,11 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   <div className="flex items-center gap-3">
                     <FileCheck2 className="w-6 h-6 text-[#073B78] shrink-0" />
                     <div>
-                      <h3 className="font-bold text-[15px] text-[#102D52]">PT. Terbang Bersama Kawan (PT. TBK)</h3>
+                      <h3 className="font-semibold text-[15px] text-[#102D52]">PT. Terbang Bersama Kawan (PT. TBK)</h3>
                       <span className="text-[11.5px] text-[#526783]">Terdaftar resmi di Kemenkumham RI</span>
                     </div>
                   </div>
-                  <span className="text-[11px] font-bold text-[#15966A] bg-[#E6F7F3] px-3 py-1 rounded-full uppercase tracking-wider font-mono">
+                  <span className="text-[11px] font-semibold text-[#15966A] bg-[#E6F7F3] px-3 py-1 rounded-full tracking-wide font-mono">
                     AHU Terverifikasi
                   </span>
                 </div>
@@ -1065,23 +1065,23 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                 <dl className="divide-y divide-[#DCE7F5] text-xs sm:text-[13.5px]">
                   <div className="py-3.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
                     <dt className="text-[#526783] font-medium sm:w-1/3">Akta Notaris</dt>
-                    <dd className="font-semibold text-[#102D52] sm:w-2/3 sm:text-right">
+                    <dd className="font-medium text-[#102D52] sm:w-2/3 sm:text-right">
                       <span className="font-mono font-bold text-[#102D52]">{content.legal?.aktaNumber || 'No. 10'}</span>
-                      <span className="text-[#526783] block text-[11px] mt-0.5">Tanggal {content.legal?.aktaDate || '18 Maret 2021'} &bull; Notaris: {content.legal?.notary || 'Eka Dian Anggraini, S.H., M.Kn.'}</span>
+                      <span className="text-[#526783] block text-[11px] mt-0.5 font-normal">Tanggal {content.legal?.aktaDate || '18 Maret 2021'} &bull; Notaris: {content.legal?.notary || 'Eka Dian Anggraini, S.H., M.Kn.'}</span>
                     </dd>
                   </div>
 
                   <div className="py-3.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
                     <dt className="text-[#526783] font-medium sm:w-1/3">SK Pengesahan Menkumham</dt>
-                    <dd className="font-semibold text-[#102D52] sm:w-2/3 sm:text-right">
+                    <dd className="font-medium text-[#102D52] sm:w-2/3 sm:text-right">
                       <span className="font-mono font-bold text-[#102D52] break-all">{content.legal?.skMenkumham || 'AHU-0016462.AH.01.01.TAHUN 2021'}</span>
-                      <span className="text-[#526783] block text-[11px] mt-0.5">Tanggal SK: {content.legal?.skDate || '19 Maret 2021'}</span>
+                      <span className="text-[#526783] block text-[11px] mt-0.5 font-normal">Tanggal SK: {content.legal?.skDate || '19 Maret 2021'}</span>
                     </dd>
                   </div>
 
                   <div className="py-3.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
                     <dt className="text-[#526783] font-medium sm:w-1/3">Status Hak Lahan</dt>
-                    <dd className="font-bold text-[#102D52] sm:w-2/3 sm:text-right">
+                    <dd className="font-semibold text-[#102D52] sm:w-2/3 sm:text-right">
                       <span className="text-[#102D52]">Sertifikat Hak Milik (SHM)</span>
                       <span className="text-[#526783] block text-[11px] mt-0.5 font-normal">Hak kepemilikan mutlak dan sah atas nama pembeli</span>
                     </dd>
@@ -1099,14 +1099,14 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
         <section id="kontak" className="py-16 sm:py-24 bg-white">
           <div className="container-editorial">
             <div className="max-w-2xl mb-12 sm:mb-16 reveal-on-scroll">
-              <div className="flex items-center gap-2 text-[#FF9D2E] font-bold text-xs uppercase tracking-[0.14em] mb-2">
+              <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
                 <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
                 <span>Hubungi Kami</span>
               </div>
-              <h2 className="font-sans font-bold text-3xl sm:text-4xl text-[#102D52] leading-tight">
+              <h2 className="font-serif font-normal text-3xl sm:text-4xl text-[#102D52] leading-tight">
                 Konsultasi &amp; Layanan Informasi
               </h2>
-              <p className="text-[15px] sm:text-[16px] text-[#526783] mt-2.5 leading-relaxed">
+              <p className="font-sans text-[15px] sm:text-[16px] text-[#526783] mt-2.5 leading-relaxed">
                 Tim pemasaran resmi PT. Terbang Bersama Kawan siap memberikan informasi ketersediaan unit, tahapan berkas, dan pendampingan survei lokasi.
               </p>
             </div>
@@ -1120,7 +1120,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                       <MapPin className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-[#FF9D2E] block">
+                      <span className="text-[11px] font-medium tracking-wide text-[#FF9D2E] block">
                         Alamat Kantor Pemasaran
                       </span>
                       <p className="text-xs sm:text-[13.5px] text-[#102D52] font-semibold leading-relaxed mt-0.5">
@@ -1134,14 +1134,14 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                       <Phone className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-[#FF9D2E] block">
+                      <span className="text-[11px] font-medium tracking-wide text-[#FF9D2E] block">
                         WhatsApp &amp; Telepon
                       </span>
                       <a
                         href={waUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs sm:text-[13.5px] text-[#102D52] font-bold hover:text-[#073B78] transition-colors block mt-0.5"
+                        className="text-xs sm:text-[13.5px] text-[#102D52] font-semibold hover:text-[#073B78] transition-colors block mt-0.5"
                       >
                         {content.contact?.whatsapp || '0812-7890-1234'}
                       </a>
@@ -1153,7 +1153,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                       <Mail className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-[#FF9D2E] block">
+                      <span className="text-[11px] font-medium tracking-wide text-[#FF9D2E] block">
                         Email Resmi
                       </span>
                       <a
@@ -1170,7 +1170,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                       <Clock className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-[#FF9D2E] block">
+                      <span className="text-[11px] font-medium tracking-wide text-[#FF9D2E] block">
                         Jam Layanan Kantor
                       </span>
                       <p className="text-xs sm:text-[13.5px] text-[#102D52] font-medium mt-0.5">
@@ -1185,7 +1185,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   href={waUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="interactive-btn w-full min-h-[50px] px-6 rounded-2xl bg-[#15966A] hover:bg-[#12805A] text-white font-bold text-xs sm:text-[13px] tracking-wider uppercase flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg"
+                  className="interactive-btn w-full min-h-[50px] px-6 rounded-2xl bg-[#15966A] hover:bg-[#12805A] text-white font-semibold text-xs sm:text-[13px] tracking-normal flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg"
                 >
                   <MessageCircle className="w-5 h-5" />
                   <span>Chat WhatsApp Tim Pemasaran</span>
@@ -1194,10 +1194,10 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
 
               {/* Right Column: Inquiry Consultation Form */}
               <div className="lg:col-span-7 bg-[#F4F7FC] p-6 sm:p-9 rounded-2xl border border-[#DCE7F5] shadow-sm reveal-right-on-scroll delay-200 interactive-card">
-                <h3 className="font-bold text-xl text-[#102D52] mb-1">
+                <h3 className="font-serif font-normal text-xl sm:text-2xl text-[#102D52] mb-1">
                   Kirim Formulir Konsultasi
                 </h3>
-                <p className="text-xs sm:text-[13.5px] text-[#526783] mb-6">
+                <p className="font-sans text-xs sm:text-[13.5px] text-[#526783] mb-6">
                   Silakan isi informasi di bawah ini. Tim kami akan segera merespons via WhatsApp atau telepon.
                 </p>
 
@@ -1217,7 +1217,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
 
                 <form onSubmit={handleInquirySubmit} className="space-y-4">
                   <div>
-                    <label className="block text-xs font-bold text-[#102D52] uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-medium text-[#102D52] mb-1.5">
                       Nama Lengkap <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -1226,13 +1226,13 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="Masukkan nama lengkap Anda"
-                      className="w-full px-4 py-3 rounded-xl bg-white border border-[#DCE7F5] text-xs sm:text-[13.5px] text-[#102D52] placeholder-[#526783]/60 focus:outline-none focus:ring-2 focus:ring-[#FF9D2E] focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 rounded-xl bg-white border border-[#DCE7F5] text-xs sm:text-[13.5px] text-[#102D52] placeholder-[#526783]/60 focus:outline-none focus:ring-2 focus:ring-[#FF9D2E] focus:border-transparent transition-all font-sans"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-[#102D52] uppercase tracking-wider mb-1.5">
+                      <label className="block text-xs font-medium text-[#102D52] mb-1.5">
                         Nomor WhatsApp <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -1241,11 +1241,11 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         placeholder="Contoh: 081234567890"
-                        className="w-full px-4 py-3 rounded-xl bg-white border border-[#DCE7F5] text-xs sm:text-[13.5px] text-[#102D52] placeholder-[#526783]/60 focus:outline-none focus:ring-2 focus:ring-[#FF9D2E] focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 rounded-xl bg-white border border-[#DCE7F5] text-xs sm:text-[13.5px] text-[#102D52] placeholder-[#526783]/60 focus:outline-none focus:ring-2 focus:ring-[#FF9D2E] focus:border-transparent transition-all font-sans"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-[#102D52] uppercase tracking-wider mb-1.5">
+                      <label className="block text-xs font-medium text-[#102D52] mb-1.5">
                         Alamat Email (Opsional)
                       </label>
                       <input
@@ -1253,13 +1253,13 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="nama@email.com"
-                        className="w-full px-4 py-3 rounded-xl bg-white border border-[#DCE7F5] text-xs sm:text-[13.5px] text-[#102D52] placeholder-[#526783]/60 focus:outline-none focus:ring-2 focus:ring-[#FF9D2E] focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 rounded-xl bg-white border border-[#DCE7F5] text-xs sm:text-[13.5px] text-[#102D52] placeholder-[#526783]/60 focus:outline-none focus:ring-2 focus:ring-[#FF9D2E] focus:border-transparent transition-all font-sans"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-[#102D52] uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-medium text-[#102D52] mb-1.5">
                       Pesan atau Pertanyaan
                     </label>
                     <textarea
@@ -1267,14 +1267,14 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="Tuliskan pertanyaan seputar kavling, berkas KPR subsidi, atau jadwal survei..."
-                      className="w-full px-4 py-3 rounded-xl bg-white border border-[#DCE7F5] text-xs sm:text-[13.5px] text-[#102D52] placeholder-[#526783]/60 focus:outline-none focus:ring-2 focus:ring-[#FF9D2E] focus:border-transparent transition-all resize-none"
+                      className="w-full px-4 py-3 rounded-xl bg-white border border-[#DCE7F5] text-xs sm:text-[13.5px] text-[#102D52] placeholder-[#526783]/60 focus:outline-none focus:ring-2 focus:ring-[#FF9D2E] focus:border-transparent transition-all resize-none font-sans"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={formSubmitting}
-                    className="interactive-btn w-full h-[48px] rounded-full bg-[#073B78] hover:bg-[#102D52] text-white text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-2 shadow-md hover:shadow-lg disabled:opacity-50"
+                    className="interactive-btn w-full h-[48px] rounded-full bg-[#073B78] hover:bg-[#102D52] text-white text-xs font-semibold tracking-normal flex items-center justify-center gap-2 shadow-md hover:shadow-lg disabled:opacity-50"
                   >
                     <span>{formSubmitting ? 'Mengirim...' : 'Kirim & Lanjutkan ke WhatsApp'}</span>
                     <ArrowRight className="w-4 h-4" />

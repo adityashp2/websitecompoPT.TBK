@@ -59,14 +59,14 @@ export default function PimpinanPage() {
             </nav>
 
             <div className="max-w-3xl space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[#FF9D2E] text-[11px] font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[#FF9D2E] text-[11px] font-medium tracking-wide">
                 <Users className="w-3.5 h-3.5" />
-                <span>{content.leadership.badge || 'STRUKTUR PENGURUS RESMI'}</span>
+                <span>{content.leadership.badge || 'Struktur Pengurus Resmi'}</span>
               </div>
-              <h1 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              <h1 className="font-serif font-normal text-3xl sm:text-4xl lg:text-[46px] tracking-tight text-white leading-[1.15]">
                 {content.leadership.title || 'Dewan Pengurus & Manajemen Perseroan'}
               </h1>
-              <p className="text-white/85 text-sm sm:text-base leading-relaxed max-w-2xl">
+              <p className="font-sans text-white/85 text-[15px] sm:text-base leading-relaxed max-w-2xl">
                 {content.leadership.subtitle || 'Dikelola oleh pengurus resmi yang tercantum dalam Anggaran Dasar, Akta Pendirian, serta tim manajemen profesional yang berdedikasi membangun kawasan perumahan berkualitas di Lampung.'}
               </p>
             </div>
@@ -77,14 +77,14 @@ export default function PimpinanPage() {
         <section className="py-16 sm:py-24 border-b border-[#DCE7F5] bg-white">
           <div className="container-editorial space-y-12">
             <div className="max-w-2xl">
-              <div className="flex items-center gap-2 text-[#FF9D2E] font-bold text-xs uppercase tracking-[0.14em] mb-2">
+              <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
                 <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
                 <span>Pimpinan Tertinggi Perseroan</span>
               </div>
-              <h2 className="font-sans font-bold text-2xl sm:text-3xl text-[#102D52]">
+              <h2 className="font-serif font-normal text-2xl sm:text-3xl text-[#102D52]">
                 Dewan Komisaris &amp; Direksi Utama
               </h2>
-              <p className="text-xs sm:text-sm text-[#526783] mt-1.5 leading-relaxed">
+              <p className="font-sans text-xs sm:text-sm text-[#526783] mt-1.5 leading-relaxed">
                 Tercantum secara sah dalam Akta Notaris {content.legal?.aktaNumber || 'No. 10'} tanggal {content.legal?.aktaDate || '18 Maret 2021'} dan disahkan melalui Keputusan Menteri Hukum dan HAM RI Nomor {content.legal?.skMenkumham || 'AHU-0016462.AH.01.01.TAHUN 2021'}.
               </p>
             </div>
@@ -114,29 +114,29 @@ export default function PimpinanPage() {
                             {member.name ? member.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() : 'TBK'}
                           </span>
                         </div>
-                        <span className="relative z-10 mt-3 text-[11px] font-bold text-white/70 tracking-wider uppercase">
+                        <span className="relative z-10 mt-3 text-[11px] font-medium text-white/70 tracking-wider">
                           Portret Resmi Perseroan
                         </span>
                       </div>
                     )}
 
                     {/* Role Badge */}
-                    <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md border border-[#FF9D2E]/60 text-[#FF9D2E] text-[11px] font-bold uppercase tracking-wider">
+                    <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md border border-[#FF9D2E]/60 text-[#FF9D2E] text-[11px] font-medium tracking-wide">
                       <span>{member.role}</span>
                     </div>
 
                     {/* Official SK Status Badge */}
-                    <div className="absolute top-4 right-4 z-10 px-3 py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md text-[#15966A] text-[11px] font-semibold border border-[#15966A]/40 flex items-center gap-1.5">
+                    <div className="absolute top-4 right-4 z-10 px-3 py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md text-[#15966A] text-[11px] font-medium border border-[#15966A]/40 flex items-center gap-1.5">
                       <CheckCircle2 className="w-3.5 h-3.5 text-[#15966A]" />
                       <span>SK Kemenkumham</span>
                     </div>
 
                     {/* Name at bottom of portrait */}
                     <div className="absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6 text-white">
-                      <span className="text-[11px] uppercase tracking-wider text-[#FF9D2E] font-bold block mb-0.5">
+                      <span className="text-[11px] tracking-wide text-[#FF9D2E] font-medium block mb-0.5">
                         {member.department || 'Pengurus Inti Perseroan'}
                       </span>
-                      <h3 className="font-sans text-2xl sm:text-3xl text-white font-extrabold tracking-tight">
+                      <h3 className="font-serif text-2xl sm:text-3xl text-white font-normal tracking-tight">
                         {member.name}
                       </h3>
                     </div>
@@ -145,11 +145,11 @@ export default function PimpinanPage() {
                   {/* Body */}
                   <div className="p-6 flex flex-col flex-1 justify-between space-y-4 bg-white">
                     <div>
-                      <div className="text-[11px] font-bold uppercase tracking-wider text-[#FF9D2E] mb-2 flex items-center gap-1.5">
+                      <div className="text-[11px] font-medium tracking-wide text-[#FF9D2E] mb-2 flex items-center gap-1.5">
                         <Briefcase className="w-3.5 h-3.5" />
                         <span>Amanat &amp; Tanggung Jawab</span>
                       </div>
-                      <p className="text-xs sm:text-[13.5px] text-[#526783] leading-relaxed">
+                      <p className="font-sans text-xs sm:text-[13.5px] text-[#526783] leading-relaxed">
                         {member.roleDescription}
                       </p>
                     </div>
@@ -173,11 +173,11 @@ export default function PimpinanPage() {
           <section className="py-16 sm:py-24 border-b border-[#DCE7F5] bg-[#F4F7FC]">
             <div className="container-editorial space-y-12">
               <div className="max-w-2xl">
-                <div className="flex items-center gap-2 text-[#FF9D2E] font-bold text-xs uppercase tracking-[0.14em] mb-2">
+                <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
                   <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
                   <span>Struktur Pelaksana &amp; Operasional</span>
                 </div>
-                <h2 className="font-sans font-bold text-2xl sm:text-3xl text-[#102D52]">
+                <h2 className="font-serif font-normal text-2xl sm:text-3xl text-[#102D52]">
                   Jajaran Manajemen &amp; Kepala Divisi
                 </h2>
                 <p className="text-xs sm:text-sm text-[#526783] mt-1.5 leading-relaxed">
@@ -263,11 +263,11 @@ export default function PimpinanPage() {
         <section className="py-16 sm:py-24 border-b border-[#DCE7F5] bg-white">
           <div className="container-editorial space-y-12">
             <div className="max-w-2xl">
-              <div className="flex items-center gap-2 text-[#FF9D2E] font-bold text-xs uppercase tracking-[0.14em] mb-2">
+              <div className="flex items-center gap-2 text-[#FF9D2E] font-semibold text-xs tracking-wider mb-2">
                 <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                <span>Tata Kelola &amp; Rantai Komando</span>
+                <span>Tata kelola &amp; rantai komando</span>
               </div>
-              <h2 className="font-sans font-bold text-2xl sm:text-3xl text-[#102D52]">
+              <h2 className="font-serif font-normal text-2xl sm:text-3xl text-[#102D52]">
                 Bagan Struktur Organisasi Perseroan
               </h2>
               <p className="text-xs sm:text-sm text-[#526783] mt-1.5 leading-relaxed">
@@ -280,9 +280,9 @@ export default function PimpinanPage() {
               {/* Level 1: RUPS */}
               <div className="flex flex-col items-center">
                 <div className="w-full max-w-md p-5 rounded-xl bg-gradient-to-r from-[#073B78] to-[#102D52] text-white text-center border border-white/10 shadow-md">
-                  <span className="text-[10px] font-mono tracking-widest text-[#FF9D2E] uppercase font-bold block">Tingkat 1 - Pemegang Saham</span>
-                  <h4 className="font-sans text-base sm:text-lg text-white font-bold">Rapat Umum Pemegang Saham (RUPS)</h4>
-                  <p className="text-[11px] text-white/80 mt-0.5">Pemegang kekuasaan tertinggi dalam penetapan arah strategis perseroan</p>
+                  <span className="text-[11px] font-medium tracking-wider text-[#FF9D2E] block mb-0.5">Tingkat 1 &bull; Pemegang Saham</span>
+                  <h4 className="font-serif font-normal text-lg sm:text-xl text-white">Rapat Umum Pemegang Saham (RUPS)</h4>
+                  <p className="text-xs text-white/80 mt-1">Pemegang kekuasaan tertinggi dalam penetapan arah strategis perseroan</p>
                 </div>
 
                 <div className="w-[2px] h-8 bg-[#DCE7F5]" />
@@ -293,13 +293,13 @@ export default function PimpinanPage() {
                 {/* Dewan Komisaris */}
                 <div className="p-6 rounded-2xl border border-[#DCE7F5] bg-white shadow-sm flex flex-col justify-between">
                   <div className="space-y-2">
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#073B78] text-white text-[10px] font-bold uppercase">
-                      <ShieldCheck className="w-3 h-3 text-[#FF9D2E]" />
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#073B78] text-white text-[11px] font-medium">
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#FF9D2E]" />
                       <span>Fungsi Pengawasan</span>
                     </div>
-                    <h5 className="font-sans text-base text-[#102D52] font-bold">Dewan Komisaris</h5>
+                    <h5 className="font-serif font-normal text-xl text-[#102D52]">Dewan Komisaris</h5>
                     {displayPrimary[0] && (
-                      <p className="text-xs text-[#073B78] font-bold">
+                      <p className="text-xs text-[#073B78] font-semibold">
                         {displayPrimary[0].name} ({displayPrimary[0].role})
                       </p>
                     )}
@@ -307,19 +307,19 @@ export default function PimpinanPage() {
                       {displayPrimary[0]?.roleDescription || 'Mengawasi kebijakan direksi dalam menjalankan perseroan serta memberikan nasihat pengelolaan risiko investasi.'}
                     </p>
                   </div>
-                  <span className="text-[10px] font-mono text-[#526783] mt-3 pt-2 border-t border-[#DCE7F5]">Independensi &amp; Kepatuhan</span>
+                  <span className="text-[11px] text-[#526783] mt-3 pt-2 border-t border-[#DCE7F5]">Independensi &amp; Kepatuhan</span>
                 </div>
 
                 {/* Direktur Utama */}
                 <div className="p-6 rounded-2xl border-2 border-[#FF9D2E]/60 bg-white shadow-sm flex flex-col justify-between">
                   <div className="space-y-2">
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#FF9D2E] text-[#102D52] text-[10px] font-extrabold uppercase">
-                      <Landmark className="w-3 h-3" />
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#FF9D2E] text-[#102D52] text-[11px] font-semibold">
+                      <Landmark className="w-3.5 h-3.5" />
                       <span>Fungsi Eksekutif</span>
                     </div>
-                    <h5 className="font-sans text-base text-[#102D52] font-bold">Direksi Utama</h5>
+                    <h5 className="font-serif font-normal text-xl text-[#102D52]">Direksi Utama</h5>
                     {displayPrimary[1] && (
-                      <p className="text-xs text-[#102D52] font-bold">
+                      <p className="text-xs text-[#102D52] font-semibold">
                         {displayPrimary[1].name} ({displayPrimary[1].role})
                       </p>
                     )}
@@ -327,7 +327,7 @@ export default function PimpinanPage() {
                       {displayPrimary[1]?.roleDescription || 'Memimpin pengurusan perseroan, mewakili perusahaan secara hukum, dan mengkoordinasikan seluruh divisi pelaksana.'}
                     </p>
                   </div>
-                  <span className="text-[10px] font-mono text-[#526783] mt-3 pt-2 border-t border-[#DCE7F5]">Akta Notaris {content.legal?.aktaNumber || 'No. 10'}</span>
+                  <span className="text-[11px] text-[#526783] mt-3 pt-2 border-t border-[#DCE7F5]">Akta Notaris {content.legal?.aktaNumber || 'No. 10'}</span>
                 </div>
               </div>
 
@@ -339,7 +339,7 @@ export default function PimpinanPage() {
               {/* Level 3: Pilar Divisi Operasional Proyek */}
               <div>
                 <div className="text-center mb-6">
-                  <span className="text-[11px] font-bold text-[#526783] uppercase tracking-wider">
+                  <span className="text-xs font-semibold text-[#526783] tracking-wide">
                     Divisi Pelaksana Proyek Puri Gunung Langgar
                   </span>
                 </div>
@@ -351,7 +351,7 @@ export default function PimpinanPage() {
                         <div className="w-8 h-8 rounded-lg bg-[#073B78] text-[#FF9D2E] flex items-center justify-center">
                           {idx === 0 ? <HardHat className="w-4 h-4" /> : idx === 1 ? <BadgePercent className="w-4 h-4" /> : idx === 2 ? <Compass className="w-4 h-4" /> : <FileCheck2 className="w-4 h-4" />}
                         </div>
-                        <h6 className="font-bold text-xs text-[#102D52]">{member.role}</h6>
+                        <h6 className="font-semibold text-xs text-[#102D52]">{member.role}</h6>
                         <p className="text-[11px] font-semibold text-[#073B78]">{member.name}</p>
                         <p className="text-[11.5px] text-[#526783] leading-relaxed line-clamp-3">
                           {member.roleDescription}
@@ -373,11 +373,11 @@ export default function PimpinanPage() {
         <section className="py-16 sm:py-24 border-b border-[#DCE7F5] bg-[#F4F7FC]">
           <div className="container-editorial space-y-10">
             <div>
-              <div className="flex items-center gap-2 text-[#FF9D2E] font-bold text-xs uppercase tracking-[0.14em] mb-2">
+              <div className="flex items-center gap-2 text-[#FF9D2E] font-semibold text-xs tracking-wider mb-2">
                 <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                <span>Tata Kelola Perusahaan</span>
+                <span>Tata kelola perusahaan</span>
               </div>
-              <h3 className="font-sans font-bold text-2xl sm:text-3xl text-[#102D52]">
+              <h3 className="font-serif font-normal text-2xl sm:text-3xl text-[#102D52]">
                 Prinsip Good Corporate Governance
               </h3>
               <p className="text-xs sm:text-sm text-[#526783] mt-1.5 leading-relaxed">
@@ -387,24 +387,24 @@ export default function PimpinanPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
               <div className="p-6 rounded-2xl bg-white border border-[#DCE7F5] shadow-sm space-y-3">
-                <span className="font-extrabold text-3xl text-[#073B78] block">01</span>
-                <h4 className="font-bold text-lg text-[#102D52]">Transparansi Finansial</h4>
+                <span className="font-serif text-3xl text-[#073B78] block">01</span>
+                <h4 className="font-semibold text-lg text-[#102D52]">Transparansi Finansial</h4>
                 <p className="text-xs sm:text-sm text-[#526783] leading-relaxed">
                   Pembukuan berkala yang rapi dan seluruh penerimaan pembayaran melalui rekening giro perseroan resmi tanpa perantara tidak resmi.
                 </p>
               </div>
 
               <div className="p-6 rounded-2xl bg-white border border-[#DCE7F5] shadow-sm space-y-3">
-                <span className="font-extrabold text-3xl text-[#073B78] block">02</span>
-                <h4 className="font-bold text-lg text-[#102D52]">Pengawasan Mutu Konstruksi</h4>
+                <span className="font-serif text-3xl text-[#073B78] block">02</span>
+                <h4 className="font-semibold text-lg text-[#102D52]">Pengawasan Mutu Konstruksi</h4>
                 <p className="text-xs sm:text-sm text-[#526783] leading-relaxed">
                   Setiap tahap pekerjaan fisik di lapangan diawasi langsung agar spesifikasi teknis presisi dengan standar kelayakan perumahan nasional.
                 </p>
               </div>
 
               <div className="p-6 rounded-2xl bg-white border border-[#DCE7F5] shadow-sm space-y-3">
-                <span className="font-extrabold text-3xl text-[#073B78] block">03</span>
-                <h4 className="font-bold text-lg text-[#102D52]">Akuntabilitas Konsumen</h4>
+                <span className="font-serif text-3xl text-[#073B78] block">03</span>
+                <h4 className="font-semibold text-lg text-[#102D52]">Akuntabilitas Konsumen</h4>
                 <p className="text-xs sm:text-sm text-[#526783] leading-relaxed">
                   Layanan konsultasi transparan, kepastian pemecahan sertifikat SHM, serta masa pemeliharaan unit pasca serah terima kunci.
                 </p>
@@ -416,7 +416,7 @@ export default function PimpinanPage() {
         {/* SECTION 5: Bottom CTA */}
         <section className="py-16 sm:py-20 bg-gradient-to-br from-[#073B78] via-[#0A4B91] to-[#102D52] text-white">
           <div className="container-editorial text-center space-y-6">
-            <h2 className="font-sans font-extrabold text-2xl sm:text-3xl lg:text-4xl text-white max-w-xl mx-auto">
+            <h2 className="font-serif font-normal text-2xl sm:text-3xl lg:text-4xl text-white max-w-xl mx-auto leading-tight">
               Konsultasikan Rencana Kepemilikan Rumah Anda
             </h2>
             <p className="text-white/85 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed">
@@ -425,9 +425,9 @@ export default function PimpinanPage() {
             <div className="pt-2">
               <Link
                 href="/kontak"
-                className="group inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-xs font-bold uppercase tracking-wider transition-all duration-200 hover:-translate-y-[1px] shadow-lg"
+                className="group inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-sm font-semibold transition-all duration-200 hover:-translate-y-[1px] shadow-lg"
               >
-                <span>Hubungi Manajemen &amp; Pemasaran</span>
+                <span>Hubungi manajemen &amp; pemasaran</span>
                 <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
               </Link>
             </div>

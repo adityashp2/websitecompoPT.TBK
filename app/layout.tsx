@@ -1,6 +1,21 @@
 import type { Metadata, Viewport } from 'next';
+import { DM_Serif_Display, DM_Sans } from 'next/font/google';
 import './globals.css';
 import MobileBottomNav from './components/MobileBottomNav';
+
+const dmSerifDisplay = DM_Serif_Display({
+  weight: ['400'],
+  subsets: ['latin'],
+  variable: '--font-serif',
+  display: 'swap',
+});
+
+const dmSans = DM_Sans({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+});
 
 export const viewport: Viewport = {
   themeColor: '#073B78',
@@ -101,7 +116,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className="scroll-smooth">
+    <html lang="id" className={`scroll-smooth ${dmSerifDisplay.variable} ${dmSans.variable}`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -110,7 +125,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="bg-white text-[#102D52] font-sans antialiased selection:bg-[#FF9D2E] selection:text-[#102D52] min-h-screen pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:pb-0">
+      <body className={`${dmSans.className} bg-white text-[#102D52] font-sans antialiased selection:bg-[#FF9D2E] selection:text-[#102D52] min-h-screen pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:pb-0`}>
         {children}
         <MobileBottomNav />
       </body>

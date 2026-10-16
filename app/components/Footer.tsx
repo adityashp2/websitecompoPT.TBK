@@ -24,10 +24,10 @@ export default function Footer({ content }: FooterProps) {
                 </svg>
               </div>
               <div className="flex flex-col text-left">
-                <span className="font-extrabold text-[15px] text-white tracking-[0.06em] uppercase group-hover:text-[#FF9D2E] transition-colors">
+                <span className="font-bold text-[15px] text-white tracking-[0.04em] uppercase group-hover:text-[#FF9D2E] transition-colors">
                   {content.footer?.companyName || 'PT. Terbang Bersama Kawan'}
                 </span>
-                <span className="text-[10.5px] text-[#FF9D2E] uppercase tracking-[0.08em] font-semibold">
+                <span className="text-[10.5px] text-[#FF9D2E] uppercase tracking-[0.05em] font-medium">
                   Pengembang Properti Bandar Lampung
                 </span>
               </div>

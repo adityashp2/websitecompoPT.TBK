@@ -89,15 +89,15 @@ export default function KontakPage() {
             <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-white/70 mb-6">
               <Link href="/" className="hover:text-[#FF9D2E] transition-colors">Beranda</Link>
               <span>/</span>
-              <span className="text-[#FF9D2E] font-bold">Kontak &amp; Konsultasi</span>
+              <span className="text-[#FF9D2E] font-medium">Kontak &amp; Konsultasi</span>
             </nav>
 
             <div className="max-w-3xl space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[#FF9D2E] text-[11px] font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[#FF9D2E] text-xs font-medium">
                 <Phone className="w-3.5 h-3.5" />
-                <span>{content.contact.badge || 'HUBUNGI PERSEROAN'}</span>
+                <span>{content.contact.badge || 'Hubungi perseroan'}</span>
               </div>
-              <h1 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              <h1 className="font-serif font-normal text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">
                 {content.contact.title || 'Layanan Konsultasi & Pemesanan'}
               </h1>
               <p className="text-white/85 text-sm sm:text-base leading-relaxed max-w-2xl">
@@ -114,19 +114,19 @@ export default function KontakPage() {
               {/* Left Contact Information */}
               <div className="lg:col-span-5 bg-[#F4F7FC] p-6 sm:p-8 rounded-2xl border border-[#DCE7F5] shadow-sm space-y-8">
                 <div>
-                  <div className="flex items-center gap-2 text-[#FF9D2E] font-bold text-xs uppercase tracking-[0.14em] mb-2">
+                  <div className="flex items-center gap-2 text-[#FF9D2E] font-semibold text-xs tracking-wider mb-2">
                     <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                    <span>Informasi Kontak</span>
+                    <span>Informasi kontak</span>
                   </div>
-                  <h2 className="font-sans font-bold text-2xl sm:text-3xl text-[#102D52]">
+                  <h2 className="font-serif font-normal text-2xl sm:text-3xl text-[#102D52]">
                     Kantor Pemasaran &amp; Domisili
                   </h2>
                 </div>
 
                 <div className="divide-y divide-[#DCE7F5]">
                   <div className="py-4 first:pt-0">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#FF9D2E] block mb-1">
-                      Lokasi Kantor
+                    <span className="text-xs text-[#FF9D2E] font-semibold block mb-1">
+                      Lokasi kantor
                     </span>
                     <p className="text-xs sm:text-[13.5px] text-[#102D52] font-semibold leading-relaxed">
                       {content.contact.address || 'Kawasan Puri Gunung Langgar, Desa Sabah Balau, Kec. Tanjung Bintang, Lampung Selatan'}
@@ -134,8 +134,8 @@ export default function KontakPage() {
                   </div>
 
                   <div className="py-4">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#FF9D2E] block mb-1">
-                      Layanan WhatsApp Resmi
+                    <span className="text-xs text-[#FF9D2E] font-semibold block mb-1">
+                      Layanan WhatsApp resmi
                     </span>
                     <p className="font-mono text-sm sm:text-base font-bold text-[#102D52]">
                       {content.contact.whatsapp || '0812-7890-1234'}
@@ -144,8 +144,8 @@ export default function KontakPage() {
                   </div>
 
                   <div className="py-4">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#FF9D2E] block mb-1">
-                      Surat Elektronik (Email)
+                    <span className="text-xs text-[#FF9D2E] font-semibold block mb-1">
+                      Surat elektronik (email)
                     </span>
                     <p className="text-xs sm:text-[13.5px] text-[#102D52] font-medium">
                       {content.contact.email || 'info@terbangbersamakawan.co.id'}
@@ -153,8 +153,8 @@ export default function KontakPage() {
                   </div>
 
                   <div className="py-4">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#FF9D2E] block mb-1">
-                      Jam Pelayanan Kantor
+                    <span className="text-xs text-[#FF9D2E] font-semibold block mb-1">
+                      Jam pelayanan kantor
                     </span>
                     <p className="text-xs sm:text-[13.5px] text-[#102D52] font-medium">
                       {content.contact.operatingHours || 'Senin - Sabtu: 08.00 - 17.00 WIB'}
@@ -169,18 +169,18 @@ export default function KontakPage() {
                     href={waUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#15966A] hover:bg-[#117a56] text-white text-xs font-bold tracking-wider uppercase transition-all duration-200 shadow-md"
+                    className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#15966A] hover:bg-[#117a56] text-white text-sm font-semibold transition-all duration-200 shadow-md"
                   >
                     <MessageCircle className="w-4 h-4 fill-current" />
-                    <span>Konsultasi WhatsApp Langsung</span>
+                    <span>Konsultasi WhatsApp langsung</span>
                     <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
                   </a>
                 </div>
 
                 {/* Pendampingan Survei Note */}
                 <div className="pt-4 border-l-4 border-[#073B78] bg-white rounded-r-xl p-4 space-y-1">
-                  <div className="text-xs font-bold text-[#073B78] uppercase tracking-wider">
-                    Pendampingan Survei Gratis
+                  <div className="text-xs font-semibold text-[#073B78]">
+                    Pendampingan survei gratis
                   </div>
                   <p className="text-xs text-[#526783] leading-relaxed">
                     Survei lokasi Puri Gunung Langgar dapat dijadwalkan setiap hari dengan konfirmasi terlebih dahulu melalui WhatsApp.
@@ -191,11 +191,11 @@ export default function KontakPage() {
               {/* Right Interactive Form */}
               <div className="lg:col-span-7 bg-[#F4F7FC] p-6 sm:p-9 rounded-2xl border border-[#DCE7F5] shadow-sm">
                 <div className="mb-6">
-                  <div className="flex items-center gap-2 text-[#FF9D2E] font-bold text-xs uppercase tracking-[0.14em] mb-2">
+                  <div className="flex items-center gap-2 text-[#FF9D2E] font-semibold text-xs tracking-wider mb-2">
                     <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                    <span>Formulir Pemesanan</span>
+                    <span>Formulir pemesanan</span>
                   </div>
-                  <h2 className="font-sans font-bold text-2xl sm:text-3xl text-[#102D52] mb-1.5">
+                  <h2 className="font-serif font-normal text-2xl sm:text-3xl text-[#102D52] mb-1.5">
                     Formulir Minat &amp; Pemesanan Unit
                   </h2>
                   <p className="text-xs sm:text-[13px] text-[#526783]">
@@ -206,16 +206,16 @@ export default function KontakPage() {
                 {formSuccess ? (
                   <div className="p-8 rounded-2xl bg-[#E6F7F3] border border-[#15966A]/30 text-[#102D52] text-center space-y-3">
                     <CheckCircle2 className="w-10 h-10 mx-auto text-[#15966A]" />
-                    <div className="text-base font-bold text-[#15966A]">Pesan Anda Berhasil Terkirim</div>
+                    <div className="text-base font-semibold text-[#15966A]">Pesan Anda Berhasil Terkirim</div>
                     <p className="text-xs sm:text-sm text-[#526783] max-w-md mx-auto">
                       Terima kasih atas ketertarikan Anda. Tim pemasaran PT. Terbang Bersama Kawan akan segera menghubungi nomor WhatsApp Anda.
                     </p>
                     <button
                       type="button"
                       onClick={() => setFormSuccess(false)}
-                      className="mt-3 px-6 py-2.5 rounded-full bg-[#073B78] hover:bg-[#1C5795] text-white font-bold text-xs tracking-wider uppercase transition-colors"
+                      className="mt-3 px-6 py-2.5 rounded-full bg-[#073B78] hover:bg-[#1C5795] text-white font-semibold text-xs transition-colors"
                     >
-                      Kirim Pertanyaan Lain
+                      Kirim pertanyaan lain
                     </button>
                   </div>
                 ) : (
@@ -227,7 +227,7 @@ export default function KontakPage() {
                     )}
 
                     <div>
-                      <label htmlFor="kontak-name" className="block text-xs font-bold uppercase tracking-wider text-[#102D52] mb-1.5">
+                      <label htmlFor="kontak-name" className="block text-xs font-semibold text-[#102D52] mb-1.5">
                         Nama Lengkap *
                       </label>
                       <input
@@ -243,7 +243,7 @@ export default function KontakPage() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label htmlFor="kontak-phone" className="block text-xs font-bold uppercase tracking-wider text-[#102D52] mb-1.5">
+                        <label htmlFor="kontak-phone" className="block text-xs font-semibold text-[#102D52] mb-1.5">
                           Nomor WhatsApp *
                         </label>
                         <input
@@ -257,7 +257,7 @@ export default function KontakPage() {
                         />
                       </div>
                       <div>
-                        <label htmlFor="kontak-email" className="block text-xs font-bold uppercase tracking-wider text-[#102D52] mb-1.5">
+                        <label htmlFor="kontak-email" className="block text-xs font-semibold text-[#102D52] mb-1.5">
                           Alamat Email (Opsional)
                         </label>
                         <input
@@ -272,7 +272,7 @@ export default function KontakPage() {
                     </div>
 
                     <div>
-                      <label htmlFor="kontak-message" className="block text-xs font-bold uppercase tracking-wider text-[#102D52] mb-1.5">
+                      <label htmlFor="kontak-message" className="block text-xs font-semibold text-[#102D52] mb-1.5">
                         Pesan atau Minat Khusus
                       </label>
                       <textarea
@@ -288,13 +288,13 @@ export default function KontakPage() {
                     <button
                       type="submit"
                       disabled={formSubmitting}
-                      className="group w-full h-[48px] rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] font-extrabold text-xs uppercase tracking-wider shadow-md transition-all duration-200 hover:-translate-y-[1px] active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50"
+                      className="group w-full h-[48px] rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] font-semibold text-sm shadow-md transition-all duration-200 hover:-translate-y-[1px] active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50"
                     >
                       {formSubmitting ? (
                         <span>Mengirim data...</span>
                       ) : (
                         <>
-                          <span>Kirim Formulir Minat</span>
+                          <span>Kirim formulir minat</span>
                           <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
                         </>
                       )}

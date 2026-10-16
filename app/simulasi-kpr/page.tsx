@@ -85,19 +85,19 @@ export default function SimulasiKprPage() {
             <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-white/70 mb-6">
               <Link href="/" className="hover:text-[#FF9D2E] transition-colors">Beranda</Link>
               <span>/</span>
-              <span className="text-[#FF9D2E] font-bold">Simulasi KPR FLPP</span>
+              <span className="text-[#FF9D2E] font-medium">Simulasi KPR FLPP</span>
             </nav>
 
             <div className="max-w-3xl space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[#FF9D2E] text-[11px] font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[#FF9D2E] text-xs font-medium">
                 <Calculator className="w-3.5 h-3.5" />
-                <span>KALKULATOR RESMI KPR FLPP</span>
+                <span>Kalkulator resmi KPR FLPP</span>
               </div>
-              <h1 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              <h1 className="font-serif font-normal text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">
                 Simulasi Angsuran Rumah Subsidi
               </h1>
               <p className="text-white/85 text-sm sm:text-base leading-relaxed max-w-2xl">
-                Hitung estimasi angsuran bulanan rumah bersubsidi Puri Gunung Langgar dengan suku bunga tetap 5% flat per tahun sesuai skema fasilitas likuiditas pembiayaan perumahan (FLPP).
+                Hitung estimasi angsuran bulanan rumah bersubsidi Puri Gunung Langgar dengan suku bunga tetap 5% flat per tahun sesuai skema Fasilitas Likuiditas Pembiayaan Perumahan (FLPP).
               </p>
             </div>
           </div>
@@ -110,11 +110,11 @@ export default function SimulasiKprPage() {
               {/* Left Column: Interactive Inputs */}
               <div className="lg:col-span-7 bg-[#F4F7FC] p-6 sm:p-9 rounded-2xl border border-[#DCE7F5] shadow-sm space-y-8">
                 <div>
-                  <div className="flex items-center gap-2 text-[#FF9D2E] font-bold text-xs uppercase tracking-[0.14em] mb-2">
+                  <div className="flex items-center gap-2 text-[#FF9D2E] font-semibold text-xs tracking-wider mb-2">
                     <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                    <span>Perhitungan Angsuran</span>
+                    <span>Perhitungan angsuran</span>
                   </div>
-                  <h2 className="font-sans font-bold text-2xl sm:text-3xl text-[#102D52]">
+                  <h2 className="font-serif font-normal text-2xl sm:text-3xl text-[#102D52]">
                     Parameter Simulasi KPR
                   </h2>
                   <p className="text-xs sm:text-sm text-[#526783] mt-1 leading-relaxed">
@@ -125,10 +125,10 @@ export default function SimulasiKprPage() {
                 {/* Input Harga Rumah */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold uppercase tracking-wider text-[#102D52]">
-                      Harga Unit Rumah
+                    <label className="text-xs font-semibold text-[#102D52]">
+                      Harga unit rumah
                     </label>
-                    <span className="text-xs text-[#073B78] font-semibold bg-[#E8F1FC] px-2.5 py-0.5 rounded-full">
+                    <span className="text-xs text-[#073B78] font-medium bg-[#E8F1FC] px-2.5 py-0.5 rounded-full">
                       Standar FLPP Lampung
                     </span>
                   </div>
@@ -146,10 +146,10 @@ export default function SimulasiKprPage() {
                 {/* Input Uang Muka (DP) */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold uppercase tracking-wider text-[#102D52]">
-                      Uang Muka (DP): <span className="text-[#FF9D2E] font-mono font-bold">{formatRupiah(dp)}</span>
+                    <label className="text-xs font-semibold text-[#102D52]">
+                      Uang muka (DP): <span className="text-[#FF9D2E] font-mono font-bold">{formatRupiah(dp)}</span>
                     </label>
-                    <span className="text-xs text-[#526783] font-mono font-semibold">
+                    <span className="text-xs text-[#526783] font-mono font-medium">
                       {((dp / harga) * 100).toFixed(1)}% dari harga
                     </span>
                   </div>
@@ -171,7 +171,7 @@ export default function SimulasiKprPage() {
                         key={val}
                         type="button"
                         onClick={() => setDp(val)}
-                        className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all border ${
+                        className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
                           dp === val
                             ? 'bg-[#073B78] text-white border-[#073B78] shadow-sm'
                             : 'bg-white hover:bg-white text-[#102D52] border-[#DCE7F5]'
@@ -185,8 +185,8 @@ export default function SimulasiKprPage() {
 
                 {/* Tenor Pinjaman */}
                 <div className="space-y-3">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#102D52] block">
-                    Jangka Waktu Pinjaman (Tenor)
+                  <label className="text-xs font-semibold text-[#102D52] block">
+                    Jangka waktu pinjaman (tenor)
                   </label>
                   <div className="grid grid-cols-3 gap-3">
                     {[10, 15, 20].map((t) => (
@@ -194,7 +194,7 @@ export default function SimulasiKprPage() {
                         key={t}
                         type="button"
                         onClick={() => setTenor(t)}
-                        className={`py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all border text-center ${
+                        className={`py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all border text-center ${
                           tenor === t
                             ? 'bg-[#073B78] text-white border-[#073B78] shadow-md'
                             : 'bg-white hover:bg-[#E8F1FC] text-[#102D52] border-[#DCE7F5]'
@@ -211,7 +211,7 @@ export default function SimulasiKprPage() {
                 <div className="py-3 px-4 rounded-xl border border-[#DCE7F5] bg-white flex items-center justify-between text-xs text-[#102D52]">
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4 text-[#15966A] shrink-0" />
-                    <span className="font-semibold">Suku Bunga KPR Subsidi FLPP</span>
+                    <span className="font-medium">Suku bunga KPR subsidi FLPP</span>
                   </div>
                   <span className="font-mono font-bold text-[#15966A]">5.0% Tetap Sampai Lunas</span>
                 </div>
@@ -221,20 +221,20 @@ export default function SimulasiKprPage() {
               <div className="lg:col-span-5 space-y-6">
                 <div className="bg-gradient-to-br from-[#073B78] to-[#102D52] text-white p-6 sm:p-8 rounded-2xl shadow-xl space-y-6">
                   <div>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#FF9D2E] mb-1 block">
-                      Hasil Simulasi Angsuran
+                    <span className="text-xs font-medium text-[#FF9D2E] mb-1 block">
+                      Hasil simulasi angsuran
                     </span>
-                    <h3 className="font-sans text-2xl font-bold text-white">
+                    <h3 className="font-serif font-normal text-2xl text-white">
                       Estimasi Cicilan Bulanan
                     </h3>
                   </div>
 
                   {/* Main Highlighted Number */}
                   <div className="p-5 rounded-xl bg-white/10 border border-white/15 text-center space-y-1">
-                    <div className="text-xs uppercase tracking-wider text-white/75 font-semibold">
+                    <div className="text-xs text-white/80 font-medium">
                       Angsuran Tenor {tenor} Tahun (FLPP 5% Tetap)
                     </div>
-                    <div className="text-3xl sm:text-4xl font-extrabold text-[#FF9D2E] tracking-tight">
+                    <div className="text-3xl sm:text-4xl font-mono font-bold text-[#FF9D2E] tracking-tight">
                       {formatRupiah(angsuranBulan)}
                       <span className="text-xs font-normal text-white/70 font-sans"> /bulan</span>
                     </div>
@@ -269,18 +269,18 @@ export default function SimulasiKprPage() {
                       href={waUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group w-full py-3.5 px-4 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all duration-200 hover:-translate-y-[1px] active:scale-[0.99] text-center shadow-lg"
+                      className="group w-full py-3.5 px-4 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-200 hover:-translate-y-[1px] active:scale-[0.99] text-center shadow-lg"
                     >
                       <Phone className="w-4 h-4" />
-                      <span>Ajukan Simulasi Ini via WA</span>
+                      <span>Ajukan simulasi ini via WhatsApp</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
 
                     <Link
                       href="/kontak"
-                      className="w-full py-3 px-4 rounded-full border border-white/40 hover:border-white hover:bg-white/10 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all duration-200 text-center"
+                      className="w-full py-3 px-4 rounded-full border border-white/40 hover:border-white hover:bg-white/10 text-white font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-200 text-center"
                     >
-                      <span>Isi Formulir Minat Unit</span>
+                      <span>Isi formulir minat unit</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
 
@@ -292,8 +292,8 @@ export default function SimulasiKprPage() {
 
                 {/* Perbandingan 3 Tenor */}
                 <div className="p-5 rounded-2xl bg-[#F4F7FC] border border-[#DCE7F5] space-y-3">
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#526783]">
-                    Perbandingan Tenor Lainnya (DP {formatRupiah(dp)})
+                  <div className="text-xs font-semibold text-[#526783]">
+                    Perbandingan tenor lainnya (DP {formatRupiah(dp)})
                   </div>
                   <div className="divide-y divide-[#DCE7F5] text-xs">
                     {[10, 15, 20].map((t) => (
@@ -324,11 +324,11 @@ export default function SimulasiKprPage() {
         <section className="py-16 sm:py-24 bg-[#F4F7FC] border-t border-b border-[#DCE7F5]">
           <div className="container-editorial space-y-12">
             <div className="max-w-2xl">
-              <div className="flex items-center gap-2 text-[#FF9D2E] font-bold text-xs uppercase tracking-[0.14em] mb-2">
+              <div className="flex items-center gap-2 text-[#FF9D2E] font-semibold text-xs tracking-wider mb-2">
                 <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                <span>Persyaratan Resmi FLPP</span>
+                <span>Persyaratan resmi FLPP</span>
               </div>
-              <h2 className="font-sans font-bold text-2xl sm:text-3xl text-[#102D52]">
+              <h2 className="font-serif font-normal text-2xl sm:text-3xl text-[#102D52]">
                 Syarat &amp; Dokumen Pengajuan KPR Bersubsidi
               </h2>
               <p className="text-xs sm:text-sm text-[#526783] mt-1 leading-relaxed">
@@ -340,7 +340,7 @@ export default function SimulasiKprPage() {
               <div className="bg-white p-6 sm:p-8 rounded-2xl border border-[#DCE7F5] shadow-sm space-y-4">
                 <div className="flex items-center gap-2.5 text-[#073B78]">
                   <CheckCircle2 className="w-6 h-6 text-[#15966A] shrink-0" />
-                  <h3 className="font-bold text-lg text-[#102D52]">Kriteria Calon Penerima Subsidi</h3>
+                  <h3 className="font-semibold text-lg text-[#102D52]">Kriteria Calon Penerima Subsidi</h3>
                 </div>
                 <ul className="space-y-2.5 text-xs sm:text-sm text-[#526783] pl-6 list-disc leading-relaxed">
                   <li>Warga Negara Indonesia (WNI) berusia minimal 21 tahun atau telah menikah.</li>
@@ -354,7 +354,7 @@ export default function SimulasiKprPage() {
               <div className="bg-white p-6 sm:p-8 rounded-2xl border border-[#DCE7F5] shadow-sm space-y-4">
                 <div className="flex items-center gap-2.5 text-[#073B78]">
                   <FileCheck2 className="w-6 h-6 text-[#073B78] shrink-0" />
-                  <h3 className="font-bold text-lg text-[#102D52]">Berkas yang Harus Disiapkan</h3>
+                  <h3 className="font-semibold text-lg text-[#102D52]">Berkas yang Harus Disiapkan</h3>
                 </div>
                 <ul className="space-y-2.5 text-xs sm:text-sm text-[#526783] pl-6 list-disc leading-relaxed">
                   <li>Fotokopi KTP Pemohon &amp; Pasangan (jika menikah).</li>

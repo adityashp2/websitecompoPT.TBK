@@ -68,8 +68,8 @@ module.exports = {
         },
       },
       fontFamily: {
-        serif: ['var(--font-serif)', 'DM Serif Display', 'Playfair Display', 'Georgia', 'serif'],
-        sans: ['var(--font-sans)', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-serif)', 'DM Serif Display', 'Georgia', 'serif'],
+        sans: ['var(--font-sans)', 'DM Sans', 'system-ui', '-apple-system', 'sans-serif'],
       },
     },
   },

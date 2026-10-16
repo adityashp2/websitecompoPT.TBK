@@ -213,10 +213,10 @@ export default function Header({ content }: HeaderProps) {
             </div>
 
             <div className="flex flex-col text-left">
-              <span className="text-[13.5px] sm:text-[15px] font-black tracking-[0.06em] text-white uppercase group-hover:text-[#FF9D2E] transition-colors leading-tight">
+              <span className="text-[13.5px] sm:text-[15px] font-bold tracking-[0.04em] text-white uppercase group-hover:text-[#FF9D2E] transition-colors leading-tight">
                 PT. TBK
               </span>
-              <span className="text-[9.5px] sm:text-[10.5px] text-[#FF9D2E] font-semibold tracking-[0.05em] uppercase leading-tight mt-0.5">
+              <span className="text-[9.5px] sm:text-[10.5px] text-[#FF9D2E] font-medium tracking-[0.04em] uppercase leading-tight mt-0.5">
                 Terbang Bersama Kawan
               </span>
             </div>
@@ -408,7 +408,7 @@ export default function Header({ content }: HeaderProps) {
             <Link
               href="/kontak"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full min-h-[42px] px-4 rounded-xl bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] font-bold text-[13px] tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow"
+              className="w-full min-h-[42px] px-4 rounded-xl bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] font-semibold text-[13px] tracking-normal flex items-center justify-center gap-2 transition-all shadow"
             >
               <span>Hubungi Kami</span>
               <ArrowRight className="w-4 h-4" />
