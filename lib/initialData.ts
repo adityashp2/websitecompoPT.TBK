@@ -41,6 +41,19 @@ export interface KprSimulationConfig {
   benefits: string[];
 }
 
+export interface PromoPopup {
+  enabled: boolean;
+  image: string;
+  badge?: string;
+  title?: string;
+  description?: string;
+  ctaText?: string;
+  ctaUrl?: string;
+  greeting?: string;
+  highlightText?: string;
+  urgencyText?: string;
+}
+
 export interface SiteContent {
   meta: {
     title: string;
@@ -170,6 +183,7 @@ export interface SiteContent {
     summary: string;
     copyrightText: string;
   };
+  promoPopup?: PromoPopup;
 }
 
 export const defaultBannerSlides: BannerSlide[] = [
@@ -497,28 +511,20 @@ export const initialSiteContent: SiteContent = {
     videoUrl: "",
     slides: [
       {
+        image: "/assets/project-workspace.jpg",
+        caption: "Kawasan Puri Gunung Langgar, Tanjung Bintang, Lampung Selatan"
+      },
+      {
         image: "/assets/service-construction.jpg",
-        caption: "Dokumentasi Lapangan: Pematangan dan Perataan Lahan Proyek Puri Gunung Langgar."
+        caption: "Pematangan dan Perataan Lahan Kawasan"
       },
       {
         image: "/assets/service-residential.jpg",
-        caption: "Dokumentasi Lapangan: Pengukuran Batas Kavling dan Pondasi Unit."
-      },
-      {
-        image: "/assets/service-interior.jpg",
-        caption: "Dokumentasi Lapangan: Pekerjaan Pondasi, Pembesian, dan Struktur Bangunan Kokoh."
-      },
-      {
-        image: "/assets/project-coastal.jpg",
-        caption: "Dokumentasi Lapangan: Infrastruktur Akses Jalan Lingkungan dan Saluran Air Kawasan."
-      },
-      {
-        image: "/assets/project-workspace.jpg",
-        caption: "Ilustrasi Perencanaan: Master Plan Kawasan Puri Gunung Langgar, Tanjung Bintang, Lampung Selatan."
+        caption: "Progres Pembangunan Unit Hunian Subsidi"
       },
       {
         image: "/assets/hero-villa.jpg",
-        caption: "Visualisasi Arsitektural: Konsep Desain & Standar Mutu Hunian PT. TBK."
+        caption: "Visualisasi Standar Kualitas Hunian PT. TBK"
       }
     ],
     specs: [
@@ -551,6 +557,18 @@ export const initialSiteContent: SiteContent = {
     tagline: "Pengembang Perumahan Resmi",
     summary: "Pengembang perumahan resmi, amanah, dan berkualitas berdomisili di Bandar Lampung. Mengutamakan transparansi, kepuasan konsumen, dan legalitas sah.",
     copyrightText: "Hak Cipta Dilindungi Undang-Undang. PT. Terbang Bersama Kawan (PT. TBK).",
+  },
+  promoPopup: {
+    enabled: true,
+    image: "/uploads/spek-rmh-1792149341412.jpg",
+    greeting: "👋 Hai, calon pemilik rumah impian!",
+    highlightText: "JANGAN LEWATKAN KESEMPATAN UNTUK MEMILIKI HUNIAN RESMI BERSUBSIDI",
+    title: "PURI GUNUNG LANGGAR",
+    badge: "BATCH SUBSIDI TAHUN 2026",
+    urgencyText: "⏰ Amankan tempatmu sekarang sebelum terlambat!",
+    description: "Program Rumah Subsidi Berkualitas dengan Angsuran Ringan Flat Sampai Lunas",
+    ctaText: "Daftar sekarang!!!",
+    ctaUrl: "https://wa.me/6281278901234?text=Halo%20PT.%20TBK%2C%20saya%20tertarik%20dengan%20promo%20spesial%20unit%20Puri%20Gunung%20Langgar.",
   },
 };
 

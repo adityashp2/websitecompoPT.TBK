@@ -135,7 +135,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${dmSans.className} bg-white text-[#102D52] font-sans antialiased selection:bg-[#FF9D2E] selection:text-[#102D52] min-h-screen pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:pb-0`}>
+      <body className={`${dmSans.className} bg-[#102D52] text-[#102D52] font-sans antialiased selection:bg-[#FF9D2E] selection:text-[#102D52] min-h-screen relative`}>
         <React.Suspense fallback={null}>
           <RouteProgressBar />
         </React.Suspense>

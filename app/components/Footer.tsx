@@ -11,7 +11,7 @@ interface FooterProps {
 
 export default function Footer({ content }: FooterProps) {
   return (
-    <footer className="bg-[#102D52] text-[#DCE7F5]/85 pt-16 pb-12 border-t border-white/10 text-[13.5px]">
+    <footer className="bg-[#102D52] text-[#DCE7F5]/85 pt-16 pb-28 md:pb-12 border-t border-white/10 text-[13.5px]">
       <div className="container-editorial">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-12 pb-12 border-b border-white/10">
           {/* Column 1: Company Profile & Verification */}

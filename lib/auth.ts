@@ -41,12 +41,43 @@ export function generateSalt(): string {
 }
 
 /**
- * Authenticate admin by username or email and password (Supabase with SQLite fallback)
+ * Authenticate admin by username or email and password (SQLite primary with Supabase fallback)
  */
 export async function authenticateAdmin(identifier: string, password: string): Promise<AdminUser | null> {
   const cleanId = identifier.trim().toLowerCase();
 
-  // 1. Try Supabase if configured
+  // 1. Try local SQLite first (instant local SSD check, < 1ms)
+  try {
+    const db = getDb();
+    const user = db.prepare(`
+      SELECT id, username, email, password_hash, salt, name, role
+      FROM admin_users 
+      WHERE LOWER(username) = ? OR LOWER(email) = ?
+    `).get(cleanId, cleanId) as {
+      id: number;
+      username: string;
+      email: string | null;
+      password_hash: string;
+      salt: string;
+      name: string;
+      role: string;
+    } | undefined;
+
+    if (user && verifyPassword(password, user.password_hash, user.salt)) {
+      db.prepare('UPDATE admin_users SET last_login = CURRENT_TIMESTAMP WHERE id = ?').run(user.id);
+      return {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      };
+    }
+  } catch (error) {
+    console.error('Error authenticating admin in SQLite:', error);
+  }
+
+  // 2. Fallback to Supabase if configured and not found in SQLite
   if (isSupabaseConfigured()) {
     try {
       const supabase = getSupabaseAdminClient();
@@ -78,45 +109,11 @@ export async function authenticateAdmin(identifier: string, password: string): P
         }
       }
     } catch (err) {
-      console.warn('Supabase authenticateAdmin error, falling back to SQLite:', err);
+      console.warn('Supabase authenticateAdmin error:', err);
     }
   }
 
-  // 2. Fallback to SQLite
-  try {
-    const db = getDb();
-    const user = db.prepare(`
-      SELECT id, username, email, password_hash, salt, name, role
-      FROM admin_users 
-      WHERE LOWER(username) = ? OR LOWER(email) = ?
-    `).get(cleanId, cleanId) as {
-      id: number;
-      username: string;
-      email: string | null;
-      password_hash: string;
-      salt: string;
-      name: string;
-      role: string;
-    } | undefined;
-
-    if (!user) return null;
-
-    const isValid = verifyPassword(password, user.password_hash, user.salt);
-    if (!isValid) return null;
-
-    db.prepare('UPDATE admin_users SET last_login = CURRENT_TIMESTAMP WHERE id = ?').run(user.id);
-
-    return {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      name: user.name,
-      role: user.role,
-    };
-  } catch (error) {
-    console.error('Error authenticating admin in SQLite:', error);
-    return null;
-  }
+  return null;
 }
 
 /**
@@ -164,7 +161,34 @@ export async function getAdminFromSession(token: string): Promise<AdminUser | nu
   if (!token) return null;
   const nowIso = new Date().toISOString();
 
-  // 1. Try Supabase if configured
+  // 1. Try local SQLite session first (instant local check, < 1ms)
+  try {
+    const db = getDb();
+    const row = db.prepare(`
+      SELECT 
+        u.id, u.username, u.email, u.name, u.role, u.created_at, u.last_login,
+        s.expires_at
+      FROM admin_sessions s
+      JOIN admin_users u ON s.user_id = u.id
+      WHERE s.token = ? AND s.expires_at > ?
+    `).get(token, nowIso) as (AdminUser & { expires_at: string }) | undefined;
+
+    if (row) {
+      return {
+        id: row.id,
+        username: row.username,
+        email: row.email,
+        name: row.name,
+        role: row.role,
+        created_at: row.created_at,
+        last_login: row.last_login,
+      };
+    }
+  } catch (err) {
+    console.error('SQLite getAdminFromSession error:', err);
+  }
+
+  // 2. Fallback to Supabase if configured and not found in SQLite
   if (isSupabaseConfigured()) {
     try {
       const supabase = getSupabaseAdminClient();
@@ -190,39 +214,11 @@ export async function getAdminFromSession(token: string): Promise<AdminUser | nu
         }
       }
     } catch (err) {
-      console.warn('Supabase getAdminFromSession error, falling back to SQLite:', err);
+      console.warn('Supabase getAdminFromSession error:', err);
     }
   }
 
-  // 2. Fallback to SQLite
-  try {
-    const db = getDb();
-    const row = db.prepare(`
-      SELECT 
-        u.id, u.username, u.email, u.name, u.role, u.created_at, u.last_login,
-        s.expires_at
-      FROM admin_sessions s
-      JOIN admin_users u ON s.user_id = u.id
-      WHERE s.token = ? AND s.expires_at > ?
-    `).get(token, nowIso) as (AdminUser & { expires_at: string }) | undefined;
-
-    if (!row) {
-      return null;
-    }
-
-    return {
-      id: row.id,
-      username: row.username,
-      email: row.email,
-      name: row.name,
-      role: row.role,
-      created_at: row.created_at,
-      last_login: row.last_login,
-    };
-  } catch (error) {
-    console.error('Error verifying session in SQLite:', error);
-    return null;
-  }
+  return null;
 }
 
 /**

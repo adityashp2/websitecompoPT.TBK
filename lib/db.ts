@@ -116,7 +116,7 @@ export function mergeWithDefaults(parsed: any): SiteContent {
       ...parsed.project,
       mediaType: parsed.project?.mediaType || initialSiteContent.project.mediaType || 'photo',
       videoUrl: parsed.project?.videoUrl ?? initialSiteContent.project.videoUrl ?? '',
-      slides: Array.isArray(parsed.project?.slides)
+      slides: Array.isArray(parsed.project?.slides) && parsed.project.slides.length > 0
         ? parsed.project.slides
         : initialSiteContent.project.slides,
       specs: Array.isArray(parsed.project?.specs)
@@ -189,6 +189,17 @@ export function mergeWithDefaults(parsed: any): SiteContent {
       ...(parsed.footer || {}),
       tagline: parsed.footer?.tagline || initialSiteContent.footer.tagline,
     },
+    promoPopup: {
+      ...initialSiteContent.promoPopup,
+      ...(parsed.promoPopup || {}),
+      enabled: typeof parsed.promoPopup?.enabled === 'boolean'
+        ? parsed.promoPopup.enabled
+        : (initialSiteContent.promoPopup?.enabled ?? true),
+      image: parsed.promoPopup?.image || initialSiteContent.promoPopup?.image || '/uploads/spek-rmh-1792149341412.jpg',
+      greeting: parsed.promoPopup?.greeting || initialSiteContent.promoPopup?.greeting,
+      highlightText: parsed.promoPopup?.highlightText || initialSiteContent.promoPopup?.highlightText,
+      urgencyText: parsed.promoPopup?.urgencyText || initialSiteContent.promoPopup?.urgencyText,
+    },
   };
 }
 
@@ -210,9 +221,16 @@ function getSiteContentSqlite(): SiteContent {
 }
 
 /**
- * Get site content (Supabase with automatic SQLite fallback)
+ * Get site content (instant local SQLite with Supabase fallback)
  */
 export async function getSiteContent(): Promise<SiteContent> {
+  // 1. Instant local SQLite read (< 1ms, no network delay)
+  const local = getSiteContentSqlite();
+  if (local) {
+    return local;
+  }
+
+  // 2. Fallback to Supabase if SQLite has no content
   if (isSupabaseConfigured()) {
     try {
       const supabase = getSupabaseAdminClient();
@@ -233,7 +251,7 @@ export async function getSiteContent(): Promise<SiteContent> {
     }
   }
 
-  return getSiteContentSqlite();
+  return initialSiteContent;
 }
 
 /**
@@ -357,6 +375,18 @@ export async function saveInquiry(inquiry: { name: string; phone: string; email?
  * Get all inquiry messages
  */
 export async function getInquiries() {
+  // 1. Local SQLite read first (instant, < 1ms)
+  try {
+    const db = getDb();
+    const rows = db.prepare("SELECT * FROM inquiries ORDER BY created_at DESC").all();
+    if (rows && rows.length > 0) {
+      return rows;
+    }
+  } catch (err) {
+    console.error('SQLite getInquiries error:', err);
+  }
+
+  // 2. Fallback to Supabase if configured and SQLite empty
   if (isSupabaseConfigured()) {
     try {
       const supabase = getSupabaseAdminClient();
@@ -371,16 +401,11 @@ export async function getInquiries() {
         }
       }
     } catch (err) {
-      console.warn('Supabase getInquiries error, falling back to SQLite:', err);
+      console.warn('Supabase getInquiries error:', err);
     }
   }
 
-  try {
-    const db = getDb();
-    return db.prepare("SELECT * FROM inquiries ORDER BY created_at DESC").all();
-  } catch {
-    return [];
-  }
+  return [];
 }
 
 /**

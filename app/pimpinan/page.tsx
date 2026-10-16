@@ -87,72 +87,61 @@ export default async function PimpinanPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
               {displayPrimary.map((member, idx) => (
                 <div
                   key={idx}
-                  className="group rounded-2xl bg-[#F4F7FC] border border-[#DCE7F5] overflow-hidden flex flex-col transition-all duration-300 hover:border-[#073B78] shadow-sm hover:shadow-md"
+                  className="group rounded-2xl bg-[#F4F7FC] border border-[#DCE7F5] p-5 sm:p-6 flex flex-col sm:flex-row gap-5 sm:gap-6 items-center sm:items-stretch transition-all duration-300 hover:border-[#073B78] shadow-sm hover:shadow-md"
                 >
-                  {/* Executive Portrait Frame */}
-                  <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] bg-[#073B78] overflow-hidden">
+                  {/* Pas Foto Proporsional 3:4 (Wajah Utuh Tidak Terpotong) */}
+                  <div className="relative w-36 sm:w-44 aspect-[3/4] shrink-0 rounded-xl overflow-hidden shadow-md border border-[#DCE7F5] bg-[#073B78]">
                     {member.image && member.image.trim() !== '' ? (
-                      <>
-                        <img
-                          src={member.image}
-                          alt={member.name}
-                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
-                        />
-                        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#102D52]/95 via-[#102D52]/50 to-transparent pointer-events-none" />
-                      </>
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 ease-out"
+                      />
                     ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-[#073B78] relative overflow-hidden">
-                        <div className="relative z-10 w-24 h-28 rounded-2xl border border-white/20 bg-white/10 flex flex-col items-center justify-center p-4">
-                          <Building2 className="w-7 h-7 text-[#FF9D2E] mb-1" />
-                          <span className="text-2xl font-bold text-white tracking-wider">
-                            {member.name ? member.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() : 'TBK'}
-                          </span>
-                        </div>
-                        <span className="relative z-10 mt-3 text-[11px] font-medium text-white/70 tracking-wider">
-                          Portret Resmi Perseroan
-                        </span>
+                      <div className="w-full h-full flex flex-col items-center justify-center p-4 text-white text-center">
+                        <Building2 className="w-8 h-8 text-[#FF9D2E] mb-1" />
+                        <span className="text-xl font-bold">TBK</span>
                       </div>
                     )}
-
-                    {/* Responsive Badges Header (Role & Legal Verified) */}
-                    <div className="absolute top-3 sm:top-4 inset-x-3 sm:inset-x-4 z-10 flex flex-wrap items-center justify-between gap-1.5 pointer-events-none">
-                      <div className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md border border-[#FF9D2E]/60 text-[#FF9D2E] text-[10px] sm:text-[11px] font-medium tracking-wide shadow-sm pointer-events-auto">
-                        <span>{member.role}</span>
-                      </div>
-                      <div className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md text-[#15966A] text-[10px] sm:text-[11px] font-medium border border-[#15966A]/40 flex items-center gap-1 shadow-sm pointer-events-auto">
-                        <CheckCircle2 className="w-3 h-3 text-[#15966A]" />
-                        <span>SK Kemenkumham</span>
-                      </div>
-                    </div>
-
-                    {/* Name at bottom of portrait */}
-                    <div className="absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6 text-white">
-                      <span className="text-[11px] tracking-wide text-[#FF9D2E] font-medium block mb-0.5">
-                        {member.department || 'Pengurus Inti Perseroan'}
+                    <div className="absolute top-2 left-2 z-10">
+                      <span className="px-2 py-0.5 rounded-full bg-[#102D52]/90 backdrop-blur-md text-[#FF9D2E] text-[9.5px] font-bold tracking-wide border border-[#FF9D2E]/40">
+                        {member.role}
                       </span>
-                      <h3 className="font-serif text-2xl sm:text-3xl text-white font-normal tracking-tight">
-                        {member.name}
-                      </h3>
                     </div>
                   </div>
 
-                  {/* Body */}
-                  <div className="p-6 flex flex-col flex-1 justify-between space-y-4 bg-white">
+                  {/* Konten Keterangan Eksekutif di Sebelah Kanan */}
+                  <div className="flex flex-col flex-1 justify-between space-y-3 text-left w-full">
                     <div>
-                      <div className="text-[11px] font-medium tracking-wide text-[#FF9D2E] mb-2 flex items-center gap-1.5">
+                      <div className="flex items-center gap-1.5 mb-1.5">
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-semibold border border-emerald-200 flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          <span>SK Kemenkumham RI</span>
+                        </span>
+                      </div>
+                      <h3 className="font-serif text-xl sm:text-2xl text-[#102D52] font-normal tracking-tight">
+                        {member.name}
+                      </h3>
+                      <span className="text-[11px] tracking-wide text-[#FF9D2E] font-medium block">
+                        {member.department || 'Pengurus Inti Perseroan'}
+                      </span>
+                    </div>
+
+                    <div>
+                      <div className="text-[10.5px] font-medium tracking-wide text-[#FF9D2E] mb-1 flex items-center gap-1.5">
                         <Briefcase className="w-3.5 h-3.5" />
                         <span>Amanat &amp; Tanggung Jawab</span>
                       </div>
-                      <p className="font-sans text-xs sm:text-[13.5px] text-[#526783] leading-relaxed">
+                      <p className="font-sans text-xs sm:text-[13px] text-[#526783] leading-relaxed line-clamp-3 sm:line-clamp-4">
                         {member.roleDescription}
                       </p>
                     </div>
 
-                    <div className="pt-3 border-t border-[#DCE7F5] flex items-center justify-between text-[11px] text-[#526783]">
+                    <div className="pt-2.5 border-t border-[#DCE7F5] flex items-center justify-between text-[10.5px] text-[#526783]">
                       <div className="flex items-center gap-1.5">
                         <ShieldCheck className="w-3.5 h-3.5 text-[#073B78] shrink-0" />
                         <span>Akta Notaris {content.legal?.aktaNumber || 'No. 10'}</span>

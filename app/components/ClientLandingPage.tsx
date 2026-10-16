@@ -28,6 +28,7 @@ import Footer from './Footer';
 import FloatingWhatsApp from './FloatingWhatsApp';
 import PromoBannerCarousel from './PromoBannerCarousel';
 import LookbookModal, { LookbookItem } from './LookbookModal';
+import PromoPopupModal from './PromoPopupModal';
 import { SiteContent, initialSiteContent } from '@/lib/initialData';
 
 const featureColorClasses = [
@@ -88,34 +89,10 @@ export default function ClientLandingPage({ initialContent }: { initialContent: 
       .catch(() => {});
   }, []);
 
-  // Scroll Reveal IntersectionObserver with reduced motion support
+  // Scroll Reveal - ensure all sections are revealed and visible immediately
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const elements = document.querySelectorAll('.reveal-on-scroll, .reveal-left-on-scroll, .reveal-right-on-scroll');
-
-    if (prefersReducedMotion) {
-      elements.forEach((el) => el.classList.add('is-revealed'));
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-revealed');
-            observer.unobserve(entry.target); // Trigger once without replaying on scroll back and forth
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
-    );
-
-    elements.forEach((el) => observer.observe(el));
-
-    return () => {
-      elements.forEach((el) => observer.unobserve(el));
-      observer.disconnect();
-    };
+    elements.forEach((el) => el.classList.add('is-revealed'));
   }, [content]);
 
   // Project Media State
@@ -131,6 +108,16 @@ export default function ClientLandingPage({ initialContent }: { initialContent: 
       ];
 
   const [currentProjectSlide, setCurrentProjectSlide] = useState(0);
+  const [isGalleryHovered, setIsGalleryHovered] = useState(false);
+
+  // Auto slideshow for project photos (3.5s interval, pause on hover)
+  useEffect(() => {
+    if (activeProjectSlides.length <= 1 || isGalleryHovered) return;
+    const timer = setInterval(() => {
+      setCurrentProjectSlide((prev) => (prev + 1) % activeProjectSlides.length);
+    }, 3500);
+    return () => clearInterval(timer);
+  }, [activeProjectSlides.length, isGalleryHovered]);
 
   // Mobile Touch Swipe for Project Image Gallery
   const [galleryTouchStartX, setGalleryTouchStartX] = useState<number | null>(null);
@@ -401,127 +388,109 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
 
             {/* Showcase: Photo Gallery Left, Spec Sheet Right */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-              {/* Left Column: Media Gallery Viewer */}
-              <div className="lg:col-span-7 space-y-3 reveal-left-on-scroll delay-100">
+              {/* Left Column: Media Gallery Viewer - Frameless & Auto Slideshow */}
+              <div className="lg:col-span-7 flex flex-col items-center justify-center space-y-3 reveal-left-on-scroll delay-100">
+                {/* Frameless Slideshow Stage */}
                 <div
-                  className="relative aspect-[4/3] sm:aspect-[16/10] w-full rounded-2xl overflow-hidden bg-[#102D52] border border-[#DCE7F5] shadow-md select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E]"
+                  className="relative w-full h-[400px] sm:h-[460px] md:h-[500px] flex items-center justify-center select-none group"
                   tabIndex={0}
                   role="region"
-                  aria-label="Galeri foto dokumentasi proyek Puri Gunung Langgar. Geser untuk berganti foto."
+                  aria-label="Slideshow dokumentasi proyek Puri Gunung Langgar. Geser atau klik untuk memperbesar."
+                  onMouseEnter={() => setIsGalleryHovered(true)}
+                  onMouseLeave={() => setIsGalleryHovered(false)}
                   onTouchStart={handleGalleryTouchStart}
                   onTouchEnd={handleGalleryTouchEnd}
                 >
                   {activeProjectSlides.map((slide, sIdx) => {
                     const isActive = sIdx === currentProjectSlide;
-                    const projectLookbookItems: LookbookItem[] = activeProjectSlides.map((s, idx) => ({
-                      image: s.image,
-                      title: s.caption || `${content.project?.name || 'Puri Gunung Langgar'} - Dokumentasi Foto`,
-                      description: `Dokumentasi visual proyek ${content.project?.name || 'Puri Gunung Langgar'} yang dikembangkan oleh PT. Terbang Bersama Kawan.`,
-                      tag: `Sudut 0${idx + 1}`,
-                      category: 'Galeri Proyek',
-                    }));
-
                     return (
                       <div
                         key={sIdx}
-                        className={`absolute inset-0 transition-all duration-500 ease-out cursor-pointer ${
-                          isActive
-                            ? 'opacity-100 scale-100 z-10 pointer-events-auto'
-                            : 'opacity-0 scale-[1.025] z-0 pointer-events-none'
+                        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-700 ease-in-out ${
+                          isActive ? 'opacity-100 z-10 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'
                         }`}
-                        onClick={() =>
-                          setLightbox({
-                            open: true,
-                            currentIndex: sIdx,
-                            items: projectLookbookItems,
-                          })
-                        }
-                        aria-hidden={!isActive}
                       >
+                        {/* Gambar Apa Adanya tanpa Frame Tebal / Letterbox Hitam */}
                         <img
                           src={slide.image}
-                          alt={slide.caption || 'Puri Gunung Langgar'}
-                          className="w-full h-full object-cover transition-transform duration-700 ease-out hover:scale-105"
+                          alt={slide.caption || 'Foto Proyek'}
+                          onClick={() => {
+                            const projectLookbookItems: LookbookItem[] = activeProjectSlides.map((s, idx) => ({
+                              image: s.image,
+                              title: s.caption || `${content.project?.name || 'Puri Gunung Langgar'} - Dokumentasi Foto`,
+                              description: `Dokumentasi visual proyek ${content.project?.name || 'Puri Gunung Langgar'} yang dikembangkan oleh PT. Terbang Bersama Kawan.`,
+                              tag: `Dokumentasi 0${idx + 1}`,
+                              category: 'Galeri Proyek',
+                            }));
+                            setLightbox({
+                              open: true,
+                              currentIndex: sIdx,
+                              items: projectLookbookItems,
+                            });
+                          }}
+                          className="max-h-[400px] sm:max-h-[460px] md:max-h-[500px] w-auto max-w-full object-contain rounded-2xl shadow-lg border border-slate-200/80 cursor-pointer transition-transform duration-300 hover:scale-[1.01]"
                           loading="lazy"
                         />
                       </div>
                     );
                   })}
 
-                  {/* Top Bar: Minimal Counter & Enlarge Button */}
-                  <div className="absolute top-3 inset-x-3 z-20 flex items-center justify-between pointer-events-none">
-                    <div className="px-3 py-1 rounded-full bg-[#102D52]/85 backdrop-blur-sm border border-white/15 text-white font-mono text-[11px] font-medium tracking-wider shadow-sm pointer-events-auto">
-                      <span className="text-[#FF9D2E]">0{currentProjectSlide + 1}</span>
-                      <span className="text-white/40 mx-1">/</span>
-                      <span>0{activeProjectSlides.length}</span>
-                    </div>
+                  {/* Tombol Perbesar Floating di Pojok Kanan Atas */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const projectLookbookItems: LookbookItem[] = activeProjectSlides.map((s, idx) => ({
+                        image: s.image,
+                        title: s.caption || `${content.project?.name || 'Puri Gunung Langgar'} - Dokumentasi Foto`,
+                        description: `Dokumentasi visual proyek ${content.project?.name || 'Puri Gunung Langgar'} yang dikembangkan oleh PT. Terbang Bersama Kawan.`,
+                        tag: `Dokumentasi 0${idx + 1}`,
+                        category: 'Galeri Proyek',
+                      }));
+                      setLightbox({
+                        open: true,
+                        currentIndex: currentProjectSlide,
+                        items: projectLookbookItems,
+                      });
+                    }}
+                    className="absolute top-3 right-3 sm:right-6 z-30 bg-black/60 hover:bg-[#073B78] text-white px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-md backdrop-blur-sm transition-all hover:scale-105 active:scale-95 border border-white/20"
+                    aria-label="Perbesar foto"
+                  >
+                    <Maximize2 className="w-3.5 h-3.5 text-[#FF9D2E]" />
+                    <span className="hidden sm:inline">Perbesar Foto</span>
+                  </button>
+                </div>
 
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const projectLookbookItems: LookbookItem[] = activeProjectSlides.map((s, idx) => ({
-                          image: s.image,
-                          title: s.caption || `${content.project?.name || 'Puri Gunung Langgar'} - Dokumentasi Foto`,
-                          description: `Dokumentasi visual proyek ${content.project?.name || 'Puri Gunung Langgar'} yang dikembangkan oleh PT. Terbang Bersama Kawan.`,
-                          tag: `Sudut 0${idx + 1}`,
-                          category: 'Galeri Proyek',
-                        }));
-                        setLightbox({
-                          open: true,
-                          currentIndex: currentProjectSlide,
-                          items: projectLookbookItems,
-                        });
-                      }}
-                      className="bg-[#102D52]/85 backdrop-blur-sm text-white px-3 py-1 rounded-full text-[11px] font-medium flex items-center gap-1.5 border border-white/15 shadow-sm hover:bg-[#073B78] hover:border-[#FF9D2E] transition-all hover:scale-105 active:scale-95 pointer-events-auto"
-                      aria-label="Perbesar foto"
-                    >
-                      <Maximize2 className="w-3.5 h-3.5 text-[#FF9D2E]" />
-                      <span className="hidden sm:inline">Perbesar</span>
-                    </button>
-                  </div>
-
-                  {/* Previous and Next Controls */}
+                {/* Indikator Slideshow Dots & Caption di Luar (Tidak Menutupi Poster) */}
+                <div className="flex flex-col items-center gap-1.5 pt-1 text-center w-full">
                   {activeProjectSlides.length > 1 && (
-                    <div className="absolute inset-y-0 inset-x-3 z-20 flex items-center justify-between pointer-events-none">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setCurrentProjectSlide((prev) => (prev - 1 + activeProjectSlides.length) % activeProjectSlides.length);
-                        }}
-                        className="w-9 h-9 rounded-full bg-[#102D52]/85 hover:bg-[#FF9D2E] hover:text-[#102D52] border border-white/20 text-white backdrop-blur-sm flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 pointer-events-auto shadow-sm"
-                        aria-label="Foto sebelumnya"
-                      >
-                        <ChevronLeft className="w-4 h-4" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setCurrentProjectSlide((prev) => (prev + 1) % activeProjectSlides.length);
-                        }}
-                        className="w-9 h-9 rounded-full bg-[#102D52]/85 hover:bg-[#FF9D2E] hover:text-[#102D52] border border-white/20 text-white backdrop-blur-sm flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 pointer-events-auto shadow-sm"
-                        aria-label="Foto berikutnya"
-                      >
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
+                    <div className="flex items-center gap-1.5">
+                      {activeProjectSlides.map((_, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setCurrentProjectSlide(idx)}
+                          className={`h-2 rounded-full transition-all duration-300 ${
+                            idx === currentProjectSlide
+                              ? 'w-6 bg-[#073B78]'
+                              : 'w-2 bg-[#DCE7F5] hover:bg-[#A9C3E5]'
+                          }`}
+                          aria-label={`Slide ${idx + 1}`}
+                        />
+                      ))}
                     </div>
                   )}
 
-                  {/* Caption Bar */}
-                  <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-[#102D52]/95 via-[#102D52]/60 to-transparent p-4 sm:p-5 text-white pointer-events-none">
-                    <div className="text-[11px] sm:text-xs uppercase tracking-wider text-[#FF9D2E] font-bold mb-0.5">
-                      Dokumentasi Fisik Lapangan
-                    </div>
-                    <p className="text-[13px] sm:text-[14px] text-white/90 line-clamp-1">
-                      {activeProjectSlides[currentProjectSlide]?.caption || 'Kawasan Puri Gunung Langgar, Lampung Selatan.'}
+                  {activeProjectSlides[currentProjectSlide]?.caption && (
+                    <p className="text-xs sm:text-sm text-[#526783] font-medium max-w-md line-clamp-1">
+                      {activeProjectSlides[currentProjectSlide].caption}
                     </p>
-                  </div>
+                  )}
                 </div>
 
-                {/* Thumbnail Strip */}
+                {/* Mini Clean Thumbnail Strip Tanpa Frame Gelap */}
                 {activeProjectSlides.length > 1 && (
-                  <div className="grid grid-cols-4 gap-2.5 sm:gap-3 pt-1">
+                  <div className="flex items-center justify-center gap-2 pt-1 overflow-x-auto max-w-full">
                     {activeProjectSlides.map((slide, sIdx) => {
                       const isActive = sIdx === currentProjectSlide;
                       return (
@@ -529,17 +498,17 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                           key={sIdx}
                           type="button"
                           onClick={() => setCurrentProjectSlide(sIdx)}
-                          className={`group/thumb relative aspect-[4/3] rounded-xl overflow-hidden border transition-all duration-200 hover:-translate-y-0.5 ${
+                          className={`relative h-14 sm:h-16 aspect-[3/4] sm:aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200 shrink-0 ${
                             isActive
-                              ? 'border-[#FF9D2E] ring-2 ring-[#FF9D2E]/40 shadow-sm'
-                              : 'border-[#DCE7F5] hover:border-[#FF9D2E]/60'
+                              ? 'border-[#FF9D2E] shadow-md scale-105 opacity-100 ring-2 ring-[#FF9D2E]/25'
+                              : 'border-slate-200 opacity-60 hover:opacity-100'
                           }`}
-                          aria-label={`Pilih sudut dokumentasi ${sIdx + 1}`}
+                          aria-label={`Pilih foto ${sIdx + 1}`}
                         >
                           <img
                             src={slide.image}
-                            alt={slide.caption || `Sudut ${sIdx + 1}`}
-                            className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover/thumb:scale-105"
+                            alt={slide.caption || `Foto ${sIdx + 1}`}
+                            className="w-full h-full object-cover"
                           />
                         </button>
                       );
@@ -762,74 +731,63 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
               </div>
             </div>
 
-            {/* Primary Leadership Duo: Dewan Komisaris & Direktur Utama */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 max-w-4xl mx-auto mb-14 sm:mb-18">
+            {/* Primary Leadership Duo: Dewan Komisaris & Direktur Utama (Executive Clean Layout) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto mb-14 sm:mb-18">
               {displayPrimaryLeaders.map((member, idx) => (
                 <div
                   key={idx}
-                  className="group rounded-2xl bg-white border border-[#DCE7F5] overflow-hidden flex flex-col transition-all duration-300 hover:border-[#073B78] shadow-sm hover:shadow-md reveal-on-scroll delay-100 interactive-card"
+                  className="group rounded-2xl bg-white border border-[#DCE7F5] p-5 sm:p-6 flex flex-col sm:flex-row gap-5 sm:gap-6 items-center sm:items-stretch transition-all duration-300 hover:border-[#073B78] shadow-sm hover:shadow-md reveal-on-scroll delay-100 interactive-card"
                 >
-                  {/* Executive Portrait Frame */}
-                  <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] bg-[#073B78] overflow-hidden">
+                  {/* Pas Foto Proporsional 3:4 (Wajah Utuh Tidak Terpotong) */}
+                  <div className="relative w-36 sm:w-44 aspect-[3/4] shrink-0 rounded-xl overflow-hidden shadow-md border border-[#DCE7F5] bg-[#073B78]">
                     {member.image && member.image.trim() !== '' ? (
-                      <>
-                        <img
-                          src={member.image}
-                          alt={member.name}
-                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
-                          loading="lazy"
-                        />
-                        <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#102D52]/95 via-[#102D52]/50 to-transparent pointer-events-none" />
-                      </>
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 ease-out"
+                        loading="lazy"
+                      />
                     ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-[#073B78] relative overflow-hidden">
-                        <div className="relative z-10 w-24 h-28 rounded-2xl border border-white/20 bg-white/10 flex flex-col items-center justify-center p-4">
-                          <Building2 className="w-7 h-7 text-[#FF9D2E] mb-1" />
-                          <span className="text-2xl font-bold text-white tracking-wider">
-                            {member.name ? member.name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase() : 'TBK'}
-                          </span>
-                        </div>
-                        <span className="relative z-10 mt-3 text-[11px] font-medium text-white/70 tracking-wider">
-                          Portret Resmi Perseroan
-                        </span>
+                      <div className="w-full h-full flex flex-col items-center justify-center p-4 text-white text-center">
+                        <Building2 className="w-8 h-8 text-[#FF9D2E] mb-1" />
+                        <span className="text-xl font-bold">TBK</span>
                       </div>
                     )}
-
-                    {/* Responsive Badges Header (Role & Legal Verified) */}
-                    <div className="absolute top-3 sm:top-4 inset-x-3 sm:inset-x-4 z-10 flex flex-wrap items-center justify-between gap-1.5 pointer-events-none">
-                      <div className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md border border-[#FF9D2E]/60 text-[#FF9D2E] text-[10px] sm:text-[11px] font-medium tracking-wide shadow-sm pointer-events-auto">
-                        <span>{member.role}</span>
-                      </div>
-                      <div className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md text-[#15966A] text-[10px] sm:text-[11px] font-medium border border-[#15966A]/40 flex items-center gap-1 shadow-sm pointer-events-auto">
-                        <CheckCircle2 className="w-3 h-3 text-[#15966A]" />
-                        <span>SK Kemenkumham</span>
-                      </div>
-                    </div>
-
-                    {/* Name at bottom of portrait */}
-                    <div className="absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6 text-white">
-                      <span className="text-[11px] tracking-wide text-[#FF9D2E] font-medium block mb-0.5">
-                        {member.department || 'Pengurus Inti Perseroan'}
+                    <div className="absolute top-2 left-2 z-10">
+                      <span className="px-2 py-0.5 rounded-full bg-[#102D52]/90 backdrop-blur-md text-[#FF9D2E] text-[9.5px] font-bold tracking-wide border border-[#FF9D2E]/40">
+                        {member.role}
                       </span>
-                      <h3 className="font-serif text-2xl sm:text-3xl text-white font-normal tracking-tight">
-                        {member.name}
-                      </h3>
                     </div>
                   </div>
 
-                  {/* Body Content */}
-                  <div className="p-6 flex flex-col flex-1 justify-between space-y-4 bg-white">
+                  {/* Konten Keterangan Eksekutif di Sebelah Kanan */}
+                  <div className="flex flex-col flex-1 justify-between space-y-3 text-left w-full">
                     <div>
-                      <div className="text-[11px] font-medium tracking-wide text-[#FF9D2E] mb-2 flex items-center gap-1.5">
+                      <div className="flex items-center gap-1.5 mb-1.5">
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-semibold border border-emerald-200 flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          <span>SK Kemenkumham RI</span>
+                        </span>
+                      </div>
+                      <h3 className="font-serif text-xl sm:text-2xl text-[#102D52] font-normal tracking-tight">
+                        {member.name}
+                      </h3>
+                      <span className="text-[11px] tracking-wide text-[#FF9D2E] font-medium block">
+                        {member.department || 'Pengurus Inti Perseroan'}
+                      </span>
+                    </div>
+
+                    <div>
+                      <div className="text-[10.5px] font-medium tracking-wide text-[#FF9D2E] mb-1 flex items-center gap-1.5">
                         <Briefcase className="w-3.5 h-3.5" />
                         <span>Amanat &amp; Tanggung Jawab</span>
                       </div>
-                      <p className="font-sans text-xs sm:text-[13.5px] text-[#526783] leading-relaxed">
+                      <p className="font-sans text-xs sm:text-[13px] text-[#526783] leading-relaxed line-clamp-3 sm:line-clamp-4">
                         {member.roleDescription}
                       </p>
                     </div>
 
-                    <div className="pt-3 border-t border-[#DCE7F5] flex items-center justify-between text-[11px] text-[#526783]">
+                    <div className="pt-2.5 border-t border-[#DCE7F5] flex items-center justify-between text-[10.5px] text-[#526783]">
                       <div className="flex items-center gap-1.5">
                         <ShieldCheck className="w-3.5 h-3.5 text-[#073B78] shrink-0" />
                         <span>Akta Notaris {content.legal?.aktaNumber || 'No. 10'}</span>
@@ -1555,6 +1513,9 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
         projectName={content.project?.name || 'Puri Gunung Langgar'}
         whatsappNumber={content.contact?.whatsapp || ''}
       />
+
+      {/* Promotional Pop-up Modal (Muncul saat baru buka web jika diaktifkan admin) */}
+      <PromoPopupModal promo={content.promoPopup} />
     </div>
   );
 }

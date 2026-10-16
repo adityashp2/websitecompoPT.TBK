@@ -63,7 +63,7 @@ export default function MobileBottomNav() {
     <nav
       aria-label="Navigasi Bawah Seluler"
       role="navigation"
-      className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#102D52]/95 backdrop-blur-xl border-t border-white/10 shadow-[0_-8px_24px_rgba(7,59,120,0.25)] pb-[max(0.5rem,env(safe-area-inset-bottom))]"
+      className="md:hidden fixed bottom-0 inset-x-0 z-[800] bg-[#102D52] border-t border-[#1C5795] shadow-[0_-6px_20px_rgba(0,0,0,0.35)] pb-[max(0.5rem,env(safe-area-inset-bottom))]"
     >
       <div className="grid grid-cols-5 h-[58px] max-w-lg mx-auto px-1 items-center">
         {navItems.map((item) => {

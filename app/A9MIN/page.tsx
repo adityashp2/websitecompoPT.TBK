@@ -36,7 +36,10 @@ import {
   X,
   Calculator,
   Building2,
-  ChevronDown
+  ChevronDown,
+  Megaphone,
+  Eye,
+  MessageCircle
 } from 'lucide-react';
 
 interface Inquiry {
@@ -54,6 +57,7 @@ export type AdminTab =
   | 'hero'
   | 'buying-process'
   | 'kpr-simulation'
+  | 'promo-popup'
   | 'branding'
   | 'about'
   | 'leadership'
@@ -155,30 +159,38 @@ export default function AdminDashboard() {
   // Check auth session and fetch current database content
   useEffect(() => {
     initDashboard();
+    // Safety fallback: release loading screen if it takes more than 4 seconds
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 4000);
+    return () => clearTimeout(timeout);
   }, []);
 
   const initDashboard = async () => {
     setLoading(true);
     try {
-      // 1. Verify authentication
-      const authRes = await fetch('/api/auth/me');
-      const authJson = await authRes.json();
+      const [authRes, contentRes] = await Promise.all([
+        fetch('/api/auth/me', { cache: 'no-store' }),
+        fetch('/api/content', { cache: 'no-store' }),
+      ]);
+
+      const authJson = await authRes.json().catch(() => ({ authenticated: false }));
       if (!authRes.ok || !authJson.authenticated) {
+        setLoading(false);
         router.replace('/A9MIN/login');
         return;
       }
       setAdminUser(authJson.user);
+
+      const contentJson = await contentRes.json().catch(() => ({ success: false }));
+      if (contentJson.success && contentJson.data) {
+        setContent(contentJson.data);
+      }
     } catch (err) {
       console.error('Session verification error:', err);
+      setLoading(false);
       router.replace('/A9MIN/login');
       return;
-    }
-
-    // 2. Fetch site content safely
-    try {
-      await fetchContent();
-    } catch (err) {
-      console.error('Failed to load initial site content:', err);
     } finally {
       setLoading(false);
     }
@@ -186,7 +198,7 @@ export default function AdminDashboard() {
 
   const fetchContent = async () => {
     try {
-      const res = await fetch('/api/content');
+      const res = await fetch('/api/content', { cache: 'no-store' });
       const json = await res.json();
       if (json.success && json.data) {
         setContent(json.data);
@@ -194,8 +206,6 @@ export default function AdminDashboard() {
     } catch (err) {
       console.error(err);
       setSaveStatus({ type: 'error', message: 'Gagal membaca data dari database SQL.' });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -393,10 +403,26 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F4F7FC] text-[#102D52] flex items-center justify-center">
-        <div className="flex items-center gap-3 text-[#FF9D2E]">
+      <div className="min-h-screen bg-[#F4F7FC] text-[#102D52] flex flex-col items-center justify-center p-4">
+        <div className="flex items-center gap-3 text-[#FF9D2E] mb-2">
           <RefreshCw className="w-6 h-6 animate-spin" />
           <span className="font-syne font-semibold">Memuat Data Panel Admin...</span>
+        </div>
+        <p className="text-xs text-[#526783] mb-4">Menghubungkan ke database...</p>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setLoading(false)}
+            className="text-xs px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-[#073B78] font-semibold hover:bg-slate-50 transition-colors shadow-xs"
+          >
+            Buka Sekarang
+          </button>
+          <Link
+            href="/A9MIN/login"
+            className="text-xs text-[#526783] hover:text-[#073B78] underline"
+          >
+            Halaman Login
+          </Link>
         </div>
       </div>
     );
@@ -555,7 +581,7 @@ export default function AdminDashboard() {
             <div className="space-y-1">
               <div className="text-[11px] uppercase font-bold text-[#FF9D2E] px-3 py-1 tracking-wider flex items-center justify-between">
                 <span>Tampilan Beranda</span>
-                <span className="text-[10px] text-white/60 font-semibold">5 Bagian</span>
+                <span className="text-[10px] text-white/60 font-semibold">6 Bagian</span>
               </div>
 
               <button
@@ -631,6 +657,30 @@ export default function AdminDashboard() {
               >
                 <Calculator className="w-4 h-4 shrink-0" />
                 <span>Simulasi KPR FLPP 5%</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('promo-popup')}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  activeTab === 'promo-popup'
+                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <Megaphone className="w-4 h-4 shrink-0 text-[#FF9D2E]" />
+                  <span>Popup Iklan Promo</span>
+                </div>
+                <span
+                  className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${
+                    content.promoPopup?.enabled
+                      ? 'bg-emerald-400/20 text-emerald-300 border border-emerald-400/40'
+                      : 'bg-white/10 text-white/50'
+                  }`}
+                >
+                  {content.promoPopup?.enabled ? 'AKTIF' : 'OFF'}
+                </span>
               </button>
             </div>
 
@@ -788,7 +838,7 @@ export default function AdminDashboard() {
                 <span className="text-xs font-bold text-white uppercase tracking-wider">Bagian Konten Aktif</span>
               </div>
               <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#FFF7EB] text-[#C76A08] border border-[#FF9D2E]/30 font-mono font-semibold">
-                13 Menu
+                14 Menu
               </span>
             </div>
 
@@ -802,10 +852,6 @@ export default function AdminDashboard() {
                   value={activeTab}
                   onChange={(e) => {
                     setActiveTab(e.target.value as any);
-                    const editorEl = document.getElementById('admin-form-editor');
-                    if (editorEl) {
-                      editorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
                   }}
                   className="w-full h-11 px-3.5 pr-10 rounded-xl bg-[#071C38] border border-[#1C5795] text-white font-semibold text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] appearance-none cursor-pointer"
                 >
@@ -815,6 +861,7 @@ export default function AdminDashboard() {
                     <option value="hero">Hero & Statistik Utama</option>
                     <option value="buying-process">Alur Pembelian Rumah</option>
                     <option value="kpr-simulation">Simulasi KPR FLPP 5%</option>
+                    <option value="promo-popup">Popup Iklan Promo ({content.promoPopup?.enabled ? 'AKTIF' : 'OFF'})</option>
                   </optgroup>
                   <optgroup label="PROFIL PERUSAHAAN">
                     <option value="branding">Branding, Logo & Footer</option>
@@ -841,11 +888,17 @@ export default function AdminDashboard() {
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1">
               {[
                 { id: 'banners', label: 'Banner' },
+                { id: 'intro-features', label: 'Keunggulan' },
                 { id: 'hero', label: 'Statistik' },
+                { id: 'buying-process', label: 'Alur Beli' },
+                { id: 'kpr-simulation', label: 'KPR FLPP' },
+                { id: 'promo-popup', label: 'Iklan Promo' },
+                { id: 'branding', label: 'Branding' },
                 { id: 'about', label: 'Tentang' },
+                { id: 'leadership', label: 'Pengurus' },
+                { id: 'legal', label: 'Legalitas' },
                 { id: 'project', label: 'Proyek' },
                 { id: 'activities', label: 'Kegiatan' },
-                { id: 'legal', label: 'Legalitas' },
                 { id: 'contact', label: 'Kontak' },
                 { id: 'inquiries', label: `Pesan ${inquiries.length > 0 ? `(${inquiries.length})` : ''}` },
               ].map((chip) => (
@@ -854,10 +907,6 @@ export default function AdminDashboard() {
                   type="button"
                   onClick={() => {
                     setActiveTab(chip.id as any);
-                    const editorEl = document.getElementById('admin-form-editor');
-                    if (editorEl) {
-                      editorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
                   }}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
                     activeTab === chip.id
@@ -1992,6 +2041,436 @@ export default function AdminDashboard() {
                         </button>
                       </div>
                     ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB: POPUP IKLAN PROMO */}
+            {activeTab === 'promo-popup' && (
+              <div className="space-y-6">
+                <div className="border-b border-[#DCE7F5] pb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
+                        <Megaphone className="w-5 h-5 text-[#FF9D2E]" />
+                        Popup Iklan Promo (Muncul Saat Baru Buka)
+                      </h2>
+                      <p className="text-xs text-[#526783] mt-1">
+                        Atur banner promo yang otomatis muncul saat pengunjung baru membuka website. Iklan dapat ditutup pengunjung dengan tombol [X].
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`text-xs px-3 py-1.5 rounded-full font-bold flex items-center gap-1.5 ${
+                          content.promoPopup?.enabled
+                            ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/30'
+                            : 'bg-slate-100 text-slate-500 border border-slate-200'
+                        }`}
+                      >
+                        <span
+                          className={`w-2 h-2 rounded-full ${
+                            content.promoPopup?.enabled ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'
+                          }`}
+                        />
+                        <span>{content.promoPopup?.enabled ? 'Status: Iklan Aktif' : 'Status: Dinonaktifkan'}</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* MASTER SWITCH: ON / OFF BANNER PROMO */}
+                <div
+                  className={`p-5 rounded-2xl border transition-all ${
+                    content.promoPopup?.enabled
+                      ? 'bg-gradient-to-r from-emerald-50/80 via-white to-white border-emerald-300 shadow-sm'
+                      : 'bg-[#F8FAFD] border-[#DCE7F5]'
+                  }`}
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-bold text-[#073B78]">
+                          Aktivasi Pop-up Iklan Promo di Beranda
+                        </span>
+                        {content.promoPopup?.enabled ? (
+                          <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-emerald-600 text-white uppercase tracking-wider">
+                            Aktif Tayang
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-slate-400 text-white uppercase tracking-wider">
+                            Mati (OFF)
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-[#526783] max-w-xl leading-relaxed">
+                        {content.promoPopup?.enabled
+                          ? '✅ Iklan sedang AKTIF. Setiap pengunjung yang baru membuka halaman beranda akan langsung melihat pop-up iklan ini (bisa ditutup dengan tombol "X").'
+                          : '⭕ Iklan sedang NONAKTIF. Pengunjung tidak akan melihat pop-up iklan saat membuka website.'}
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newEnabled = !(content.promoPopup?.enabled);
+                        setContent({
+                          ...content,
+                          promoPopup: {
+                            ...(content.promoPopup || {
+                              image: '/assets/project-workspace.jpg',
+                              badge: 'PROMO SPESIAL TERBATAS',
+                              title: 'Program Subsidi KPR Puri Gunung Langgar',
+                              description: 'Dapatkan subsidi uang muka dan kemudahan proses berkas!',
+                              ctaText: 'Konsultasi Promo WhatsApp',
+                              ctaUrl: 'https://wa.me/6281278901234',
+                            }),
+                            enabled: newEnabled,
+                          },
+                        });
+                        setSaveStatus({
+                          type: 'success',
+                          message: newEnabled
+                            ? 'Iklan Promo DIAKTIFKAN! Jangan lupa klik "Simpan ke SQL" di pojok kanan atas.'
+                            : 'Iklan Promo DINONAKTIFKAN! Jangan lupa klik "Simpan ke SQL" di pojok kanan atas.',
+                        });
+                      }}
+                      className={`px-5 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all shrink-0 shadow-sm ${
+                        content.promoPopup?.enabled
+                          ? 'bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200'
+                          : 'bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78]'
+                      }`}
+                    >
+                      {content.promoPopup?.enabled ? (
+                        <>
+                          <X className="w-4 h-4" />
+                          <span>Matikan Iklan Promo</span>
+                        </>
+                      ) : (
+                        <>
+                          <Megaphone className="w-4 h-4 text-[#FF9D2E]" />
+                          <span>Nyalakan Iklan Promo Sekarang</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* FORM PENGATURAN FOTO & KONTEN IKLAN */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                  {/* Left Column: Form Inputs */}
+                  <div className="lg:col-span-7 space-y-4">
+                    {/* Upload Banner Foto */}
+                    <div className="p-4 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-3">
+                      <label className="block text-xs font-bold text-[#073B78] uppercase tracking-wider">
+                        Foto / Banner Iklan Promo
+                      </label>
+                      <p className="text-[11px] text-[#526783]">
+                        Upload gambar brosur, poster promo perumahan, atau banner diskon (rekomendasi rasio horizontal 16:9 atau 4:3).
+                      </p>
+
+                      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                        <div className="w-28 h-20 rounded-lg bg-white border border-[#DCE7F5] overflow-hidden shrink-0 flex items-center justify-center">
+                          {content.promoPopup?.image ? (
+                            <img
+                              src={content.promoPopup.image}
+                              alt="Banner Promo"
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-[10px] text-[#526783]">Belum ada foto</span>
+                          )}
+                        </div>
+
+                        <div className="flex-1 w-full space-y-2">
+                          <input
+                            type="text"
+                            value={content.promoPopup?.image || ''}
+                            onChange={(e) =>
+                              setContent({
+                                ...content,
+                                promoPopup: {
+                                  ...(content.promoPopup || { enabled: false }),
+                                  image: e.target.value,
+                                },
+                              })
+                            }
+                            placeholder="URL gambar (/assets/... atau /uploads/...)"
+                            className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                          />
+
+                          <div className="flex items-center gap-2">
+                            <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-colors shadow-xs">
+                              <Upload className="w-3.5 h-3.5" />
+                              <span>{uploadingKey === 'promoPopupImage' ? 'Mengupload...' : 'Upload Foto Iklan'}</span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                disabled={uploadingKey === 'promoPopupImage'}
+                                onChange={(e) => {
+                                  if (e.target.files && e.target.files[0]) {
+                                    handleGenericFileUpload(e.target.files[0], 'promoPopupImage', (url) => {
+                                      setContent({
+                                        ...content,
+                                        promoPopup: {
+                                          ...(content.promoPopup || { enabled: false }),
+                                          image: url,
+                                        },
+                                      });
+                                    });
+                                  }
+                                }}
+                              />
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Pengaturan Teks Format ICC (Image 1) */}
+                    <div>
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
+                        Sapaan / Greeting (Atas)
+                      </label>
+                      <input
+                        type="text"
+                        value={content.promoPopup?.greeting || ''}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            promoPopup: {
+                              ...(content.promoPopup || { enabled: false, image: '' }),
+                              greeting: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="Contoh: 👋 Hai, calon pemilik rumah impian!"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-semibold focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
+                        Teks Highlight Oranye (Tengah)
+                      </label>
+                      <input
+                        type="text"
+                        value={content.promoPopup?.highlightText || ''}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            promoPopup: {
+                              ...(content.promoPopup || { enabled: false, image: '' }),
+                              highlightText: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="Contoh: JANGAN LEWATKAN KESEMPATAN UNTUK MEMILIKI HUNIAN RESMI BERSUBSIDI"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-bold text-[#073B78] mb-1">
+                          Nama Proyek (Garis Bawah)
+                        </label>
+                        <input
+                          type="text"
+                          value={content.promoPopup?.title || ''}
+                          onChange={(e) =>
+                            setContent({
+                              ...content,
+                              promoPopup: {
+                                ...(content.promoPopup || { enabled: false, image: '' }),
+                                title: e.target.value,
+                              },
+                            })
+                          }
+                          placeholder="Contoh: PURI GUNUNG LANGGAR"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-bold focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-[#073B78] mb-1">
+                          Batch / Periode Promo
+                        </label>
+                        <input
+                          type="text"
+                          value={content.promoPopup?.badge || ''}
+                          onChange={(e) =>
+                            setContent({
+                              ...content,
+                              promoPopup: {
+                                ...(content.promoPopup || { enabled: false, image: '' }),
+                                badge: e.target.value,
+                              },
+                            })
+                          }
+                          placeholder="Contoh: BATCH SUBSIDI TAHUN 2026"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
+                        Teks Urgensi Waktu (Ikon Jam)
+                      </label>
+                      <input
+                        type="text"
+                        value={content.promoPopup?.urgencyText || ''}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            promoPopup: {
+                              ...(content.promoPopup || { enabled: false, image: '' }),
+                              urgencyText: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="Contoh: ⏰ Amankan tempatmu sekarang sebelum terlambat!"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-semibold focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                      />
+                    </div>
+
+                    {/* Tombol CTA & Link */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-bold text-[#073B78] mb-1">
+                          Teks Tombol CTA
+                        </label>
+                        <input
+                          type="text"
+                          value={content.promoPopup?.ctaText || ''}
+                          onChange={(e) =>
+                            setContent({
+                              ...content,
+                              promoPopup: {
+                                ...(content.promoPopup || { enabled: false, image: '' }),
+                                ctaText: e.target.value,
+                              },
+                            })
+                          }
+                          placeholder="Contoh: Daftar sekarang!!!"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-bold focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-[#073B78] mb-1">
+                          Link Tujuan Klik (WhatsApp / URL)
+                        </label>
+                        <input
+                          type="text"
+                          value={content.promoPopup?.ctaUrl || ''}
+                          onChange={(e) =>
+                            setContent({
+                              ...content,
+                              promoPopup: {
+                                ...(content.promoPopup || { enabled: false, image: '' }),
+                                ctaUrl: e.target.value,
+                              },
+                            })
+                          }
+                          placeholder="https://wa.me/62812... atau /kontak"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/80 text-[11px] text-amber-900 leading-relaxed">
+                      💡 <strong>Format Split Poster & Teks (Gaya ICC):</strong> Sisi kiri menampilkan poster flyer vertikal penuh, sisi kanan menampilkan sapaan, teks oranye ajakan, jam urgensi, dan tombol &quot;Daftar sekarang!!!&quot;. Pop-up otomatis muncul di awal saat pengunjung membuka website.
+                    </div>
+                  </div>
+
+                  {/* Right Column: Live Mockup Preview */}
+                  <div className="lg:col-span-5 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-xs font-bold text-[#073B78] uppercase tracking-wider flex items-center gap-1.5">
+                        <Eye className="w-4 h-4 text-[#FF9D2E]" />
+                        <span>Live Preview Tampilan Pop-up</span>
+                      </label>
+                      <span className="text-[10px] text-[#526783] bg-white px-2 py-0.5 rounded border border-[#DCE7F5]">
+                        Simulasi Layar Pengunjung
+                      </span>
+                    </div>
+
+                    <div className="p-4 sm:p-5 rounded-2xl bg-[#0A2548]/90 border border-[#1C5795] flex items-start justify-center pt-5 min-h-[420px]">
+                      {/* Modal Mockup Box - Warm Cream & Navy Style */}
+                      <div className="relative w-full max-w-sm bg-[#FAF6EE] rounded-2xl shadow-2xl p-3 sm:p-3.5 text-left border border-[#E9DCBF]">
+                        {/* Mock Close Button */}
+                        <div
+                          className="absolute top-2.5 right-2.5 z-20 w-6 h-6 rounded-full bg-[#102D52] text-white flex items-center justify-center cursor-default shadow-xs"
+                          title="Tombol X Tutup Iklan"
+                        >
+                          <X className="w-3.5 h-3.5 stroke-[2.5]" />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2.5 items-center pt-1">
+                          {/* Mock Poster Kiri */}
+                          <div className="bg-[#F3EBDA] border border-[#E2D4BC] overflow-hidden rounded-xl p-1 flex items-center justify-center relative">
+                            <span className="absolute top-1.5 left-1.5 bg-[#102D52] text-[#FF9D2E] text-[7px] font-bold px-1.5 py-0.5 rounded-full uppercase">
+                              Promo
+                            </span>
+                            {content.promoPopup?.image ? (
+                              <img
+                                src={content.promoPopup.image}
+                                alt="Poster Preview"
+                                className="w-full h-auto max-h-[160px] object-contain block rounded-lg"
+                              />
+                            ) : (
+                              <div className="h-32 flex items-center justify-center text-[9px] text-slate-400 p-2 text-center">
+                                Upload poster
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Mock Keterangan Kanan */}
+                          <div className="space-y-1.5 text-left pr-1">
+                            <div className="flex items-center gap-1">
+                              <span className="px-2 py-0.5 rounded-full bg-[#102D52] text-white text-[7.5px] font-bold uppercase">
+                                {content.promoPopup?.badge || 'Batch 2026'}
+                              </span>
+                            </div>
+
+                            <h5 className="font-bold text-[10.5px] text-[#102D52] leading-tight">
+                              {content.promoPopup?.greeting || '👋 Hai, calon pemilik rumah impian!'}
+                            </h5>
+
+                            <div className="p-1.5 rounded-lg bg-[#F4ECE0] border border-[#E3D4BE] space-y-0.5 text-[8px]">
+                              <p className="font-bold text-[#A85822] uppercase line-clamp-1">
+                                {content.promoPopup?.highlightText || 'HUNIAN RESMI BERSUBSIDI'}
+                              </p>
+                              <p className="font-serif font-bold text-[#102D52]">
+                                {content.promoPopup?.title || 'PURI GUNUNG LANGGAR'}
+                              </p>
+                              <p className="text-[#15966A] font-semibold">✓ Angsuran Mulai 1 Juta-an</p>
+                            </div>
+
+                            <p className="font-bold text-[8.5px] text-[#B91C1C] leading-tight bg-[#FEECEB] p-1 rounded border border-[#FCD2CE]">
+                              {content.promoPopup?.urgencyText || '⏰ Amankan tempatmu sekarang!'}
+                            </p>
+
+                            <div className="pt-0.5">
+                              <div className="w-full py-1.5 rounded-lg bg-[#102D52] text-white font-bold text-[9px] text-center shadow-xs flex items-center justify-center gap-1">
+                                <MessageCircle className="w-3 h-3 fill-white text-[#102D52]" />
+                                <span>{content.promoPopup?.ctaText || 'Daftar sekarang!!!'}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="text-[11px] text-[#526783] text-center italic">
+                      {content.promoPopup?.enabled
+                        ? '✅ Pop-up ini akan otomatis muncul tepat di awal saat pengunjung membuka beranda.'
+                        : '⭕ Iklan ini sedang mati (OFF). Klik tombol aktifkan di atas untuk menampilkan di web.'}
+                    </p>
                   </div>
                 </div>
               </div>
