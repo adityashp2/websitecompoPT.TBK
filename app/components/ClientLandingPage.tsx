@@ -253,45 +253,47 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
 
       <main id="main-content">
         {/* ========================================================= */}
-        {/* HERO FOLD (FULL-WIDTH BANNER CAROUSEL + CORPORATE STATS)  */}
-        {/* On mobile: calibrated min-h so initial screen is 100% blue */}
+        {/* 2. FULL-WIDTH PROMOTIONAL BANNER CAROUSEL (HIGHEST PRIORITY) */}
+        {/* Inspired by Indonesian Certification Center (ICC)          */}
+        {/* Edge-to-edge, over-the-banner orange arrows, bottom dots   */}
         {/* ========================================================= */}
-        <div className="w-full pt-[58px] min-[980px]:pt-[68px] min-h-[calc(100dvh-60px)] lg:min-h-0 flex flex-col justify-between bg-[#073B78]">
-          <div className="flex-1 flex flex-col justify-center">
-            <PromoBannerCarousel slides={content.bannerSlides} whatsappUrl={waUrl} />
-          </div>
-
-          {/* STATISTIK & REKAM JEJAK UTAMA PERSEROAN */}
-          {(() => {
-            const statsList = Array.isArray(content.hero?.stats) && content.hero.stats.length > 0
-              ? content.hero.stats
-              : [
-                  { label: "Domisili Perusahaan", value: "Bandar Lampung" },
-                  { label: "Pengesahan Kemenkumham", value: "2021" },
-                  { label: "Proyek Utama", value: "Puri Gunung Langgar" },
-                  { label: "Kategori Pembangunan", value: "Hunian Bersubsidi" },
-                ];
-
-            return (
-              <section aria-label="Statistik Utama Perseroan" className="w-full bg-[#073B78] text-white border-b border-[#0A4B91]/80 shrink-0">
-                <div className="w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
-                  <div className="grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-white/15 py-3 sm:py-5">
-                    {statsList.map((st, sIdx) => (
-                      <div key={sIdx} className="px-3 sm:px-6 py-2 sm:py-1 flex flex-col justify-center">
-                        <span className="font-serif font-normal text-base sm:text-xl lg:text-2xl text-[#FF9D2E] leading-tight tracking-tight">
-                          {st.value}
-                        </span>
-                        <span className="text-[10px] sm:text-xs text-white/75 font-medium uppercase tracking-wider mt-0.5 sm:mt-1">
-                          {st.label}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </section>
-            );
-          })()}
+        <div className="w-full pt-[58px] min-[980px]:pt-[68px]">
+          <PromoBannerCarousel slides={content.bannerSlides} whatsappUrl={waUrl} />
         </div>
+
+        {/* ========================================================= */}
+        {/* STATISTIK & REKAM JEJAK UTAMA PERSEROAN                   */}
+        {/* Responsive 4-metric editorial bar on mobile, tablet & desktop */}
+        {/* ========================================================= */}
+        {(() => {
+          const statsList = Array.isArray(content.hero?.stats) && content.hero.stats.length > 0
+            ? content.hero.stats
+            : [
+                { label: "Domisili Perusahaan", value: "Bandar Lampung" },
+                { label: "Pengesahan Kemenkumham", value: "2021" },
+                { label: "Proyek Utama", value: "Puri Gunung Langgar" },
+                { label: "Kategori Pembangunan", value: "Hunian Bersubsidi" },
+              ];
+
+          return (
+            <section aria-label="Statistik Utama Perseroan" className="w-full bg-[#073B78] text-white border-b border-[#0A4B91]/80">
+              <div className="w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-white/15 py-4 sm:py-5">
+                  {statsList.map((st, sIdx) => (
+                    <div key={sIdx} className="px-3 sm:px-6 py-2.5 sm:py-1 flex flex-col justify-center">
+                      <span className="font-serif font-normal text-lg sm:text-xl lg:text-2xl text-[#FF9D2E] leading-tight tracking-tight">
+                        {st.value}
+                      </span>
+                      <span className="text-[10.5px] sm:text-xs text-white/75 font-medium uppercase tracking-wider mt-1">
+                        {st.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          );
+        })()}
 
         {/* ======================================================================= */}
         {/* SECTION 1: ABOUT PT. TBK & VALUE PROPOSITIONS                           */}

@@ -169,8 +169,12 @@ export default function AdminDashboard() {
   const initDashboard = async () => {
     setLoading(true);
     try {
+      const localToken = typeof window !== 'undefined' ? localStorage.getItem('tbk_admin_token') : null;
       const [authRes, contentRes] = await Promise.all([
-        fetch('/api/auth/me', { cache: 'no-store' }),
+        fetch('/api/auth/me', {
+          cache: 'no-store',
+          headers: localToken ? { Authorization: `Bearer ${localToken}` } : {},
+        }),
         fetch('/api/content', { cache: 'no-store' }),
       ]);
 
@@ -215,9 +219,15 @@ export default function AdminDashboard() {
     }
     setLoggingOut(true);
     try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('tbk_admin_token');
+      }
       await fetch('/api/auth/logout', { method: 'POST' });
       router.replace('/A9MIN/login');
     } catch (err) {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('tbk_admin_token');
+      }
       console.error('Logout failed:', err);
       router.replace('/A9MIN/login');
     }

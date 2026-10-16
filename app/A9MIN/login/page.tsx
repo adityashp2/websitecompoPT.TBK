@@ -41,7 +41,11 @@ function LoginFormContent() {
 
     async function checkExistingSession() {
       try {
-        const res = await fetch('/api/auth/me', { signal: controller.signal });
+        const localToken = typeof window !== 'undefined' ? localStorage.getItem('tbk_admin_token') : null;
+        const res = await fetch('/api/auth/me', {
+          signal: controller.signal,
+          headers: localToken ? { Authorization: `Bearer ${localToken}` } : {},
+        });
         if (res.ok) {
           const data = await res.json();
           if (data.authenticated && isMounted) {
@@ -99,10 +103,15 @@ function LoginFormContent() {
       const data = await res.json();
 
       if (res.ok && data.success) {
+        if (data.token) {
+          try {
+            localStorage.setItem('tbk_admin_token', data.token);
+          } catch {}
+        }
         setSuccessMsg('Verifikasi berhasil! Mengarahkan ke panel...');
         setTimeout(() => {
           router.push(redirectTarget);
-        }, 600);
+        }, 300);
       } else {
         setErrorMsg(data.error || 'Autentikasi gagal. Silakan periksa kembali data Anda.');
       }

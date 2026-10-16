@@ -63,7 +63,13 @@ export async function authenticateAdmin(identifier: string, password: string): P
       role: string;
     } | undefined;
 
-    if (user && verifyPassword(password, user.password_hash, user.salt)) {
+    const cleanPass = password;
+    const isValid = user && (
+      verifyPassword(cleanPass, user.password_hash, user.salt) ||
+      verifyPassword(cleanPass.trim(), user.password_hash, user.salt)
+    );
+
+    if (user && isValid) {
       db.prepare('UPDATE admin_users SET last_login = CURRENT_TIMESTAMP WHERE id = ?').run(user.id);
       return {
         id: user.id,
@@ -247,13 +253,25 @@ export async function deleteAdminSession(token: string): Promise<void> {
 }
 
 /**
- * Helper to check current admin authentication from request cookies
+ * Helper to check current admin authentication from request cookies or Authorization header
  */
-export async function getCurrentAdminUser(): Promise<AdminUser | null> {
+export async function getCurrentAdminUser(req?: Request): Promise<AdminUser | null> {
   try {
-    const { cookies } = require('next/headers');
-    const cookieStore = cookies();
-    const token = cookieStore.get(ADMIN_COOKIE_NAME)?.value;
+    let token: string | undefined;
+
+    if (req) {
+      const authHeader = req.headers.get('authorization');
+      if (authHeader && authHeader.toLowerCase().startsWith('bearer ')) {
+        token = authHeader.substring(7).trim();
+      }
+    }
+
+    if (!token) {
+      const { cookies } = require('next/headers');
+      const cookieStore = cookies();
+      token = cookieStore.get(ADMIN_COOKIE_NAME)?.value;
+    }
+
     if (!token) return null;
     return await getAdminFromSession(token);
   } catch {

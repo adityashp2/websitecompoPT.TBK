@@ -27,11 +27,16 @@ export async function POST(request: Request) {
     // Create session (Supabase / SQLite)
     const { token, expiresAt } = await createAdminSession(admin.id, !!rememberMe);
 
-    // Set HTTP-only secure cookie
+    // Only enable secure flag if connection is HTTPS
+    const isHttps =
+      request.headers.get('x-forwarded-proto') === 'https' ||
+      request.url.startsWith('https://');
+
+    // Set HTTP-only cookie
     const cookieStore = cookies();
     cookieStore.set(ADMIN_COOKIE_NAME, token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: isHttps,
       sameSite: 'lax',
       path: '/',
       expires: expiresAt,
@@ -41,6 +46,7 @@ export async function POST(request: Request) {
       success: true,
       message: 'Login berhasil.',
       user: admin,
+      token,
     });
   } catch (error) {
     console.error('API /api/auth/login error:', error);

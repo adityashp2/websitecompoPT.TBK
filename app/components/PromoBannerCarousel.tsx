@@ -310,13 +310,13 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
       {/* - Clean content section begins directly below banner                    */}
       {/* ======================================================================= */}
       <div
-        className="block lg:hidden relative w-full h-full flex-1 flex flex-col justify-center overflow-hidden bg-[#073B78]"
+        className="block lg:hidden relative w-full overflow-hidden bg-[#073B78]"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Full-width banner container: fills available flex height so initial screen fold is 100% blue */}
-        <div className="relative w-full h-full flex-1 min-h-[360px] sm:min-h-[420px] overflow-hidden flex flex-col justify-center">
+        {/* Full-width banner container with calibrated promotional aspect ratio */}
+        <div className="relative w-full min-h-[330px] sm:h-[360px] md:h-[390px] overflow-hidden">
           {slides.map((slide, idx) => {
             const isActive = idx === currentIndex;
             return (
