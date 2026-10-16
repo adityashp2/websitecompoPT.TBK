@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { getDb } from './db';
+import { isSupabaseConfigured, getSupabaseAdminClient } from './supabase';
 
 export interface AdminUser {
   id: number;
@@ -24,8 +25,12 @@ export function hashPassword(password: string, salt: string): string {
  * Verify password against stored hash and salt
  */
 export function verifyPassword(password: string, hash: string, salt: string): boolean {
-  const calculatedHash = hashPassword(password, salt);
-  return crypto.timingSafeEqual(Buffer.from(calculatedHash), Buffer.from(hash));
+  try {
+    const calculatedHash = hashPassword(password, salt);
+    return crypto.timingSafeEqual(Buffer.from(calculatedHash), Buffer.from(hash));
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -36,13 +41,50 @@ export function generateSalt(): string {
 }
 
 /**
- * Authenticate admin by username or email and password
+ * Authenticate admin by username or email and password (Supabase with SQLite fallback)
  */
-export function authenticateAdmin(identifier: string, password: string): AdminUser | null {
+export async function authenticateAdmin(identifier: string, password: string): Promise<AdminUser | null> {
+  const cleanId = identifier.trim().toLowerCase();
+
+  // 1. Try Supabase if configured
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        const { data: users, error } = await supabase
+          .from('admin_users')
+          .select('id, username, email, password_hash, salt, name, role')
+          .or(`username.ilike.${cleanId},email.ilike.${cleanId}`)
+          .limit(1);
+
+        if (!error && users && users.length > 0) {
+          const user = users[0];
+          const isValid = verifyPassword(password, user.password_hash, user.salt);
+          if (isValid) {
+            await supabase
+              .from('admin_users')
+              .update({ last_login: new Date().toISOString() })
+              .eq('id', user.id);
+
+            return {
+              id: Number(user.id),
+              username: user.username,
+              email: user.email,
+              name: user.name,
+              role: user.role || 'admin',
+            };
+          }
+          return null;
+        }
+      }
+    } catch (err) {
+      console.warn('Supabase authenticateAdmin error, falling back to SQLite:', err);
+    }
+  }
+
+  // 2. Fallback to SQLite
   try {
     const db = getDb();
-    const cleanId = identifier.trim().toLowerCase();
-
     const user = db.prepare(`
       SELECT id, username, email, password_hash, salt, name, role
       FROM admin_users 
@@ -57,16 +99,11 @@ export function authenticateAdmin(identifier: string, password: string): AdminUs
       role: string;
     } | undefined;
 
-    if (!user) {
-      return null;
-    }
+    if (!user) return null;
 
     const isValid = verifyPassword(password, user.password_hash, user.salt);
-    if (!isValid) {
-      return null;
-    }
+    if (!isValid) return null;
 
-    // Update last_login
     db.prepare('UPDATE admin_users SET last_login = CURRENT_TIMESTAMP WHERE id = ?').run(user.id);
 
     return {
@@ -77,26 +114,45 @@ export function authenticateAdmin(identifier: string, password: string): AdminUs
       role: user.role,
     };
   } catch (error) {
-    console.error('Error authenticating admin:', error);
+    console.error('Error authenticating admin in SQLite:', error);
     return null;
   }
 }
 
 /**
- * Create a persistent session in SQLite
+ * Create a persistent session (both in Supabase and SQLite)
  */
-export function createAdminSession(userId: number, rememberMe: boolean = false): { token: string; expiresAt: Date } {
-  const db = getDb();
+export async function createAdminSession(userId: number, rememberMe: boolean = false): Promise<{ token: string; expiresAt: Date }> {
   const token = crypto.randomBytes(32).toString('hex');
-  
-  // 30 days if rememberMe, otherwise 1 day
   const durationDays = rememberMe ? 30 : 1;
   const expiresAt = new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000);
 
-  db.prepare(`
-    INSERT INTO admin_sessions (token, user_id, expires_at)
-    VALUES (?, ?, ?)
-  `).run(token, userId, expiresAt.toISOString());
+  // SQLite session
+  try {
+    const db = getDb();
+    db.prepare(`
+      INSERT INTO admin_sessions (token, user_id, expires_at)
+      VALUES (?, ?, ?)
+    `).run(token, userId, expiresAt.toISOString());
+  } catch (err) {
+    console.error('SQLite createAdminSession error:', err);
+  }
+
+  // Supabase session
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        await supabase.from('admin_sessions').insert([{
+          token,
+          user_id: userId,
+          expires_at: expiresAt.toISOString(),
+        }]);
+      }
+    } catch (err) {
+      console.error('Supabase createAdminSession error:', err);
+    }
+  }
 
   return { token, expiresAt };
 }
@@ -104,14 +160,43 @@ export function createAdminSession(userId: number, rememberMe: boolean = false):
 /**
  * Verify session token and retrieve associated admin user
  */
-export function getAdminFromSession(token: string): AdminUser | null {
+export async function getAdminFromSession(token: string): Promise<AdminUser | null> {
   if (!token) return null;
+  const nowIso = new Date().toISOString();
 
+  // 1. Try Supabase if configured
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        const { data, error } = await supabase
+          .from('admin_sessions')
+          .select('expires_at, admin_users:user_id (id, username, email, name, role, created_at, last_login)')
+          .eq('token', token)
+          .gt('expires_at', nowIso)
+          .single();
+
+        if (data && data.admin_users && !error) {
+          const user = Array.isArray(data.admin_users) ? data.admin_users[0] : data.admin_users;
+          return {
+            id: Number(user.id),
+            username: user.username,
+            email: user.email,
+            name: user.name,
+            role: user.role || 'admin',
+            created_at: user.created_at,
+            last_login: user.last_login,
+          };
+        }
+      }
+    } catch (err) {
+      console.warn('Supabase getAdminFromSession error, falling back to SQLite:', err);
+    }
+  }
+
+  // 2. Fallback to SQLite
   try {
     const db = getDb();
-    const nowIso = new Date().toISOString();
-
-    // Query active session and join with admin_users
     const row = db.prepare(`
       SELECT 
         u.id, u.username, u.email, u.name, u.role, u.created_at, u.last_login,
@@ -122,8 +207,6 @@ export function getAdminFromSession(token: string): AdminUser | null {
     `).get(token, nowIso) as (AdminUser & { expires_at: string }) | undefined;
 
     if (!row) {
-      // Clean up expired session if token existed
-      db.prepare('DELETE FROM admin_sessions WHERE token = ? OR expires_at <= ?').run(token, nowIso);
       return null;
     }
 
@@ -137,58 +220,127 @@ export function getAdminFromSession(token: string): AdminUser | null {
       last_login: row.last_login,
     };
   } catch (error) {
-    console.error('Error verifying session:', error);
+    console.error('Error verifying session in SQLite:', error);
     return null;
   }
 }
 
 /**
- * Delete a session (logout)
+ * Delete session token on logout
  */
-export function deleteAdminSession(token: string): boolean {
-  if (!token) return false;
+export async function deleteAdminSession(token: string): Promise<void> {
+  if (!token) return;
+
   try {
     const db = getDb();
     db.prepare('DELETE FROM admin_sessions WHERE token = ?').run(token);
-    return true;
-  } catch (error) {
-    console.error('Error deleting session:', error);
-    return false;
+  } catch (err) {
+    console.error('SQLite deleteAdminSession error:', err);
+  }
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        await supabase.from('admin_sessions').delete().eq('token', token);
+      }
+    } catch (err) {
+      console.error('Supabase deleteAdminSession error:', err);
+    }
+  }
+}
+
+/**
+ * Helper to check current admin authentication from request cookies
+ */
+export async function getCurrentAdminUser(): Promise<AdminUser | null> {
+  try {
+    const { cookies } = require('next/headers');
+    const cookieStore = cookies();
+    const token = cookieStore.get(ADMIN_COOKIE_NAME)?.value;
+    if (!token) return null;
+    return await getAdminFromSession(token);
+  } catch {
+    return null;
   }
 }
 
 /**
  * Change admin password
  */
-export function changeAdminPassword(userId: number, currentPass: string, newPass: string): { success: boolean; message: string } {
+export async function changeAdminPassword(
+  userId: number,
+  currentPass: string,
+  newPass: string
+): Promise<{ success: boolean; message: string }> {
   try {
-    const db = getDb();
-    const user = db.prepare('SELECT id, password_hash, salt FROM admin_users WHERE id = ?').get(userId) as {
-      id: number;
-      password_hash: string;
-      salt: string;
-    } | undefined;
+    let currentUser: { password_hash: string; salt: string } | null = null;
 
-    if (!user) {
-      return { success: false, message: 'Pengguna tidak ditemukan.' };
+    // Check in Supabase first if configured
+    if (isSupabaseConfigured()) {
+      try {
+        const supabase = getSupabaseAdminClient();
+        if (supabase) {
+          const { data } = await supabase
+            .from('admin_users')
+            .select('password_hash, salt')
+            .eq('id', userId)
+            .single();
+          if (data) currentUser = data;
+        }
+      } catch (e) {
+        console.warn('Supabase fetch user error:', e);
+      }
     }
 
-    if (!verifyPassword(currentPass, user.password_hash, user.salt)) {
-      return { success: false, message: 'Password saat ini tidak sesuai.' };
+    // Fallback check in SQLite
+    if (!currentUser) {
+      const db = getDb();
+      currentUser = db.prepare('SELECT password_hash, salt FROM admin_users WHERE id = ?').get(userId) as any;
+    }
+
+    if (!currentUser) {
+      return { success: false, message: 'Pengguna admin tidak ditemukan.' };
+    }
+
+    const isValid = verifyPassword(currentPass, currentUser.password_hash, currentUser.salt);
+    if (!isValid) {
+      return { success: false, message: 'Kata sandi saat ini tidak sesuai.' };
     }
 
     if (newPass.length < 6) {
-      return { success: false, message: 'Password baru minimal 6 karakter.' };
+      return { success: false, message: 'Kata sandi baru minimal 6 karakter.' };
     }
 
     const newSalt = generateSalt();
     const newHash = hashPassword(newPass, newSalt);
 
-    db.prepare('UPDATE admin_users SET password_hash = ?, salt = ? WHERE id = ?').run(newHash, newSalt, userId);
+    // Update SQLite
+    try {
+      const db = getDb();
+      db.prepare('UPDATE admin_users SET password_hash = ?, salt = ? WHERE id = ?').run(newHash, newSalt, userId);
+    } catch (err) {
+      console.error('SQLite password update error:', err);
+    }
 
-    return { success: true, message: 'Password berhasil diubah secara permanen.' };
+    // Update Supabase
+    if (isSupabaseConfigured()) {
+      try {
+        const supabase = getSupabaseAdminClient();
+        if (supabase) {
+          await supabase
+            .from('admin_users')
+            .update({ password_hash: newHash, salt: newSalt })
+            .eq('id', userId);
+        }
+      } catch (err) {
+        console.error('Supabase password update error:', err);
+      }
+    }
+
+    return { success: true, message: 'Kata sandi berhasil diperbarui.' };
   } catch (error) {
     console.error('Error changing admin password:', error);
-    return { success: false, message: 'Terjadi kesalahan sistem saat mengubah password.' };
+    return { success: false, message: 'Terjadi kesalahan sistem saat memperbarui kata sandi.' };
   }
 }

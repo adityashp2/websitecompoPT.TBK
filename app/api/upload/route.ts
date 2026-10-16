@@ -1,9 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { getCurrentAdminUser } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
+    const admin = await getCurrentAdminUser();
+    if (!admin) {
+      return NextResponse.json(
+        { success: false, error: 'Akses ditolak. Sesi administrator diperlukan untuk mengunggah berkas.' },
+        { status: 401 }
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
 

@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Sesi login tidak sah atau sudah kedaluwarsa.' }, { status: 401 });
     }
 
-    const user = getAdminFromSession(token);
+    const user = await getAdminFromSession(token);
     if (!user) {
       return NextResponse.json({ success: false, error: 'Sesi login tidak sah.' }, { status: 401 });
     }
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Silakan isi password saat ini dan password baru.' }, { status: 400 });
     }
 
-    const result = changeAdminPassword(user.id, currentPassword, newPassword);
+    const result = await changeAdminPassword(user.id, currentPassword, newPassword);
     if (!result.success) {
       return NextResponse.json({ success: false, error: result.message }, { status: 400 });
     }

@@ -10,7 +10,7 @@ export async function POST() {
     const token = cookieStore.get(ADMIN_COOKIE_NAME)?.value;
 
     if (token) {
-      deleteAdminSession(token);
+      await deleteAdminSession(token);
     }
 
     const response = NextResponse.json({

@@ -2,12 +2,16 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
 import { initialSiteContent, SiteContent } from './initialData';
+import { isSupabaseConfigured, getSupabaseAdminClient } from './supabase';
 
 declare global {
   // eslint-disable-next-line no-var
   var __sqliteDbInstance: Database.Database | undefined;
 }
 
+/**
+ * Initialize or get SQLite instance (acts as primary local DB or fallback)
+ */
 function getDb(): Database.Database {
   if (global.__sqliteDbInstance) return global.__sqliteDbInstance;
 
@@ -83,108 +87,352 @@ function getDb(): Database.Database {
 
 export { getDb };
 
-export function getSiteContent(): SiteContent {
+/**
+ * Merge raw database JSON with initialSiteContent defaults
+ */
+export function mergeWithDefaults(parsed: any): SiteContent {
+  if (!parsed || typeof parsed !== 'object') return initialSiteContent;
+
+  return {
+    ...initialSiteContent,
+    ...parsed,
+    bannerSlides: Array.isArray(parsed.bannerSlides)
+      ? parsed.bannerSlides
+      : initialSiteContent.bannerSlides,
+    hero: {
+      ...initialSiteContent.hero,
+      ...parsed.hero,
+      headlineTop: parsed.hero?.headlineTop || initialSiteContent.hero.headlineTop,
+      headlineBottom: parsed.hero?.headlineBottom || initialSiteContent.hero.headlineBottom,
+      bodyText: parsed.hero?.bodyText || initialSiteContent.hero.bodyText,
+      activeBadgeLabel: parsed.hero?.activeBadgeLabel || initialSiteContent.hero.activeBadgeLabel,
+      activeBadgeProject: parsed.hero?.activeBadgeProject || initialSiteContent.hero.activeBadgeProject,
+      slides: Array.isArray(parsed.hero?.slides)
+        ? parsed.hero.slides
+        : initialSiteContent.hero.slides,
+    },
+    project: {
+      ...initialSiteContent.project,
+      ...parsed.project,
+      mediaType: parsed.project?.mediaType || initialSiteContent.project.mediaType || 'photo',
+      videoUrl: parsed.project?.videoUrl ?? initialSiteContent.project.videoUrl ?? '',
+      slides: Array.isArray(parsed.project?.slides)
+        ? parsed.project.slides
+        : initialSiteContent.project.slides,
+      specs: Array.isArray(parsed.project?.specs)
+        ? parsed.project.specs
+        : initialSiteContent.project.specs,
+    },
+    activities: {
+      ...initialSiteContent.activities,
+      ...(parsed.activities || {}),
+      items: Array.isArray(parsed.activities?.items)
+        ? parsed.activities.items
+        : initialSiteContent.activities.items,
+    },
+    leadership: {
+      ...initialSiteContent.leadership,
+      ...(parsed.leadership || {}),
+      operationalTitle: parsed.leadership?.operationalTitle || initialSiteContent.leadership.operationalTitle,
+      operationalSubtitle: parsed.leadership?.operationalSubtitle || initialSiteContent.leadership.operationalSubtitle,
+      members: Array.isArray(parsed.leadership?.members)
+        ? parsed.leadership.members
+        : initialSiteContent.leadership.members,
+    },
+    buyingProcess: {
+      ...initialSiteContent.buyingProcess,
+      ...(parsed.buyingProcess || {}),
+      steps: Array.isArray(parsed.buyingProcess?.steps)
+        ? parsed.buyingProcess.steps
+        : (initialSiteContent.buyingProcess?.steps || []),
+    },
+    kprSimulation: {
+      ...initialSiteContent.kprSimulation,
+      ...(parsed.kprSimulation || {}),
+      benefits: Array.isArray(parsed.kprSimulation?.benefits)
+        ? parsed.kprSimulation.benefits
+        : (initialSiteContent.kprSimulation?.benefits || []),
+    },
+    contact: {
+      ...initialSiteContent.contact,
+      ...(parsed.contact || {}),
+      mapsEmbedUrl: parsed.contact?.mapsEmbedUrl || initialSiteContent.contact.mapsEmbedUrl,
+      mapsUrl: parsed.contact?.mapsUrl || initialSiteContent.contact.mapsUrl,
+    },
+    legal: {
+      ...initialSiteContent.legal,
+      ...(parsed.legal || {}),
+      landStatus: parsed.legal?.landStatus || initialSiteContent.legal.landStatus,
+      landStatusDetail: parsed.legal?.landStatusDetail || initialSiteContent.legal.landStatusDetail,
+    },
+    about: {
+      ...initialSiteContent.about,
+      ...(parsed.about || {}),
+      missions: Array.isArray(parsed.about?.missions) ? parsed.about.missions : initialSiteContent.about.missions,
+      commitmentTitle: parsed.about?.commitmentTitle || initialSiteContent.about.commitmentTitle,
+      commitmentBody: parsed.about?.commitmentBody || initialSiteContent.about.commitmentBody,
+      commitmentPoints: Array.isArray(parsed.about?.commitmentPoints) ? parsed.about.commitmentPoints : initialSiteContent.about.commitmentPoints,
+      officeImage: parsed.about?.officeImage || initialSiteContent.about.officeImage,
+      officeCaption: parsed.about?.officeCaption || initialSiteContent.about.officeCaption,
+      homeIntroBadge: parsed.about?.homeIntroBadge || initialSiteContent.about.homeIntroBadge,
+      homeIntroTitle: parsed.about?.homeIntroTitle || initialSiteContent.about.homeIntroTitle,
+      homeIntroHighlight: parsed.about?.homeIntroHighlight || initialSiteContent.about.homeIntroHighlight,
+      homeIntroText: parsed.about?.homeIntroText || initialSiteContent.about.homeIntroText,
+      homeIntroCtaText: parsed.about?.homeIntroCtaText || initialSiteContent.about.homeIntroCtaText,
+      homeIntroCtaLink: parsed.about?.homeIntroCtaLink || initialSiteContent.about.homeIntroCtaLink,
+      features: Array.isArray(parsed.about?.features)
+        ? parsed.about.features
+        : (initialSiteContent.about?.features || []),
+    },
+    footer: {
+      ...initialSiteContent.footer,
+      ...(parsed.footer || {}),
+      tagline: parsed.footer?.tagline || initialSiteContent.footer.tagline,
+    },
+  };
+}
+
+/**
+ * Get site content from SQLite
+ */
+function getSiteContentSqlite(): SiteContent {
   try {
     const db = getDb();
     const row = db.prepare("SELECT data FROM site_content WHERE id = 'main'").get() as { data: string } | undefined;
     if (row && row.data) {
       const parsed = JSON.parse(row.data);
-      // Merge with initial data to ensure all keys exist
-      return {
-        ...initialSiteContent,
-        ...parsed,
-        hero: {
-          ...initialSiteContent.hero,
-          ...parsed.hero,
-          headlineTop: parsed.hero?.headlineTop || initialSiteContent.hero.headlineTop,
-          headlineBottom: parsed.hero?.headlineBottom || initialSiteContent.hero.headlineBottom,
-          bodyText: parsed.hero?.bodyText || initialSiteContent.hero.bodyText,
-          activeBadgeLabel: parsed.hero?.activeBadgeLabel || initialSiteContent.hero.activeBadgeLabel,
-          activeBadgeProject: parsed.hero?.activeBadgeProject || initialSiteContent.hero.activeBadgeProject,
-          slides: Array.isArray(parsed.hero?.slides)
-            ? parsed.hero.slides
-            : initialSiteContent.hero.slides,
-        },
-        project: {
-          ...initialSiteContent.project,
-          ...parsed.project,
-          mediaType: parsed.project?.mediaType || initialSiteContent.project.mediaType || 'photo',
-          videoUrl: parsed.project?.videoUrl ?? initialSiteContent.project.videoUrl ?? '',
-          slides: Array.isArray(parsed.project?.slides)
-            ? parsed.project.slides
-            : initialSiteContent.project.slides,
-        },
-        activities: {
-          ...initialSiteContent.activities,
-          ...(parsed.activities || {}),
-          items: Array.isArray(parsed.activities?.items)
-            ? parsed.activities.items
-            : initialSiteContent.activities.items,
-        },
-        leadership: {
-          ...initialSiteContent.leadership,
-          ...(parsed.leadership || {}),
-          members: Array.isArray(parsed.leadership?.members)
-            ? parsed.leadership.members
-            : initialSiteContent.leadership.members,
-        },
-        contact: {
-          ...initialSiteContent.contact,
-          ...(parsed.contact || {}),
-          mapsEmbedUrl: parsed.contact?.mapsEmbedUrl || initialSiteContent.contact.mapsEmbedUrl,
-          mapsUrl: parsed.contact?.mapsUrl || initialSiteContent.contact.mapsUrl,
-        },
-        about: {
-          ...initialSiteContent.about,
-          ...(parsed.about || {}),
-          missions: Array.isArray(parsed.about?.missions) ? parsed.about.missions : initialSiteContent.about.missions,
-          commitmentTitle: parsed.about?.commitmentTitle || initialSiteContent.about.commitmentTitle,
-          commitmentBody: parsed.about?.commitmentBody || initialSiteContent.about.commitmentBody,
-          commitmentPoints: Array.isArray(parsed.about?.commitmentPoints) ? parsed.about.commitmentPoints : initialSiteContent.about.commitmentPoints,
-        },
-        footer: {
-          ...initialSiteContent.footer,
-          ...(parsed.footer || {}),
-          tagline: parsed.footer?.tagline || initialSiteContent.footer.tagline,
-        },
-      };
+      return mergeWithDefaults(parsed);
     }
   } catch (error) {
-    console.error('Database getSiteContent error:', error);
+    console.error('SQLite getSiteContent error:', error);
   }
   return initialSiteContent;
 }
 
-export function updateSiteContent(newContent: SiteContent): SiteContent {
-  const db = getDb();
-  db.prepare(`
-    INSERT INTO site_content (id, data, updated_at) 
-    VALUES ('main', ?, CURRENT_TIMESTAMP)
-    ON CONFLICT(id) DO UPDATE SET data = excluded.data, updated_at = CURRENT_TIMESTAMP
-  `).run(JSON.stringify(newContent));
+/**
+ * Get site content (Supabase with automatic SQLite fallback)
+ */
+export async function getSiteContent(): Promise<SiteContent> {
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        const { data, error } = await supabase
+          .from('site_content')
+          .select('data')
+          .eq('id', 'main')
+          .single();
+
+        if (data && data.data && !error) {
+          const raw = typeof data.data === 'string' ? JSON.parse(data.data) : data.data;
+          return mergeWithDefaults(raw);
+        }
+      }
+    } catch (err) {
+      console.warn('Supabase query failed, falling back to SQLite:', err);
+    }
+  }
+
+  return getSiteContentSqlite();
+}
+
+/**
+ * Update site content in SQLite
+ */
+function updateSiteContentSqlite(newContent: SiteContent): SiteContent {
+  try {
+    const db = getDb();
+    db.prepare(`
+      INSERT INTO site_content (id, data, updated_at) 
+      VALUES ('main', ?, CURRENT_TIMESTAMP)
+      ON CONFLICT(id) DO UPDATE SET data = excluded.data, updated_at = CURRENT_TIMESTAMP
+    `).run(JSON.stringify(newContent));
+  } catch (err) {
+    console.error('SQLite updateSiteContent error:', err);
+  }
   return newContent;
 }
 
-export function resetSiteContent(): SiteContent {
-  const db = getDb();
-  db.prepare(`
-    INSERT INTO site_content (id, data, updated_at) 
-    VALUES ('main', ?, CURRENT_TIMESTAMP)
-    ON CONFLICT(id) DO UPDATE SET data = excluded.data, updated_at = CURRENT_TIMESTAMP
-  `).run(JSON.stringify(initialSiteContent));
+/**
+ * Update site content (both Supabase and local SQLite backup)
+ */
+export async function updateSiteContent(newContent: SiteContent): Promise<SiteContent> {
+  // Always update local SQLite as backup
+  updateSiteContentSqlite(newContent);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        const { error } = await supabase
+          .from('site_content')
+          .upsert({
+            id: 'main',
+            data: newContent,
+            updated_at: new Date().toISOString(),
+          });
+
+        if (error) {
+          console.error('Supabase updateSiteContent error:', error);
+        }
+      }
+    } catch (err) {
+      console.error('Supabase updateSiteContent exception:', err);
+    }
+  }
+
+  return newContent;
+}
+
+/**
+ * Reset site content to official default data
+ */
+export async function resetSiteContent(): Promise<SiteContent> {
+  try {
+    const db = getDb();
+    db.prepare(`
+      INSERT INTO site_content (id, data, updated_at) 
+      VALUES ('main', ?, CURRENT_TIMESTAMP)
+      ON CONFLICT(id) DO UPDATE SET data = excluded.data, updated_at = CURRENT_TIMESTAMP
+    `).run(JSON.stringify(initialSiteContent));
+  } catch (err) {
+    console.error('SQLite resetSiteContent error:', err);
+  }
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        await supabase
+          .from('site_content')
+          .upsert({
+            id: 'main',
+            data: initialSiteContent,
+            updated_at: new Date().toISOString(),
+          });
+      }
+    } catch (err) {
+      console.error('Supabase resetSiteContent error:', err);
+    }
+  }
+
   return initialSiteContent;
 }
 
-export function saveInquiry(inquiry: { name: string; phone: string; email?: string; message?: string }) {
-  const db = getDb();
-  const stmt = db.prepare(`
-    INSERT INTO inquiries (name, phone, email, message)
-    VALUES (?, ?, ?, ?)
-  `);
-  return stmt.run(inquiry.name, inquiry.phone, inquiry.email || '', inquiry.message || '');
+/**
+ * Save user inquiry message
+ */
+export async function saveInquiry(inquiry: { name: string; phone: string; email?: string; message?: string }) {
+  // Save to SQLite
+  try {
+    const db = getDb();
+    const stmt = db.prepare(`
+      INSERT INTO inquiries (name, phone, email, message)
+      VALUES (?, ?, ?, ?)
+    `);
+    stmt.run(inquiry.name, inquiry.phone, inquiry.email || '', inquiry.message || '');
+  } catch (err) {
+    console.error('SQLite saveInquiry error:', err);
+  }
+
+  // Save to Supabase
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        await supabase.from('inquiries').insert([{
+          name: inquiry.name,
+          phone: inquiry.phone,
+          email: inquiry.email || null,
+          message: inquiry.message || null,
+        }]);
+      }
+    } catch (err) {
+      console.error('Supabase saveInquiry error:', err);
+    }
+  }
 }
 
-export function getInquiries() {
-  const db = getDb();
-  return db.prepare("SELECT * FROM inquiries ORDER BY created_at DESC").all();
+/**
+ * Get all inquiry messages
+ */
+export async function getInquiries() {
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        const { data, error } = await supabase
+          .from('inquiries')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (data && !error) {
+          return data;
+        }
+      }
+    } catch (err) {
+      console.warn('Supabase getInquiries error, falling back to SQLite:', err);
+    }
+  }
+
+  try {
+    const db = getDb();
+    return db.prepare("SELECT * FROM inquiries ORDER BY created_at DESC").all();
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Delete a single inquiry message by id
+ */
+export async function deleteInquiry(id: number): Promise<boolean> {
+  let success = false;
+
+  try {
+    const db = getDb();
+    const res = db.prepare('DELETE FROM inquiries WHERE id = ?').run(id);
+    success = res.changes > 0;
+  } catch (err) {
+    console.error('SQLite deleteInquiry error:', err);
+  }
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        const { error } = await supabase.from('inquiries').delete().eq('id', id);
+        if (!error) success = true;
+      }
+    } catch (err) {
+      console.error('Supabase deleteInquiry error:', err);
+    }
+  }
+
+  return success;
+}
+
+/**
+ * Clear all inquiry messages
+ */
+export async function clearAllInquiries(): Promise<boolean> {
+  try {
+    const db = getDb();
+    db.prepare('DELETE FROM inquiries').run();
+  } catch (err) {
+    console.error('SQLite clearAllInquiries error:', err);
+  }
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        await supabase.from('inquiries').delete().neq('id', 0);
+      }
+    } catch (err) {
+      console.error('Supabase clearAllInquiries error:', err);
+    }
+  }
+
+  return true;
 }

@@ -16,7 +16,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const admin = authenticateAdmin(identifier, password);
+    const admin = await authenticateAdmin(identifier, password);
     if (!admin) {
       return NextResponse.json(
         { success: false, error: 'Username/email atau password yang Anda masukkan salah.' },
@@ -24,8 +24,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create session in SQLite
-    const { token, expiresAt } = createAdminSession(admin.id, !!rememberMe);
+    // Create session (Supabase / SQLite)
+    const { token, expiresAt } = await createAdminSession(admin.id, !!rememberMe);
 
     // Set HTTP-only secure cookie
     const cookieStore = cookies();

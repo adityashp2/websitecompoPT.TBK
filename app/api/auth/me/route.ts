@@ -13,7 +13,7 @@ export async function GET() {
       return NextResponse.json({ authenticated: false }, { status: 401 });
     }
 
-    const user = getAdminFromSession(token);
+    const user = await getAdminFromSession(token);
     if (!user) {
       // Invalid or expired token: clear cookie properly on the response
       const response = NextResponse.json({ authenticated: false }, { status: 401 });
