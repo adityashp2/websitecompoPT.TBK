@@ -1179,14 +1179,12 @@ export default function AdminDashboard() {
                             <button
                               type="button"
                               onClick={() => {
-                                if (window.confirm(`Hapus slide banner "${slide.eyebrow}"?`)) {
-                                  const newSlides = (content.bannerSlides || []).filter((_, i) => i !== sIdx);
-                                  setContent({ ...content, bannerSlides: newSlides });
-                                  setSaveStatus({
-                                    type: 'success',
-                                    message: 'Slide banner berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan perubahan secara permanen.',
-                                  });
-                                }
+                                const newSlides = (content.bannerSlides || []).filter((_, i) => i !== sIdx);
+                                setContent({ ...content, bannerSlides: newSlides });
+                                setSaveStatus({
+                                  type: 'success',
+                                  message: 'Slide banner berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan perubahan secara permanen.',
+                                });
                               }}
                               className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 ml-1"
                               title="Hapus Slide Ini"
@@ -1836,25 +1834,18 @@ export default function AdminDashboard() {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  if (window.confirm(`Hapus kartu keunggulan "${feature.title}"?`)) {
-                                    const currentFeatures = Array.isArray(content.about.features)
-                                      ? [...content.about.features]
-                                      : [
-                                          { title: 'Hunian Berkualitas', desc: 'Rumah nyaman dengan infrastruktur yang memadai.', icon: 'home' },
-                                          { title: 'Harga Terjangkau', desc: 'Solusi hunian untuk keluarga Indonesia.', icon: 'shield' },
-                                          { title: 'Lokasi Strategis', desc: 'Mudah diakses dan dekat dengan fasilitas umum.', icon: 'map' },
-                                          { title: 'Lingkungan Asri', desc: 'Hidup lebih sehat di lingkungan yang hijau.', icon: 'leaf' },
-                                        ];
-                                    const newFeatures = currentFeatures.filter((_, i) => i !== fIdx);
-                                    setContent({
-                                      ...content,
-                                      about: { ...content.about, features: newFeatures },
-                                    });
-                                    setSaveStatus({
-                                      type: 'success',
-                                      message: 'Kartu keunggulan berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan perubahan.',
-                                    });
-                                  }
+                                  const currentFeatures = Array.isArray(content.about.features)
+                                    ? [...content.about.features]
+                                    : [];
+                                  const newFeatures = currentFeatures.filter((_, i) => i !== fIdx);
+                                  setContent({
+                                    ...content,
+                                    about: { ...content.about, features: newFeatures },
+                                  });
+                                  setSaveStatus({
+                                    type: 'success',
+                                    message: 'Kartu keunggulan berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan perubahan.',
+                                  });
                                 }}
                                 className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs flex items-center gap-1 transition-colors"
                                 title="Hapus kartu ini"
@@ -2114,17 +2105,15 @@ export default function AdminDashboard() {
                           <button
                             type="button"
                             onClick={() => {
-                              if (window.confirm(`Hapus langkah "${stepItem.title}"?`)) {
-                                const newSteps = (content.buyingProcess?.steps || []).filter((_, i) => i !== stepIdx);
-                                setContent({
-                                  ...content,
-                                  buyingProcess: { ...content.buyingProcess!, steps: newSteps },
-                                });
-                                setSaveStatus({
-                                  type: 'success',
-                                  message: 'Langkah tahapan berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan perubahan secara permanen.',
-                                });
-                              }
+                              const newSteps = (content.buyingProcess?.steps || []).filter((_, i) => i !== stepIdx);
+                              setContent({
+                                ...content,
+                                buyingProcess: { ...content.buyingProcess!, steps: newSteps },
+                              });
+                              setSaveStatus({
+                                type: 'success',
+                                message: 'Langkah tahapan berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan perubahan secara permanen.',
+                              });
                             }}
                             className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 ml-1"
                             title="Hapus Langkah"
@@ -3563,18 +3552,16 @@ export default function AdminDashboard() {
                             <button
                               type="button"
                               onClick={() => {
-                                if (window.confirm(`Apakah Anda yakin ingin menghapus pengurus "${member.name}"?`)) {
-                                  const newMembers = [...content.leadership.members];
-                                  newMembers.splice(idx, 1);
-                                  setContent({
-                                    ...content,
-                                    leadership: { ...content.leadership, members: newMembers },
-                                  });
-                                  setSaveStatus({
-                                    type: 'success',
-                                    message: 'Data pengurus berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan secara permanen.',
-                                  });
-                                }
+                                const newMembers = [...content.leadership.members];
+                                newMembers.splice(idx, 1);
+                                setContent({
+                                  ...content,
+                                  leadership: { ...content.leadership, members: newMembers },
+                                });
+                                setSaveStatus({
+                                  type: 'success',
+                                  message: 'Data pengurus berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan secara permanen.',
+                                });
                               }}
                               className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs flex items-center gap-1 transition-colors border border-red-500/20 ml-1"
                               title="Hapus pengurus ini"
@@ -4099,18 +4086,16 @@ export default function AdminDashboard() {
                             <button
                               type="button"
                               onClick={() => {
-                                if (window.confirm(`Hapus kegiatan lapangan "${item.title || item.tag}"?`)) {
-                                  const newItems = [...content.activities.items];
-                                  newItems.splice(idx, 1);
-                                  setContent({
-                                    ...content,
-                                    activities: { ...content.activities, items: newItems },
-                                  });
-                                  setSaveStatus({
-                                    type: 'success',
-                                    message: 'Kegiatan lapangan berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan secara permanen.',
-                                  });
-                                }
+                                const newItems = [...content.activities.items];
+                                newItems.splice(idx, 1);
+                                setContent({
+                                  ...content,
+                                  activities: { ...content.activities, items: newItems },
+                                });
+                                setSaveStatus({
+                                  type: 'success',
+                                  message: 'Kegiatan lapangan berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan secara permanen.',
+                                });
                               }}
                               className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs flex items-center gap-1 transition-colors border border-red-500/20 ml-1"
                               title="Hapus kegiatan ini"
@@ -4436,6 +4421,96 @@ export default function AdminDashboard() {
                     />
                   </div>
 
+                  {/* FOTO COVER / SAMPUL UTAMA PROYEK (TAMPIL DI BERANDA) */}
+                  <div className="p-5 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-3">
+                    <div>
+                      <label className="block text-xs font-bold text-[#073B78] flex items-center gap-1.5 uppercase tracking-wider">
+                        <ImageIcon className="w-4 h-4 text-[#FF9D2E]" />
+                        <span>Foto Sampul / Gambar Utama Proyek (Tampil di Beranda)</span>
+                      </label>
+                      <p className="text-xs text-[#526783] mt-0.5">
+                        Foto ini adalah gambar utama proyek Puri Gunung Langgar yang tampil di halaman depan (beranda). Anda dapat mengganti, mengupload foto baru, atau menghapusnya.
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                      <div className="w-36 h-24 rounded-xl bg-slate-900 border border-[#DCE7F5] overflow-hidden shrink-0 flex items-center justify-center">
+                        {content.project.image && content.project.image.trim() !== '' ? (
+                          <img
+                            src={content.project.image}
+                            alt="Sampul Proyek"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-[10px] text-slate-400 text-center px-2">Tanpa Foto Sampul</span>
+                        )}
+                      </div>
+
+                      <div className="flex-1 w-full space-y-2">
+                        <input
+                          type="text"
+                          value={content.project.image || ''}
+                          onChange={(e) =>
+                            setContent({
+                              ...content,
+                              project: { ...content.project, image: e.target.value },
+                            })
+                          }
+                          placeholder="Path atau URL gambar (/assets/... atau /uploads/...)"
+                          className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                        />
+
+                        <div className="flex items-center gap-2">
+                          <label className="cursor-pointer px-3.5 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-colors shadow-sm">
+                            <Upload className="w-3.5 h-3.5" />
+                            <span>{uploadingKey === 'projectCover' ? 'Mengupload...' : 'Upload Foto Baru'}</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              disabled={uploadingKey === 'projectCover'}
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                  handleGenericFileUpload(e.target.files[0], 'projectCover', (url) => {
+                                    setContent({
+                                      ...content,
+                                      project: { ...content.project, image: url },
+                                    });
+                                    setSaveStatus({
+                                      type: 'success',
+                                      message: 'Foto sampul proyek berhasil diganti! Klik "Simpan ke SQL" di atas untuk menyimpan.',
+                                    });
+                                  });
+                                }
+                              }}
+                            />
+                          </label>
+
+                          {content.project.image && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setContent({
+                                  ...content,
+                                  project: { ...content.project, image: '' },
+                                });
+                                setSaveStatus({
+                                  type: 'success',
+                                  message: 'Foto sampul proyek berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan.',
+                                });
+                              }}
+                              className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                              title="Hapus foto utama ini"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                              <span>Hapus Foto Sampul</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* PENGATURAN MEDIA PROYEK: FOTO SLIDESHOW ATAU VIDEO YOUTUBE */}
                   <div className="pt-4 border-t border-[#DCE7F5] space-y-4">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -4567,19 +4642,17 @@ export default function AdminDashboard() {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  if (window.confirm('Kosongkan semua foto galeri proyek Puri Gunung Langgar?')) {
-                                    setContent({
-                                      ...content,
-                                      project: {
-                                        ...content.project,
-                                        slides: [],
-                                      },
-                                    });
-                                    setSaveStatus({
-                                      type: 'success',
-                                      message: 'Semua foto galeri proyek dikosongkan! Klik "Simpan ke SQL" di kanan atas untuk menyimpan secara permanen.',
-                                    });
-                                  }
+                                  setContent({
+                                    ...content,
+                                    project: {
+                                      ...content.project,
+                                      slides: [],
+                                    },
+                                  });
+                                  setSaveStatus({
+                                    type: 'success',
+                                    message: 'Semua foto galeri proyek dikosongkan! Klik "Simpan ke SQL" di kanan atas untuk menyimpan secara permanen.',
+                                  });
                                 }}
                                 className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all"
                               >
