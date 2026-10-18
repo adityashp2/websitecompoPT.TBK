@@ -94,6 +94,17 @@ CREATE POLICY "Service role has full access to admin_sessions"
   USING (true) WITH CHECK (true);
 
 -- ========================================================
+-- GRANT HAK AKSES PERMISSION KE ROLES SUPABASE
+-- ========================================================
+GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON ALL ROUTINES IN SCHEMA public TO anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON ROUTINES TO anon, authenticated, service_role;
+
+-- ========================================================
 -- SEED DATA AWAL (KONTEN RESMI & DEFAULT SUPERADMIN)
 -- ========================================================
 
