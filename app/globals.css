@@ -131,6 +131,13 @@ body {
   border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 
+/* Safety constraint: Header & Logo should never break dimensions */
+header img {
+  max-height: 40px !important;
+  width: auto !important;
+  object-fit: contain !important;
+}
+
 /* ========================================================= */
 /* ICC-INSPIRED MOTION DESIGN & KEYFRAMES                    */
 /* ========================================================= */

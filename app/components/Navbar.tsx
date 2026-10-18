@@ -193,6 +193,8 @@ export default function Header({ content }: HeaderProps) {
           left: 0,
           right: 0,
           zIndex: 9999,
+          backgroundColor: '#073B78',
+          maxHeight: '68px',
         }}
       >
         <div className="w-full max-w-[1360px] mx-auto h-full px-3.5 sm:px-6 flex items-center justify-between gap-2">
@@ -204,10 +206,13 @@ export default function Header({ content }: HeaderProps) {
             aria-label="PT. Terbang Bersama Kawan - Beranda"
           >
             {/* Logo Image Asset */}
-            <div className="h-8 sm:h-9 w-auto flex items-center shrink-0">
+            <div className="h-8 sm:h-9 w-auto flex items-center shrink-0" style={{ maxHeight: '36px', overflow: 'hidden' }}>
               <img
                 src={content.meta?.logo || '/assets/logo-tbk.png'}
                 alt={`Logo ${content.footer?.companyName || 'PT. Terbang Bersama Kawan'}`}
+                width={120}
+                height={36}
+                style={{ maxHeight: '36px', width: 'auto', objectFit: 'contain' }}
                 className="h-8 sm:h-9 w-auto object-contain brightness-0 invert"
               />
             </div>

@@ -137,6 +137,7 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
                   <img
                     src={slide.image}
                     alt={slide.imageAlt}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     className={`w-full h-full object-cover object-center transition-transform duration-1000 ${
                       isActive ? 'scale-105' : 'scale-100'
                     }`}
@@ -321,6 +322,7 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
                     <img
                       src={slide.image}
                       alt={slide.imageAlt}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       className="w-full h-full object-cover object-center"
                       loading={idx === 0 ? 'eager' : 'lazy'}
                     />

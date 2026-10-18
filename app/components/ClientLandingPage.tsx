@@ -22,13 +22,21 @@ import {
   Wallet,
   Leaf,
   Briefcase,
-  Users
+  Users,
+  User
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Header from './Navbar';
 import Footer from './Footer';
 import FloatingWhatsApp from './FloatingWhatsApp';
 import PromoBannerCarousel from './PromoBannerCarousel';
+import {
+  HeaderHousesIllustration,
+  Step1ConsultationIllustration,
+  Step2DocumentIllustration,
+  Step3BankIllustration,
+  Step4HandshakeIllustration,
+} from './BuyingProcessIllustrations';
 import type { LookbookItem } from './LookbookModal';
 import { SiteContent, initialSiteContent } from '@/lib/initialData';
 
@@ -938,22 +946,24 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
         </section>
 
         {/* ========================================================= */}
-        {/* SECTION C: BUYING PROCESS (Alur Kepemilikan)              */}
-        {/* Background: Clean White #FFFFFF                          */}
+        {/* SECTION C: BUYING PROCESS (Tahapan Pembelian Rumah)       */}
+        {/* Background: Soft Modern Tone #F8FAFC                     */}
         {/* ========================================================= */}
-        <section id="alur-pembelian" className="py-16 sm:py-24 bg-white border-b border-[#DCE7F5] scroll-mt-16">
-          <div className="container-editorial">
-            <div className="max-w-2xl mb-12 sm:mb-16 reveal-on-scroll">
-              <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
-                <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                <span>{content.buyingProcess?.badge || 'Panduan Konsumen'}</span>
+        <section id="alur-pembelian" className="py-14 sm:py-20 bg-[#F8FAFC] border-y border-[#E2E8F0] scroll-mt-16">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6">
+            {/* Header with Title & Suburban Houses Vector Illustration */}
+            <div className="flex items-start justify-between gap-4 mb-8 sm:mb-10 reveal-on-scroll">
+              <div className="max-w-lg">
+                <h2 className="font-serif font-bold text-2xl sm:text-3xl lg:text-4xl text-[#102D52] leading-tight tracking-tight">
+                  {content.buyingProcess?.title || 'Tahapan Pembelian Rumah Subsidi'}
+                </h2>
+                <p className="font-sans text-[13px] sm:text-[14.5px] text-[#526783] mt-2.5 leading-relaxed">
+                  {content.buyingProcess?.subtitle || 'Alur pengajuan yang transparan dan terstruktur bagi masyarakat, dari pemilihan kavling hingga serah terima kunci.'}
+                </p>
               </div>
-              <h2 className="font-serif font-normal text-3xl sm:text-4xl text-[#102D52] leading-tight">
-                {content.buyingProcess?.title || 'Tahapan Pembelian Rumah Subsidi'}
-              </h2>
-              <p className="font-sans text-[15px] sm:text-[16px] text-[#526783] mt-2.5 leading-relaxed">
-                {content.buyingProcess?.subtitle || 'Alur pengajuan yang transparan dan terstruktur bagi masyarakat, dari pemilihan kavling hingga serah terima kunci.'}
-              </p>
+              <div className="shrink-0 pt-1">
+                <HeaderHousesIllustration className="w-28 sm:w-36 md:w-44 h-auto drop-shadow-sm" />
+              </div>
             </div>
 
             {(() => {
@@ -996,42 +1006,79 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                 : defaultSteps;
 
               return (
-                <div className="relative pt-2">
+                <div className="relative pl-6 sm:pl-9">
+                  {/* Dashed vertical timeline line running through all items */}
                   <div
-                    className="hidden md:block absolute top-[24px] left-[5%] right-[5%] h-[2px] bg-[#DCE7F5] z-0"
+                    className="absolute left-[7px] sm:left-[11px] top-6 bottom-8 w-0 border-l-2 border-dashed border-[#CBD5E1]"
                     aria-hidden="true"
                   />
 
-                  <ol className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-10 relative z-10 pl-6 md:pl-0 border-l-2 border-[#DCE7F5] md:border-l-0 ml-2 md:ml-0">
-                    {steps.map((item, idx) => (
-                      <li key={idx} className={`relative flex flex-col justify-between reveal-on-scroll ${item.delayClass}`}>
-                        <span
-                          className="md:hidden absolute -left-[32px] top-1 w-4 h-4 rounded-full bg-white border-4 border-[#FF9D2E]"
-                          aria-hidden="true"
-                        />
+                  <div className="space-y-4 sm:space-y-5">
+                    {steps.map((item, idx) => {
+                      let illustration = <Step1ConsultationIllustration className="w-16 h-16 sm:w-20 sm:h-20 shrink-0" />;
+                      let highlightIcon = <CheckCircle2 className="w-4 h-4 text-[#102D52] shrink-0" />;
 
-                        <div>
-                          <div className="hidden md:flex items-center gap-3 mb-4">
-                            <span className="w-4 h-4 rounded-full bg-white border-4 border-[#FF9D2E] shrink-0" aria-hidden="true" />
-                            <span className="font-serif text-3xl lg:text-4xl text-[#073B78] leading-none">{item.step}</span>
+                      if (idx === 1 || item.step === '02') {
+                        illustration = <Step2DocumentIllustration className="w-16 h-16 sm:w-20 sm:h-20 shrink-0" />;
+                        highlightIcon = <User className="w-4 h-4 text-[#102D52] shrink-0" />;
+                      } else if (idx === 2 || item.step === '03') {
+                        illustration = <Step3BankIllustration className="w-16 h-16 sm:w-20 sm:h-20 shrink-0" />;
+                        highlightIcon = <CheckCircle2 className="w-4 h-4 text-[#102D52] shrink-0" />;
+                      } else if (idx === 3 || item.step === '04') {
+                        illustration = <Step4HandshakeIllustration className="w-16 h-16 sm:w-20 sm:h-20 shrink-0" />;
+                        highlightIcon = <CheckCircle2 className="w-4 h-4 text-[#102D52] shrink-0" />;
+                      }
+
+                      const isHandshakeStep = idx === 3 || item.step === '04';
+
+                      return (
+                        <div key={idx} className={`relative group reveal-on-scroll ${item.delayClass}`}>
+                          {/* Circular Timeline Node Dot */}
+                          <div
+                            className="absolute -left-[27px] sm:-left-[39px] top-6 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-white border-[3.5px] border-[#F59E0B] shadow-sm z-10 transition-transform group-hover:scale-110"
+                            aria-hidden="true"
+                          />
+
+                          {/* White Illustrated Card */}
+                          <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-[0_2px_12px_rgba(16,45,82,0.05)] border border-[#E2E8F0] hover:shadow-[0_6px_20px_rgba(16,45,82,0.08)] transition-all duration-200">
+                            {/* Card Top: Number, Title & Illustration */}
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="pr-2">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-serif text-2xl sm:text-3xl font-bold text-[#D97706] tracking-tight leading-none">
+                                    {item.step}
+                                  </span>
+                                  {isHandshakeStep && (
+                                    <span className="text-xl sm:text-2xl leading-none" role="img" aria-label="handshake">
+                                      🤝
+                                    </span>
+                                  )}
+                                </div>
+                                <h3 className="font-bold text-base sm:text-lg text-[#102D52] mt-1.5 tracking-tight leading-snug">
+                                  {item.title}
+                                </h3>
+                              </div>
+
+                              <div className="shrink-0">
+                                {illustration}
+                              </div>
+                            </div>
+
+                            {/* Card Body: Description */}
+                            <p className="font-sans text-xs sm:text-[13.5px] text-[#526783] leading-relaxed mt-2.5 mb-3.5">
+                              {item.desc}
+                            </p>
+
+                            {/* Card Footer: Subtle Divider + Icon Highlight */}
+                            <div className="pt-3 border-t border-[#F1F5F9] flex items-center gap-2 text-xs font-medium text-[#334155]">
+                              {highlightIcon}
+                              <span>{item.highlight}</span>
+                            </div>
                           </div>
-
-                          <span className="md:hidden font-serif text-2xl text-[#073B78] block mb-1">{item.step}</span>
-
-                          <h3 className="font-semibold text-[16px] text-[#102D52] tracking-normal mb-2">
-                            {item.title}
-                          </h3>
-                          <p className="text-xs lg:text-[13px] text-[#526783] leading-relaxed mb-3">
-                            {item.desc}
-                          </p>
                         </div>
-
-                        <div className="pt-2.5 border-t border-[#DCE7F5] text-[11.5px] text-[#073B78] font-semibold">
-                          {item.highlight}
-                        </div>
-                      </li>
-                    ))}
-                  </ol>
+                      );
+                    })}
+                  </div>
                 </div>
               );
             })()}
