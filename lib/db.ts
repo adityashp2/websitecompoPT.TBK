@@ -110,26 +110,29 @@ export function mergeWithDefaults(parsed: any): SiteContent {
     hero: {
       ...initialSiteContent.hero,
       ...parsed.hero,
-      headlineTop: parsed.hero?.headlineTop || initialSiteContent.hero.headlineTop,
-      headlineBottom: parsed.hero?.headlineBottom || initialSiteContent.hero.headlineBottom,
-      bodyText: parsed.hero?.bodyText || initialSiteContent.hero.bodyText,
-      activeBadgeLabel: parsed.hero?.activeBadgeLabel || initialSiteContent.hero.activeBadgeLabel,
-      activeBadgeProject: parsed.hero?.activeBadgeProject || initialSiteContent.hero.activeBadgeProject,
+      headlineTop: parsed.hero?.headlineTop ?? initialSiteContent.hero.headlineTop,
+      headlineBottom: parsed.hero?.headlineBottom ?? initialSiteContent.hero.headlineBottom,
+      bodyText: parsed.hero?.bodyText ?? initialSiteContent.hero.bodyText,
+      activeBadgeLabel: parsed.hero?.activeBadgeLabel ?? initialSiteContent.hero.activeBadgeLabel,
+      activeBadgeProject: parsed.hero?.activeBadgeProject ?? initialSiteContent.hero.activeBadgeProject,
       slides: Array.isArray(parsed.hero?.slides)
         ? parsed.hero.slides
         : initialSiteContent.hero.slides,
+      stats: Array.isArray(parsed.hero?.stats)
+        ? parsed.hero.stats
+        : (initialSiteContent.hero?.stats || []),
     },
     project: {
       ...initialSiteContent.project,
       ...parsed.project,
       mediaType: parsed.project?.mediaType || initialSiteContent.project.mediaType || 'photo',
       videoUrl: parsed.project?.videoUrl ?? initialSiteContent.project.videoUrl ?? '',
-      slides: Array.isArray(parsed.project?.slides) && parsed.project.slides.length > 0
+      slides: Array.isArray(parsed.project?.slides)
         ? parsed.project.slides
-        : initialSiteContent.project.slides,
+        : (initialSiteContent.project?.slides || []),
       specs: Array.isArray(parsed.project?.specs)
         ? parsed.project.specs
-        : initialSiteContent.project.specs,
+        : (initialSiteContent.project?.specs || []),
       highlights: Array.isArray(parsed.project?.highlights)
         ? parsed.project.highlights
         : (initialSiteContent.project?.highlights || []),
@@ -148,16 +151,16 @@ export function mergeWithDefaults(parsed: any): SiteContent {
       ...(parsed.activities || {}),
       items: Array.isArray(parsed.activities?.items)
         ? parsed.activities.items
-        : initialSiteContent.activities.items,
+        : (initialSiteContent.activities?.items || []),
     },
     leadership: {
       ...initialSiteContent.leadership,
       ...(parsed.leadership || {}),
-      operationalTitle: parsed.leadership?.operationalTitle || initialSiteContent.leadership.operationalTitle,
-      operationalSubtitle: parsed.leadership?.operationalSubtitle || initialSiteContent.leadership.operationalSubtitle,
+      operationalTitle: parsed.leadership?.operationalTitle ?? initialSiteContent.leadership.operationalTitle,
+      operationalSubtitle: parsed.leadership?.operationalSubtitle ?? initialSiteContent.leadership.operationalSubtitle,
       members: Array.isArray(parsed.leadership?.members)
         ? parsed.leadership.members
-        : initialSiteContent.leadership.members,
+        : (initialSiteContent.leadership?.members || []),
     },
     buyingProcess: {
       ...initialSiteContent.buyingProcess,
@@ -176,14 +179,14 @@ export function mergeWithDefaults(parsed: any): SiteContent {
     contact: {
       ...initialSiteContent.contact,
       ...(parsed.contact || {}),
-      mapsEmbedUrl: parsed.contact?.mapsEmbedUrl || initialSiteContent.contact.mapsEmbedUrl,
-      mapsUrl: parsed.contact?.mapsUrl || initialSiteContent.contact.mapsUrl,
+      mapsEmbedUrl: parsed.contact?.mapsEmbedUrl ?? initialSiteContent.contact.mapsEmbedUrl,
+      mapsUrl: parsed.contact?.mapsUrl ?? initialSiteContent.contact.mapsUrl,
     },
     legal: {
       ...initialSiteContent.legal,
       ...(parsed.legal || {}),
-      landStatus: parsed.legal?.landStatus || initialSiteContent.legal.landStatus,
-      landStatusDetail: parsed.legal?.landStatusDetail || initialSiteContent.legal.landStatusDetail,
+      landStatus: parsed.legal?.landStatus ?? initialSiteContent.legal.landStatus,
+      landStatusDetail: parsed.legal?.landStatusDetail ?? initialSiteContent.legal.landStatusDetail,
       records: Array.isArray(parsed.legal?.records)
         ? parsed.legal.records
         : (initialSiteContent.legal?.records || []),
@@ -191,18 +194,18 @@ export function mergeWithDefaults(parsed: any): SiteContent {
     about: {
       ...initialSiteContent.about,
       ...(parsed.about || {}),
-      missions: Array.isArray(parsed.about?.missions) ? parsed.about.missions : initialSiteContent.about.missions,
-      commitmentTitle: parsed.about?.commitmentTitle || initialSiteContent.about.commitmentTitle,
-      commitmentBody: parsed.about?.commitmentBody || initialSiteContent.about.commitmentBody,
-      commitmentPoints: Array.isArray(parsed.about?.commitmentPoints) ? parsed.about.commitmentPoints : initialSiteContent.about.commitmentPoints,
-      officeImage: parsed.about?.officeImage || initialSiteContent.about.officeImage,
-      officeCaption: parsed.about?.officeCaption || initialSiteContent.about.officeCaption,
-      homeIntroBadge: parsed.about?.homeIntroBadge || initialSiteContent.about.homeIntroBadge,
-      homeIntroTitle: parsed.about?.homeIntroTitle || initialSiteContent.about.homeIntroTitle,
-      homeIntroHighlight: parsed.about?.homeIntroHighlight || initialSiteContent.about.homeIntroHighlight,
-      homeIntroText: parsed.about?.homeIntroText || initialSiteContent.about.homeIntroText,
-      homeIntroCtaText: parsed.about?.homeIntroCtaText || initialSiteContent.about.homeIntroCtaText,
-      homeIntroCtaLink: parsed.about?.homeIntroCtaLink || initialSiteContent.about.homeIntroCtaLink,
+      missions: Array.isArray(parsed.about?.missions) ? parsed.about.missions : (initialSiteContent.about?.missions || []),
+      commitmentTitle: parsed.about?.commitmentTitle ?? initialSiteContent.about.commitmentTitle,
+      commitmentBody: parsed.about?.commitmentBody ?? initialSiteContent.about.commitmentBody,
+      commitmentPoints: Array.isArray(parsed.about?.commitmentPoints) ? parsed.about.commitmentPoints : (initialSiteContent.about?.commitmentPoints || []),
+      officeImage: parsed.about?.officeImage !== undefined ? parsed.about.officeImage : initialSiteContent.about.officeImage,
+      officeCaption: parsed.about?.officeCaption !== undefined ? parsed.about.officeCaption : initialSiteContent.about.officeCaption,
+      homeIntroBadge: parsed.about?.homeIntroBadge ?? initialSiteContent.about.homeIntroBadge,
+      homeIntroTitle: parsed.about?.homeIntroTitle ?? initialSiteContent.about.homeIntroTitle,
+      homeIntroHighlight: parsed.about?.homeIntroHighlight ?? initialSiteContent.about.homeIntroHighlight,
+      homeIntroText: parsed.about?.homeIntroText ?? initialSiteContent.about.homeIntroText,
+      homeIntroCtaText: parsed.about?.homeIntroCtaText ?? initialSiteContent.about.homeIntroCtaText,
+      homeIntroCtaLink: parsed.about?.homeIntroCtaLink ?? initialSiteContent.about.homeIntroCtaLink,
       features: Array.isArray(parsed.about?.features)
         ? parsed.about.features
         : (initialSiteContent.about?.features || []),
@@ -217,7 +220,7 @@ export function mergeWithDefaults(parsed: any): SiteContent {
     footer: {
       ...initialSiteContent.footer,
       ...(parsed.footer || {}),
-      tagline: parsed.footer?.tagline || initialSiteContent.footer.tagline,
+      tagline: parsed.footer?.tagline ?? initialSiteContent.footer.tagline,
     },
     promoPopup: {
       ...initialSiteContent.promoPopup,
@@ -225,10 +228,10 @@ export function mergeWithDefaults(parsed: any): SiteContent {
       enabled: typeof parsed.promoPopup?.enabled === 'boolean'
         ? parsed.promoPopup.enabled
         : (initialSiteContent.promoPopup?.enabled ?? true),
-      image: parsed.promoPopup?.image || initialSiteContent.promoPopup?.image || '/uploads/spek-rmh-1792149341412.jpg',
-      greeting: parsed.promoPopup?.greeting || initialSiteContent.promoPopup?.greeting,
-      highlightText: parsed.promoPopup?.highlightText || initialSiteContent.promoPopup?.highlightText,
-      urgencyText: parsed.promoPopup?.urgencyText || initialSiteContent.promoPopup?.urgencyText,
+      image: parsed.promoPopup?.image !== undefined ? parsed.promoPopup.image : (initialSiteContent.promoPopup?.image || '/uploads/spek-rmh-1792149341412.jpg'),
+      greeting: parsed.promoPopup?.greeting ?? initialSiteContent.promoPopup?.greeting,
+      highlightText: parsed.promoPopup?.highlightText ?? initialSiteContent.promoPopup?.highlightText,
+      urgencyText: parsed.promoPopup?.urgencyText ?? initialSiteContent.promoPopup?.urgencyText,
     },
   };
 }

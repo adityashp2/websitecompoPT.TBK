@@ -13,7 +13,13 @@ interface PromoBannerCarouselProps {
 }
 
 export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerCarouselProps) {
-  const slides: BannerSlide[] = Array.isArray(propSlides) && propSlides.length > 0 ? propSlides : defaultBannerSlides;
+  const slides: BannerSlide[] = Array.isArray(propSlides)
+    ? propSlides
+    : defaultBannerSlides;
+
+  if (!slides || slides.length === 0) {
+    return null;
+  }
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
