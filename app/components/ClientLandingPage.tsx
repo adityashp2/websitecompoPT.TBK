@@ -21,7 +21,8 @@ import {
   TreePine,
   Wallet,
   Leaf,
-  Briefcase
+  Briefcase,
+  Users
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Header from './Navbar';
@@ -266,6 +267,20 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
   const waUrl = whatsappNumber.startsWith('0')
     ? `https://wa.me/62${whatsappNumber.slice(1)}`
     : `https://wa.me/${whatsappNumber}`;
+
+  // Leadership / Dewan Pengurus & Manajemen Data
+  const rawLeadershipMembers = Array.isArray(content.leadership?.members) && content.leadership.members.length > 0
+    ? content.leadership.members
+    : initialSiteContent.leadership.members;
+
+  const primaryLeaders = rawLeadershipMembers.filter(
+    (m) => m.role.toLowerCase().includes('komisaris') || m.role.toLowerCase().includes('direktur utama')
+  );
+  const operationalLeaders = rawLeadershipMembers.filter(
+    (m) => !m.role.toLowerCase().includes('komisaris') && !m.role.toLowerCase().includes('direktur utama')
+  );
+  const displayPrimaryLeaders = primaryLeaders.length > 0 ? primaryLeaders : rawLeadershipMembers.slice(0, 2);
+  const displayOperationalLeaders = primaryLeaders.length > 0 ? operationalLeaders : rawLeadershipMembers.slice(2);
 
   return (
     <div className="min-h-screen bg-white text-[#102D52] font-sans antialiased selection:bg-[#FF9D2E] selection:text-[#102D52]" suppressHydrationWarning>
@@ -747,7 +762,180 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
           </div>
         </section>
 
+        {/* ========================================================= */}
+        {/* SECTION: DEWAN PENGURUS & DIREKSI PERSEROAN               */}
+        {/* Background: #F4F7FC (Soft Elegant Contrast)               */}
+        {/* ========================================================= */}
+        <section id="pimpinan" className="py-16 sm:py-24 bg-[#F4F7FC] border-b border-[#DCE7F5] scroll-mt-16">
+          <div className="container-editorial">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12 sm:mb-16 reveal-on-scroll">
+              <div className="max-w-2xl">
+                <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
+                  <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
+                  <span>{content.leadership?.badge || 'STRUKTUR KEPEMIMPINAN RESMI'}</span>
+                </div>
+                <h2 className="font-serif font-normal text-3xl sm:text-4xl text-[#102D52] leading-tight">
+                  {content.leadership?.title || 'Dewan Komisaris & Direksi Perseroan'}
+                </h2>
+                <p className="font-sans text-[15px] sm:text-[16px] text-[#526783] mt-2.5 leading-relaxed">
+                  {content.leadership?.subtitle || 'Dikelola oleh pengurus resmi yang tercantum dalam Akta Notaris & SK Kemenkumham RI, serta jajaran manajemen profesional yang berdedikasi membangun kawasan perumahan berkualitas di Lampung.'}
+                </p>
+              </div>
 
+              <div className="self-start sm:self-end shrink-0">
+                <Link
+                  href="/pimpinan"
+                  prefetch={false}
+                  className="group inline-flex items-center gap-2 text-xs font-semibold tracking-normal text-[#073B78] hover:text-[#FF9D2E] transition-colors bg-white px-4 py-2.5 rounded-full border border-[#DCE7F5] shadow-xs"
+                >
+                  <Users className="w-3.5 h-3.5 text-[#FF9D2E]" />
+                  <span>Lihat Seluruh Struktur Organisasi</span>
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Primary Leadership Duo: Dewan Komisaris & Direktur Utama */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 max-w-4xl mx-auto mb-12 sm:mb-16">
+              {displayPrimaryLeaders.map((member, idx) => (
+                <div
+                  key={idx}
+                  className="group rounded-2xl bg-white border border-[#DCE7F5] overflow-hidden flex flex-col transition-all duration-300 hover:border-[#073B78] shadow-sm hover:shadow-md reveal-on-scroll"
+                >
+                  {/* Executive Portrait Frame - 3:4 Aspect Ratio with Full Face Visibility */}
+                  <div className="relative w-full aspect-[3/4] bg-[#073B78] overflow-hidden">
+                    {member.image && member.image.trim() !== '' ? (
+                      <>
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#102D52]/95 via-[#102D52]/50 to-transparent pointer-events-none" />
+                      </>
+                    ) : (
+                      <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-[#073B78] relative overflow-hidden">
+                        <div className="relative z-10 w-24 h-28 rounded-2xl border border-white/20 bg-white/10 flex flex-col items-center justify-center p-4">
+                          <Building2 className="w-7 h-7 text-[#FF9D2E] mb-1" />
+                          <span className="text-2xl font-bold text-white tracking-wider">
+                            {member.name ? member.name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase() : 'TBK'}
+                          </span>
+                        </div>
+                        <span className="relative z-10 mt-3 text-[11px] font-medium text-white/70 tracking-wider">
+                          Portret Resmi Perseroan
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Role Badge */}
+                    <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md border border-[#FF9D2E]/60 text-[#FF9D2E] text-[11px] font-medium tracking-wide shadow-sm">
+                      <span>{member.role}</span>
+                    </div>
+
+                    {/* Legal Verified Badge */}
+                    <div className="absolute top-4 right-4 z-10 px-3 py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md text-[#15966A] text-[11px] font-medium border border-[#15966A]/40 flex items-center gap-1.5 shadow-sm">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#15966A]" />
+                      <span>SK Kemenkumham</span>
+                    </div>
+
+                    {/* Name at bottom of portrait */}
+                    <div className="absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6 text-white">
+                      <span className="text-[11px] tracking-wide text-[#FF9D2E] font-medium block mb-0.5">
+                        {member.department || 'Pengurus Inti Perseroan'}
+                      </span>
+                      <h3 className="font-serif text-2xl sm:text-3xl text-white font-normal tracking-tight">
+                        {member.name}
+                      </h3>
+                    </div>
+                  </div>
+
+                  {/* Body Content */}
+                  <div className="p-6 flex flex-col flex-1 justify-between space-y-4 bg-white">
+                    <div>
+                      <div className="text-[11px] font-medium tracking-wide text-[#FF9D2E] mb-2 flex items-center gap-1.5">
+                        <Briefcase className="w-3.5 h-3.5" />
+                        <span>Amanat &amp; Tanggung Jawab</span>
+                      </div>
+                      <p className="text-[13px] sm:text-[13.5px] text-[#526783] leading-relaxed">
+                        {member.roleDescription}
+                      </p>
+                    </div>
+
+                    <div className="pt-3 border-t border-[#DCE7F5] flex items-center justify-between text-xs text-[#526783]">
+                      <span className="flex items-center gap-1.5 text-xs text-[#15966A]">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#15966A]" />
+                        <span>Akta Notaris No. 10</span>
+                      </span>
+                      <span className="font-mono text-[11px]">PT. TBK</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Operational Management Team Grid */}
+            {displayOperationalLeaders.length > 0 && (
+              <div className="border-t border-[#DCE7F5] pt-10 sm:pt-14">
+                <div className="max-w-2xl mb-8">
+                  <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-1.5">
+                    <span className="w-4 h-0.5 bg-[#FF9D2E] rounded-full" />
+                    <span>Jajaran Manajemen Operasional</span>
+                  </div>
+                  <h3 className="font-serif font-normal text-2xl sm:text-3xl text-[#102D52]">
+                    {content.leadership?.operationalTitle || 'Kepala Divisi & Pelaksana Teknis'}
+                  </h3>
+                  <p className="font-sans text-xs sm:text-sm text-[#526783] mt-1 leading-relaxed">
+                    {content.leadership?.operationalSubtitle || 'Memastikan kelancaran proses verifikasi KPR FLPP, pengawasan fisik konstruksi, dan sertifikasi tanah secara tepat waktu.'}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {displayOperationalLeaders.map((op, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-white rounded-2xl border border-[#DCE7F5] overflow-hidden flex flex-col transition-all duration-300 hover:border-[#073B78] shadow-xs hover:shadow-sm"
+                    >
+                      <div className="relative w-full aspect-[4/5] bg-[#073B78] overflow-hidden">
+                        {op.image && op.image.trim() !== '' ? (
+                          <img
+                            src={op.image}
+                            alt={op.name}
+                            className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-white/50 text-xs">
+                            Portret Foto
+                          </div>
+                        )}
+                        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
+                        <div className="absolute bottom-2.5 left-3 right-3 text-white">
+                          <span className="text-[10px] text-[#FF9D2E] font-medium block">
+                            {op.department || 'Manajemen'}
+                          </span>
+                          <span className="font-bold text-sm leading-tight block truncate">
+                            {op.name}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="p-4 flex-1 flex flex-col justify-between space-y-2">
+                        <div>
+                          <div className="text-[11px] font-bold text-[#073B78] mb-1">
+                            {op.role}
+                          </div>
+                          <p className="text-[11.5px] text-[#526783] line-clamp-3 leading-relaxed">
+                            {op.roleDescription}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
 
         {/* ========================================================= */}
         {/* SECTION C: BUYING PROCESS (Alur Kepemilikan)              */}
