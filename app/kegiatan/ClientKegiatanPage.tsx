@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Header from '../components/SiteHeader';
+import Header from '../components/Navbar';
 import Footer from '../components/Footer';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import LookbookModal, { LookbookItem } from '../components/LookbookModal';

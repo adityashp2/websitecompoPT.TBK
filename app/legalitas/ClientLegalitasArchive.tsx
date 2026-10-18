@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Header from '../components/SiteHeader';
+import Header from '../components/Navbar';
 import Footer from '../components/Footer';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import { SiteContent } from '@/lib/initialData';
@@ -217,7 +217,10 @@ export default function ClientLegalitasArchive({ content }: { content: SiteConte
   ];
 
   return (
-    <div className="min-h-screen bg-[#F5F1E8] text-[#252A30] font-sans selection:bg-[#FF9828] selection:text-[#0B2D50] relative">
+    <div
+      suppressHydrationWarning
+      className="min-h-screen bg-[#F5F1E8] text-[#252A30] font-sans selection:bg-[#FF9828] selection:text-[#0B2D50] relative"
+    >
       {/* Scroll Progress Bar */}
       <div
         className="fixed top-0 left-0 right-0 h-[3px] bg-[#FF9828] z-40 transition-all duration-150"

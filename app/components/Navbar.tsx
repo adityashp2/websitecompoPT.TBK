@@ -65,12 +65,17 @@ const SEARCH_DATABASE: SearchItem[] = [
 
 export default function Header({ content }: HeaderProps) {
   const pathname = usePathname();
-  const isHomePage = pathname === '/';
+  const [mounted, setMounted] = useState(false);
+  const isHomePage = mounted ? pathname === '/' : true;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -229,11 +234,11 @@ export default function Header({ content }: HeaderProps) {
           {/* Center-Right: Desktop Navigation Menu */}
           <nav aria-label="Menu utama" suppressHydrationWarning className="hidden min-[980px]:flex items-center gap-3.5 min-[1120px]:gap-5 lg:gap-6 xl:gap-7">
             {mainNavItems.map((item) => {
-              const isActive = item.href === '/'
+              const isActive = mounted && (item.href === '/'
                 ? pathname === '/'
                 : item.href.includes('#')
                 ? false
-                : pathname?.startsWith(item.href);
+                : pathname?.startsWith(item.href));
 
               return (
                 <Link
@@ -369,11 +374,11 @@ export default function Header({ content }: HeaderProps) {
           {/* Navigation Links */}
           <nav aria-label="Menu seluler" className="space-y-1.5 my-3 py-2">
             {allNavItems.map((item) => {
-              const isActive = item.href === '/'
+              const isActive = mounted && (item.href === '/'
                 ? pathname === '/'
                 : item.href.includes('#')
                 ? false
-                : pathname?.startsWith(item.href);
+                : pathname?.startsWith(item.href));
 
               return (
                 <Link
