@@ -37,11 +37,11 @@ import {
   Step3BankIllustration,
   Step4HandshakeIllustration,
 } from './BuyingProcessIllustrations';
+import PromoPopupModal from './PromoPopupModal';
 import type { LookbookItem } from './LookbookModal';
 import { SiteContent, initialSiteContent } from '@/lib/initialData';
 
 const LookbookModal = dynamic(() => import('./LookbookModal'), { ssr: false });
-const PromoPopupModal = dynamic(() => import('./PromoPopupModal'), { ssr: false });
 
 const featureColorClasses = [
   { bg: 'bg-[#EBF3FC]', text: 'text-[#073B78]', hover: 'group-hover:text-[#073B78]' },
