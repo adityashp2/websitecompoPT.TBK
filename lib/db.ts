@@ -254,16 +254,10 @@ function getSiteContentSqlite(): SiteContent {
 }
 
 /**
- * Get site content (instant local SQLite with Supabase fallback)
+ * Get site content (Supabase cloud primary when configured, SQLite fallback)
  */
 export async function getSiteContent(): Promise<SiteContent> {
-  // 1. Instant local SQLite read (< 1ms, no network delay)
-  const local = getSiteContentSqlite();
-  if (local) {
-    return local;
-  }
-
-  // 2. Fallback to Supabase if SQLite has no content
+  // 1. Supabase primary read if configured (essential for Vercel serverless persistence)
   if (isSupabaseConfigured()) {
     try {
       const supabase = getSupabaseAdminClient();
@@ -282,6 +276,18 @@ export async function getSiteContent(): Promise<SiteContent> {
     } catch (err) {
       console.warn('Supabase query failed, falling back to SQLite:', err);
     }
+  }
+
+  // 2. Local SQLite read
+  try {
+    const db = getDb();
+    const row = db.prepare("SELECT data FROM site_content WHERE id = 'main'").get() as { data: string } | undefined;
+    if (row && row.data) {
+      const parsed = JSON.parse(row.data);
+      return mergeWithDefaults(parsed);
+    }
+  } catch (error) {
+    console.error('SQLite getSiteContent error:', error);
   }
 
   return initialSiteContent;
@@ -323,12 +329,12 @@ export async function updateSiteContent(newContent: SiteContent): Promise<SiteCo
             updated_at: new Date().toISOString(),
           });
 
-        if (error && error.code !== '42501') {
+        if (error) {
           console.error('Supabase updateSiteContent error:', error);
         }
       }
     } catch (err) {
-      // Background sync error ignored, SQLite is primary
+      console.error('Supabase sync error:', err);
     }
   }
 
@@ -408,18 +414,7 @@ export async function saveInquiry(inquiry: { name: string; phone: string; email?
  * Get all inquiry messages
  */
 export async function getInquiries() {
-  // 1. Local SQLite read first (instant, < 1ms)
-  try {
-    const db = getDb();
-    const rows = db.prepare("SELECT * FROM inquiries ORDER BY created_at DESC").all();
-    if (rows && rows.length > 0) {
-      return rows;
-    }
-  } catch (err) {
-    console.error('SQLite getInquiries error:', err);
-  }
-
-  // 2. Fallback to Supabase if configured and SQLite empty
+  // 1. Supabase read first when configured (cloud persistent)
   if (isSupabaseConfigured()) {
     try {
       const supabase = getSupabaseAdminClient();
@@ -436,6 +431,17 @@ export async function getInquiries() {
     } catch (err) {
       console.warn('Supabase getInquiries error:', err);
     }
+  }
+
+  // 2. Local SQLite fallback
+  try {
+    const db = getDb();
+    const rows = db.prepare("SELECT * FROM inquiries ORDER BY created_at DESC").all();
+    if (rows && rows.length > 0) {
+      return rows;
+    }
+  } catch (err) {
+    console.error('SQLite getInquiries error:', err);
   }
 
   return [];

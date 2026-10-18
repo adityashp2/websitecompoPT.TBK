@@ -17,7 +17,7 @@ export async function GET() {
 
 export async function PUT(request: Request) {
   try {
-    const admin = await getCurrentAdminUser();
+    const admin = await getCurrentAdminUser(request);
     if (!admin) {
       return NextResponse.json(
         { success: false, error: 'Akses ditolak. Sesi administrator diperlukan untuk menyimpan perubahan.' },
@@ -42,7 +42,7 @@ export async function PUT(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const admin = await getCurrentAdminUser();
+    const admin = await getCurrentAdminUser(request);
     if (!admin) {
       return NextResponse.json(
         { success: false, error: 'Akses ditolak. Sesi administrator diperlukan untuk aksi ini.' },

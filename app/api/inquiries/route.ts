@@ -4,9 +4,9 @@ import { getCurrentAdminUser } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const admin = await getCurrentAdminUser();
+    const admin = await getCurrentAdminUser(request);
     if (!admin) {
       return NextResponse.json(
         { success: false, error: 'Akses ditolak. Sesi administrator diperlukan untuk melihat pesan calon konsumen.' },
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const admin = await getCurrentAdminUser();
+    const admin = await getCurrentAdminUser(request);
     if (!admin) {
       return NextResponse.json(
         { success: false, error: 'Akses ditolak. Sesi administrator diperlukan untuk menghapus pesan.' },

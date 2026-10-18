@@ -389,7 +389,10 @@ export default function AdminDashboard() {
   const fetchInquiries = async () => {
     setInquiriesLoading(true);
     try {
-      const res = await fetch('/api/inquiries');
+      const localToken = typeof window !== 'undefined' ? localStorage.getItem('tbk_admin_token') : null;
+      const res = await fetch('/api/inquiries', {
+        headers: localToken ? { Authorization: `Bearer ${localToken}` } : {},
+      });
       const json = await res.json();
       if (json.success && json.data) {
         setInquiries(json.data);
@@ -406,7 +409,11 @@ export default function AdminDashboard() {
       return;
     }
     try {
-      const res = await fetch(`/api/inquiries?id=${id}`, { method: 'DELETE' });
+      const localToken = typeof window !== 'undefined' ? localStorage.getItem('tbk_admin_token') : null;
+      const res = await fetch(`/api/inquiries?id=${id}`, {
+        method: 'DELETE',
+        headers: localToken ? { Authorization: `Bearer ${localToken}` } : {},
+      });
       const json = await res.json();
       if (json.success) {
         setInquiries((prev) => prev.filter((i) => i.id !== id));
@@ -439,7 +446,11 @@ export default function AdminDashboard() {
       return;
     }
     try {
-      const res = await fetch('/api/inquiries?all=true', { method: 'DELETE' });
+      const localToken = typeof window !== 'undefined' ? localStorage.getItem('tbk_admin_token') : null;
+      const res = await fetch('/api/inquiries?all=true', {
+        method: 'DELETE',
+        headers: localToken ? { Authorization: `Bearer ${localToken}` } : {},
+      });
       const json = await res.json();
       if (json.success) {
         setInquiries([]);
@@ -473,9 +484,13 @@ export default function AdminDashboard() {
     setSaving(true);
     setSaveStatus(null);
     try {
+      const localToken = typeof window !== 'undefined' ? localStorage.getItem('tbk_admin_token') : null;
       const res = await fetch('/api/content', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(localToken ? { Authorization: `Bearer ${localToken}` } : {}),
+        },
         body: JSON.stringify(content),
       });
       const json = await res.json();
@@ -499,9 +514,13 @@ export default function AdminDashboard() {
     }
     setSaving(true);
     try {
+      const localToken = typeof window !== 'undefined' ? localStorage.getItem('tbk_admin_token') : null;
       const res = await fetch('/api/content', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(localToken ? { Authorization: `Bearer ${localToken}` } : {}),
+        },
         body: JSON.stringify({ action: 'reset' }),
       });
       const json = await res.json();
