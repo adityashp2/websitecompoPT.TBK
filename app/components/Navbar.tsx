@@ -179,20 +179,20 @@ export default function Header({ content }: HeaderProps) {
         <div className="h-[58px] min-[980px]:h-[68px] bg-[#073B78]" aria-hidden="true" />
       )}
 
-      {/* Main Corporate Header: ICC-Inspired Full-Width Navy Blue */}
+      {/* Main Corporate Header: Permanent Sticky & Fixed on Scroll */}
       <header
         suppressHydrationWarning
-        className={`fixed top-0 inset-x-0 z-[900] h-[58px] min-[980px]:h-[68px] w-full transition-all duration-200 ease-out border-b border-white/10 ${
-          isScrolled || !isHomePage
-            ? 'bg-[#073B78] shadow-md'
-            : 'bg-[#073B78]'
+        className={`fixed top-0 inset-x-0 w-full h-[58px] min-[980px]:h-[68px] transition-all duration-300 ease-out border-b ${
+          isScrolled
+            ? 'bg-[#073B78]/95 backdrop-blur-md shadow-lg shadow-black/20 border-white/15'
+            : 'bg-[#073B78] border-white/10 shadow-sm'
         }`}
         style={{
           position: 'fixed',
           top: 0,
           left: 0,
           right: 0,
-          zIndex: 900,
+          zIndex: 9999,
         }}
       >
         <div className="w-full max-w-[1360px] mx-auto h-full px-3.5 sm:px-6 flex items-center justify-between gap-2">
