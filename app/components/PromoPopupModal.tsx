@@ -15,6 +15,18 @@ export default function PromoPopupModal({ promo }: PromoPopupModalProps) {
 
   useEffect(() => {
     if (promo?.enabled && promo?.image) {
+      // Pastikan iklan hanya muncul 1x per sesi kunjungan (tidak berulang saat klik Beranda)
+      try {
+        const alreadySeen = sessionStorage.getItem('tbk_promo_popup_seen');
+        if (alreadySeen === 'true') {
+          return;
+        }
+        // Tandai langsung di sesi ini
+        sessionStorage.setItem('tbk_promo_popup_seen', 'true');
+      } catch {
+        // Abaikan jika browser membatasi sessionStorage
+      }
+
       setMounted(true);
       const timer = setTimeout(() => {
         setAnimating(true);
@@ -27,6 +39,11 @@ export default function PromoPopupModal({ promo }: PromoPopupModalProps) {
   }, [promo?.enabled, promo?.image]);
 
   const handleClose = () => {
+    try {
+      sessionStorage.setItem('tbk_promo_popup_seen', 'true');
+    } catch {
+      // Abaikan
+    }
     setAnimating(false);
     setTimeout(() => {
       setMounted(false);
