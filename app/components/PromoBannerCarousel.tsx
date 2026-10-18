@@ -23,57 +23,28 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [touchEndX, setTouchEndX] = useState<number | null>(null);
 
-  const resetTimer = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-  }, []);
-
-  const goToPrev = useCallback(() => {
+  const goToPrev = () => {
     setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
-    resetTimer();
-  }, [slides.length, resetTimer]);
+  };
 
-  const goToNext = useCallback(() => {
+  const goToNext = () => {
     setCurrentIndex((prev) => (prev + 1) % slides.length);
-    resetTimer();
-  }, [slides.length, resetTimer]);
+  };
 
-  const goToSlide = useCallback((index: number) => {
+  const goToSlide = (index: number) => {
     setCurrentIndex(index);
-    resetTimer();
-  }, [resetTimer]);
+  };
 
-  // Autoplay effect (5.5s) with pause, visibility, and reduced motion check
+  // Continuous auto slideshow (4.5 seconds per slide)
   useEffect(() => {
-    if (slides.length <= 1 || isPaused) return;
+    if (slides.length <= 1) return;
 
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (mediaQuery.matches) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % slides.length);
+    }, 4500);
 
-    const handleVisibility = () => {
-      if (document.hidden) {
-        resetTimer();
-      } else if (!isPaused) {
-        resetTimer();
-        timerRef.current = setInterval(() => {
-          goToNext();
-        }, 5500);
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibility);
-
-    timerRef.current = setInterval(() => {
-      goToNext();
-    }, 5500);
-
-    return () => {
-      resetTimer();
-      document.removeEventListener('visibilitychange', handleVisibility);
-    };
-  }, [slides.length, isPaused, goToNext, resetTimer]);
+    return () => clearInterval(timer);
+  }, [slides.length]);
 
   // Keyboard navigation support
   useEffect(() => {
@@ -91,7 +62,6 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStartX(e.targetTouches[0].clientX);
     setTouchEndX(null);
-    setIsPaused(true);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -99,7 +69,6 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
   };
 
   const handleTouchEnd = () => {
-    setIsPaused(false);
     if (touchStartX === null || touchEndX === null) return;
     const distance = touchStartX - touchEndX;
     if (distance > 40) {
@@ -115,13 +84,10 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
     <section
       id="beranda"
       className="relative w-full overflow-hidden select-none bg-[#073B78]"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      onFocus={() => setIsPaused(true)}
-      onBlur={() => setIsPaused(false)}
       role="region"
       aria-roledescription="carousel"
       aria-label="Promosi Unggulan PT. Terbang Bersama Kawan"
+      suppressHydrationWarning
     >
       {/* ======================================================================= */}
       {/* 1. DESKTOP HERO: FULL-WIDTH BACKGROUND HERO (>= 1024px)                 */}

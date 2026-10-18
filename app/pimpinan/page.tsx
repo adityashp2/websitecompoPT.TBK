@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import { getSiteContent } from '@/lib/db';
-import Header from '../components/Header';
+import Header from '../components/SiteHeader';
 import Footer from '../components/Footer';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import { 

@@ -1,8 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Maximize2, Image as ImageIcon } from 'lucide-react';
-import LookbookModal, { LookbookItem } from '../components/LookbookModal';
+import type { LookbookItem } from '../components/LookbookModal';
+
+const LookbookModal = dynamic(() => import('../components/LookbookModal'), { ssr: false });
 
 interface SlideItem {
   image: string;

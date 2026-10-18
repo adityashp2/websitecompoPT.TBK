@@ -151,44 +151,47 @@ function LoginFormContent() {
       <main className="relative z-10 flex-1 flex items-center justify-center px-4 py-8">
         <div className="w-full max-w-[440px]">
           {/* Card Container */}
-          <div className="relative rounded-2xl bg-white/95 backdrop-blur-xl border border-white/40 shadow-2xl shadow-[#071C38]/50 p-6 sm:p-9 transition-all">
+          <div className="relative rounded-3xl bg-[#0B1E36]/85 backdrop-blur-2xl border border-white/15 shadow-2xl shadow-[#040C18]/80 p-6 sm:p-9 transition-all">
             {/* Top Glowing Edge Accent */}
-            <div className="absolute -top-[1px] inset-x-8 h-[3px] bg-gradient-to-r from-[#073B78] via-[#FF9D2E] to-[#073B78]" />
+            <div className="absolute -top-[1px] inset-x-8 h-[2px] bg-gradient-to-r from-transparent via-[#FF9D2E] to-transparent" />
 
             {/* Header / Logo */}
             <div className="text-center mb-7">
-              <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-[#F0F6FC] border border-[#DCE7F5] shadow-xs mb-4">
+              <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-white/10 border border-white/20 shadow-lg backdrop-blur-md mb-4">
                 <img
                   src="/assets/logo-tbk.png"
                   alt="Logo PT. TBK"
-                  className="h-12 w-auto object-contain"
+                  className="h-11 w-auto object-contain brightness-105"
                 />
               </div>
 
-              <div className="inline-block px-3 py-1 rounded-full bg-[#FFF7EB] border border-[#FF9D2E]/40 text-[#C76A08] text-[11px] font-bold uppercase tracking-widest mb-2">
-                Panel Pengelola CMS
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-bold tracking-wider uppercase font-mono">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                  PT. TBK Admin Studio
+                </span>
               </div>
               
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#073B78] font-syne">
-                Masuk ke Admin Panel
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white font-syne">
+                Masuk ke Panel Kendali
               </h1>
-              <p className="text-xs text-[#526783] mt-1.5 leading-relaxed">
-                PT. Terbang Bersama Kawan (PT. TBK) &bull; Puri Gunung Langgar
+              <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+                Puri Gunung Langgar &bull; CMS SQLite & Cloud Ready
               </p>
             </div>
 
             {/* Success Alert */}
             {successMsg && (
-              <div className="mb-5 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2.5 animate-in fade-in">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <div className="mb-5 p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs flex items-center gap-2.5 animate-in fade-in">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span>{successMsg}</span>
               </div>
             )}
 
             {/* Error Alert */}
             {errorMsg && (
-              <div className="mb-5 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2.5 animate-in fade-in">
-                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <div className="mb-5 p-3.5 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2.5 animate-in fade-in">
+                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
                 <span>{errorMsg}</span>
               </div>
             )}
@@ -199,12 +202,12 @@ function LoginFormContent() {
               <div>
                 <label 
                   htmlFor="identifier" 
-                  className="block text-xs font-bold uppercase tracking-wider text-[#073B78] mb-1.5"
+                  className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5"
                 >
                   Username atau Email
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#526783]">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                     <User className="w-4 h-4" />
                   </div>
                   <input
@@ -216,7 +219,7 @@ function LoginFormContent() {
                     placeholder="admin atau admin@terbangbersamakawan.co.id"
                     disabled={loading}
                     autoComplete="username"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] text-[#102D52] placeholder-[#526783]/50 text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-2 focus:ring-[#FF9D2E]/20 transition-all disabled:opacity-50"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#071324]/80 border border-white/15 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-2 focus:ring-[#FF9D2E]/25 transition-all disabled:opacity-50"
                   />
                 </div>
               </div>
@@ -226,13 +229,13 @@ function LoginFormContent() {
                 <div className="flex items-center justify-between mb-1.5">
                   <label 
                     htmlFor="password" 
-                    className="block text-xs font-bold uppercase tracking-wider text-[#073B78]"
+                    className="block text-xs font-semibold uppercase tracking-wider text-slate-300"
                   >
                     Kata Sandi (Password)
                   </label>
                 </div>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#526783]">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                     <Lock className="w-4 h-4" />
                   </div>
                   <input
@@ -244,13 +247,13 @@ function LoginFormContent() {
                     placeholder="Masukkan kata sandi..."
                     disabled={loading}
                     autoComplete="current-password"
-                    className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] text-[#102D52] placeholder-[#526783]/50 text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-2 focus:ring-[#FF9D2E]/20 transition-all disabled:opacity-50"
+                    className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-[#071324]/80 border border-white/15 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-2 focus:ring-[#FF9D2E]/25 transition-all disabled:opacity-50"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     tabIndex={-1}
-                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#526783] hover:text-[#073B78] transition-colors"
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-white transition-colors"
                     aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -265,9 +268,9 @@ function LoginFormContent() {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 rounded border-[#DCE7F5] text-[#FF9D2E] focus:ring-[#FF9D2E] focus:ring-offset-0"
+                    className="w-4 h-4 rounded border-white/20 bg-[#071324] text-[#FF9D2E] focus:ring-[#FF9D2E] focus:ring-offset-0"
                   />
-                  <span className="text-xs text-[#526783] font-medium">Ingat sesi saya (30 hari)</span>
+                  <span className="text-xs text-slate-300 font-medium">Ingat sesi saya (30 hari)</span>
                 </label>
               </div>
 
@@ -275,22 +278,28 @@ function LoginFormContent() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full mt-2 py-3 px-4 rounded-xl bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] hover:opacity-95 text-[#071C38] font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#FF9D2E]/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="w-full mt-2 py-3 px-4 rounded-xl bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] hover:brightness-110 active:scale-[0.99] text-[#071324] font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#FF9D2E]/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {loading ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin text-[#071C38]" />
-                    <span>Memproses Masuk...</span>
+                    <Loader2 className="w-4 h-4 animate-spin text-[#071324]" />
+                    <span>Memverifikasi Akses...</span>
                   </>
                 ) : (
                   <>
-                    <KeyRound className="w-4 h-4 text-[#071C38]" />
-                    <span>Masuk ke Admin Panel</span>
+                    <KeyRound className="w-4 h-4 text-[#071324]" />
+                    <span>Buka Admin Studio</span>
                   </>
                 )}
               </button>
             </form>
 
+            {/* Quick credentials hint */}
+            <div className="mt-5 p-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-center">
+              <p className="text-[11px] text-slate-400">
+                Akses Default: <code className="text-amber-300 font-mono px-1 py-0.5 rounded bg-black/40">admin</code> / <code className="text-amber-300 font-mono px-1 py-0.5 rounded bg-black/40">admin123</code>
+              </p>
+            </div>
           </div>
 
           {/* Footer note */}

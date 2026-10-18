@@ -1,9 +1,12 @@
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
 import { DM_Serif_Display, DM_Sans, Cormorant_Garamond } from 'next/font/google';
+import dynamic from 'next/dynamic';
 import './globals.css';
-import MobileBottomNav from './components/MobileBottomNav';
 import RouteProgressBar from './components/RouteProgressBar';
+
+const MobileBottomNav = dynamic(() => import('./components/MobileBottomNav'), { ssr: false });
+const FloatingWhatsApp = dynamic(() => import('./components/FloatingWhatsApp'), { ssr: false });
 
 const dmSerifDisplay = DM_Serif_Display({
   weight: ['400'],
@@ -128,6 +131,9 @@ export default function RootLayout({
   return (
     <html lang="id" className={`scroll-smooth ${dmSerifDisplay.variable} ${dmSans.variable} ${cormorantGaramond.variable}`}>
       <head>
+        <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta httpEquiv="Pragma" content="no-cache" />
+        <meta httpEquiv="Expires" content="0" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <script
@@ -141,6 +147,7 @@ export default function RootLayout({
         </React.Suspense>
         {children}
         <MobileBottomNav />
+        <FloatingWhatsApp />
       </body>
     </html>
   );

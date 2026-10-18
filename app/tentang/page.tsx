@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import { getSiteContent } from '@/lib/db';
-import Header from '../components/Header';
+import Header from '../components/SiteHeader';
 import Footer from '../components/Footer';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import { 
@@ -11,7 +11,8 @@ import {
   Award, 
   CheckCircle2, 
   FileCheck2, 
-  Users, 
+  Users,
+  Calculator, 
   ArrowRight
 } from 'lucide-react';
 
@@ -58,8 +59,10 @@ export default async function TentangPage() {
         <section className="bg-gradient-to-br from-[#073B78] via-[#0A4B91] to-[#102D52] text-white pt-12 pb-16 px-4 border-b border-white/10 relative overflow-hidden">
           <div className="container-editorial relative z-10">
             {/* Breadcrumb */}
-            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-white/70 mb-6">
-              <Link href="/" className="hover:text-[#FF9D2E] transition-colors">Beranda</Link>
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-white/70 mb-6" suppressHydrationWarning>
+              <Link href="/" className="hover:text-[#FF9D2E] transition-colors" suppressHydrationWarning>
+                Beranda
+              </Link>
               <span>/</span>
               <span className="text-[#FF9D2E] font-bold">Tentang Perusahaan</span>
             </nav>
@@ -151,11 +154,11 @@ export default async function TentangPage() {
                     <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
                   </Link>
                   <Link
-                    href="/pimpinan"
+                    href="/simulasi-kpr"
                     className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#073B78] hover:bg-[#073B78] hover:text-white text-[#073B78] text-xs font-semibold tracking-normal transition-all duration-200"
                   >
-                    <Users className="w-3.5 h-3.5 text-[#FF9D2E]" />
-                    <span>Dewan Pengurus &amp; Manajemen</span>
+                    <Calculator className="w-3.5 h-3.5 text-[#FF9D2E]" />
+                    <span>Hitung Simulasi KPR</span>
                   </Link>
                   <Link
                     href="/legalitas"

@@ -12,8 +12,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Protect /A9MIN routes, but bypass /A9MIN/login and its sub-resources
-  if (pathname.startsWith('/A9MIN') && !pathname.startsWith('/A9MIN/login')) {
+  // Protect /A9MIN & /admin-studio routes, but bypass /A9MIN/login and its sub-resources
+  const isProtectedAdmin = (pathname.startsWith('/A9MIN') || pathname.startsWith('/admin-studio')) && !pathname.startsWith('/A9MIN/login');
+  if (isProtectedAdmin) {
     const sessionCookie = request.cookies.get('tbk_admin_session')?.value;
 
     if (!sessionCookie) {
@@ -27,5 +28,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/A9MIN/:path*', '/a9min/:path*', '/A9MIN', '/a9min'],
+  matcher: ['/A9MIN/:path*', '/a9min/:path*', '/A9MIN', '/a9min', '/admin-studio/:path*', '/admin-studio'],
 };

@@ -67,6 +67,121 @@ export type AdminTab =
   | 'contact'
   | 'inquiries';
 
+const TAB_GROUPS: Record<
+  AdminTab,
+  {
+    group: string;
+    title: string;
+    desc: string;
+  }
+> = {
+  banners: {
+    group: 'Tampilan Beranda',
+    title: 'Slide Banner Promosi (Top Carousel)',
+    desc: 'Kelola slide banner beranda di bagian paling atas (Puri Gunung Langgar, KPR FLPP 5%, Legalitas SHM, dll.).',
+  },
+  'intro-features': {
+    group: 'Tampilan Beranda',
+    title: 'Intro & 4 Keunggulan Utama',
+    desc: 'Atur pesan sambutan dan 4 kartu poin keunggulan utama PT. TBK.',
+  },
+  hero: {
+    group: 'Tampilan Beranda',
+    title: 'Hero Section & Statistik Utama',
+    desc: 'Atur headline utama, subheadline, angka statistik, dan media video/foto hero.',
+  },
+  'buying-process': {
+    group: 'Tampilan Beranda',
+    title: 'Alur Pembelian Rumah Bersubsidi',
+    desc: 'Kelola 4 langkah alur mudah kepemilikan rumah di PT. TBK.',
+  },
+  'kpr-simulation': {
+    group: 'Tampilan Beranda',
+    title: 'Kalkulator Simulasi KPR FLPP 5%',
+    desc: 'Sesuaikan harga unit acuan, suku bunga subsidi pemerintah, dan rincian tenor angsuran.',
+  },
+  'promo-popup': {
+    group: 'Tampilan Beranda',
+    title: 'Popup Flyer Iklan Promo Beranda',
+    desc: 'Aktifkan banner popup modal promosi yang muncul otomatis saat pengunjung membuka website.',
+  },
+  branding: {
+    group: 'Profil Perusahaan',
+    title: 'Branding, Identitas & Footer',
+    desc: 'Kelola logo resmi perusahaan, slogan, favicon, dan teks hak cipta footer.',
+  },
+  about: {
+    group: 'Profil Perusahaan',
+    title: 'Tentang Perusahaan, Visi & Misi',
+    desc: 'Perbarui narasi sejarah, visi, misi, dan nilai integritas PT. Terbang Bersama Kawan.',
+  },
+  leadership: {
+    group: 'Profil Perusahaan',
+    title: 'Struktur Dewan Pengurus & Direksi',
+    desc: 'Kelola profil jajaran komisaris dan direksi perusahaan beserta foto dan jabatannya.',
+  },
+  legal: {
+    group: 'Profil Perusahaan',
+    title: 'Legalitas Resmi & Sertifikat SHM',
+    desc: 'Kelola informasi akta pendirian, izin berusaha, notaris rekanan, dan jaminan sertifikat perumahan.',
+  },
+  project: {
+    group: 'Proyek & Lapangan',
+    title: 'Spesifikasi & Galeri Proyek Perumahan',
+    desc: 'Kelola rincian unit perumahan Puri Gunung Langgar, spesifikasi bangunan, peta denah, dan masterplan.',
+  },
+  activities: {
+    group: 'Proyek & Lapangan',
+    title: 'Dokumentasi Kegiatan & Progres Lapangan',
+    desc: 'Unggah dokumentasi foto dan video kegiatan pembangunan riil di lapangan.',
+  },
+  contact: {
+    group: 'Interaksi & Kontak',
+    title: 'Informasi Kontak & Titik Lokasi Kantor',
+    desc: 'Kelola nomor telepon kantor, WhatsApp resmi, alamat email, dan link peta Google Maps.',
+  },
+  inquiries: {
+    group: 'Interaksi & Kontak',
+    title: 'Kotak Masuk Pesan & Formulir Pengunjung',
+    desc: 'Daftar pesan konsultasi dan pertanyaan yang dikirim langsung oleh calon konsumen dari website.',
+  },
+};
+
+const renderTabIcon = (tab: AdminTab) => {
+  switch (tab) {
+    case 'banners':
+      return <Film className="w-5 h-5 text-[#FF9D2E]" />;
+    case 'intro-features':
+      return <Sparkles className="w-5 h-5 text-[#FF9D2E]" />;
+    case 'hero':
+      return <Home className="w-5 h-5 text-[#FF9D2E]" />;
+    case 'buying-process':
+      return <FileText className="w-5 h-5 text-[#FF9D2E]" />;
+    case 'kpr-simulation':
+      return <Calculator className="w-5 h-5 text-[#FF9D2E]" />;
+    case 'promo-popup':
+      return <Megaphone className="w-5 h-5 text-[#FF9D2E]" />;
+    case 'branding':
+      return <Sparkles className="w-5 h-5 text-[#FF9D2E]" />;
+    case 'about':
+      return <Building2 className="w-5 h-5 text-[#FF9D2E]" />;
+    case 'leadership':
+      return <Users className="w-5 h-5 text-[#FF9D2E]" />;
+    case 'legal':
+      return <ShieldCheck className="w-5 h-5 text-[#FF9D2E]" />;
+    case 'project':
+      return <Building className="w-5 h-5 text-[#FF9D2E]" />;
+    case 'activities':
+      return <HardHat className="w-5 h-5 text-[#FF9D2E]" />;
+    case 'contact':
+      return <PhoneCall className="w-5 h-5 text-[#FF9D2E]" />;
+    case 'inquiries':
+      return <Inbox className="w-5 h-5 text-[#FF9D2E]" />;
+    default:
+      return <Sparkles className="w-5 h-5 text-[#FF9D2E]" />;
+  }
+};
+
 export default function AdminDashboard() {
   const router = useRouter();
   const [adminUser, setAdminUser] = useState<{ id: number; name: string; username: string; role: string } | null>(null);
@@ -413,23 +528,30 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F4F7FC] text-[#102D52] flex flex-col items-center justify-center p-4">
-        <div className="flex items-center gap-3 text-[#FF9D2E] mb-2">
-          <RefreshCw className="w-6 h-6 animate-spin" />
-          <span className="font-syne font-semibold">Memuat Data Panel Admin...</span>
+      <div className="min-h-screen bg-[#071324] text-white flex flex-col items-center justify-center p-6 select-none">
+        <div className="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-700/80 p-2.5 flex items-center justify-center mb-5 shadow-2xl shadow-slate-950">
+          <img
+            src={content.meta?.logo || "/assets/logo-tbk.png"}
+            alt="Logo PT. TBK"
+            className="w-full h-full object-contain"
+          />
         </div>
-        <p className="text-xs text-[#526783] mb-4">Menghubungkan ke database...</p>
+        <div className="flex items-center gap-2.5 text-[#FF9D2E] font-semibold mb-2">
+          <RefreshCw className="w-5 h-5 animate-spin" />
+          <span className="font-syne text-sm sm:text-base tracking-wide">Menghubungkan CMS PT. TBK...</span>
+        </div>
+        <p className="text-xs text-slate-400 mb-6 font-mono">Memuat konten terverifikasi & database SQL...</p>
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={() => setLoading(false)}
-            className="text-xs px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-[#073B78] font-semibold hover:bg-slate-50 transition-colors shadow-xs"
+            className="text-xs px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold transition-colors shadow-xs border border-slate-700"
           >
-            Buka Sekarang
+            Buka Langsung
           </button>
           <Link
             href="/A9MIN/login"
-            className="text-xs text-[#526783] hover:text-[#073B78] underline"
+            className="text-xs text-slate-400 hover:text-[#FF9D2E] underline font-medium"
           >
             Halaman Login
           </Link>
@@ -439,123 +561,108 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F7FC] text-[#102D52] selection:bg-[#FF9D2E] selection:text-[#071C38]">
+    <div className="min-h-screen bg-[#F1F5F9] text-slate-800 selection:bg-[#FF9D2E] selection:text-slate-950 font-sans">
       {/* Top Admin Navbar */}
-      <nav className="sticky top-0 z-40 bg-[#073B78] border-b border-[#0A4B91] px-4 sm:px-6 lg:px-8 py-3.5 shadow-lg shadow-[#071C38]/20">
-        <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-3.5 lg:gap-6">
+      <nav className="sticky top-0 z-40 bg-[#071324]/95 backdrop-blur-md border-b border-slate-800 px-4 sm:px-6 lg:px-8 py-3 shadow-md shadow-slate-950/20">
+        <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-3">
           {/* Brand Left */}
-          <div className="flex items-center justify-between lg:justify-start gap-4">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-white/[0.04] border border-white/10 p-1 flex items-center justify-center shrink-0 shadow-sm">
-                <img
-                  src={content.meta?.logo || "/assets/logo-tbk.png"}
-                  alt="Logo PT. TBK"
-                  className="h-full w-auto object-contain"
-                />
-              </div>
-              <div>
-                <div className="font-syne font-bold text-sm sm:text-base text-white">
-                  CMS Panel Administrasi
-                </div>
-                <div className="text-[11px] text-[#FF9D2E] font-semibold">
-                  PT. Terbang Bersama Kawan (PT. TBK)
-                </div>
-              </div>
+          <div className="flex items-center gap-3.5 min-w-0">
+            <div className="h-10 w-10 rounded-xl bg-slate-800/90 border border-slate-700/80 p-1 flex items-center justify-center shrink-0 shadow-inner">
+              <img
+                src={content.meta?.logo || "/assets/logo-tbk.png"}
+                alt="Logo PT. TBK"
+                className="h-full w-auto object-contain"
+              />
             </div>
-
-            {/* Mobile-only User Pill & Logout */}
-            <div className="flex lg:hidden items-center gap-2">
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#102D52] border border-[#1C5795] text-[11px] text-white">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                <span className="font-semibold text-[#FF9D2E] truncate max-w-[90px]">
-                  {adminUser?.name || 'Admin'}
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="font-syne font-bold text-sm sm:text-base text-white tracking-tight truncate">
+                  PT. TBK Admin Studio
+                </span>
+                <span className="hidden md:inline-flex px-1.5 py-0.5 rounded-md bg-[#FF9D2E]/15 border border-[#FF9D2E]/30 text-[10px] font-bold text-[#FF9D2E] tracking-wide uppercase">
+                  CMS Pro
                 </span>
               </div>
-              <button
-                onClick={handleLogout}
-                disabled={loggingOut}
-                className="p-1.5 rounded-lg bg-[#102D52] border border-[#1C5795] hover:bg-rose-600 hover:border-rose-600 text-white/90 hover:text-white transition-colors"
-                title="Keluar"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
+              <div className="text-[11px] text-slate-400 flex items-center gap-1.5 truncate">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                <span className="font-medium text-slate-300">SQLite &amp; Cloud Ready</span>
+                <span className="text-slate-600 hidden sm:inline">•</span>
+                <span className="text-slate-400 hidden sm:inline font-mono text-[10px]">Puri Gunung Langgar</span>
+              </div>
             </div>
           </div>
 
           {/* Action buttons bar */}
-          <div className="flex items-center justify-between lg:justify-end gap-2 sm:gap-2.5 overflow-x-auto lg:overflow-visible pb-1 lg:pb-0">
-            {/* Desktop User badge */}
-            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#102D52] border border-[#1C5795] text-xs text-white shrink-0">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-white/70 text-[11px]">Admin:</span>
-              <span className="font-semibold text-[#FF9D2E] truncate max-w-[140px]">
-                {adminUser?.name || 'Administrator'}
-              </span>
-            </div>
-
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             {/* Quick Links Group */}
-            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-              <Link
-                href="/"
-                target="_blank"
-                className="px-2.5 sm:px-3 py-2 rounded-lg bg-[#102D52] border border-[#1C5795] hover:border-[#FF9D2E] hover:bg-[#163E70] text-xs text-white/90 hover:text-white flex items-center gap-1.5 transition-colors shrink-0"
-              >
-                <ExternalLink className="w-3.5 h-3.5 text-[#FF9D2E]" />
-                <span className="hidden sm:inline">Lihat Website</span>
-                <span className="sm:hidden">Web</span>
-              </Link>
+            <Link
+              href="/"
+              target="_blank"
+              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 hover:bg-slate-700 hover:border-slate-600 text-xs text-slate-200 flex items-center gap-1.5 transition-all shadow-xs"
+              title="Pratinjau Website Publik"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-[#FF9D2E] shrink-0" />
+              <span className="hidden md:inline font-medium">Lihat Website</span>
+            </Link>
 
-              <button
-                onClick={() => setShowPasswordModal(true)}
-                className="px-2.5 sm:px-3 py-2 rounded-lg bg-[#102D52] border border-[#1C5795] hover:border-[#FF9D2E] hover:bg-[#163E70] text-xs text-white/90 hover:text-white flex items-center gap-1.5 transition-colors shrink-0"
-                title="Ganti Kata Sandi Admin"
-              >
-                <Key className="w-3.5 h-3.5 text-[#FF9D2E]" />
-                <span className="hidden sm:inline">Ganti Password</span>
-                <span className="sm:hidden">Sandi</span>
-              </button>
+            <button
+              onClick={() => setShowPasswordModal(true)}
+              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 hover:bg-slate-700 hover:border-slate-600 text-xs text-slate-200 flex items-center gap-1.5 transition-all shadow-xs"
+              title="Ganti Kata Sandi Admin"
+            >
+              <Key className="w-3.5 h-3.5 text-[#FF9D2E] shrink-0" />
+              <span className="hidden md:inline font-medium">Password</span>
+            </button>
 
-              <button
-                onClick={handleReset}
-                disabled={saving}
-                className="px-2.5 sm:px-3 py-2 rounded-lg bg-rose-500/20 border border-rose-400/40 text-rose-100 hover:bg-rose-500/30 text-xs flex items-center gap-1.5 transition-colors disabled:opacity-50 shrink-0"
-                title="Reset ke DATA RESMI default"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Reset Data</span>
-                <span className="sm:hidden">Reset</span>
-              </button>
-            </div>
+            <button
+              onClick={handleReset}
+              disabled={saving}
+              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/25 hover:bg-rose-500/20 text-rose-300 text-xs flex items-center gap-1.5 transition-all disabled:opacity-50 shadow-xs"
+              title="Reset ke DATA RESMI default"
+            >
+              <RotateCcw className="w-3.5 h-3.5 shrink-0" />
+              <span className="hidden lg:inline font-medium">Reset</span>
+            </button>
 
-            {/* Primary Action Button (Simpan) */}
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="px-4 sm:px-5 py-2 rounded-lg bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-[#071C38] font-bold text-xs flex items-center gap-1.5 hover:brightness-105 shadow-md shadow-[#FF9D2E]/30 transition-all disabled:opacity-50 shrink-0"
-              >
-                {saving ? (
-                  <>
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                    <span>Menyimpan...</span>
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-3.5 h-3.5" />
-                    <span>Simpan ke SQL</span>
-                  </>
-                )}
-              </button>
+            {/* Primary Save Button */}
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-[#FF9D2E] via-[#FF9D2E] to-[#F28A17] hover:from-[#F28A17] hover:to-[#DE7B0E] text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-md shadow-[#FF9D2E]/20 hover:shadow-lg hover:shadow-[#FF9D2E]/30 transition-all active:scale-95 disabled:opacity-50"
+            >
+              {saving ? (
+                <>
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin shrink-0" />
+                  <span>Menyimpan...</span>
+                </>
+              ) : (
+                <>
+                  <Save className="w-3.5 h-3.5 shrink-0" />
+                  <span>Simpan ke SQL</span>
+                </>
+              )}
+            </button>
 
-              {/* Desktop Logout button */}
+            <div className="h-5 w-px bg-slate-800 mx-0.5 hidden sm:block" />
+
+            {/* User Profile Badge & Logout */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-800/90 border border-slate-700/80 text-xs text-slate-200">
+                <div className="w-5 h-5 rounded-full bg-[#FF9D2E]/20 text-[#FF9D2E] border border-[#FF9D2E]/30 flex items-center justify-center font-bold text-[10px]">
+                  {adminUser?.name ? adminUser.name.charAt(0).toUpperCase() : 'A'}
+                </div>
+                <span className="font-semibold text-slate-200 truncate max-w-[100px]">
+                  {adminUser?.name || 'Admin'}
+                </span>
+              </div>
+
               <button
                 onClick={handleLogout}
                 disabled={loggingOut}
-                className="hidden lg:flex px-3 py-2 rounded-lg bg-[#102D52] border border-[#1C5795] hover:bg-rose-600 hover:border-rose-600 text-xs text-white/90 hover:text-white items-center gap-1.5 transition-colors shrink-0"
+                className="p-1.5 sm:p-2 rounded-xl bg-slate-800/80 border border-slate-700/80 hover:bg-rose-500/20 hover:border-rose-500/40 hover:text-rose-300 text-slate-400 transition-all"
                 title="Keluar dari Panel Admin"
               >
-                <LogOut className="w-3.5 h-3.5" />
-                <span>Keluar</span>
+                <LogOut className="w-4 h-4 shrink-0" />
               </button>
             </div>
           </div>
@@ -564,50 +671,64 @@ export default function AdminDashboard() {
 
       {/* Save Notification Banner */}
       {saveStatus && (
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 mt-4 animate-in fade-in slide-in-from-top-2 duration-200">
           <div
-            className={`p-4 rounded-xl flex items-center gap-3 text-sm font-medium ${
+            className={`p-4 rounded-2xl flex items-center justify-between gap-3 text-sm font-medium shadow-sm ${
               saveStatus.type === 'success'
-                ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
-                : 'bg-rose-50 border border-rose-200 text-rose-800'
+                ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-900'
+                : 'bg-rose-500/10 border border-rose-500/30 text-rose-900'
             }`}
           >
-            {saveStatus.type === 'success' ? (
-              <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-400" />
-            ) : (
-              <AlertCircle className="w-5 h-5 shrink-0 text-rose-400" />
-            )}
-            <span>{saveStatus.message}</span>
+            <div className="flex items-center gap-3">
+              {saveStatus.type === 'success' ? (
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-600 flex items-center justify-center shrink-0">
+                  <CheckCircle2 className="w-5 h-5" />
+                </div>
+              ) : (
+                <div className="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-600 flex items-center justify-center shrink-0">
+                  <AlertCircle className="w-5 h-5" />
+                </div>
+              )}
+              <span className="font-semibold">{saveStatus.message}</span>
+            </div>
+            <button
+              onClick={() => setSaveStatus(null)}
+              className="p-1 rounded-lg hover:bg-black/5 text-slate-500"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
         </div>
       )}
 
-      {/* Main Admin Content */}
-      <div className="max-w-[1400px] mx-auto px-3.5 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-          {/* Sidebar Tabs (Visible on Desktop >= lg) - Pinned Sticky Sidebar */}
-          <div className="hidden lg:block lg:col-span-3 space-y-4 bg-[#0A2548] border border-[#1C5795]/50 rounded-2xl p-4 shadow-sm text-white sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto admin-sidebar-scroll">
+      {/* Main Admin Content Container */}
+      <div className="max-w-[1440px] mx-auto px-3.5 sm:px-6 lg:px-8 py-5 sm:py-7">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
+          {/* Sidebar Tabs (Desktop >= lg) */}
+          <aside className="hidden lg:block lg:col-span-3 space-y-4 bg-[#071324] border border-slate-800/90 rounded-2xl p-3.5 shadow-xl shadow-slate-950/20 text-slate-200 sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto admin-sidebar-scroll">
             {/* GROUP 1: HALAMAN DEPAN (BERANDA) */}
             <div className="space-y-1">
-              <div className="text-[11px] uppercase font-bold text-[#FF9D2E] px-3 py-1 tracking-wider flex items-center justify-between">
+              <div className="text-[10px] uppercase font-bold text-[#FF9D2E] px-3 py-1.5 tracking-wider flex items-center justify-between">
                 <span>Tampilan Beranda</span>
-                <span className="text-[10px] text-white/60 font-semibold">6 Bagian</span>
+                <span className="text-[10px] text-slate-400 font-semibold font-mono">6 Menu</span>
               </div>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('banners')}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
                   activeTab === 'banners'
-                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
-                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
+                    ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <Film className="w-4 h-4 shrink-0 text-[#FF9D2E]" />
+                  <Film className={`w-4 h-4 shrink-0 ${activeTab === 'banners' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
                   <span>Banner Promosi Atas</span>
                 </div>
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/15 text-white font-mono font-semibold">
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono font-bold ${
+                  activeTab === 'banners' ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-slate-400 border border-slate-700/60'
+                }`}>
                   {content.bannerSlides?.length || 0}
                 </span>
               </button>
@@ -615,43 +736,45 @@ export default function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setActiveTab('intro-features')}
-                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
                   activeTab === 'intro-features'
-                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
-                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
+                    ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <Sparkles className="w-4 h-4 shrink-0 text-[#FF9D2E]" />
-                <span>Intro & 4 Keunggulan</span>
+                <Sparkles className={`w-4 h-4 shrink-0 ${activeTab === 'intro-features' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                <span>Intro &amp; 4 Keunggulan</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('hero')}
-                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
                   activeTab === 'hero'
-                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
-                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
+                    ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <Home className="w-4 h-4 shrink-0" />
-                <span>Hero & Statistik Utama</span>
+                <Home className={`w-4 h-4 shrink-0 ${activeTab === 'hero' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                <span>Hero &amp; Statistik Utama</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('buying-process')}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
                   activeTab === 'buying-process'
-                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
-                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
+                    ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <FileText className="w-4 h-4 shrink-0" />
+                  <FileText className={`w-4 h-4 shrink-0 ${activeTab === 'buying-process' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
                   <span>Alur Pembelian Rumah</span>
                 </div>
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/15 text-white font-mono font-semibold">
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono font-bold ${
+                  activeTab === 'buying-process' ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-slate-400 border border-slate-700/60'
+                }`}>
                   {content.buyingProcess?.steps?.length || 4}
                 </span>
               </button>
@@ -659,34 +782,34 @@ export default function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setActiveTab('kpr-simulation')}
-                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
                   activeTab === 'kpr-simulation'
-                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
-                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
+                    ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <Calculator className="w-4 h-4 shrink-0" />
+                <Calculator className={`w-4 h-4 shrink-0 ${activeTab === 'kpr-simulation' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
                 <span>Simulasi KPR FLPP 5%</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('promo-popup')}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
                   activeTab === 'promo-popup'
-                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
-                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
+                    ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <Megaphone className="w-4 h-4 shrink-0 text-[#FF9D2E]" />
+                  <Megaphone className={`w-4 h-4 shrink-0 ${activeTab === 'promo-popup' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
                   <span>Popup Iklan Promo</span>
                 </div>
                 <span
                   className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${
                     content.promoPopup?.enabled
-                      ? 'bg-emerald-400/20 text-emerald-300 border border-emerald-400/40'
-                      : 'bg-white/10 text-white/50'
+                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                      : 'bg-slate-800 text-slate-500'
                   }`}
                 >
                   {content.promoPopup?.enabled ? 'AKTIF' : 'OFF'}
@@ -695,52 +818,54 @@ export default function AdminDashboard() {
             </div>
 
             {/* GROUP 2: PROFIL PERUSAHAAN */}
-            <div className="space-y-1 pt-2 border-t border-[#1C5795]/40">
-              <div className="text-[11px] uppercase font-bold text-[#FF9D2E] px-3 py-1 tracking-wider flex items-center justify-between">
+            <div className="space-y-1 pt-2.5 border-t border-slate-800">
+              <div className="text-[10px] uppercase font-bold text-[#FF9D2E] px-3 py-1.5 tracking-wider flex items-center justify-between">
                 <span>Profil Perusahaan</span>
-                <span className="text-[10px] text-white/60 font-semibold">4 Bagian</span>
+                <span className="text-[10px] text-slate-400 font-semibold font-mono">4 Menu</span>
               </div>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('branding')}
-                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
                   activeTab === 'branding'
-                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
-                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
+                    ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <Sparkles className="w-4 h-4 shrink-0 text-[#FF9D2E]" />
-                <span>Branding, Logo & Footer</span>
+                <Sparkles className={`w-4 h-4 shrink-0 ${activeTab === 'branding' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                <span>Branding, Logo &amp; Footer</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('about')}
-                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
                   activeTab === 'about'
-                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
-                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
+                    ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <Building2 className="w-4 h-4 shrink-0" />
-                <span>Tentang, Visi & Misi</span>
+                <Building2 className={`w-4 h-4 shrink-0 ${activeTab === 'about' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                <span>Tentang, Visi &amp; Misi</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('leadership')}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
                   activeTab === 'leadership'
-                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
-                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
+                    ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <Users className="w-4 h-4 shrink-0" />
+                  <Users className={`w-4 h-4 shrink-0 ${activeTab === 'leadership' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
                   <span>Dewan Pengurus</span>
                 </div>
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/15 text-white font-mono font-semibold">
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono font-bold ${
+                  activeTab === 'leadership' ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-slate-400 border border-slate-700/60'
+                }`}>
                   {content.leadership?.members?.length || 0}
                 </span>
               </button>
@@ -748,87 +873,89 @@ export default function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setActiveTab('legal')}
-                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
                   activeTab === 'legal'
-                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
-                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
+                    ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <ShieldCheck className="w-4 h-4 shrink-0" />
-                <span>Legalitas & Notaris</span>
+                <ShieldCheck className={`w-4 h-4 shrink-0 ${activeTab === 'legal' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                <span>Legalitas &amp; Notaris</span>
               </button>
             </div>
 
             {/* GROUP 3: PROYEK & DOKUMENTASI */}
-            <div className="space-y-1 pt-2 border-t border-[#1C5795]/40">
-              <div className="text-[11px] uppercase font-bold text-[#FF9D2E] px-3 py-1 tracking-wider flex items-center justify-between">
-                <span>Proyek & Lapangan</span>
-                <span className="text-[10px] text-white/60 font-semibold">2 Bagian</span>
+            <div className="space-y-1 pt-2.5 border-t border-slate-800">
+              <div className="text-[10px] uppercase font-bold text-[#FF9D2E] px-3 py-1.5 tracking-wider flex items-center justify-between">
+                <span>Proyek &amp; Lapangan</span>
+                <span className="text-[10px] text-slate-400 font-semibold font-mono">2 Menu</span>
               </div>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('project')}
-                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
                   activeTab === 'project'
-                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
-                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
+                    ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <Building className="w-4 h-4 shrink-0" />
+                <Building className={`w-4 h-4 shrink-0 ${activeTab === 'project' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
                 <span>Proyek Puri Gunung Langgar</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('activities')}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
                   activeTab === 'activities'
-                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
-                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
+                    ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <HardHat className="w-4 h-4 shrink-0" />
+                  <HardHat className={`w-4 h-4 shrink-0 ${activeTab === 'activities' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
                   <span>Kegiatan Lapangan Riil</span>
                 </div>
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/15 text-white font-mono font-semibold">
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono font-bold ${
+                  activeTab === 'activities' ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-slate-400 border border-slate-700/60'
+                }`}>
                   {content.activities?.items?.length || 0}
                 </span>
               </button>
             </div>
 
             {/* GROUP 4: INTERAKSI & FORMULIR */}
-            <div className="space-y-1 pt-2 border-t border-[#1C5795]/40">
-              <div className="text-[11px] uppercase font-bold text-[#FF9D2E] px-3 py-1 tracking-wider flex items-center justify-between">
-                <span>Interaksi & Kontak</span>
-                <span className="text-[10px] text-white/60 font-semibold">2 Bagian</span>
+            <div className="space-y-1 pt-2.5 border-t border-slate-800">
+              <div className="text-[10px] uppercase font-bold text-[#FF9D2E] px-3 py-1.5 tracking-wider flex items-center justify-between">
+                <span>Interaksi &amp; Kontak</span>
+                <span className="text-[10px] text-slate-400 font-semibold font-mono">2 Menu</span>
               </div>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('contact')}
-                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
                   activeTab === 'contact'
-                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
-                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
+                    ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <PhoneCall className="w-4 h-4 shrink-0" />
-                <span>Kontak & Alamat Kantor</span>
+                <PhoneCall className={`w-4 h-4 shrink-0 ${activeTab === 'contact' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                <span>Kontak &amp; Alamat Kantor</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('inquiries')}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
                   activeTab === 'inquiries'
-                    ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-md shadow-[#FF9D2E]/25'
-                    : 'text-white/80 hover:text-white hover:bg-white/10 font-medium'
+                    ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <Inbox className="w-4 h-4 shrink-0" />
+                  <Inbox className={`w-4 h-4 shrink-0 ${activeTab === 'inquiries' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
                   <span>Pesan Masuk (Formulir)</span>
                 </div>
                 {inquiries.length > 0 && (
@@ -838,23 +965,23 @@ export default function AdminDashboard() {
                 )}
               </button>
             </div>
-          </div>
+          </aside>
 
-          {/* Mobile & Tablet Quick Navigation Selector (< lg) - Sticky Navigation */}
-          <div className="lg:hidden col-span-1 space-y-3 bg-[#0A2548] border border-[#1C5795]/50 rounded-2xl p-4 shadow-lg text-white sticky top-16 z-30 backdrop-blur-md">
-            <div className="flex items-center justify-between gap-2 border-b border-[#DCE7F5] pb-3">
+          {/* Mobile & Tablet Quick Navigation Selector (< lg) */}
+          <div className="lg:hidden col-span-1 space-y-3 bg-[#071324] border border-slate-800 rounded-2xl p-4 shadow-xl text-slate-200 sticky top-16 z-30 backdrop-blur-md">
+            <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-[#FF9D2E]" />
                 <span className="text-xs font-bold text-white uppercase tracking-wider">Bagian Konten Aktif</span>
               </div>
-              <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#FFF7EB] text-[#C76A08] border border-[#FF9D2E]/30 font-mono font-semibold">
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-[#FF9D2E] border border-[#FF9D2E]/30 font-mono font-semibold">
                 14 Menu
               </span>
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="mobile-tab-select" className="text-[11px] text-white/70 block font-medium">
-                Pilih bagian yang ingin Anda edit:
+              <label htmlFor="mobile-tab-select" className="text-[11px] text-slate-400 block font-medium">
+                Pilih menu konten yang diedit:
               </label>
               <div className="relative">
                 <select
@@ -863,28 +990,28 @@ export default function AdminDashboard() {
                   onChange={(e) => {
                     setActiveTab(e.target.value as any);
                   }}
-                  className="w-full h-11 px-3.5 pr-10 rounded-xl bg-[#071C38] border border-[#1C5795] text-white font-semibold text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] appearance-none cursor-pointer"
+                  className="w-full h-11 px-3.5 pr-10 rounded-xl bg-slate-900 border border-slate-700 text-white font-semibold text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] appearance-none cursor-pointer"
                 >
                   <optgroup label="TAMPILAN BERANDA">
                     <option value="banners">Banner Promosi Atas ({content.bannerSlides?.length || 0})</option>
-                    <option value="intro-features">Intro & 4 Keunggulan</option>
-                    <option value="hero">Hero & Statistik Utama</option>
+                    <option value="intro-features">Intro &amp; 4 Keunggulan</option>
+                    <option value="hero">Hero &amp; Statistik Utama</option>
                     <option value="buying-process">Alur Pembelian Rumah</option>
                     <option value="kpr-simulation">Simulasi KPR FLPP 5%</option>
                     <option value="promo-popup">Popup Iklan Promo ({content.promoPopup?.enabled ? 'AKTIF' : 'OFF'})</option>
                   </optgroup>
                   <optgroup label="PROFIL PERUSAHAAN">
-                    <option value="branding">Branding, Logo & Footer</option>
-                    <option value="about">Tentang, Visi & Misi</option>
+                    <option value="branding">Branding, Logo &amp; Footer</option>
+                    <option value="about">Tentang, Visi &amp; Misi</option>
                     <option value="leadership">Dewan Pengurus ({content.leadership?.members?.length || 0})</option>
-                    <option value="legal">Legalitas & Notaris</option>
+                    <option value="legal">Legalitas &amp; Notaris</option>
                   </optgroup>
-                  <optgroup label="PROYEK & LAPANGAN">
+                  <optgroup label="PROYEK &amp; LAPANGAN">
                     <option value="project">Proyek Puri Gunung Langgar</option>
                     <option value="activities">Kegiatan Lapangan Riil ({content.activities?.items?.length || 0})</option>
                   </optgroup>
-                  <optgroup label="INTERAKSI & KONTAK">
-                    <option value="contact">Kontak & Alamat Kantor</option>
+                  <optgroup label="INTERAKSI &amp; KONTAK">
+                    <option value="contact">Kontak &amp; Alamat Kantor</option>
                     <option value="inquiries">Pesan Masuk (Formulir) {inquiries.length > 0 ? `(${inquiries.length} baru)` : ''}</option>
                   </optgroup>
                 </select>
@@ -895,7 +1022,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Quick Category Chips for Fast 1-Tap Switching */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1">
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-0.5">
               {[
                 { id: 'banners', label: 'Banner' },
                 { id: 'intro-features', label: 'Keunggulan' },
@@ -920,8 +1047,8 @@ export default function AdminDashboard() {
                   }}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
                     activeTab === chip.id
-                      ? 'bg-[#FF9D2E] text-[#071C38] font-bold shadow-xs'
-                      : 'bg-[#102D52] text-white/80 hover:text-white border border-[#1C5795]'
+                      ? 'bg-[#FF9D2E] text-slate-950 font-bold shadow-xs'
+                      : 'bg-slate-900 text-slate-300 hover:text-white border border-slate-700/80'
                   }`}
                 >
                   {chip.label}
@@ -930,8 +1057,53 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Form Content Editor */}
-          <div id="admin-form-editor" className="lg:col-span-9 bg-white border border-[#DCE7F5] rounded-2xl p-4 sm:p-6 lg:p-8 shadow-sm">
+          {/* Form Content Column (lg:col-span-9) */}
+          <div className="lg:col-span-9 space-y-4">
+            {/* Dynamic Executive Breadcrumbs & Tab Banner */}
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-start sm:items-center gap-3.5">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#071324] to-[#162C4E] text-[#FF9D2E] flex items-center justify-center shrink-0 shadow-md border border-slate-700/50">
+                  {renderTabIcon(activeTab)}
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">
+                    <span>Admin Studio</span>
+                    <span>/</span>
+                    <span className="text-amber-600 font-extrabold">{TAB_GROUPS[activeTab]?.group}</span>
+                  </div>
+                  <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+                    {TAB_GROUPS[activeTab]?.title}
+                  </h1>
+                  <p className="text-xs text-slate-500 mt-0.5 max-w-2xl leading-relaxed">
+                    {TAB_GROUPS[activeTab]?.desc}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] hover:from-[#F28A17] hover:to-[#DE7B0E] text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-sm hover:shadow-md transition-all active:scale-95 disabled:opacity-50"
+                >
+                  {saving ? (
+                    <>
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin shrink-0" />
+                      <span>Menyimpan...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-3.5 h-3.5 shrink-0" />
+                      <span>Simpan Tab Ini</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Form Content Editor Container */}
+            <div id="admin-form-editor" className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-xs">
             {/* TAB: PROMO BANNERS CAROUSEL */}
             {activeTab === 'banners' && (
               <div className="space-y-6">
@@ -5293,23 +5465,24 @@ export default function AdminDashboard() {
                 )}
               </div>
             )}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Password Change Modal */}
       {showPasswordModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#071C38]/70 backdrop-blur-sm animate-in fade-in">
-          <div className="relative w-full max-w-md bg-white border border-[#DCE7F5] rounded-2xl p-6 sm:p-7 shadow-2xl shadow-[#071C38]/30">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="relative w-full max-w-md bg-white border border-slate-200 rounded-2xl p-6 sm:p-7 shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between pb-4 mb-4 border-b border-[#DCE7F5]">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-lg bg-[#FFF7EB] text-[#FF9D2E]">
+            <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center shadow-xs">
                   <Key className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-syne font-bold text-[#073B78] text-base">Ganti Kata Sandi</h3>
-                  <p className="text-xs text-[#526783]">Ubah password akun admin Anda</p>
+                  <h3 className="font-syne font-bold text-slate-900 text-base">Ganti Kata Sandi</h3>
+                  <p className="text-xs text-slate-500">Ubah password akun admin Anda</p>
                 </div>
               </div>
               <button
@@ -5321,7 +5494,7 @@ export default function AdminDashboard() {
                   setNewPass('');
                   setConfirmPass('');
                 }}
-                className="p-1 rounded-lg text-[#526783] hover:text-[#073B78] hover:bg-[#EBF3FC] transition-colors"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -5332,23 +5505,23 @@ export default function AdminDashboard() {
               <div
                 className={`mb-4 p-3 rounded-xl text-xs flex items-center gap-2.5 ${
                   passChangeStatus.type === 'success'
-                    ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
-                    : 'bg-rose-500/10 border border-rose-500/30 text-rose-300'
+                    ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-800'
+                    : 'bg-rose-500/10 border border-rose-500/30 text-rose-800'
                 }`}
               >
                 {passChangeStatus.type === 'success' ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                 ) : (
-                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
                 )}
-                <span>{passChangeStatus.message}</span>
+                <span className="font-medium">{passChangeStatus.message}</span>
               </div>
             )}
 
             {/* Form */}
             <form onSubmit={handleChangePassword} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-[#073B78] mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1">
                   Kata Sandi Saat Ini
                 </label>
                 <input
@@ -5358,12 +5531,12 @@ export default function AdminDashboard() {
                   onChange={(e) => setCurrPass(e.target.value)}
                   placeholder="Masukkan password saat ini..."
                   disabled={passChangeLoading}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] placeholder-[#526783]/50 text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all font-medium"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#073B78] mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1">
                   Kata Sandi Baru (Minimal 6 Karakter)
                 </label>
                 <input
@@ -5373,12 +5546,12 @@ export default function AdminDashboard() {
                   onChange={(e) => setNewPass(e.target.value)}
                   placeholder="Masukkan password baru..."
                   disabled={passChangeLoading}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] placeholder-[#526783]/50 text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all font-medium"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#073B78] mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1">
                   Konfirmasi Kata Sandi Baru
                 </label>
                 <input
@@ -5388,7 +5561,7 @@ export default function AdminDashboard() {
                   onChange={(e) => setConfirmPass(e.target.value)}
                   placeholder="Ketik ulang password baru..."
                   disabled={passChangeLoading}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] placeholder-[#526783]/50 text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all font-medium"
                 />
               </div>
 
@@ -5397,14 +5570,14 @@ export default function AdminDashboard() {
                   type="button"
                   onClick={() => setShowPasswordModal(false)}
                   disabled={passChangeLoading}
-                  className="px-4 py-2 rounded-xl bg-[#F4F7FC] hover:bg-[#EBF3FC] text-xs font-semibold text-[#526783] border border-[#DCE7F5] transition-colors"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-600 transition-colors"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={passChangeLoading}
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-[#071C38] font-bold text-xs uppercase tracking-wider hover:brightness-105 shadow-md shadow-[#FF9D2E]/25 transition-all flex items-center gap-1.5"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] hover:from-[#F28A17] hover:to-[#DE7B0E] text-slate-950 font-bold text-xs uppercase tracking-wider shadow-md shadow-[#FF9D2E]/25 transition-all flex items-center gap-1.5 active:scale-95"
                 >
                   {passChangeLoading ? (
                     <>

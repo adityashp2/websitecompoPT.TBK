@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import { getSiteContent } from '@/lib/db';
 import { getYouTubeEmbedUrl } from '@/lib/initialData';
-import Header from '../components/Header';
+import Header from '../components/Navbar';
 import Footer from '../components/Footer';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import ClientProyekGallery from './ClientProyekGallery';

@@ -29,7 +29,7 @@ const navItems: NavItem[] = [
     label: 'Tentang',
     href: '/tentang',
     icon: Building2,
-    isActive: (pathname) => pathname.startsWith('/tentang') || pathname.startsWith('/pimpinan'),
+    isActive: (pathname) => pathname.startsWith('/tentang'),
   },
   {
     label: 'Proyek',
@@ -53,9 +53,18 @@ const navItems: NavItem[] = [
 
 export default function MobileBottomNav() {
   const pathname = usePathname() || '/';
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   // Do not render bottom nav inside admin panel
-  if (pathname.startsWith('/A9MIN') || pathname.startsWith('/login')) {
+  const currentPath = pathname || (typeof window !== 'undefined' ? window.location.pathname : '');
+  const isNavAdmin = currentPath.toLowerCase().includes('admin') || currentPath.toLowerCase().includes('a9min') || currentPath.startsWith('/login');
+  if (isNavAdmin) {
     return null;
   }
 

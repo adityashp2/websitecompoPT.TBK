@@ -24,7 +24,7 @@ import {
   Briefcase
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import Header from './Header';
+import Header from './Navbar';
 import Footer from './Footer';
 import FloatingWhatsApp from './FloatingWhatsApp';
 import PromoBannerCarousel from './PromoBannerCarousel';
@@ -92,10 +92,44 @@ export default function ClientLandingPage({ initialContent }: { initialContent: 
       .catch(() => {});
   }, []);
 
-  // Scroll Reveal - ensure all sections are revealed and visible immediately
+  // Scroll Reveal - Animate elements in when scrolled into viewport
   useEffect(() => {
-    const elements = document.querySelectorAll('.reveal-on-scroll, .reveal-left-on-scroll, .reveal-right-on-scroll');
-    elements.forEach((el) => el.classList.add('is-revealed'));
+    const elements = document.querySelectorAll<HTMLElement>(
+      '.reveal-on-scroll, .reveal-left-on-scroll, .reveal-right-on-scroll'
+    );
+    if (!elements.length) return;
+
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
+      elements.forEach((el) => el.classList.add('is-revealed'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -40px 0px',
+      }
+    );
+
+    elements.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      // If element is already in initial screen viewport on load, reveal it immediately
+      if (rect.top < window.innerHeight - 30) {
+        el.classList.add('is-revealed');
+      } else {
+        observer.observe(el);
+      }
+    });
+
+    return () => observer.disconnect();
   }, [content]);
 
   // Project Media State
@@ -113,14 +147,14 @@ export default function ClientLandingPage({ initialContent }: { initialContent: 
   const [currentProjectSlide, setCurrentProjectSlide] = useState(0);
   const [isGalleryHovered, setIsGalleryHovered] = useState(false);
 
-  // Auto slideshow for project photos (3.5s interval, pause on hover)
+  // Auto slideshow for project photos (3.8s interval)
   useEffect(() => {
-    if (activeProjectSlides.length <= 1 || isGalleryHovered) return;
+    if (activeProjectSlides.length <= 1) return;
     const timer = setInterval(() => {
       setCurrentProjectSlide((prev) => (prev + 1) % activeProjectSlides.length);
-    }, 3500);
+    }, 3800);
     return () => clearInterval(timer);
-  }, [activeProjectSlides.length, isGalleryHovered]);
+  }, [activeProjectSlides.length]);
 
   // Mobile Touch Swipe for Project Image Gallery
   const [galleryTouchStartX, setGalleryTouchStartX] = useState<number | null>(null);
@@ -176,19 +210,6 @@ export default function ClientLandingPage({ initialContent }: { initialContent: 
   );
   const kprPerHari = Math.round(kprAngsuran / 30);
 
-  // Leadership / Dewan Pengurus & Manajemen Data
-  const rawLeadershipMembers = Array.isArray(content.leadership?.members) && content.leadership.members.length > 0
-    ? content.leadership.members
-    : initialSiteContent.leadership.members;
-
-  const primaryLeaders = rawLeadershipMembers.filter(
-    (m) => m.role.toLowerCase().includes('komisaris') || m.role.toLowerCase().includes('direktur utama')
-  );
-  const operationalLeaders = rawLeadershipMembers.filter(
-    (m) => !m.role.toLowerCase().includes('komisaris') && !m.role.toLowerCase().includes('direktur utama')
-  );
-  const displayPrimaryLeaders = primaryLeaders.length > 0 ? primaryLeaders : rawLeadershipMembers.slice(0, 2);
-  const displayOperationalLeaders = primaryLeaders.length > 0 ? operationalLeaders : rawLeadershipMembers.slice(2);
 
   // Inquiry Form State
   const [formData, setFormData] = useState({
@@ -247,17 +268,17 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
     : `https://wa.me/${whatsappNumber}`;
 
   return (
-    <div className="min-h-screen bg-white text-[#102D52] font-sans antialiased selection:bg-[#FF9D2E] selection:text-[#102D52]">
+    <div className="min-h-screen bg-white text-[#102D52] font-sans antialiased selection:bg-[#FF9D2E] selection:text-[#102D52]" suppressHydrationWarning>
       {/* 1. Header (ICC-Style Full-Width Navy Header with Logo, Search Modal, and Hamburger) */}
       <Header content={content} />
 
-      <main id="main-content">
+      <main id="main-content" suppressHydrationWarning>
         {/* ========================================================= */}
         {/* 2. FULL-WIDTH PROMOTIONAL BANNER CAROUSEL (HIGHEST PRIORITY) */}
         {/* Inspired by Indonesian Certification Center (ICC)          */}
         {/* Edge-to-edge, over-the-banner orange arrows, bottom dots   */}
         {/* ========================================================= */}
-        <div className="w-full pt-[58px] min-[980px]:pt-[68px]">
+        <div className="w-full pt-[58px] min-[980px]:pt-[68px]" suppressHydrationWarning>
           <PromoBannerCarousel slides={content.bannerSlides} whatsappUrl={waUrl} />
         </div>
 
@@ -399,8 +420,6 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   tabIndex={0}
                   role="region"
                   aria-label="Slideshow dokumentasi proyek Puri Gunung Langgar. Geser atau klik untuk memperbesar."
-                  onMouseEnter={() => setIsGalleryHovered(true)}
-                  onMouseLeave={() => setIsGalleryHovered(false)}
                   onTouchStart={handleGalleryTouchStart}
                   onTouchEnd={handleGalleryTouchEnd}
                 >
@@ -437,6 +456,34 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                       </div>
                     );
                   })}
+
+                  {/* Tombol Navigasi Kiri & Kanan */}
+                  {activeProjectSlides.length > 1 && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentProjectSlide((prev) => (prev - 1 + activeProjectSlides.length) % activeProjectSlides.length);
+                        }}
+                        className="absolute left-2.5 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-[#FF9D2E] text-[#102D52] hover:text-white flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 active:scale-95 border border-slate-200/80 backdrop-blur-sm"
+                        aria-label="Foto sebelumnya"
+                      >
+                        <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentProjectSlide((prev) => (prev + 1) % activeProjectSlides.length);
+                        }}
+                        className="absolute right-2.5 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-[#FF9D2E] text-[#102D52] hover:text-white flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 active:scale-95 border border-slate-200/80 backdrop-blur-sm"
+                        aria-label="Foto selanjutnya"
+                      >
+                        <ChevronRight className="w-5 h-5 stroke-[2.5]" />
+                      </button>
+                    </>
+                  )}
 
                   {/* Tombol Perbesar Floating di Pojok Kanan Atas */}
                   <button
@@ -700,182 +747,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
           </div>
         </section>
 
-        {/* ========================================================= */}
-        {/* SECTION: JAJARAN PIMPINAN & STRUKTUR MANAJEMEN (#pimpinan) */}
-        {/* Placed prominently on homepage as requested by user       */}
-        {/* Editorial styling with DM Serif Display & DM Sans         */}
-        {/* ========================================================= */}
-        <section id="pimpinan" className="py-16 sm:py-24 bg-[#F4F7FC] border-b border-[#DCE7F5] scroll-mt-16">
-          <div className="container-editorial">
-            {/* Section Header */}
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12 sm:mb-16 reveal-on-scroll">
-              <div className="max-w-2xl">
-                <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
-                  <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                  <span>Struktur Kepemimpinan</span>
-                </div>
-                <h2 className="font-serif font-normal text-3xl sm:text-4xl text-[#102D52] leading-tight">
-                  Dewan Komisaris &amp; Direksi Perseroan
-                </h2>
-                <p className="font-sans text-[15px] sm:text-[16px] text-[#526783] mt-2.5 leading-relaxed">
-                  Dikelola oleh pengurus resmi yang tercantum dalam Akta Notaris &amp; SK Kemenkumham RI, serta jajaran manajemen profesional yang berdedikasi membangun kawasan perumahan berkualitas di Lampung.
-                </p>
-              </div>
 
-              <div className="self-start sm:self-end">
-                <Link
-                  href="/pimpinan"
-                  prefetch={false}
-                  className="group inline-flex items-center gap-2 text-xs font-semibold tracking-normal text-[#073B78] hover:text-[#FF9D2E] transition-colors"
-                >
-                  <span>Lihat Seluruh Struktur Organisasi</span>
-                  <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Primary Leadership Duo: Dewan Komisaris & Direktur Utama (Executive Clean Layout) */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto mb-14 sm:mb-18">
-              {displayPrimaryLeaders.map((member, idx) => (
-                <div
-                  key={idx}
-                  className="group rounded-2xl bg-white border border-[#DCE7F5] p-5 sm:p-6 flex flex-col sm:flex-row gap-5 sm:gap-6 items-center sm:items-stretch transition-all duration-300 hover:border-[#073B78] shadow-sm hover:shadow-md reveal-on-scroll delay-100 interactive-card"
-                >
-                  {/* Pas Foto Proporsional 3:4 (Wajah Utuh Tidak Terpotong) */}
-                  <div className="relative w-36 sm:w-44 aspect-[3/4] shrink-0 rounded-xl overflow-hidden shadow-md border border-[#DCE7F5] bg-[#073B78]">
-                    {member.image && member.image.trim() !== '' ? (
-                      <img
-                        src={member.image}
-                        alt={member.name}
-                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 ease-out"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center p-4 text-white text-center">
-                        <Building2 className="w-8 h-8 text-[#FF9D2E] mb-1" />
-                        <span className="text-xl font-bold">TBK</span>
-                      </div>
-                    )}
-                    <div className="absolute top-2 left-2 z-10">
-                      <span className="px-2 py-0.5 rounded-full bg-[#102D52]/90 backdrop-blur-md text-[#FF9D2E] text-[9.5px] font-bold tracking-wide border border-[#FF9D2E]/40">
-                        {member.role}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Konten Keterangan Eksekutif di Sebelah Kanan */}
-                  <div className="flex flex-col flex-1 justify-between space-y-3 text-left w-full">
-                    <div>
-                      <div className="flex items-center gap-1.5 mb-1.5">
-                        <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-semibold border border-emerald-200 flex items-center gap-1">
-                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                          <span>SK Kemenkumham RI</span>
-                        </span>
-                      </div>
-                      <h3 className="font-serif text-xl sm:text-2xl text-[#102D52] font-normal tracking-tight">
-                        {member.name}
-                      </h3>
-                      <span className="text-[11px] tracking-wide text-[#FF9D2E] font-medium block">
-                        {member.department || 'Pengurus Inti Perseroan'}
-                      </span>
-                    </div>
-
-                    <div>
-                      <div className="text-[10.5px] font-medium tracking-wide text-[#FF9D2E] mb-1 flex items-center gap-1.5">
-                        <Briefcase className="w-3.5 h-3.5" />
-                        <span>Amanat &amp; Tanggung Jawab</span>
-                      </div>
-                      <p className="font-sans text-xs sm:text-[13px] text-[#526783] leading-relaxed line-clamp-3 sm:line-clamp-4">
-                        {member.roleDescription}
-                      </p>
-                    </div>
-
-                    <div className="pt-2.5 border-t border-[#DCE7F5] flex items-center justify-between text-[10.5px] text-[#526783]">
-                      <div className="flex items-center gap-1.5">
-                        <ShieldCheck className="w-3.5 h-3.5 text-[#073B78] shrink-0" />
-                        <span>Akta Notaris {content.legal?.aktaNumber || 'No. 10'}</span>
-                      </div>
-                      <span className="font-mono text-[#526783]">{content.legal?.aktaDate || '18 Maret 2021'}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Sub-section: Operational Division Heads */}
-            {displayOperationalLeaders.length > 0 && (
-              <div className="space-y-6 pt-2">
-                <div className="border-t border-[#DCE7F5] pt-10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div>
-                    <span className="text-[11px] font-medium tracking-wide text-[#FF9D2E] uppercase block mb-1">
-                      Manajemen Lapangan &amp; Pelayanan
-                    </span>
-                    <h3 className="font-serif font-normal text-2xl text-[#102D52]">
-                      Kepala Divisi &amp; Pelaksana Teknis
-                    </h3>
-                  </div>
-                  <p className="text-xs text-[#526783] max-w-md sm:text-right">
-                    Memastikan kelancaran proses verifikasi KPR FLPP, pengawasan fisik konstruksi, dan sertifikasi tanah secara tepat waktu.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                  {displayOperationalLeaders.map((member, idx) => (
-                    <div
-                      key={idx}
-                      className="group rounded-2xl bg-white border border-[#DCE7F5] p-5 flex flex-col justify-between transition-all duration-200 hover:border-[#073B78] hover:-translate-y-1 shadow-sm hover:shadow-md reveal-on-scroll interactive-card"
-                    >
-                      <div className="space-y-4">
-                        <div className="relative w-full aspect-square rounded-xl bg-[#073B78] overflow-hidden flex items-center justify-center">
-                          {member.image && member.image.trim() !== '' ? (
-                            <img
-                              src={member.image}
-                              alt={member.name}
-                              className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                              loading="lazy"
-                            />
-                          ) : (
-                            <div className="flex flex-col items-center justify-center text-center p-4">
-                              <Building2 className="w-8 h-8 text-[#FF9D2E] mb-1" />
-                              <span className="text-xs text-white/80 font-medium">PT. TBK</span>
-                            </div>
-                          )}
-
-                          {member.department && (
-                            <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-[#102D52]/90 backdrop-blur-md border border-white/15 text-[#FF9D2E] text-[9.5px] font-semibold tracking-wide">
-                              {member.department}
-                            </div>
-                          )}
-                        </div>
-
-                        <div>
-                          <span className="text-[11px] font-semibold text-[#FF9D2E] block mb-1">
-                            {member.role}
-                          </span>
-                          <h4 className="font-sans font-bold text-[15px] text-[#102D52] leading-snug">
-                            {member.name}
-                          </h4>
-                        </div>
-
-                        <p className="text-xs text-[#526783] leading-relaxed line-clamp-3">
-                          {member.roleDescription}
-                        </p>
-                      </div>
-
-                      <div className="pt-4 mt-4 border-t border-[#DCE7F5] flex items-center justify-between text-[11px] text-[#526783]">
-                        <span className="font-semibold text-[#102D52]">PT. TBK Lampung</span>
-                        <span className="text-[#15966A] font-semibold flex items-center gap-1">
-                          <CheckCircle2 className="w-3 h-3" />
-                          <span>Berwenang</span>
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
 
         {/* ========================================================= */}
         {/* SECTION C: BUYING PROCESS (Alur Kepemilikan)              */}
@@ -1305,206 +1177,10 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
             </div>
           </div>
         </section>
-
-        {/* ========================================================= */}
-        {/* SECTION G: CONTACT & INQUIRY FORM                         */}
-        {/* Clean White Background, Direct WhatsApp Access, Valid Form */}
-        {/* ========================================================= */}
-        <section id="kontak" className="py-16 sm:py-24 bg-white">
-          <div className="container-editorial">
-            <div className="max-w-2xl mb-12 sm:mb-16 reveal-on-scroll">
-              <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
-                <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                <span>Hubungi Kami</span>
-              </div>
-              <h2 className="font-serif font-normal text-3xl sm:text-4xl text-[#102D52] leading-tight">
-                Konsultasi &amp; Layanan Informasi
-              </h2>
-              <p className="font-sans text-[15px] sm:text-[16px] text-[#526783] mt-2.5 leading-relaxed">
-                Tim pemasaran resmi PT. Terbang Bersama Kawan siap memberikan informasi ketersediaan unit, tahapan berkas, dan pendampingan survei lokasi.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-              {/* Left Column: Direct Coordinates */}
-              <div className="lg:col-span-5 space-y-6 reveal-left-on-scroll delay-100">
-                <div className="p-6 rounded-2xl bg-[#F4F7FC] border border-[#DCE7F5] shadow-sm space-y-5 interactive-card">
-                  <div className="flex items-start gap-3.5">
-                    <div className="w-10 h-10 rounded-xl bg-[#E8F1FC] text-[#073B78] flex items-center justify-center shrink-0">
-                      <MapPin className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <span className="text-[11px] font-medium tracking-wide text-[#FF9D2E] block">
-                        Alamat Kantor Pemasaran
-                      </span>
-                      <p className="text-xs sm:text-[13.5px] text-[#102D52] font-semibold leading-relaxed mt-0.5">
-                        {content.contact?.address || 'Bandar Lampung, Provinsi Lampung, Indonesia'}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3.5 pt-3 border-t border-[#DCE7F5]">
-                    <div className="w-10 h-10 rounded-xl bg-[#E6F7F3] text-[#15966A] flex items-center justify-center shrink-0">
-                      <Phone className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <span className="text-[11px] font-medium tracking-wide text-[#FF9D2E] block">
-                        WhatsApp &amp; Telepon
-                      </span>
-                      <a
-                        href={waUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs sm:text-[13.5px] text-[#102D52] font-semibold hover:text-[#073B78] transition-colors block mt-0.5"
-                      >
-                        {content.contact?.whatsapp || '0812-7890-1234'}
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3.5 pt-3 border-t border-[#DCE7F5]">
-                    <div className="w-10 h-10 rounded-xl bg-[#FEF5E7] text-[#FF9D2E] flex items-center justify-center shrink-0">
-                      <Mail className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <span className="text-[11px] font-medium tracking-wide text-[#FF9D2E] block">
-                        Email Resmi
-                      </span>
-                      <a
-                        href={`mailto:${content.contact?.email || 'kontak@terbangbersamakawan.co.id'}`}
-                        className="text-xs sm:text-[13.5px] text-[#102D52] font-semibold hover:text-[#073B78] transition-colors block mt-0.5"
-                      >
-                        {content.contact?.email || 'kontak@terbangbersamakawan.co.id'}
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3.5 pt-3 border-t border-[#DCE7F5]">
-                    <div className="w-10 h-10 rounded-xl bg-[#F0EBFC] text-[#7C3AED] flex items-center justify-center shrink-0">
-                      <Clock className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <span className="text-[11px] font-medium tracking-wide text-[#FF9D2E] block">
-                        Jam Layanan Kantor
-                      </span>
-                      <p className="text-xs sm:text-[13.5px] text-[#102D52] font-medium mt-0.5">
-                        {content.contact?.operatingHours || 'Senin - Sabtu: 08:00 - 17:00 WIB'}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Direct WhatsApp Callout Button */}
-                <a
-                  href={waUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="interactive-btn w-full min-h-[50px] px-6 rounded-2xl bg-[#15966A] hover:bg-[#12805A] text-white font-semibold text-xs sm:text-[13px] tracking-normal flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg"
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  <span>Chat WhatsApp Tim Pemasaran</span>
-                </a>
-              </div>
-
-              {/* Right Column: Inquiry Consultation Form */}
-              <div className="lg:col-span-7 bg-[#F4F7FC] p-6 sm:p-9 rounded-2xl border border-[#DCE7F5] shadow-sm reveal-right-on-scroll delay-200 interactive-card">
-                <h3 className="font-serif font-normal text-xl sm:text-2xl text-[#102D52] mb-1">
-                  Kirim Formulir Konsultasi
-                </h3>
-                <p className="font-sans text-xs sm:text-[13.5px] text-[#526783] mb-6">
-                  Silakan isi informasi di bawah ini. Tim kami akan segera merespons via WhatsApp atau telepon.
-                </p>
-
-                {formSuccess && (
-                  <div className="mb-6 p-4 rounded-xl bg-[#E6F7F3] border border-[#15966A]/30 text-[#15966A] text-xs sm:text-[13.5px] font-semibold flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 shrink-0" />
-                    <span>Terima kasih! WhatsApp sedang terbuka untuk mengirim rincian konsultasi Anda.</span>
-                  </div>
-                )}
-
-                {formError && (
-                  <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs sm:text-[13.5px] font-semibold flex items-center gap-2">
-                    <X className="w-5 h-5 shrink-0" />
-                    <span>{formError}</span>
-                  </div>
-                )}
-
-                <form onSubmit={handleInquirySubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-medium text-[#102D52] mb-1.5">
-                      Nama Lengkap <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Masukkan nama lengkap Anda"
-                      className="w-full px-4 py-3 rounded-xl bg-white border border-[#DCE7F5] text-xs sm:text-[13.5px] text-[#102D52] placeholder-[#526783]/60 focus:outline-none focus:ring-2 focus:ring-[#FF9D2E] focus:border-transparent transition-all font-sans"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-medium text-[#102D52] mb-1.5">
-                        Nomor WhatsApp <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        placeholder="Contoh: 081234567890"
-                        className="w-full px-4 py-3 rounded-xl bg-white border border-[#DCE7F5] text-xs sm:text-[13.5px] text-[#102D52] placeholder-[#526783]/60 focus:outline-none focus:ring-2 focus:ring-[#FF9D2E] focus:border-transparent transition-all font-sans"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-[#102D52] mb-1.5">
-                        Alamat Email (Opsional)
-                      </label>
-                      <input
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="nama@email.com"
-                        className="w-full px-4 py-3 rounded-xl bg-white border border-[#DCE7F5] text-xs sm:text-[13.5px] text-[#102D52] placeholder-[#526783]/60 focus:outline-none focus:ring-2 focus:ring-[#FF9D2E] focus:border-transparent transition-all font-sans"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium text-[#102D52] mb-1.5">
-                      Pesan atau Pertanyaan
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="Tuliskan pertanyaan seputar kavling, berkas KPR subsidi, atau jadwal survei..."
-                      className="w-full px-4 py-3 rounded-xl bg-white border border-[#DCE7F5] text-xs sm:text-[13.5px] text-[#102D52] placeholder-[#526783]/60 focus:outline-none focus:ring-2 focus:ring-[#FF9D2E] focus:border-transparent transition-all resize-none font-sans"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={formSubmitting}
-                    className="interactive-btn w-full h-[48px] rounded-full bg-[#073B78] hover:bg-[#102D52] text-white text-xs font-semibold tracking-normal flex items-center justify-center gap-2 shadow-md hover:shadow-lg disabled:opacity-50"
-                  >
-                    <span>{formSubmitting ? 'Mengirim...' : 'Kirim & Lanjutkan ke WhatsApp'}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
 
       {/* Footer */}
       <Footer content={content} />
-
-      {/* Floating WhatsApp Action Button */}
-      <FloatingWhatsApp content={content} />
 
       {/* Fullscreen Lookbook Modal */}
       <LookbookModal
