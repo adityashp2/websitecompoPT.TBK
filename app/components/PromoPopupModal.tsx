@@ -15,16 +15,21 @@ export default function PromoPopupModal({ promo }: PromoPopupModalProps) {
 
   useEffect(() => {
     if (promo?.enabled && promo?.image) {
-      // Pastikan iklan hanya muncul 1x per sesi kunjungan (tidak berulang saat klik Beranda)
+      // Pastikan iklan hanya muncul 1x saja ke pengunjung (tidak muncul lagi saat klik Beranda atau refresh halaman)
       try {
-        const alreadySeen = sessionStorage.getItem('tbk_promo_popup_seen');
-        if (alreadySeen === 'true') {
+        const sessionSeen = sessionStorage.getItem('tbk_promo_popup_seen');
+        const localSeen = localStorage.getItem('tbk_promo_popup_seen');
+        const lastSeenImage = localStorage.getItem('tbk_promo_seen_image');
+
+        // Jika sudah pernah dilihat di sesi ini atau di browser ini dengan gambar yang sama, jangan munculkan lagi
+        if (sessionSeen === 'true' || localSeen === 'true' || lastSeenImage === promo.image) {
           return;
         }
+
         // Tandai langsung di sesi ini
         sessionStorage.setItem('tbk_promo_popup_seen', 'true');
       } catch {
-        // Abaikan jika browser membatasi sessionStorage
+        // Abaikan jika browser membatasi storage (private mode)
       }
 
       setMounted(true);
@@ -41,6 +46,10 @@ export default function PromoPopupModal({ promo }: PromoPopupModalProps) {
   const handleClose = () => {
     try {
       sessionStorage.setItem('tbk_promo_popup_seen', 'true');
+      localStorage.setItem('tbk_promo_popup_seen', 'true');
+      if (promo?.image) {
+        localStorage.setItem('tbk_promo_seen_image', promo.image);
+      }
     } catch {
       // Abaikan
     }
