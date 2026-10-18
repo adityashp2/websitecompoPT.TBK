@@ -1292,7 +1292,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   {activitiesList.map((item, idx) => (
                     <div
                       key={idx}
-                      className={`group flex flex-col justify-between space-y-3 bg-[#F4F7FC] p-4 rounded-2xl border border-[#DCE7F5] shadow-sm hover:shadow-md transition-shadow reveal-on-scroll ${item.delayClass} interactive-card`}
+                      className="group flex flex-col justify-between space-y-3 bg-[#F4F7FC] p-4 rounded-2xl border border-[#DCE7F5] shadow-sm hover:shadow-md transition-shadow interactive-card"
                     >
                       <div
                         className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-[#102D52] cursor-pointer"
