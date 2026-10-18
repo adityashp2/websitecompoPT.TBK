@@ -697,28 +697,28 @@ export default function AdminDashboard() {
       <div className="max-w-[1440px] mx-auto px-3.5 sm:px-6 lg:px-8 py-5 sm:py-7">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
           {/* Sidebar Tabs (Desktop >= lg) */}
-          <aside className="hidden lg:block lg:col-span-3 space-y-4 bg-[#071324] border border-slate-800/90 rounded-2xl p-3.5 shadow-xl shadow-slate-950/20 text-slate-200 sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto admin-sidebar-scroll">
+          <aside className="hidden lg:block lg:col-span-3 bg-[#071324] border border-slate-800/90 rounded-2xl p-2.5 shadow-xl shadow-slate-950/25 text-slate-200 sticky top-16 max-h-[calc(100vh-4.5rem)] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden admin-sidebar-scroll space-y-2.5">
             {/* GROUP 1: HALAMAN DEPAN (BERANDA) */}
-            <div className="space-y-1">
-              <div className="text-[10px] uppercase font-bold text-[#FF9D2E] px-3 py-1.5 tracking-wider flex items-center justify-between">
+            <div className="space-y-0.5">
+              <div className="text-[9.5px] uppercase font-bold text-[#FF9D2E] px-2.5 py-1 tracking-wider flex items-center justify-between">
                 <span>Tampilan Beranda</span>
-                <span className="text-[10px] text-slate-400 font-semibold font-mono">5 Menu</span>
+                <span className="text-[9.5px] text-slate-400 font-semibold font-mono">5 Menu</span>
               </div>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('banners')}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
+                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                   activeTab === 'banners'
                     ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <div className="flex items-center gap-2.5">
-                  <Film className={`w-4 h-4 shrink-0 ${activeTab === 'banners' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
-                  <span>Banner Promosi Atas</span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <Film className={`w-3.5 h-3.5 shrink-0 ${activeTab === 'banners' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                  <span className="truncate">Banner Promosi Atas</span>
                 </div>
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono font-bold ${
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold shrink-0 ml-1.5 ${
                   activeTab === 'banners' ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-slate-400 border border-slate-700/60'
                 }`}>
                   {content.bannerSlides?.length || 0}
@@ -728,30 +728,30 @@ export default function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setActiveTab('intro-features')}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
+                className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                   activeTab === 'intro-features'
                     ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <Sparkles className={`w-4 h-4 shrink-0 ${activeTab === 'intro-features' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
-                <span>Statistik &amp; Keunggulan</span>
+                <Sparkles className={`w-3.5 h-3.5 shrink-0 ${activeTab === 'intro-features' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                <span className="truncate">Statistik &amp; Keunggulan</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('buying-process')}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
+                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                   activeTab === 'buying-process'
                     ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <div className="flex items-center gap-2.5">
-                  <FileText className={`w-4 h-4 shrink-0 ${activeTab === 'buying-process' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
-                  <span>Alur Pembelian Rumah</span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <FileText className={`w-3.5 h-3.5 shrink-0 ${activeTab === 'buying-process' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                  <span className="truncate">Alur Pembelian Rumah</span>
                 </div>
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono font-bold ${
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold shrink-0 ml-1.5 ${
                   activeTab === 'buying-process' ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-slate-400 border border-slate-700/60'
                 }`}>
                   {content.buyingProcess?.steps?.length || 4}
@@ -761,31 +761,31 @@ export default function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setActiveTab('kpr-simulation')}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
+                className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                   activeTab === 'kpr-simulation'
                     ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <Calculator className={`w-4 h-4 shrink-0 ${activeTab === 'kpr-simulation' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
-                <span>Simulasi KPR FLPP 5%</span>
+                <Calculator className={`w-3.5 h-3.5 shrink-0 ${activeTab === 'kpr-simulation' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                <span className="truncate">Simulasi KPR FLPP 5%</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('promo-popup')}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
+                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                   activeTab === 'promo-popup'
                     ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <div className="flex items-center gap-2.5">
-                  <Megaphone className={`w-4 h-4 shrink-0 ${activeTab === 'promo-popup' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
-                  <span>Popup Iklan Promo</span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <Megaphone className={`w-3.5 h-3.5 shrink-0 ${activeTab === 'promo-popup' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                  <span className="truncate">Popup Iklan Promo</span>
                 </div>
                 <span
-                  className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${
+                  className={`text-[9px] px-1.5 py-0.2 rounded-full font-bold uppercase tracking-wider shrink-0 ml-1.5 ${
                     content.promoPopup?.enabled
                       ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
                       : 'bg-slate-800 text-slate-500'
@@ -797,52 +797,52 @@ export default function AdminDashboard() {
             </div>
 
             {/* GROUP 2: PROFIL PERUSAHAAN */}
-            <div className="space-y-1 pt-2.5 border-t border-slate-800">
-              <div className="text-[10px] uppercase font-bold text-[#FF9D2E] px-3 py-1.5 tracking-wider flex items-center justify-between">
+            <div className="space-y-0.5 pt-2 border-t border-slate-800/80">
+              <div className="text-[9.5px] uppercase font-bold text-[#FF9D2E] px-2.5 py-1 tracking-wider flex items-center justify-between">
                 <span>Profil Perusahaan</span>
-                <span className="text-[10px] text-slate-400 font-semibold font-mono">4 Menu</span>
+                <span className="text-[9.5px] text-slate-400 font-semibold font-mono">4 Menu</span>
               </div>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('branding')}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
+                className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                   activeTab === 'branding'
                     ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <Sparkles className={`w-4 h-4 shrink-0 ${activeTab === 'branding' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
-                <span>Branding, Logo &amp; Footer</span>
+                <Sparkles className={`w-3.5 h-3.5 shrink-0 ${activeTab === 'branding' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                <span className="truncate">Branding, Logo &amp; Footer</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('about')}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
+                className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                   activeTab === 'about'
                     ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <Building2 className={`w-4 h-4 shrink-0 ${activeTab === 'about' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
-                <span>Tentang, Visi &amp; Misi</span>
+                <Building2 className={`w-3.5 h-3.5 shrink-0 ${activeTab === 'about' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                <span className="truncate">Tentang, Visi &amp; Misi</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('leadership')}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
+                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                   activeTab === 'leadership'
                     ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <div className="flex items-center gap-2.5">
-                  <Users className={`w-4 h-4 shrink-0 ${activeTab === 'leadership' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
-                  <span>Dewan Pengurus</span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <Users className={`w-3.5 h-3.5 shrink-0 ${activeTab === 'leadership' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                  <span className="truncate">Dewan Pengurus</span>
                 </div>
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono font-bold ${
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold shrink-0 ml-1.5 ${
                   activeTab === 'leadership' ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-slate-400 border border-slate-700/60'
                 }`}>
                   {content.leadership?.members?.length || 0}
@@ -852,51 +852,51 @@ export default function AdminDashboard() {
               <button
                 type="button"
                 onClick={() => setActiveTab('legal')}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
+                className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                   activeTab === 'legal'
                     ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <ShieldCheck className={`w-4 h-4 shrink-0 ${activeTab === 'legal' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
-                <span>Legalitas &amp; Notaris</span>
+                <ShieldCheck className={`w-3.5 h-3.5 shrink-0 ${activeTab === 'legal' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                <span className="truncate">Legalitas &amp; Notaris</span>
               </button>
             </div>
 
             {/* GROUP 3: PROYEK & DOKUMENTASI */}
-            <div className="space-y-1 pt-2.5 border-t border-slate-800">
-              <div className="text-[10px] uppercase font-bold text-[#FF9D2E] px-3 py-1.5 tracking-wider flex items-center justify-between">
+            <div className="space-y-0.5 pt-2 border-t border-slate-800/80">
+              <div className="text-[9.5px] uppercase font-bold text-[#FF9D2E] px-2.5 py-1 tracking-wider flex items-center justify-between">
                 <span>Proyek &amp; Lapangan</span>
-                <span className="text-[10px] text-slate-400 font-semibold font-mono">2 Menu</span>
+                <span className="text-[9.5px] text-slate-400 font-semibold font-mono">2 Menu</span>
               </div>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('project')}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
+                className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                   activeTab === 'project'
                     ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <Building className={`w-4 h-4 shrink-0 ${activeTab === 'project' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
-                <span>Proyek Puri Gunung Langgar</span>
+                <Building className={`w-3.5 h-3.5 shrink-0 ${activeTab === 'project' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                <span className="truncate">Proyek Puri Gunung Langgar</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('activities')}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
+                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                   activeTab === 'activities'
                     ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <div className="flex items-center gap-2.5">
-                  <HardHat className={`w-4 h-4 shrink-0 ${activeTab === 'activities' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
-                  <span>Kegiatan Lapangan Riil</span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <HardHat className={`w-3.5 h-3.5 shrink-0 ${activeTab === 'activities' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                  <span className="truncate">Kegiatan Lapangan Riil</span>
                 </div>
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono font-bold ${
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold shrink-0 ml-1.5 ${
                   activeTab === 'activities' ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-slate-400 border border-slate-700/60'
                 }`}>
                   {content.activities?.items?.length || 0}
@@ -905,40 +905,40 @@ export default function AdminDashboard() {
             </div>
 
             {/* GROUP 4: INTERAKSI & FORMULIR */}
-            <div className="space-y-1 pt-2.5 border-t border-slate-800">
-              <div className="text-[10px] uppercase font-bold text-[#FF9D2E] px-3 py-1.5 tracking-wider flex items-center justify-between">
+            <div className="space-y-0.5 pt-2 border-t border-slate-800/80">
+              <div className="text-[9.5px] uppercase font-bold text-[#FF9D2E] px-2.5 py-1 tracking-wider flex items-center justify-between">
                 <span>Interaksi &amp; Kontak</span>
-                <span className="text-[10px] text-slate-400 font-semibold font-mono">2 Menu</span>
+                <span className="text-[9.5px] text-slate-400 font-semibold font-mono">2 Menu</span>
               </div>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('contact')}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
+                className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                   activeTab === 'contact'
                     ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <PhoneCall className={`w-4 h-4 shrink-0 ${activeTab === 'contact' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
-                <span>Kontak &amp; Alamat Kantor</span>
+                <PhoneCall className={`w-3.5 h-3.5 shrink-0 ${activeTab === 'contact' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                <span className="truncate">Kontak &amp; Alamat Kantor</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('inquiries')}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
+                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                   activeTab === 'inquiries'
                     ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
                 }`}
               >
-                <div className="flex items-center gap-2.5">
-                  <Inbox className={`w-4 h-4 shrink-0 ${activeTab === 'inquiries' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
-                  <span>Pesan Masuk (Formulir)</span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <Inbox className={`w-3.5 h-3.5 shrink-0 ${activeTab === 'inquiries' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
+                  <span className="truncate">Pesan Masuk (Formulir)</span>
                 </div>
                 {inquiries.length > 0 && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono font-bold animate-pulse">
+                  <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono font-bold animate-pulse shrink-0 ml-1.5">
                     {inquiries.length}
                   </span>
                 )}
