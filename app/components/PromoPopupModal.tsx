@@ -128,7 +128,7 @@ export default function PromoPopupModal({ promo }: PromoPopupModalProps) {
       role="dialog"
       aria-modal="true"
       aria-label="Iklan Promo Banner"
-      className={`fixed inset-0 z-[50000] flex items-center justify-center p-3 sm:p-5 md:p-6 bg-black/80 backdrop-blur-md select-none touch-none overscroll-none overflow-hidden transition-opacity duration-200 ${
+      className={`fixed inset-0 z-[200000] flex items-center justify-center p-3 sm:p-5 md:p-6 bg-black/80 backdrop-blur-md select-none touch-none overscroll-none overflow-hidden transition-opacity duration-200 ${
         animating ? 'opacity-100' : 'opacity-0'
       }`}
       onClick={(e) => {
@@ -139,7 +139,7 @@ export default function PromoPopupModal({ promo }: PromoPopupModalProps) {
     >
       {/* Banner Container: Dibuat Kotak Presisi (rounded-none) dengan Shadow Elegan */}
       <div
-        className={`relative inline-block max-w-[92vw] sm:max-w-md md:max-w-lg lg:max-w-xl max-h-[88vh] rounded-none shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] overflow-hidden transition-all duration-300 transform ${
+        className={`relative inline-block max-w-[92vw] sm:max-w-md md:max-w-lg lg:max-w-xl max-h-[86vh] rounded-none shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] overflow-hidden transition-all duration-300 transform ${
           animating ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'
         }`}
         onClick={(e) => e.stopPropagation()}
@@ -162,19 +162,19 @@ export default function PromoPopupModal({ promo }: PromoPopupModalProps) {
             rel="noopener noreferrer"
             onClick={handleClose}
             className="block cursor-pointer focus:outline-none group rounded-none"
-            title="Klik banner promo untuk informasi lebih lanjut"
+            aria-label="Kunjungi penawaran promo unit perumahan"
           >
             <img
               src={promo.image}
               alt={promo.title || 'Iklan Banner Promo PT. TBK'}
-              className="w-auto h-auto max-w-full max-h-[84vh] object-contain block mx-auto rounded-none transition-transform duration-300 group-hover:scale-[1.01]"
+              className="w-auto h-auto max-w-full max-h-[82vh] object-contain block mx-auto rounded-none transition-transform duration-300 group-hover:scale-[1.01]"
             />
           </a>
         ) : (
           <img
             src={promo.image}
             alt={promo.title || 'Iklan Banner Promo PT. TBK'}
-            className="w-auto h-auto max-w-full max-h-[84vh] object-contain block mx-auto rounded-none"
+            className="w-auto h-auto max-w-full max-h-[82vh] object-contain block mx-auto rounded-none"
           />
         )}
       </div>
