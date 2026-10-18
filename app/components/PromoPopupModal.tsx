@@ -9,27 +9,38 @@ interface PromoPopupModalProps {
   promo?: PromoPopup;
 }
 
+// In-memory flag: Memastikan saat pengunjung bernavigasi antar halaman di navbar (seperti klik "Beranda", "Proyek", dll),
+// iklan tidak akan muncul berulang kali (tidak spam).
+// Namun saat halaman di-refresh (F5 / buka baru), iklan tetap bisa muncul secara normal.
+let hasClosedPromoInSession = false;
+let lastPromoImage = '';
+
 export default function PromoPopupModal({ promo }: PromoPopupModalProps) {
   const [mounted, setMounted] = useState(false);
   const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
-    if (promo?.enabled && promo?.image) {
-      // Pastikan iklan hanya muncul 1x saja ke pengunjung (tidak muncul lagi saat klik Beranda atau refresh halaman)
-      try {
-        const sessionSeen = sessionStorage.getItem('tbk_promo_popup_seen');
-        const localSeen = localStorage.getItem('tbk_promo_popup_seen');
-        const lastSeenImage = localStorage.getItem('tbk_promo_seen_image');
-
-        // Jika sudah pernah dilihat di sesi ini atau di browser ini dengan gambar yang sama, jangan munculkan lagi
-        if (sessionSeen === 'true' || localSeen === 'true' || lastSeenImage === promo.image) {
-          return;
+    // Bersihkan semua flag pemblokir lama di localStorage dan sessionStorage agar browser yang sebelumnya terkunci langsung terbuka
+    try {
+      localStorage.removeItem('tbk_promo_popup_seen');
+      for (let i = sessionStorage.length - 1; i >= 0; i--) {
+        const key = sessionStorage.key(i);
+        if (key && (key.startsWith('tbk_promo_') || key === 'tbk_promo_popup_seen')) {
+          sessionStorage.removeItem(key);
         }
+      }
+    } catch {}
 
-        // Tandai langsung di sesi ini
-        sessionStorage.setItem('tbk_promo_popup_seen', 'true');
-      } catch {
-        // Abaikan jika browser membatasi storage (private mode)
+    if (promo?.enabled && promo?.image) {
+      // Jika gambar promo diganti oleh admin, reset status tutup agar promo baru langsung tampil
+      if (lastPromoImage && lastPromoImage !== promo.image) {
+        hasClosedPromoInSession = false;
+      }
+      lastPromoImage = promo.image;
+
+      // Jika user sudah pernah menutup iklan dalam alur navigasi halaman ini, jangan munculkan lagi saat klik Beranda
+      if (hasClosedPromoInSession) {
+        return;
       }
 
       setMounted(true);
@@ -44,15 +55,10 @@ export default function PromoPopupModal({ promo }: PromoPopupModalProps) {
   }, [promo?.enabled, promo?.image]);
 
   const handleClose = () => {
+    hasClosedPromoInSession = true;
     try {
-      sessionStorage.setItem('tbk_promo_popup_seen', 'true');
-      localStorage.setItem('tbk_promo_popup_seen', 'true');
-      if (promo?.image) {
-        localStorage.setItem('tbk_promo_seen_image', promo.image);
-      }
-    } catch {
-      // Abaikan
-    }
+      localStorage.removeItem('tbk_promo_popup_seen');
+    } catch {}
     setAnimating(false);
     setTimeout(() => {
       setMounted(false);
