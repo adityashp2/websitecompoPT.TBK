@@ -54,7 +54,6 @@ interface Inquiry {
 export type AdminTab =
   | 'banners'
   | 'intro-features'
-  | 'hero'
   | 'buying-process'
   | 'kpr-simulation'
   | 'promo-popup'
@@ -82,13 +81,8 @@ const TAB_GROUPS: Record<
   },
   'intro-features': {
     group: 'Tampilan Beranda',
-    title: 'Intro & 4 Keunggulan Utama',
-    desc: 'Atur pesan sambutan dan 4 kartu poin keunggulan utama PT. TBK.',
-  },
-  hero: {
-    group: 'Tampilan Beranda',
-    title: 'Hero Section & Statistik Utama',
-    desc: 'Atur headline utama, subheadline, angka statistik, dan media video/foto hero.',
+    title: 'Statistik & Keunggulan Beranda',
+    desc: 'Kelola 4 indikator rekam jejak perseroan (bar biru di bawah banner), narasi sambutan, dan 4 kartu keunggulan PT. TBK.',
   },
   'buying-process': {
     group: 'Tampilan Beranda',
@@ -153,8 +147,6 @@ const renderTabIcon = (tab: AdminTab) => {
       return <Film className="w-5 h-5 text-[#FF9D2E]" />;
     case 'intro-features':
       return <Sparkles className="w-5 h-5 text-[#FF9D2E]" />;
-    case 'hero':
-      return <Home className="w-5 h-5 text-[#FF9D2E]" />;
     case 'buying-process':
       return <FileText className="w-5 h-5 text-[#FF9D2E]" />;
     case 'kpr-simulation':
@@ -710,7 +702,7 @@ export default function AdminDashboard() {
             <div className="space-y-1">
               <div className="text-[10px] uppercase font-bold text-[#FF9D2E] px-3 py-1.5 tracking-wider flex items-center justify-between">
                 <span>Tampilan Beranda</span>
-                <span className="text-[10px] text-slate-400 font-semibold font-mono">6 Menu</span>
+                <span className="text-[10px] text-slate-400 font-semibold font-mono">5 Menu</span>
               </div>
 
               <button
@@ -743,20 +735,7 @@ export default function AdminDashboard() {
                 }`}
               >
                 <Sparkles className={`w-4 h-4 shrink-0 ${activeTab === 'intro-features' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
-                <span>Intro &amp; 4 Keunggulan</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('hero')}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all ${
-                  activeTab === 'hero'
-                    ? 'bg-gradient-to-r from-[#FF9D2E] to-[#F28A17] text-slate-950 font-bold shadow-md shadow-[#FF9D2E]/20'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
-                }`}
-              >
-                <Home className={`w-4 h-4 shrink-0 ${activeTab === 'hero' ? 'text-slate-950' : 'text-[#FF9D2E]'}`} />
-                <span>Hero &amp; Statistik Utama</span>
+                <span>Statistik &amp; Keunggulan</span>
               </button>
 
               <button
@@ -975,7 +954,7 @@ export default function AdminDashboard() {
                 <span className="text-xs font-bold text-white uppercase tracking-wider">Bagian Konten Aktif</span>
               </div>
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-[#FF9D2E] border border-[#FF9D2E]/30 font-mono font-semibold">
-                14 Menu
+                13 Menu
               </span>
             </div>
 
@@ -994,8 +973,7 @@ export default function AdminDashboard() {
                 >
                   <optgroup label="TAMPILAN BERANDA">
                     <option value="banners">Banner Promosi Atas ({content.bannerSlides?.length || 0})</option>
-                    <option value="intro-features">Intro &amp; 4 Keunggulan</option>
-                    <option value="hero">Hero &amp; Statistik Utama</option>
+                    <option value="intro-features">Statistik &amp; Keunggulan</option>
                     <option value="buying-process">Alur Pembelian Rumah</option>
                     <option value="kpr-simulation">Simulasi KPR FLPP 5%</option>
                     <option value="promo-popup">Popup Iklan Promo ({content.promoPopup?.enabled ? 'AKTIF' : 'OFF'})</option>
@@ -1026,7 +1004,6 @@ export default function AdminDashboard() {
               {[
                 { id: 'banners', label: 'Banner' },
                 { id: 'intro-features', label: 'Keunggulan' },
-                { id: 'hero', label: 'Statistik' },
                 { id: 'buying-process', label: 'Alur Beli' },
                 { id: 'kpr-simulation', label: 'KPR FLPP' },
                 { id: 'promo-popup', label: 'Iklan Promo' },
@@ -1563,11 +1540,69 @@ export default function AdminDashboard() {
                 <div className="border-b border-[#DCE7F5] pb-4">
                   <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
                     <Sparkles className="w-5 h-5 text-[#FF9D2E]" />
-                    Intro Beranda & 4 Kartu Keunggulan
+                    Statistik &amp; Keunggulan Beranda
                   </h2>
                   <p className="text-xs text-[#526783] mt-1">
-                    Kelola teks narasi singkat di beranda (bawah banner) dan 4 kartu keunggulan utama PT. Terbang Bersama Kawan.
+                    Kelola 4 angka indikator rekam jejak perseroan (bar biru di bawah banner), narasi sambutan, dan 4 kartu keunggulan PT. TBK.
                   </p>
+                </div>
+
+                {/* 1. 4 STATISTIK & REKAM JEJAK PERSEROAN */}
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-4 shadow-xs">
+                  <div className="border-b border-[#DCE7F5] pb-3">
+                    <h3 className="text-sm font-bold text-[#073B78] uppercase tracking-wider flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-[#FF9D2E]" />
+                      <span>4 Indikator Rekam Jejak Perseroan (Bar Biru Beranda)</span>
+                    </h3>
+                    <p className="text-xs text-[#526783] mt-0.5">
+                      Nilai dan label resmi yang tampil pada bar biru tepat di bawah banner berjalan beranda.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {(content.hero?.stats || [
+                      { label: "Domisili Perusahaan", value: "Bandar Lampung" },
+                      { label: "Pengesahan Kemenkumham", value: "2021" },
+                      { label: "Proyek Utama", value: "Puri Gunung Langgar" },
+                      { label: "Kategori Pembangunan", value: "Hunian Bersubsidi" }
+                    ]).map((stat, idx) => (
+                      <div key={idx} className="p-3.5 rounded-xl bg-white border border-[#DCE7F5] space-y-2">
+                        <span className="text-[10px] font-bold text-[#FF9D2E] uppercase">Indikator #{idx + 1}</span>
+                        <div>
+                          <label className="text-[11px] text-[#526783] block font-medium mb-1">Nilai / Angka</label>
+                          <input
+                            type="text"
+                            value={stat.value}
+                            onChange={(e) => {
+                              const newStats = [...(content.hero?.stats || [])];
+                              newStats[idx] = { ...newStats[idx], value: e.target.value };
+                              setContent({
+                                ...content,
+                                hero: { ...content.hero, stats: newStats },
+                              });
+                            }}
+                            className="w-full px-3 py-1.5 rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] text-[#102D52] text-xs font-bold"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[11px] text-[#526783] block font-medium mb-1">Keterangan Label</label>
+                          <input
+                            type="text"
+                            value={stat.label}
+                            onChange={(e) => {
+                              const newStats = [...(content.hero?.stats || [])];
+                              newStats[idx] = { ...newStats[idx], label: e.target.value };
+                              setContent({
+                                ...content,
+                                hero: { ...content.hero, stats: newStats },
+                              });
+                            }}
+                            className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-[#526783] text-xs"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Bagian Kiri: Headline & Intro Beranda */}
@@ -3020,478 +3055,6 @@ export default function AdminDashboard() {
               </div>
             )}
 
-            {/* TAB: HERO */}
-            {activeTab === 'hero' && (
-              <div className="space-y-6">
-                <div className="border-b border-[#DCE7F5] pb-4">
-                  <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-[#FF9D2E]" />
-                    Pengaturan Hero & Banner Utama
-                  </h2>
-                  <p className="text-xs text-[#526783] mt-1">
-                    Ubah teks judul, subjudul, tombol CTA, latar belakang, dan 4 kartu statistik di bagian atas website.
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-bold text-[#073B78] mb-1">
-                      Label Badge Atas
-                    </label>
-                    <input
-                      type="text"
-                      value={content.hero.badge}
-                      onChange={(e) =>
-                        setContent({
-                          ...content,
-                          hero: { ...content.hero, badge: e.target.value },
-                        })
-                      }
-                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-[#073B78] mb-1">
-                      Judul Utama (Heading)
-                    </label>
-                    <input
-                      type="text"
-                      value={content.hero.heading}
-                      onChange={(e) =>
-                        setContent({
-                          ...content,
-                          hero: { ...content.hero, heading: e.target.value },
-                        })
-                      }
-                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-[#073B78] mb-1">
-                      Deskripsi / Subheading
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={content.hero.subheading}
-                      onChange={(e) =>
-                        setContent({
-                          ...content,
-                          hero: { ...content.hero, subheading: e.target.value },
-                        })
-                      }
-                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-[#073B78] mb-1">
-                        Teks Tombol Utama
-                      </label>
-                      <input
-                        type="text"
-                        value={content.hero.primaryCtaText}
-                        onChange={(e) =>
-                          setContent({
-                            ...content,
-                            hero: { ...content.hero, primaryCtaText: e.target.value },
-                          })
-                        }
-                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-[#073B78] mb-1">
-                        Link Tombol Utama (contoh: #proyek)
-                      </label>
-                      <input
-                        type="text"
-                        value={content.hero.primaryCtaLink}
-                        onChange={(e) =>
-                          setContent({
-                            ...content,
-                            hero: { ...content.hero, primaryCtaLink: e.target.value },
-                          })
-                        }
-                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-[#073B78] mb-1">
-                        Teks Tombol Sekunder
-                      </label>
-                      <input
-                        type="text"
-                        value={content.hero.secondaryCtaText}
-                        onChange={(e) =>
-                          setContent({
-                            ...content,
-                            hero: { ...content.hero, secondaryCtaText: e.target.value },
-                          })
-                        }
-                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-[#073B78] mb-1">
-                        Link Tombol Sekunder (contoh: #kontak)
-                      </label>
-                      <input
-                        type="text"
-                        value={content.hero.secondaryCtaLink}
-                        onChange={(e) =>
-                          setContent({
-                            ...content,
-                            hero: { ...content.hero, secondaryCtaLink: e.target.value },
-                          })
-                        }
-                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Hero Background Image */}
-                  <div className="p-4 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-3">
-                    <label className="block text-xs font-bold text-[#073B78]">
-                      Gambar Latar Belakang Hero (Full Header Background)
-                    </label>
-                    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                      <div className="w-24 h-16 rounded-lg bg-black/40 border border-[#DCE7F5] overflow-hidden shrink-0 flex items-center justify-center">
-                        {content.hero.backgroundImage ? (
-                          <img
-                            src={content.hero.backgroundImage}
-                            alt="Preview Hero Background"
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <ImageIcon className="w-6 h-6 text-[#526783]" />
-                        )}
-                      </div>
-                      <div className="flex-1 w-full space-y-2">
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="text"
-                            placeholder="URL atau path gambar latar hero"
-                            value={content.hero.backgroundImage || ''}
-                            onChange={(e) =>
-                              setContent({
-                                ...content,
-                                hero: { ...content.hero, backgroundImage: e.target.value },
-                              })
-                            }
-                            className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-mono"
-                          />
-                          <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0 transition-colors">
-                            <Upload className="w-3.5 h-3.5" />
-                            <span>{uploadingKey === 'hero-bg' ? 'Mengupload...' : 'Upload Foto'}</span>
-                            <input
-                              type="file"
-                              accept="image/*"
-                              className="hidden"
-                              disabled={uploadingKey === 'hero-bg'}
-                              onClick={(e) => {
-                                (e.target as HTMLInputElement).value = '';
-                              }}
-                              onChange={(e) => {
-                                if (e.target.files && e.target.files[0]) {
-                                  handleGenericFileUpload(e.target.files[0], 'hero-bg', (url) => {
-                                    setContent({
-                                      ...content,
-                                      hero: { ...content.hero, backgroundImage: url },
-                                    });
-                                    setSaveStatus({
-                                      type: 'success',
-                                      message: 'Foto latar hero berhasil diupload! Klik "Simpan Perubahan" di pojok kanan atas untuk menerapkannya ke website.',
-                                    });
-                                  });
-                                }
-                              }}
-                            />
-                          </label>
-                          {content.hero.backgroundImage && (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setContent({
-                                  ...content,
-                                  hero: { ...content.hero, backgroundImage: '' },
-                                });
-                                setSaveStatus({
-                                  type: 'success',
-                                  message: 'Foto latar hero dihapus. Klik "Simpan Perubahan" di pojok kanan atas untuk menerapkan.',
-                                });
-                              }}
-                              className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-colors"
-                              title="Hapus foto background"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          )}
-                        </div>
-                        {uploadError && (
-                          <div className="p-2 rounded bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
-                            {uploadError}
-                          </div>
-                        )}
-                        <p className="text-[11px] text-[#526783]">
-                          Format: JPG, PNG, atau WebP (disarankan orientasi lanskap 1920x1080).
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* SLIDESHOW MANAGER UNTUK HERO */}
-                  <div className="pt-6 border-t border-[#DCE7F5] space-y-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                      <div>
-                        <label className="block text-sm font-bold text-[#073B78] uppercase tracking-wider">
-                          Slideshow Foto Unit / Kawasan Hero (Otomatis)
-                        </label>
-                        <p className="text-xs text-[#526783] mt-0.5">
-                          Kelola foto-foto yang bergeser otomatis di bagian kanan hero website.
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {content.hero.slides && content.hero.slides.length > 0 && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              if (window.confirm('Kosongkan semua foto slideshow hero?')) {
-                                setContent({
-                                  ...content,
-                                  hero: { ...content.hero, slides: [] },
-                                });
-                                setSaveStatus({
-                                  type: 'success',
-                                  message: 'Semua foto slideshow hero dikosongkan! Klik "Simpan ke SQL" di kanan atas untuk menyimpan secara permanen.',
-                                });
-                              }
-                            }}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-semibold transition-all"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                            <span>Kosongkan Slide</span>
-                          </button>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const currentSlides = content.hero.slides || [];
-                            setContent({
-                              ...content,
-                              hero: {
-                                ...content.hero,
-                                slides: [
-                                  ...currentSlides,
-                                  {
-                                    image: '',
-                                    caption: 'Unit Puri Gunung Langgar, Tanjung Bintang, Lampung Selatan.',
-                                  },
-                                ],
-                              },
-                            });
-                          }}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs transition-all"
-                        >
-                          <Plus className="w-3.5 h-3.5" />
-                          <span>Tambah Slide</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      {(content.hero.slides || []).map((slide, idx) => (
-                        <div
-                          key={idx}
-                          className="p-4 bg-[#F8FAFD] rounded-xl border border-[#DCE7F5] space-y-3 relative group"
-                        >
-                          <div className="flex items-center justify-between border-b border-[#DCE7F5] pb-2">
-                            <span className="text-xs font-bold text-[#526783]">
-                              Slide #{idx + 1}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const newSlides = [...(content.hero.slides || [])];
-                                newSlides.splice(idx, 1);
-                                setContent({
-                                  ...content,
-                                  hero: { ...content.hero, slides: newSlides },
-                                });
-                                setSaveStatus({
-                                  type: 'success',
-                                  message: 'Slide foto hero berhasil dihapus! Klik "Simpan ke SQL" di kanan atas untuk menyimpan secara permanen.',
-                                });
-                              }}
-                              className="text-red-400 hover:text-red-300 p-1 rounded hover:bg-red-500/10 transition-colors text-xs flex items-center gap-1"
-                              title="Hapus slide ini"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                              <span>Hapus</span>
-                            </button>
-                          </div>
-
-                          <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
-                            {/* Preview thumbnail */}
-                            <div className="sm:col-span-3">
-                              <div className="aspect-[4/3] w-full rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] overflow-hidden flex items-center justify-center">
-                                {slide.image && slide.image.trim() !== '' ? (
-                                  <img
-                                    src={slide.image}
-                                    alt={`Preview Slide ${idx + 1}`}
-                                    className="w-full h-full object-cover"
-                                  />
-                                ) : (
-                                  <span className="text-[11px] text-[#526783] text-center px-2">
-                                    [Kotak Abu Standar]
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-
-                            {/* Inputs */}
-                            <div className="sm:col-span-9 space-y-2">
-                              <div>
-                                <label className="block text-[11px] font-medium text-[#526783] mb-0.5">
-                                  Foto Slide (Upload dari perangkat atau masukkan URL)
-                                </label>
-                                <div className="flex items-center gap-2">
-                                  <input
-                                    type="text"
-                                    placeholder="misal: /uploads/... atau URL gambar"
-                                    value={slide.image || ''}
-                                    onChange={(e) => {
-                                      const newSlides = [...(content.hero.slides || [])];
-                                      newSlides[idx].image = e.target.value;
-                                      setContent({
-                                        ...content,
-                                        hero: { ...content.hero, slides: newSlides },
-                                      });
-                                    }}
-                                    className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-mono"
-                                  />
-                                  <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0 transition-colors">
-                                    <Upload className="w-3.5 h-3.5" />
-                                    <span>{uploadingKey === `hero-slide-${idx}` ? 'Mengupload...' : 'Upload Foto'}</span>
-                                    <input
-                                      type="file"
-                                      accept="image/*"
-                                      className="hidden"
-                                      disabled={uploadingKey === `hero-slide-${idx}`}
-                                      onChange={(e) => {
-                                        if (e.target.files && e.target.files[0]) {
-                                          handleGenericFileUpload(e.target.files[0], `hero-slide-${idx}`, (url) => {
-                                            const newSlides = [...(content.hero.slides || [])];
-                                            newSlides[idx].image = url;
-                                            setContent({
-                                              ...content,
-                                              hero: { ...content.hero, slides: newSlides },
-                                            });
-                                          });
-                                        }
-                                      }}
-                                    />
-                                  </label>
-                                  {slide.image && (
-                                    <button
-                                      type="button"
-                                      onClick={() => {
-                                        const newSlides = [...(content.hero.slides || [])];
-                                        newSlides[idx].image = '';
-                                        setContent({
-                                          ...content,
-                                          hero: { ...content.hero, slides: newSlides },
-                                        });
-                                      }}
-                                      className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-colors"
-                                      title="Hapus foto dari slide ini"
-                                    >
-                                      <Trash2 className="w-4 h-4" />
-                                    </button>
-                                  )}
-                                </div>
-                              </div>
-
-                              <div>
-                                <label className="block text-[11px] font-medium text-[#526783] mb-0.5">
-                                  Teks Caption di Bawah Foto (13px abu-abu)
-                                </label>
-                                <input
-                                  type="text"
-                                  placeholder="Keterangan unit..."
-                                  value={slide.caption}
-                                  onChange={(e) => {
-                                    const newSlides = [...(content.hero.slides || [])];
-                                    newSlides[idx].caption = e.target.value;
-                                    setContent({
-                                      ...content,
-                                      hero: { ...content.hero, slides: newSlides },
-                                    });
-                                  }}
-                                  className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-
-                      {(!content.hero.slides || content.hero.slides.length === 0) && (
-                        <div className="p-4 bg-[#F8FAFD] rounded-xl border border-dashed border-[#DCE7F5] text-center text-xs text-[#526783]">
-                          Belum ada slide khusus. Slideshow akan menampilkan slide standar default.
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="pt-4 border-t border-[#DCE7F5]">
-                    <label className="block text-xs font-bold text-[#FF9D2E] uppercase tracking-wider mb-3">
-                      4 Kartu Ringkasan Hero (Stats)
-                    </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {content.hero.stats?.map((stat, idx) => (
-                        <div key={idx} className="p-3 bg-[#F8FAFD] rounded-xl border border-[#DCE7F5] space-y-2">
-                          <input
-                            type="text"
-                            placeholder="Label (contoh: Domisili)"
-                            value={stat.label}
-                            onChange={(e) => {
-                              const newStats = [...content.hero.stats];
-                              newStats[idx].label = e.target.value;
-                              setContent({
-                                ...content,
-                                hero: { ...content.hero, stats: newStats },
-                              });
-                            }}
-                            className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783]"
-                          />
-                          <input
-                            type="text"
-                            placeholder="Nilai (contoh: Bandar Lampung)"
-                            value={stat.value}
-                            onChange={(e) => {
-                              const newStats = [...content.hero.stats];
-                              newStats[idx].value = e.target.value;
-                              setContent({
-                                ...content,
-                                hero: { ...content.hero, stats: newStats },
-                              });
-                            }}
-                            className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#C76A08] font-bold"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
             {/* TAB: ABOUT & VISION MISSION */}
             {activeTab === 'about' && (
               <div className="space-y-6">
@@ -3735,6 +3298,115 @@ export default function AdminDashboard() {
                         placeholder="Contoh: Kantor Pusat - Bandar Lampung, Provinsi Lampung"
                         className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
+                    </div>
+                  </div>
+
+                  {/* 4 Pilar Kepercayaan / Nilai Mutu Perusahaan */}
+                  <div className="p-4 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <label className="block text-xs font-bold text-[#073B78] uppercase tracking-wider">
+                          4 Pilar Kepercayaan / Standar Mutu ({content.about.values?.length || 4} Nilai)
+                        </label>
+                        <p className="text-[11px] text-[#526783]">
+                          Tampil di halaman /tentang sebagai 4 kartu pilar integritas pembangunan perseroan.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const curr = content.about.values || [
+                            {
+                              title: "Legalitas & Kepastian Hukum",
+                              desc: "Beroperasi berlandaskan Akta Pendirian Notaris resmi dan SK Pengesahan Kemenkumham RI Tahun 2021 untuk keamanan hak kepemilikan konsumen."
+                            },
+                            {
+                              title: "Standar Mutu Konstruksi",
+                              desc: "Pondasi batu belah, struktur beton bertulang, dinding plester aci, dan sanitasi terencana sesuai standar teknis Kementerian PUPR."
+                            },
+                            {
+                              title: "Kemitraan Perbankan FLPP",
+                              desc: "Bekerja sama dengan bank penyalur KPR bersubsidi guna memudahkan proses persetujuan kredit dengan suku bunga ringan flat 5%."
+                            },
+                            {
+                              title: "Transparansi Layanan",
+                              desc: "Keterbukaan informasi harga, tahapan berkas, progres fisik lapangan, serta pendampingan langsung hingga serah terima kunci unit."
+                            }
+                          ];
+                          setContent({
+                            ...content,
+                            about: {
+                              ...content.about,
+                              values: [...curr, { title: 'Pilar Baru', desc: 'Deskripsi pilar integritas perseroan...' }],
+                            },
+                          });
+                        }}
+                        className="px-2.5 py-1 rounded bg-[#FFF7EB] text-[#C76A08] hover:bg-[#FF9D2E]/30 text-xs flex items-center gap-1"
+                      >
+                        <Plus className="w-3 h-3" /> Tambah Pilar
+                      </button>
+                    </div>
+
+                    <div className="space-y-3">
+                      {(content.about.values || [
+                        {
+                          title: "Legalitas & Kepastian Hukum",
+                          desc: "Beroperasi berlandaskan Akta Pendirian Notaris resmi dan SK Pengesahan Kemenkumham RI Tahun 2021 untuk keamanan hak kepemilikan konsumen."
+                        },
+                        {
+                          title: "Standar Mutu Konstruksi",
+                          desc: "Pondasi batu belah, struktur beton bertulang, dinding plester aci, dan sanitasi terencana sesuai standar teknis Kementerian PUPR."
+                        },
+                        {
+                          title: "Kemitraan Perbankan FLPP",
+                          desc: "Bekerja sama dengan bank penyalur KPR bersubsidi guna memudahkan proses persetujuan kredit dengan suku bunga ringan flat 5%."
+                        },
+                        {
+                          title: "Transparansi Layanan",
+                          desc: "Keterbukaan informasi harga, tahapan berkas, progres fisik lapangan, serta pendampingan langsung hingga serah terima kunci unit."
+                        }
+                      ]).map((val, idx) => (
+                        <div key={idx} className="p-3.5 rounded-xl bg-white border border-[#DCE7F5] space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-bold text-[#FF9D2E] uppercase">Pilar #{idx + 1}</span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const curr = content.about.values || [];
+                                setContent({
+                                  ...content,
+                                  about: { ...content.about, values: curr.filter((_, i) => i !== idx) },
+                                });
+                              }}
+                              className="text-rose-400 hover:text-rose-600 p-1"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={val.title}
+                            onChange={(e) => {
+                              const curr = [...(content.about.values || [])];
+                              curr[idx].title = e.target.value;
+                              setContent({ ...content, about: { ...content.about, values: curr } });
+                            }}
+                            placeholder="Judul Pilar (misal: Legalitas & Kepastian Hukum)"
+                            className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs font-bold text-[#102D52]"
+                          />
+                          <textarea
+                            rows={2}
+                            value={val.desc}
+                            onChange={(e) => {
+                              const curr = [...(content.about.values || [])];
+                              curr[idx].desc = e.target.value;
+                              setContent({ ...content, about: { ...content.about, values: curr } });
+                            }}
+                            placeholder="Uraian pilar mutu dan komitmen perseroan..."
+                            className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783]"
+                          />
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -5182,6 +4854,390 @@ export default function AdminDashboard() {
                           </button>
                         </div>
                       ))}
+                    </div>
+                  </div>
+
+                  {/* Highlights Bar Editor */}
+                  <div className="pt-4 border-t border-[#DCE7F5] space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <label className="block text-xs font-bold text-[#073B78] uppercase tracking-wider">
+                          Bar Ringkasan Cepat Halaman Proyek ({content.project.highlights?.length || 4} Indikator)
+                        </label>
+                        <p className="text-[11px] text-[#526783]">
+                          Muncul tepat di bawah header halaman proyek (Tipe Rumah, Bunga KPR, Status Lahan, dsb).
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const curr = content.project.highlights || [
+                            { label: "Tipe Rumah", value: "Tipe 36 / 72 m²", subtext: "Luas Bangunan & Kavling", icon: "home" },
+                            { label: "Suku Bunga KPR", value: "5.0% Flat", subtext: "FLPP Tetap Sampai Lunas", icon: "calculator" },
+                            { label: "Legalitas Lahan", value: "Sertifikat Resmi", subtext: "Proses Pemecahan BPN", icon: "shield" },
+                            { label: "Status Proyek", value: "Tahap Konstruksi", subtext: "Pematangan Lahan & Struktur", icon: "hardhat" }
+                          ];
+                          setContent({
+                            ...content,
+                            project: {
+                              ...content.project,
+                              highlights: [...curr, { label: 'Label Baru', value: 'Nilai Baru', subtext: 'Keterangan', icon: 'home' }],
+                            },
+                          });
+                        }}
+                        className="px-2.5 py-1 rounded bg-[#FFF7EB] text-[#C76A08] hover:bg-[#FF9D2E]/30 text-xs flex items-center gap-1"
+                      >
+                        <Plus className="w-3 h-3" /> Tambah Indikator
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {(content.project.highlights || [
+                        { label: "Tipe Rumah", value: "Tipe 36 / 72 m²", subtext: "Luas Bangunan & Kavling", icon: "home" },
+                        { label: "Suku Bunga KPR", value: "5.0% Flat", subtext: "FLPP Tetap Sampai Lunas", icon: "calculator" },
+                        { label: "Legalitas Lahan", value: "Sertifikat Resmi", subtext: "Proses Pemecahan BPN", icon: "shield" },
+                        { label: "Status Proyek", value: "Tahap Konstruksi", subtext: "Pematangan Lahan & Struktur", icon: "hardhat" }
+                      ]).map((hl, idx) => (
+                        <div key={idx} className="p-3 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-bold text-[#FF9D2E] uppercase">Indikator #{idx + 1}</span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const curr = content.project.highlights || [
+                                  { label: "Tipe Rumah", value: "Tipe 36 / 72 m²", subtext: "Luas Bangunan & Kavling", icon: "home" },
+                                  { label: "Suku Bunga KPR", value: "5.0% Flat", subtext: "FLPP Tetap Sampai Lunas", icon: "calculator" },
+                                  { label: "Legalitas Lahan", value: "Sertifikat Resmi", subtext: "Proses Pemecahan BPN", icon: "shield" },
+                                  { label: "Status Proyek", value: "Tahap Konstruksi", subtext: "Pematangan Lahan & Struktur", icon: "hardhat" }
+                                ];
+                                setContent({
+                                  ...content,
+                                  project: { ...content.project, highlights: curr.filter((_, i) => i !== idx) },
+                                });
+                              }}
+                              className="text-rose-400 hover:text-rose-600 p-1"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          <div className="space-y-1.5">
+                            <input
+                              type="text"
+                              placeholder="Label (contoh: Tipe Rumah)"
+                              value={hl.label}
+                              onChange={(e) => {
+                                const curr = [...(content.project.highlights || [
+                                  { label: "Tipe Rumah", value: "Tipe 36 / 72 m²", subtext: "Luas Bangunan & Kavling", icon: "home" },
+                                  { label: "Suku Bunga KPR", value: "5.0% Flat", subtext: "FLPP Tetap Sampai Lunas", icon: "calculator" },
+                                  { label: "Legalitas Lahan", value: "Sertifikat Resmi", subtext: "Proses Pemecahan BPN", icon: "shield" },
+                                  { label: "Status Proyek", value: "Tahap Konstruksi", subtext: "Pematangan Lahan & Struktur", icon: "hardhat" }
+                                ])];
+                                curr[idx].label = e.target.value;
+                                setContent({ ...content, project: { ...content.project, highlights: curr } });
+                              }}
+                              className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783]"
+                            />
+                            <input
+                              type="text"
+                              placeholder="Nilai Utama (contoh: Tipe 36 / 72 m²)"
+                              value={hl.value}
+                              onChange={(e) => {
+                                const curr = [...(content.project.highlights || [
+                                  { label: "Tipe Rumah", value: "Tipe 36 / 72 m²", subtext: "Luas Bangunan & Kavling", icon: "home" },
+                                  { label: "Suku Bunga KPR", value: "5.0% Flat", subtext: "FLPP Tetap Sampai Lunas", icon: "calculator" },
+                                  { label: "Legalitas Lahan", value: "Sertifikat Resmi", subtext: "Proses Pemecahan BPN", icon: "shield" },
+                                  { label: "Status Proyek", value: "Tahap Konstruksi", subtext: "Pematangan Lahan & Struktur", icon: "hardhat" }
+                                ])];
+                                curr[idx].value = e.target.value;
+                                setContent({ ...content, project: { ...content.project, highlights: curr } });
+                              }}
+                              className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-bold"
+                            />
+                            <input
+                              type="text"
+                              placeholder="Subteks (contoh: Luas Bangunan & Kavling)"
+                              value={hl.subtext}
+                              onChange={(e) => {
+                                const curr = [...(content.project.highlights || [
+                                  { label: "Tipe Rumah", value: "Tipe 36 / 72 m²", subtext: "Luas Bangunan & Kavling", icon: "home" },
+                                  { label: "Suku Bunga KPR", value: "5.0% Flat", subtext: "FLPP Tetap Sampai Lunas", icon: "calculator" },
+                                  { label: "Legalitas Lahan", value: "Sertifikat Resmi", subtext: "Proses Pemecahan BPN", icon: "shield" },
+                                  { label: "Status Proyek", value: "Tahap Konstruksi", subtext: "Pematangan Lahan & Struktur", icon: "hardhat" }
+                                ])];
+                                curr[idx].subtext = e.target.value;
+                                setContent({ ...content, project: { ...content.project, highlights: curr } });
+                              }}
+                              className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-[11px] text-[#526783]"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Floor Plan Editor */}
+                  <div className="pt-4 border-t border-[#DCE7F5] space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <label className="block text-xs font-bold text-[#073B78] uppercase tracking-wider">
+                          Denah & Pembagian Ruang Hunian ({content.project.floorPlan?.length || 6} Ruangan)
+                        </label>
+                        <p className="text-[11px] text-[#526783]">
+                          Kelola ukuran dan rincian ruangan tipe hunian (Kamar tidur, ruang keluarga, dsb).
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const curr = content.project.floorPlan || [
+                            { label: "Kamar Tidur Utama", value: "3.00 × 3.00 m" },
+                            { label: "Kamar Tidur Anak", value: "3.00 × 2.75 m" },
+                            { label: "Ruang Tamu & Keluarga", value: "Terbuka & Fleksibel" },
+                            { label: "Kamar Mandi / WC", value: "1.50 × 1.50 m" },
+                            { label: "Halaman Depan & Carport", value: "Tersedia Area Parkir" },
+                            { label: "Sisa Lahan Belakang", value: "Bisa untuk Dapur / Taman" }
+                          ];
+                          setContent({
+                            ...content,
+                            project: {
+                              ...content.project,
+                              floorPlan: [...curr, { label: 'Ruangan Baru', value: '3.00 × 3.00 m' }],
+                            },
+                          });
+                        }}
+                        className="px-2.5 py-1 rounded bg-[#FFF7EB] text-[#C76A08] hover:bg-[#FF9D2E]/30 text-xs flex items-center gap-1"
+                      >
+                        <Plus className="w-3 h-3" /> Tambah Ruangan
+                      </button>
+                    </div>
+
+                    <div className="space-y-2">
+                      {(content.project.floorPlan || [
+                        { label: "Kamar Tidur Utama", value: "3.00 × 3.00 m" },
+                        { label: "Kamar Tidur Anak", value: "3.00 × 2.75 m" },
+                        { label: "Ruang Tamu & Keluarga", value: "Terbuka & Fleksibel" },
+                        { label: "Kamar Mandi / WC", value: "1.50 × 1.50 m" },
+                        { label: "Halaman Depan & Carport", value: "Tersedia Area Parkir" },
+                        { label: "Sisa Lahan Belakang", value: "Bisa untuk Dapur / Taman" }
+                      ]).map((fp, idx) => (
+                        <div key={idx} className="flex items-center gap-2 p-2 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
+                          <input
+                            type="text"
+                            placeholder="Nama Ruangan"
+                            value={fp.label}
+                            onChange={(e) => {
+                              const curr = [...(content.project.floorPlan || [
+                                { label: "Kamar Tidur Utama", value: "3.00 × 3.00 m" },
+                                { label: "Kamar Tidur Anak", value: "3.00 × 2.75 m" },
+                                { label: "Ruang Tamu & Keluarga", value: "Terbuka & Fleksibel" },
+                                { label: "Kamar Mandi / WC", value: "1.50 × 1.50 m" },
+                                { label: "Halaman Depan & Carport", value: "Tersedia Area Parkir" },
+                                { label: "Sisa Lahan Belakang", value: "Bisa untuk Dapur / Taman" }
+                              ])];
+                              curr[idx].label = e.target.value;
+                              setContent({ ...content, project: { ...content.project, floorPlan: curr } });
+                            }}
+                            className="w-1/2 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52]"
+                          />
+                          <input
+                            type="text"
+                            placeholder="Ukuran / Keterangan"
+                            value={fp.value}
+                            onChange={(e) => {
+                              const curr = [...(content.project.floorPlan || [
+                                { label: "Kamar Tidur Utama", value: "3.00 × 3.00 m" },
+                                { label: "Kamar Tidur Anak", value: "3.00 × 2.75 m" },
+                                { label: "Ruang Tamu & Keluarga", value: "Terbuka & Fleksibel" },
+                                { label: "Kamar Mandi / WC", value: "1.50 × 1.50 m" },
+                                { label: "Halaman Depan & Carport", value: "Tersedia Area Parkir" },
+                                { label: "Sisa Lahan Belakang", value: "Bisa untuk Dapur / Taman" }
+                              ])];
+                              curr[idx].value = e.target.value;
+                              setContent({ ...content, project: { ...content.project, floorPlan: curr } });
+                            }}
+                            className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#073B78] font-semibold"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const curr = content.project.floorPlan || [
+                                { label: "Kamar Tidur Utama", value: "3.00 × 3.00 m" },
+                                { label: "Kamar Tidur Anak", value: "3.00 × 2.75 m" },
+                                { label: "Ruang Tamu & Keluarga", value: "Terbuka & Fleksibel" },
+                                { label: "Kamar Mandi / WC", value: "1.50 × 1.50 m" },
+                                { label: "Halaman Depan & Carport", value: "Tersedia Area Parkir" },
+                                { label: "Sisa Lahan Belakang", value: "Bisa untuk Dapur / Taman" }
+                              ];
+                              setContent({
+                                ...content,
+                                project: { ...content.project, floorPlan: curr.filter((_, i) => i !== idx) },
+                              });
+                            }}
+                            className="p-1.5 text-rose-400 hover:bg-rose-500/10 rounded-lg"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Location Advantages Editor */}
+                  <div className="pt-4 border-t border-[#DCE7F5] space-y-3">
+                    <label className="block text-xs font-bold text-[#073B78] uppercase tracking-wider">
+                      3 Keunggulan Strategis Kawasan Proyek
+                    </label>
+                    <div className="space-y-3">
+                      {(content.project.locationAdvantages || [
+                        {
+                          number: "01",
+                          title: "Dekat Perbatasan Kota",
+                          desc: "Akses lancar menuju pusat perkantoran, perbelanjaan, dan fasilitas umum di Kota Bandar Lampung maupun Sukarame."
+                        },
+                        {
+                          number: "02",
+                          title: "Lingkungan Asri & Bebas Banjir",
+                          desc: "Kontur tanah berbukit yang terbebas dari genangan air banjir, dengan sirkulasi udara segar alami perbukitan."
+                        },
+                        {
+                          number: "03",
+                          title: "Infrastruktur Terpadu",
+                          desc: "Jalan lingkungan memadai untuk akses kendaraan roda empat, jaringan drainase kawasan, dan fasilitas listrik PLN."
+                        }
+                      ]).map((adv, idx) => (
+                        <div key={idx} className="p-3.5 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-2">
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              value={adv.number}
+                              onChange={(e) => {
+                                const curr = [...(content.project.locationAdvantages || [
+                                  { number: "01", title: "Dekat Perbatasan Kota", desc: "..." },
+                                  { number: "02", title: "Lingkungan Asri & Bebas Banjir", desc: "..." },
+                                  { number: "03", title: "Infrastruktur Terpadu", desc: "..." }
+                                ])];
+                                curr[idx].number = e.target.value;
+                                setContent({ ...content, project: { ...content.project, locationAdvantages: curr } });
+                              }}
+                              className="w-14 px-2.5 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs font-bold text-[#FF9D2E]"
+                            />
+                            <input
+                              type="text"
+                              value={adv.title}
+                              onChange={(e) => {
+                                const curr = [...(content.project.locationAdvantages || [
+                                  { number: "01", title: "Dekat Perbatasan Kota", desc: "..." },
+                                  { number: "02", title: "Lingkungan Asri & Bebas Banjir", desc: "..." },
+                                  { number: "03", title: "Infrastruktur Terpadu", desc: "..." }
+                                ])];
+                                curr[idx].title = e.target.value;
+                                setContent({ ...content, project: { ...content.project, locationAdvantages: curr } });
+                              }}
+                              className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs font-bold text-[#102D52]"
+                              placeholder="Judul Keunggulan"
+                            />
+                          </div>
+                          <textarea
+                            rows={2}
+                            value={adv.desc}
+                            onChange={(e) => {
+                              const curr = [...(content.project.locationAdvantages || [
+                                { number: "01", title: "Dekat Perbatasan Kota", desc: "..." },
+                                { number: "02", title: "Lingkungan Asri & Bebas Banjir", desc: "..." },
+                                { number: "03", title: "Infrastruktur Terpadu", desc: "..." }
+                              ])];
+                              curr[idx].desc = e.target.value;
+                              setContent({ ...content, project: { ...content.project, locationAdvantages: curr } });
+                            }}
+                            className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783]"
+                            placeholder="Uraian keunggulan kawasan..."
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Survey CTA Editor */}
+                  <div className="pt-4 border-t border-[#DCE7F5] space-y-3">
+                    <label className="block text-xs font-bold text-[#073B78] uppercase tracking-wider">
+                      Banner Ajakan Jadwal Survei (Bagian Bawah Halaman Proyek)
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-semibold text-[#526783] mb-1">Judul Ajakan</label>
+                        <input
+                          type="text"
+                          value={content.project.surveyCta?.title || 'Jadwalkan Survei Lokasi Proyek Sekarang'}
+                          onChange={(e) =>
+                            setContent({
+                              ...content,
+                              project: {
+                                ...content.project,
+                                surveyCta: {
+                                  ...(content.project.surveyCta || {
+                                    title: 'Jadwalkan Survei Lokasi Proyek Sekarang',
+                                    subtitle: 'Tim lapangan PT. TBK siap mendampingi Anda melihat langsung lokasi kavling dan unit contoh di Puri Gunung Langgar.',
+                                    buttonText: 'Isi Formulir Survei',
+                                    waButtonText: 'WhatsApp Pemasaran'
+                                  }),
+                                  title: e.target.value,
+                                },
+                              },
+                            })
+                          }
+                          className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52]"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-semibold text-[#526783] mb-1">Teks Tombol Form</label>
+                        <input
+                          type="text"
+                          value={content.project.surveyCta?.buttonText || 'Isi Formulir Survei'}
+                          onChange={(e) =>
+                            setContent({
+                              ...content,
+                              project: {
+                                ...content.project,
+                                surveyCta: {
+                                  ...(content.project.surveyCta || {
+                                    title: 'Jadwalkan Survei Lokasi Proyek Sekarang',
+                                    subtitle: 'Tim lapangan PT. TBK siap mendampingi Anda melihat langsung lokasi kavling dan unit contoh di Puri Gunung Langgar.',
+                                    buttonText: 'Isi Formulir Survei',
+                                    waButtonText: 'WhatsApp Pemasaran'
+                                  }),
+                                  buttonText: e.target.value,
+                                },
+                              },
+                            })
+                          }
+                          className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52]"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[#526783] mb-1">Deskripsi Ajakan</label>
+                      <textarea
+                        rows={2}
+                        value={content.project.surveyCta?.subtitle || 'Tim lapangan PT. TBK siap mendampingi Anda melihat langsung lokasi kavling dan unit contoh di Puri Gunung Langgar.'}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            project: {
+                              ...content.project,
+                              surveyCta: {
+                                ...(content.project.surveyCta || {
+                                  title: 'Jadwalkan Survei Lokasi Proyek Sekarang',
+                                  subtitle: 'Tim lapangan PT. TBK siap mendampingi Anda melihat langsung lokasi kavling dan unit contoh di Puri Gunung Langgar.',
+                                  buttonText: 'Isi Formulir Survei',
+                                  waButtonText: 'WhatsApp Pemasaran'
+                                }),
+                                subtitle: e.target.value,
+                              },
+                            },
+                          })
+                        }
+                        className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783]"
+                      />
                     </div>
                   </div>
                 </div>

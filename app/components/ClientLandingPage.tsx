@@ -739,7 +739,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                     Visi Perseroan
                   </span>
                   <blockquote className="font-serif italic text-lg sm:text-xl text-[#102D52] font-normal leading-relaxed">
-                    &ldquo;Perusahaan properti yang berkualitas dan terpercaya.&rdquo;
+                    &ldquo;{content.about?.visionText || 'Perusahaan properti yang berkualitas dan terpercaya.'}&rdquo;
                   </blockquote>
                 </div>
               </div>

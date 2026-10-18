@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Normalize lowercase /a9min to /A9MIN
+  // Normalize lowercase /a9min or /admin to /A9MIN
   if (pathname === '/a9min' || pathname.startsWith('/a9min/')) {
     const normalizedPath = pathname.replace(/^\/a9min/, '/A9MIN');
     const url = request.nextUrl.clone();
@@ -12,8 +12,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Protect /A9MIN & /admin-studio routes, but bypass /A9MIN/login and its sub-resources
-  const isProtectedAdmin = (pathname.startsWith('/A9MIN') || pathname.startsWith('/admin-studio')) && !pathname.startsWith('/A9MIN/login');
+  // Protect /A9MIN, /admin-studio, and /admin routes, but bypass /A9MIN/login and its sub-resources
+  const isProtectedAdmin =
+    (pathname.startsWith('/A9MIN') || pathname.startsWith('/admin-studio') || pathname.startsWith('/admin')) &&
+    !pathname.startsWith('/A9MIN/login');
   if (isProtectedAdmin) {
     const sessionCookie = request.cookies.get('tbk_admin_session')?.value;
 
@@ -28,5 +30,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/A9MIN/:path*', '/a9min/:path*', '/A9MIN', '/a9min', '/admin-studio/:path*', '/admin-studio'],
+  matcher: ['/A9MIN/:path*', '/a9min/:path*', '/A9MIN', '/a9min', '/admin-studio/:path*', '/admin-studio', '/admin/:path*', '/admin'],
 };

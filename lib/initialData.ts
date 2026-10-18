@@ -104,6 +104,7 @@ export interface SiteContent {
     homeIntroCtaText?: string;
     homeIntroCtaLink?: string;
     features?: FeatureCard[];
+    values?: Array<{ title: string; desc: string; icon?: string }>;
   };
   leadership: {
     badge: string;
@@ -138,6 +139,20 @@ export interface SiteContent {
     directorAuthority: string;
     landStatus?: string;
     landStatusDetail?: string;
+    records?: Array<{
+      id: string;
+      code?: string;
+      category: string;
+      title: string;
+      refNumber: string;
+      date: string;
+      authority: string;
+      summary: string;
+      status: string;
+      statusType?: string;
+      externalUrl?: string;
+      isPhysicalCustody?: boolean;
+    }>;
   };
   activities: {
     badge: string;
@@ -165,6 +180,10 @@ export interface SiteContent {
     videoUrl?: string;
     slides?: Array<{ image: string; caption?: string }>;
     specs: Array<{ label: string; value: string }>;
+    highlights?: Array<{ label: string; value: string; subtext: string; icon?: string }>;
+    floorPlan?: Array<{ label: string; value: string }>;
+    locationAdvantages?: Array<{ number: string; title: string; desc: string }>;
+    surveyCta?: { title: string; subtitle: string; buttonText: string; waButtonText: string };
   };
   contact: {
     badge: string;
@@ -186,6 +205,12 @@ export interface SiteContent {
     copyrightText: string;
   };
   promoPopup?: PromoPopup;
+  socialLinks?: {
+    instagram?: string;
+    facebook?: string;
+    youtube?: string;
+    tiktok?: string;
+  };
 }
 
 export const defaultBannerSlides: BannerSlide[] = [
@@ -340,6 +365,28 @@ export const initialSiteContent: SiteContent = {
         title: "Lingkungan Asri",
         desc: "Hidup lebih sehat di lingkungan yang hijau.",
         icon: "leaf"
+      }
+    ],
+    values: [
+      {
+        title: "Legalitas & Kepastian Hukum",
+        desc: "Beroperasi berlandaskan Akta Pendirian Notaris resmi dan SK Pengesahan Kemenkumham RI Tahun 2021 untuk keamanan hak kepemilikan konsumen.",
+        icon: "shield"
+      },
+      {
+        title: "Standar Mutu Konstruksi",
+        desc: "Pondasi batu belah, struktur beton bertulang, dinding plester aci, dan sanitasi terencana sesuai standar teknis Kementerian PUPR.",
+        icon: "check"
+      },
+      {
+        title: "Kemitraan Perbankan FLPP",
+        desc: "Bekerja sama dengan bank penyalur KPR bersubsidi guna memudahkan proses persetujuan kredit dengan suku bunga ringan flat 5%.",
+        icon: "award"
+      },
+      {
+        title: "Transparansi Layanan",
+        desc: "Keterbukaan informasi harga, tahapan berkas, progres fisik lapangan, serta pendampingan langsung hingga serah terima kunci unit.",
+        icon: "users"
       }
     ],
   },
@@ -540,6 +587,43 @@ export const initialSiteContent: SiteContent = {
       { label: "Skema Pembiayaan", value: "KPR FLPP Bersubsidi 5% & Mandiri" },
       { label: "Lokasi Strategis", value: "Akses Cepat ke Pusat Kota Bandar Lampung" }
     ],
+    highlights: [
+      { label: "Tipe Rumah", value: "Tipe 36 / 72 m²", subtext: "Luas Bangunan & Kavling", icon: "home" },
+      { label: "Suku Bunga KPR", value: "5.0% Flat", subtext: "FLPP Tetap Sampai Lunas", icon: "calculator" },
+      { label: "Legalitas Lahan", value: "Sertifikat Resmi", subtext: "Proses Pemecahan BPN", icon: "shield" },
+      { label: "Status Proyek", value: "Tahap Konstruksi", subtext: "Pematangan Lahan & Struktur", icon: "hardhat" }
+    ],
+    floorPlan: [
+      { label: "Kamar Tidur Utama", value: "3.00 × 3.00 m" },
+      { label: "Kamar Tidur Anak", value: "3.00 × 2.75 m" },
+      { label: "Ruang Tamu & Keluarga", value: "Terbuka & Fleksibel" },
+      { label: "Kamar Mandi / WC", value: "1.50 × 1.50 m" },
+      { label: "Halaman Depan & Carport", value: "Tersedia Area Parkir" },
+      { label: "Sisa Lahan Belakang", value: "Bisa untuk Dapur / Taman" }
+    ],
+    locationAdvantages: [
+      {
+        number: "01",
+        title: "Dekat Perbatasan Kota",
+        desc: "Akses lancar menuju pusat perkantoran, perbelanjaan, dan fasilitas umum di Kota Bandar Lampung maupun Sukarame."
+      },
+      {
+        number: "02",
+        title: "Lingkungan Asri & Bebas Banjir",
+        desc: "Kontur tanah berbukit yang terbebas dari genangan air banjir, dengan sirkulasi udara segar alami perbukitan."
+      },
+      {
+        number: "03",
+        title: "Infrastruktur Terpadu",
+        desc: "Jalan lingkungan memadai untuk akses kendaraan roda empat, jaringan drainase kawasan, dan fasilitas listrik PLN."
+      }
+    ],
+    surveyCta: {
+      title: "Jadwalkan Survei Lokasi Proyek Sekarang",
+      subtitle: "Tim lapangan PT. TBK siap mendampingi Anda melihat langsung lokasi kavling dan unit contoh di Puri Gunung Langgar.",
+      buttonText: "Isi Formulir Survei",
+      waButtonText: "WhatsApp Pemasaran"
+    }
   },
   contact: {
     badge: "HUBUNGI PERSEROAN",

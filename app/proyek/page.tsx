@@ -88,41 +88,32 @@ export default async function ProyekPage() {
         <section className="bg-[#F4F7FC] border-b border-[#DCE7F5] py-8">
           <div className="container-editorial">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-[#DCE7F5]">
-              <div className="pt-4 sm:pt-0 sm:pl-0 space-y-1">
-                <div className="text-[11px] tracking-wide text-[#526783] font-medium flex items-center gap-1.5">
-                  <Home className="w-3.5 h-3.5 text-[#073B78]" />
-                  <span>Tipe Rumah</span>
+              {(content.project.highlights && content.project.highlights.length > 0
+                ? content.project.highlights
+                : [
+                    { label: "Tipe Rumah", value: "Tipe 36 / 72 m²", subtext: "Luas Bangunan & Kavling", icon: "home" },
+                    { label: "Suku Bunga KPR", value: "5.0% Flat", subtext: "FLPP Tetap Sampai Lunas", icon: "calculator" },
+                    { label: "Legalitas Lahan", value: "Sertifikat Resmi", subtext: "Proses Pemecahan BPN", icon: "shield" },
+                    { label: "Status Proyek", value: "Tahap Konstruksi", subtext: "Pematangan Lahan & Struktur", icon: "hardhat" }
+                  ]
+              ).map((hl, idx) => (
+                <div key={idx} className={`pt-4 sm:pt-0 ${idx > 0 ? 'sm:pl-8' : 'sm:pl-0'} space-y-1`}>
+                  <div className="text-[11px] tracking-wide text-[#526783] font-medium flex items-center gap-1.5">
+                    {hl.icon === 'calculator' ? (
+                      <Calculator className="w-3.5 h-3.5 text-[#15966A]" />
+                    ) : hl.icon === 'shield' ? (
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#073B78]" />
+                    ) : hl.icon === 'hardhat' ? (
+                      <HardHat className="w-3.5 h-3.5 text-[#FF9D2E]" />
+                    ) : (
+                      <Home className="w-3.5 h-3.5 text-[#073B78]" />
+                    )}
+                    <span>{hl.label}</span>
+                  </div>
+                  <div className="font-semibold text-xl sm:text-2xl text-[#102D52]">{hl.value}</div>
+                  <div className="text-[11.5px] text-[#526783]">{hl.subtext}</div>
                 </div>
-                <div className="font-semibold text-xl sm:text-2xl text-[#102D52]">Tipe 36 / 72 m²</div>
-                <div className="text-[11.5px] text-[#526783]">Luas Bangunan &amp; Kavling</div>
-              </div>
-
-              <div className="pt-4 sm:pt-0 sm:pl-8 space-y-1">
-                <div className="text-[11px] tracking-wide text-[#526783] font-medium flex items-center gap-1.5">
-                  <Calculator className="w-3.5 h-3.5 text-[#15966A]" />
-                  <span>Suku Bunga KPR</span>
-                </div>
-                <div className="font-semibold text-xl sm:text-2xl text-[#15966A]">5.0% Flat</div>
-                <div className="text-[11.5px] text-[#526783]">FLPP Tetap Sampai Lunas</div>
-              </div>
-
-              <div className="pt-4 sm:pt-0 sm:pl-8 space-y-1">
-                <div className="text-[11px] tracking-wide text-[#526783] font-medium flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#073B78]" />
-                  <span>Legalitas Lahan</span>
-                </div>
-                <div className="font-semibold text-xl sm:text-2xl text-[#102D52]">Sertifikat Resmi</div>
-                <div className="text-[11.5px] text-[#526783]">Proses Pemecahan BPN</div>
-              </div>
-
-              <div className="pt-4 sm:pt-0 sm:pl-8 space-y-1">
-                <div className="text-[11px] tracking-wide text-[#526783] font-medium flex items-center gap-1.5">
-                  <HardHat className="w-3.5 h-3.5 text-[#FF9D2E]" />
-                  <span>Status Proyek</span>
-                </div>
-                <div className="font-semibold text-xl sm:text-2xl text-[#FF9D2E]">Tahap Konstruksi</div>
-                <div className="text-[11.5px] text-[#526783]">Pematangan Lahan &amp; Struktur</div>
-              </div>
+              ))}
             </div>
           </div>
         </section>
@@ -224,7 +215,7 @@ export default async function ProyekPage() {
                     <span>Denah Tata Ruang</span>
                   </div>
                   <h3 className="font-serif font-normal text-2xl text-[#102D52]">
-                    Pembagian Ruang Tipe 36/72
+                    Pembagian Ruang {content.project?.type || 'Tipe 36/72'}
                   </h3>
                   <p className="font-sans text-xs sm:text-sm text-[#526783] mt-1 leading-relaxed">
                     Dirancang optimal untuk efisiensi ruang dan sirkulasi udara alami:
@@ -232,30 +223,22 @@ export default async function ProyekPage() {
                 </div>
 
                 <div className="divide-y divide-[#DCE7F5] text-xs sm:text-[13.5px]">
-                  <div className="py-3 flex items-center justify-between">
-                    <span className="text-[#526783] font-medium">Kamar Tidur Utama</span>
-                    <span className="font-semibold text-[#102D52]">3.00 × 3.00 m</span>
-                  </div>
-                  <div className="py-3 flex items-center justify-between">
-                    <span className="text-[#526783] font-medium">Kamar Tidur Anak</span>
-                    <span className="font-semibold text-[#102D52]">3.00 × 2.75 m</span>
-                  </div>
-                  <div className="py-3 flex items-center justify-between">
-                    <span className="text-[#526783] font-medium">Ruang Tamu &amp; Keluarga</span>
-                    <span className="font-semibold text-[#102D52]">Terbuka &amp; Fleksibel</span>
-                  </div>
-                  <div className="py-3 flex items-center justify-between">
-                    <span className="text-[#526783] font-medium">Kamar Mandi / WC</span>
-                    <span className="font-semibold text-[#102D52]">1.50 × 1.50 m</span>
-                  </div>
-                  <div className="py-3 flex items-center justify-between">
-                    <span className="text-[#526783] font-medium">Halaman Depan &amp; Carport</span>
-                    <span className="font-semibold text-[#102D52]">Tersedia Area Parkir</span>
-                  </div>
-                  <div className="py-3 flex items-center justify-between">
-                    <span className="text-[#526783] font-medium">Sisa Lahan Belakang</span>
-                    <span className="font-semibold text-[#102D52]">Bisa untuk Dapur / Taman</span>
-                  </div>
+                  {(content.project.floorPlan && content.project.floorPlan.length > 0
+                    ? content.project.floorPlan
+                    : [
+                        { label: "Kamar Tidur Utama", value: "3.00 × 3.00 m" },
+                        { label: "Kamar Tidur Anak", value: "3.00 × 2.75 m" },
+                        { label: "Ruang Tamu & Keluarga", value: "Terbuka & Fleksibel" },
+                        { label: "Kamar Mandi / WC", value: "1.50 × 1.50 m" },
+                        { label: "Halaman Depan & Carport", value: "Tersedia Area Parkir" },
+                        { label: "Sisa Lahan Belakang", value: "Bisa untuk Dapur / Taman" }
+                      ]
+                  ).map((fp, i) => (
+                    <div key={i} className="py-3 flex items-center justify-between">
+                      <span className="text-[#526783] font-medium">{fp.label}</span>
+                      <span className="font-semibold text-[#102D52]">{fp.value}</span>
+                    </div>
+                  ))}
                 </div>
 
                 <div className="pt-2 flex flex-col gap-3">
@@ -291,37 +274,42 @@ export default async function ProyekPage() {
                 <span>Aksesibilitas Kawasan</span>
               </div>
               <h2 className="font-serif font-normal text-2xl sm:text-3xl text-[#102D52]">
-                Nilai Strategis Kawasan Puri Gunung Langgar
+                Nilai Strategis Kawasan {content.project.name || 'Puri Gunung Langgar'}
               </h2>
               <p className="font-sans text-xs sm:text-sm text-[#526783] mt-1 leading-relaxed">
-                Lokasi berkembang di Desa Sabah Balau yang menjanjikan kemudahan akses dan kenaikan nilai investasi jangka panjang.
+                Lokasi berkembang di {content.project.location || 'Desa Sabah Balau'} yang menjanjikan kemudahan akses dan kenaikan nilai investasi jangka panjang.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-              <div className="p-6 rounded-2xl bg-[#F4F7FC] border border-[#DCE7F5] space-y-3">
-                <span className="font-serif text-3xl text-[#073B78] block">01</span>
-                <h3 className="font-semibold text-lg text-[#102D52]">Dekat Perbatasan Kota</h3>
-                <p className="text-xs sm:text-sm text-[#526783] leading-relaxed">
-                  Akses lancar menuju pusat perkantoran, perbelanjaan, dan fasilitas umum di Kota Bandar Lampung maupun Sukarame.
-                </p>
-              </div>
-
-              <div className="p-6 rounded-2xl bg-[#F4F7FC] border border-[#DCE7F5] space-y-3">
-                <span className="font-serif text-3xl text-[#073B78] block">02</span>
-                <h3 className="font-semibold text-lg text-[#102D52]">Lingkungan Asri &amp; Bebas Banjir</h3>
-                <p className="text-xs sm:text-sm text-[#526783] leading-relaxed">
-                  Kontur tanah berbukit yang terbebas dari genangan air banjir, dengan sirkulasi udara segar alami perbukitan.
-                </p>
-              </div>
-
-              <div className="p-6 rounded-2xl bg-[#F4F7FC] border border-[#DCE7F5] space-y-3">
-                <span className="font-serif text-3xl text-[#073B78] block">03</span>
-                <h3 className="font-semibold text-lg text-[#102D52]">Infrastruktur Terpadu</h3>
-                <p className="text-xs sm:text-sm text-[#526783] leading-relaxed">
-                  Jalan lingkungan memadai untuk akses kendaraan roda empat, jaringan drainase kawasan, dan fasilitas listrik PLN.
-                </p>
-              </div>
+              {(content.project.locationAdvantages && content.project.locationAdvantages.length > 0
+                ? content.project.locationAdvantages
+                : [
+                    {
+                      number: "01",
+                      title: "Dekat Perbatasan Kota",
+                      desc: "Akses lancar menuju pusat perkantoran, perbelanjaan, dan fasilitas umum di Kota Bandar Lampung maupun Sukarame."
+                    },
+                    {
+                      number: "02",
+                      title: "Lingkungan Asri & Bebas Banjir",
+                      desc: "Kontur tanah berbukit yang terbebas dari genangan air banjir, dengan sirkulasi udara segar alami perbukitan."
+                    },
+                    {
+                      number: "03",
+                      title: "Infrastruktur Terpadu",
+                      desc: "Jalan lingkungan memadai untuk akses kendaraan roda empat, jaringan drainase kawasan, dan fasilitas listrik PLN."
+                    }
+                  ]
+              ).map((adv, idx) => (
+                <div key={idx} className="p-6 rounded-2xl bg-[#F4F7FC] border border-[#DCE7F5] space-y-3">
+                  <span className="font-serif text-3xl text-[#073B78] block">{adv.number || `0${idx + 1}`}</span>
+                  <h3 className="font-semibold text-lg text-[#102D52]">{adv.title}</h3>
+                  <p className="text-xs sm:text-sm text-[#526783] leading-relaxed">
+                    {adv.desc}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -330,17 +318,17 @@ export default async function ProyekPage() {
         <section className="py-16 sm:py-20 bg-gradient-to-br from-[#073B78] via-[#0A4B91] to-[#102D52] text-white">
           <div className="container-editorial text-center space-y-6">
             <h2 className="font-serif font-normal text-2xl sm:text-3xl lg:text-4xl text-white max-w-xl mx-auto">
-              Jadwalkan Survei Lokasi Proyek Sekarang
+              {content.project.surveyCta?.title || 'Jadwalkan Survei Lokasi Proyek Sekarang'}
             </h2>
             <p className="font-sans text-white/85 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed">
-              Tim lapangan PT. TBK siap mendampingi Anda melihat langsung lokasi kavling dan unit contoh di Puri Gunung Langgar.
+              {content.project.surveyCta?.subtitle || 'Tim lapangan PT. TBK siap mendampingi Anda melihat langsung lokasi kavling dan unit contoh di Puri Gunung Langgar.'}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
               <Link
                 href="/kontak"
                 className="group inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-xs font-semibold tracking-normal transition-all duration-200 hover:-translate-y-[1px] shadow-lg"
               >
-                <span>Isi Formulir Survei</span>
+                <span>{content.project.surveyCta?.buttonText || 'Isi Formulir Survei'}</span>
                 <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
               </Link>
               <a
@@ -349,7 +337,7 @@ export default async function ProyekPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-7 py-3 rounded-full border border-white/40 hover:border-white hover:bg-white/10 text-white text-xs font-semibold tracking-normal transition-all duration-200"
               >
-                <span>WhatsApp Pemasaran</span>
+                <span>{content.project.surveyCta?.waButtonText || 'WhatsApp Pemasaran'}</span>
               </a>
             </div>
           </div>

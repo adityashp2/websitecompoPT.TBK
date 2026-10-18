@@ -130,6 +130,18 @@ export function mergeWithDefaults(parsed: any): SiteContent {
       specs: Array.isArray(parsed.project?.specs)
         ? parsed.project.specs
         : initialSiteContent.project.specs,
+      highlights: Array.isArray(parsed.project?.highlights)
+        ? parsed.project.highlights
+        : (initialSiteContent.project?.highlights || []),
+      floorPlan: Array.isArray(parsed.project?.floorPlan)
+        ? parsed.project.floorPlan
+        : (initialSiteContent.project?.floorPlan || []),
+      locationAdvantages: Array.isArray(parsed.project?.locationAdvantages)
+        ? parsed.project.locationAdvantages
+        : (initialSiteContent.project?.locationAdvantages || []),
+      surveyCta: parsed.project?.surveyCta
+        ? { ...initialSiteContent.project?.surveyCta, ...parsed.project.surveyCta }
+        : initialSiteContent.project?.surveyCta,
     },
     activities: {
       ...initialSiteContent.activities,
@@ -172,6 +184,9 @@ export function mergeWithDefaults(parsed: any): SiteContent {
       ...(parsed.legal || {}),
       landStatus: parsed.legal?.landStatus || initialSiteContent.legal.landStatus,
       landStatusDetail: parsed.legal?.landStatusDetail || initialSiteContent.legal.landStatusDetail,
+      records: Array.isArray(parsed.legal?.records)
+        ? parsed.legal.records
+        : (initialSiteContent.legal?.records || []),
     },
     about: {
       ...initialSiteContent.about,
@@ -191,6 +206,13 @@ export function mergeWithDefaults(parsed: any): SiteContent {
       features: Array.isArray(parsed.about?.features)
         ? parsed.about.features
         : (initialSiteContent.about?.features || []),
+      values: Array.isArray(parsed.about?.values)
+        ? parsed.about.values
+        : (initialSiteContent.about?.values || []),
+    },
+    socialLinks: {
+      ...(initialSiteContent.socialLinks || {}),
+      ...(parsed.socialLinks || {}),
     },
     footer: {
       ...initialSiteContent.footer,

@@ -30,12 +30,21 @@ export default function SimulasiKprPage() {
       .catch((err) => console.error(err));
   }, []);
 
-  const [harga] = useState<number>(166000000);
-  const [dp, setDp] = useState<number>(2000000);
-  const [tenor, setTenor] = useState<number>(20);
+  const kprConfig = content.kprSimulation;
+  const [harga, setHarga] = useState<number>(kprConfig?.defaultPrice || 166000000);
+  const [dp, setDp] = useState<number>(kprConfig?.defaultDp || 2000000);
+  const [tenor, setTenor] = useState<number>(kprConfig?.defaultTenor || 20);
+
+  useEffect(() => {
+    if (content.kprSimulation) {
+      if (content.kprSimulation.defaultPrice) setHarga(content.kprSimulation.defaultPrice);
+      if (content.kprSimulation.defaultDp) setDp(content.kprSimulation.defaultDp);
+      if (content.kprSimulation.defaultTenor) setTenor(content.kprSimulation.defaultTenor);
+    }
+  }, [content.kprSimulation]);
 
   const sisaPokok = Math.max(0, harga - dp);
-  const rateTahunan = 0.05; // 5% flat FLPP
+  const rateTahunan = content.kprSimulation?.annualInterestRate || 0.05;
   const rateBulanan = rateTahunan / 12;
 
   const hitungAngsuran = (t: number) => {
@@ -87,13 +96,13 @@ export default function SimulasiKprPage() {
             <div className="max-w-3xl space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[#FF9D2E] text-xs font-medium">
                 <Calculator className="w-3.5 h-3.5" />
-                <span>Kalkulator resmi KPR FLPP</span>
+                <span>{content.kprSimulation?.badge || 'Kalkulator resmi KPR FLPP'}</span>
               </div>
               <h1 className="font-serif font-normal text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">
-                Simulasi Angsuran Rumah Subsidi
+                {content.kprSimulation?.title || 'Simulasi Angsuran Rumah Subsidi'}
               </h1>
               <p className="text-white/85 text-sm sm:text-base leading-relaxed max-w-2xl">
-                Hitung estimasi angsuran bulanan rumah bersubsidi Puri Gunung Langgar dengan suku bunga tetap 5% flat per tahun sesuai skema Fasilitas Likuiditas Pembiayaan Perumahan (FLPP).
+                {content.kprSimulation?.subtitle || 'Hitung estimasi angsuran bulanan rumah bersubsidi Puri Gunung Langgar dengan suku bunga tetap 5% flat per tahun sesuai skema Fasilitas Likuiditas Pembiayaan Perumahan (FLPP).'}
               </p>
             </div>
           </div>
@@ -152,8 +161,8 @@ export default function SimulasiKprPage() {
 
                   <input
                     type="range"
-                    min={1000000}
-                    max={30000000}
+                    min={content.kprSimulation?.minDp || 1000000}
+                    max={content.kprSimulation?.maxDp || 30000000}
                     step={500000}
                     value={dp}
                     onChange={(e) => setDp(Number(e.target.value))}
@@ -209,7 +218,7 @@ export default function SimulasiKprPage() {
                     <ShieldCheck className="w-4 h-4 text-[#15966A] shrink-0" />
                     <span className="font-medium">Suku bunga KPR subsidi FLPP</span>
                   </div>
-                  <span className="font-mono font-bold text-[#15966A]">5.0% Tetap Sampai Lunas</span>
+                  <span className="font-mono font-bold text-[#15966A]">{(rateTahunan * 100).toFixed(1)}% Tetap Sampai Lunas</span>
                 </div>
               </div>
 
@@ -228,7 +237,7 @@ export default function SimulasiKprPage() {
                   {/* Main Highlighted Number */}
                   <div className="p-5 rounded-xl bg-white/10 border border-white/15 text-center space-y-1">
                     <div className="text-xs text-white/80 font-medium">
-                      Angsuran Tenor {tenor} Tahun (FLPP 5% Tetap)
+                      Angsuran Tenor {tenor} Tahun (FLPP {(rateTahunan * 100).toFixed(0)}% Tetap)
                     </div>
                     <div className="text-3xl sm:text-4xl font-mono font-bold text-[#FF9D2E] tracking-tight">
                       {formatRupiah(angsuranBulan)}
@@ -255,7 +264,7 @@ export default function SimulasiKprPage() {
                     </div>
                     <div className="flex justify-between py-2.5">
                       <span>Suku Bunga FLPP</span>
-                      <span className="font-mono font-bold text-[#15966A]">5% Tetap Sampai Lunas</span>
+                      <span className="font-mono font-bold text-[#15966A]">{(rateTahunan * 100).toFixed(0)}% Tetap Sampai Lunas</span>
                     </div>
                   </div>
 

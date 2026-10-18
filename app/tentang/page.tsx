@@ -27,28 +27,26 @@ export const metadata: Metadata = {
 export default async function TentangPage() {
   const content = await getSiteContent();
 
-  const values = [
-    {
-      title: 'Legalitas & Kepastian Hukum',
-      desc: 'Beroperasi berlandaskan Akta Pendirian Notaris resmi dan SK Pengesahan Kemenkumham RI Tahun 2021 untuk keamanan hak kepemilikan konsumen.',
-      icon: ShieldCheck,
-    },
-    {
-      title: 'Standar Mutu Konstruksi',
-      desc: 'Pondasi batu belah, struktur beton bertulang, dinding plester aci, dan sanitasi terencana sesuai standar teknis Kementerian PUPR.',
-      icon: CheckCircle2,
-    },
-    {
-      title: 'Kemitraan Perbankan FLPP',
-      desc: 'Bekerja sama dengan bank penyalur KPR bersubsidi guna memudahkan proses persetujuan kredit dengan suku bunga ringan flat 5%.',
-      icon: Award,
-    },
-    {
-      title: 'Transparansi Layanan',
-      desc: 'Keterbukaan informasi harga, tahapan berkas, progres fisik lapangan, serta pendampingan langsung hingga serah terima kunci unit.',
-      icon: Users,
-    },
-  ];
+  const values = (content.about.values && content.about.values.length > 0)
+    ? content.about.values
+    : [
+        {
+          title: 'Legalitas & Kepastian Hukum',
+          desc: 'Beroperasi berlandaskan Akta Pendirian Notaris resmi dan SK Pengesahan Kemenkumham RI Tahun 2021 untuk keamanan hak kepemilikan konsumen.',
+        },
+        {
+          title: 'Standar Mutu Konstruksi',
+          desc: 'Pondasi batu belah, struktur beton bertulang, dinding plester aci, dan sanitasi terencana sesuai standar teknis Kementerian PUPR.',
+        },
+        {
+          title: 'Kemitraan Perbankan FLPP',
+          desc: 'Bekerja sama dengan bank penyalur KPR bersubsidi guna memudahkan proses persetujuan kredit dengan suku bunga ringan flat 5%.',
+        },
+        {
+          title: 'Transparansi Layanan',
+          desc: 'Keterbukaan informasi harga, tahapan berkas, progres fisik lapangan, serta pendampingan langsung hingga serah terima kunci unit.',
+        },
+      ];
 
   return (
     <div className="min-h-screen bg-white text-[#102D52] flex flex-col font-sans selection:bg-[#FF9D2E] selection:text-[#102D52]">
