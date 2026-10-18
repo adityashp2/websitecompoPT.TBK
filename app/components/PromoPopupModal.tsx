@@ -122,7 +122,7 @@ export default function PromoPopupModal({ promo }: PromoPopupModalProps) {
       role="dialog"
       aria-modal="true"
       aria-label="Iklan Promo Banner"
-      className={`fixed inset-0 z-[999999] flex items-center justify-center p-3 sm:p-5 md:p-6 bg-black/80 backdrop-blur-md select-none touch-none overscroll-none overflow-hidden transition-opacity duration-200 ${
+      className={`fixed inset-0 z-[50000] flex items-center justify-center p-3 sm:p-5 md:p-6 bg-black/80 backdrop-blur-md select-none touch-none overscroll-none overflow-hidden transition-opacity duration-200 ${
         animating ? 'opacity-100' : 'opacity-0'
       }`}
       onClick={(e) => {

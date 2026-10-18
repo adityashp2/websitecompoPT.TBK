@@ -182,7 +182,7 @@ export default function Header({ content }: HeaderProps) {
       {/* Main Corporate Header: Permanent Sticky & Fixed on Scroll */}
       <header
         suppressHydrationWarning
-        className={`fixed top-0 inset-x-0 w-full h-[58px] min-[980px]:h-[68px] transition-all duration-300 ease-out border-b ${
+        className={`fixed top-0 inset-x-0 w-full h-[58px] min-[980px]:h-[68px] transition-all duration-300 ease-out border-b z-[100000] ${
           isScrolled
             ? 'bg-[#073B78]/95 backdrop-blur-md shadow-lg shadow-black/20 border-white/15'
             : 'bg-[#073B78] border-white/10 shadow-sm'
@@ -192,7 +192,7 @@ export default function Header({ content }: HeaderProps) {
           top: 0,
           left: 0,
           right: 0,
-          zIndex: 9999,
+          zIndex: 100000,
           backgroundColor: '#073B78',
           maxHeight: '68px',
         }}
@@ -201,7 +201,6 @@ export default function Header({ content }: HeaderProps) {
           {/* Left: Brand Identity with existing logo asset */}
           <Link
             href="/"
-            prefetch={false}
             className="flex items-center gap-2 sm:gap-3 min-w-0 max-w-[calc(100%-86px)] min-[980px]:max-w-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] rounded-lg py-1 group"
             aria-label="PT. Terbang Bersama Kawan - Beranda"
           >
@@ -240,7 +239,6 @@ export default function Header({ content }: HeaderProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  prefetch={false}
                   suppressHydrationWarning
                   className={`text-[12.5px] min-[1120px]:text-[13.5px] lg:text-[14px] font-medium transition-all relative py-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9D2E] rounded whitespace-nowrap ${
                     isActive
@@ -381,7 +379,6 @@ export default function Header({ content }: HeaderProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  prefetch={false}
                   suppressHydrationWarning
                   onClick={() => setMobileMenuOpen(false)}
                   className={`min-h-[44px] px-4 rounded-xl flex items-center justify-between text-[14px] transition-colors ${
