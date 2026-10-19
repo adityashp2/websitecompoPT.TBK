@@ -55,6 +55,24 @@ export default async function TentangPage() {
       <main id="main-content" className="flex-1">
         {/* Page Hero Header */}
         <section className="bg-gradient-to-br from-[#073B78] via-[#0A4B91] to-[#102D52] text-white pt-12 pb-16 px-4 border-b border-white/10 relative overflow-hidden">
+          {/* Background Image Banner (jika diatur di Admin) */}
+          {content.about?.headerBgImage && content.about.headerBgImage.trim() !== '' && (
+            <>
+              <div className="absolute inset-0 z-0 overflow-hidden">
+                <img
+                  src={content.about.headerBgImage}
+                  alt={content.about.title || 'Tentang PT. TBK'}
+                  className="w-full h-full object-cover object-center"
+                />
+              </div>
+              {/* Corporate Navy Gradient Overlay agar teks putih dan oranye tetap tajam & prestisius */}
+              <div
+                className="absolute inset-0 z-[1] bg-gradient-to-r from-[#073B78]/95 via-[#073B78]/90 to-[#102D52]/80"
+                aria-hidden="true"
+              />
+            </>
+          )}
+
           <div className="container-editorial relative z-10">
             {/* Breadcrumb */}
             <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-white/70 mb-6" suppressHydrationWarning>
@@ -66,15 +84,15 @@ export default async function TentangPage() {
             </nav>
 
             <div className="max-w-3xl space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[#FF9D2E] text-[11px] font-medium tracking-wide">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[#FF9D2E] text-[11px] font-medium tracking-wide backdrop-blur-xs">
                 <Building2 className="w-3.5 h-3.5" />
                 <span>{content.about.badge || 'Profil Resmi Perseroan'}</span>
               </div>
-              <h1 className="font-serif font-normal text-3xl sm:text-4xl lg:text-[46px] tracking-tight text-white leading-[1.15]">
+              <h1 className="font-serif font-normal text-3xl sm:text-4xl lg:text-[46px] tracking-tight text-white leading-[1.15] drop-shadow-xs">
                 {content.about.title || 'Membangun Hunian Layak, Berkualitas & Berkelanjutan'}
               </h1>
-              <p className="font-sans text-white/85 text-[15px] sm:text-base leading-relaxed max-w-2xl">
-                Mengenal lebih dekat dedikasi PT. Terbang Bersama Kawan dalam mewujudkan impian rumah pertama bagi keluarga Indonesia di Provinsi Lampung.
+              <p className="font-sans text-white/85 text-[15px] sm:text-base leading-relaxed max-w-2xl drop-shadow-xs">
+                {content.about.headerSubtitle || 'Mengenal lebih dekat dedikasi PT. Terbang Bersama Kawan dalam mewujudkan impian rumah pertama bagi keluarga Indonesia di Provinsi Lampung.'}
               </p>
             </div>
           </div>

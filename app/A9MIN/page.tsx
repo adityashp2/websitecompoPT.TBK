@@ -3077,6 +3077,115 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="space-y-4">
+                  {/* Background Banner Header Halaman /tentang */}
+                  <div className="p-5 rounded-2xl bg-[#F8FAFD] border-2 border-[#073B78]/25 shadow-xs space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-xs font-bold text-[#073B78] uppercase tracking-wider flex items-center gap-2">
+                          <ImageIcon className="w-4 h-4 text-[#FF9D2E]" />
+                          Background Banner Header Halaman Tentang (/tentang)
+                        </div>
+                        <p className="text-[11px] text-[#526783] mt-0.5">
+                          Ganti latar biru di bagian atas halaman &quot;Tentang Perusahaan&quot; dengan foto proyek, perumahan, atau arsitektur bangunan.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                      <div className="w-44 h-24 rounded-xl bg-gradient-to-br from-[#073B78] via-[#0A4B91] to-[#102D52] border border-[#DCE7F5] overflow-hidden shrink-0 relative flex items-center justify-center shadow-xs">
+                        {content.about?.headerBgImage && content.about.headerBgImage.trim() !== '' ? (
+                          <>
+                            <img
+                              src={content.about.headerBgImage}
+                              alt="Preview Background Header"
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-[#073B78]/40" />
+                            <span className="absolute bottom-1 right-1.5 px-1.5 py-0.5 rounded bg-black/60 text-white text-[9px] font-mono">
+                              Gambar Aktif
+                            </span>
+                          </>
+                        ) : (
+                          <div className="text-center p-2">
+                            <ImageIcon className="w-5 h-5 text-white/50 mx-auto mb-1" />
+                            <span className="text-[10px] text-white/80 font-medium block">Biru Default (Gradiasi)</span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex-1 space-y-2 w-full">
+                        <input
+                          type="text"
+                          value={content.about?.headerBgImage || ''}
+                          onChange={(e) =>
+                            setContent({
+                              ...content,
+                              about: { ...content.about, headerBgImage: e.target.value },
+                            })
+                          }
+                          placeholder="URL atau path gambar background (/assets/... atau /uploads/...)"
+                          className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                        />
+                        <div className="flex flex-wrap items-center gap-2">
+                          <label className="cursor-pointer px-3.5 py-2 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-colors shadow-sm">
+                            <Upload className="w-3.5 h-3.5 text-[#FF9D2E]" />
+                            <span>{uploadingKey === 'aboutHeaderBg' ? 'Mengupload...' : 'Upload Gambar Background'}</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              disabled={uploadingKey === 'aboutHeaderBg'}
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                  handleGenericFileUpload(e.target.files[0], 'aboutHeaderBg', (url) => {
+                                    setContent({
+                                      ...content,
+                                      about: { ...content.about, headerBgImage: url },
+                                    });
+                                  });
+                                }
+                              }}
+                            />
+                          </label>
+                          {content.about?.headerBgImage && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setContent({
+                                  ...content,
+                                  about: { ...content.about, headerBgImage: '' },
+                                })
+                              }
+                              className="px-3 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 text-xs font-medium flex items-center gap-1.5 transition-colors"
+                              title="Kembalikan ke latar biru default"
+                            >
+                              <RotateCcw className="w-3.5 h-3.5" />
+                              <span>Reset ke Biru Default</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
+                        Sub-Judul / Teks Pengantar Header
+                      </label>
+                      <input
+                        type="text"
+                        value={content.about?.headerSubtitle || ''}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            about: { ...content.about, headerSubtitle: e.target.value },
+                          })
+                        }
+                        placeholder="Mengenal lebih dekat dedikasi PT. Terbang Bersama Kawan..."
+                        className="w-full px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                      />
+                    </div>
+                  </div>
+
                   <div>
                     <label className="block text-xs font-bold text-[#073B78] mb-1">
                       Label Badge

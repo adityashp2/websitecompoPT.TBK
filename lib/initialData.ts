@@ -97,6 +97,8 @@ export interface SiteContent {
     commitmentPoints?: Array<{ title: string; subtitle: string }>;
     officeImage?: string;
     officeCaption?: string;
+    headerBgImage?: string;
+    headerSubtitle?: string;
     homeIntroBadge?: string;
     homeIntroTitle?: string;
     homeIntroHighlight?: string;
@@ -319,6 +321,8 @@ export const initialSiteContent: SiteContent = {
   about: {
     badge: "TENTANG PERUSAHAAN",
     title: "Membangun dengan Komitmen & Legalitas Nyata",
+    headerSubtitle: "Mengenal lebih dekat dedikasi PT. Terbang Bersama Kawan dalam mewujudkan impian rumah pertama bagi keluarga Indonesia di Provinsi Lampung.",
+    headerBgImage: "",
     description: "PT. Terbang Bersama Kawan (PT. TBK) adalah perusahaan pengembang properti dan real estat yang berbasis di Bandar Lampung. Didirikan secara sah dengan Akta Notaris No. 10 tanggal 18 Maret 2021 dan disahkan oleh Kementerian Hukum dan HAM RI pada 19 Maret 2021.",
     visionTitle: "Visi Perusahaan",
     visionText: "Perusahaan properti yang berkualitas dan terpercaya.",
