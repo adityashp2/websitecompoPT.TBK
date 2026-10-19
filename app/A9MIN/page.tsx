@@ -683,22 +683,23 @@ export default function AdminDashboard() {
   };
 
   const handleLogout = async () => {
-    if (!window.confirm('Apakah Anda yakin ingin keluar (logout) dari panel admin?')) {
-      return;
-    }
     setLoggingOut(true);
     try {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('tbk_admin_token');
+        sessionStorage.clear();
+        document.cookie = 'tbk_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
       }
-      await fetch('/api/auth/logout', { method: 'POST' });
-      router.replace('/A9MIN/login');
+      await fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
+      window.location.href = '/A9MIN/login';
     } catch (err) {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('tbk_admin_token');
+        sessionStorage.clear();
+        document.cookie = 'tbk_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
       }
       console.error('Logout failed:', err);
-      router.replace('/A9MIN/login');
+      window.location.href = '/A9MIN/login';
     }
   };
 
@@ -1030,6 +1031,7 @@ export default function AdminDashboard() {
               </div>
 
               <button
+                type="button"
                 onClick={handleLogout}
                 disabled={loggingOut}
                 className="p-1.5 sm:p-2 rounded-xl bg-white/10 border border-white/20 hover:bg-rose-500/30 text-white transition-all"
