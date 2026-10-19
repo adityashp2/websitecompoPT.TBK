@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { getDb } from './db';
+import { getDb, isVercelEnvironment } from './db';
 import { isSupabaseConfigured, getSupabaseAdminClient } from './supabase';
 
 export interface AdminUser {
@@ -76,46 +76,50 @@ function verifySessionToken(token: string): { userId: number; expiresAtMs: numbe
 }
 
 /**
- * Authenticate admin by username or email and password (SQLite primary with Supabase fallback)
+ * Authenticate admin by username or email and password (SQLite primary on local, Supabase on cloud)
  */
 export async function authenticateAdmin(identifier: string, password: string): Promise<AdminUser | null> {
   const cleanId = identifier.trim().toLowerCase();
   const cleanPass = password;
 
-  // 1. Try local SQLite first (instant local SSD check, < 1ms)
-  try {
-    const db = getDb();
-    const user = db.prepare(`
-      SELECT id, username, email, password_hash, salt, name, role
-      FROM admin_users 
-      WHERE LOWER(username) = ? OR LOWER(email) = ?
-    `).get(cleanId, cleanId) as {
-      id: number;
-      username: string;
-      email: string | null;
-      password_hash: string;
-      salt: string;
-      name: string;
-      role: string;
-    } | undefined;
+  // 1. Try local SQLite first (only on local development)
+  if (!isVercelEnvironment) {
+    try {
+      const db = getDb();
+      if (db) {
+        const user = db.prepare(`
+          SELECT id, username, email, password_hash, salt, name, role
+          FROM admin_users 
+          WHERE LOWER(username) = ? OR LOWER(email) = ?
+        `).get(cleanId, cleanId) as {
+          id: number;
+          username: string;
+          email: string | null;
+          password_hash: string;
+          salt: string;
+          name: string;
+          role: string;
+        } | undefined;
 
-    const isValid = user && (
-      verifyPassword(cleanPass, user.password_hash, user.salt) ||
-      verifyPassword(cleanPass.trim(), user.password_hash, user.salt)
-    );
+        const isValid = user && (
+          verifyPassword(cleanPass, user.password_hash, user.salt) ||
+          verifyPassword(cleanPass.trim(), user.password_hash, user.salt)
+        );
 
-    if (user && isValid) {
-      db.prepare('UPDATE admin_users SET last_login = CURRENT_TIMESTAMP WHERE id = ?').run(user.id);
-      return {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-      };
+        if (user && isValid) {
+          db.prepare('UPDATE admin_users SET last_login = CURRENT_TIMESTAMP WHERE id = ?').run(user.id);
+          return {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          };
+        }
+      }
+    } catch (error) {
+      console.error('Error authenticating admin in SQLite:', error);
     }
-  } catch (error) {
-    console.error('Error authenticating admin in SQLite:', error);
   }
 
   // 2. Fallback to Supabase if configured and not found in SQLite
@@ -178,15 +182,19 @@ export async function createAdminSession(userId: number, rememberMe: boolean = f
   const expiresAt = new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000);
   const token = signSessionToken(userId, expiresAt.getTime());
 
-  // SQLite session
-  try {
-    const db = getDb();
-    db.prepare(`
-      INSERT INTO admin_sessions (token, user_id, expires_at)
-      VALUES (?, ?, ?)
-    `).run(token, userId, expiresAt.toISOString());
-  } catch (err) {
-    // SQLite session optional on serverless
+  // SQLite session (local only)
+  if (!isVercelEnvironment) {
+    try {
+      const db = getDb();
+      if (db) {
+        db.prepare(`
+          INSERT INTO admin_sessions (token, user_id, expires_at)
+          VALUES (?, ?, ?)
+        `).run(token, userId, expiresAt.toISOString());
+      }
+    } catch (err) {
+      // SQLite session optional on serverless
+    }
   }
 
   // Supabase session
@@ -215,31 +223,35 @@ export async function getAdminFromSession(token: string): Promise<AdminUser | nu
   if (!token) return null;
   const nowIso = new Date().toISOString();
 
-  // 1. Try local SQLite session first (instant local check, < 1ms)
-  try {
-    const db = getDb();
-    const row = db.prepare(`
-      SELECT 
-        u.id, u.username, u.email, u.name, u.role, u.created_at, u.last_login,
-        s.expires_at
-      FROM admin_sessions s
-      JOIN admin_users u ON s.user_id = u.id
-      WHERE s.token = ? AND s.expires_at > ?
-    `).get(token, nowIso) as (AdminUser & { expires_at: string }) | undefined;
+  // 1. Try local SQLite session first (instant local check, local development only)
+  if (!isVercelEnvironment) {
+    try {
+      const db = getDb();
+      if (db) {
+        const row = db.prepare(`
+          SELECT 
+            u.id, u.username, u.email, u.name, u.role, u.created_at, u.last_login,
+            s.expires_at
+          FROM admin_sessions s
+          JOIN admin_users u ON s.user_id = u.id
+          WHERE s.token = ? AND s.expires_at > ?
+        `).get(token, nowIso) as (AdminUser & { expires_at: string }) | undefined;
 
-    if (row) {
-      return {
-        id: row.id,
-        username: row.username,
-        email: row.email,
-        name: row.name,
-        role: row.role,
-        created_at: row.created_at,
-        last_login: row.last_login,
-      };
+        if (row) {
+          return {
+            id: row.id,
+            username: row.username,
+            email: row.email,
+            name: row.name,
+            role: row.role,
+            created_at: row.created_at,
+            last_login: row.last_login,
+          };
+        }
+      }
+    } catch (err) {
+      // console.error('SQLite getAdminFromSession error:', err);
     }
-  } catch (err) {
-    // console.error('SQLite getAdminFromSession error:', err);
   }
 
   // 2. Fallback to Supabase if configured and not found in SQLite
@@ -287,11 +299,15 @@ export async function getAdminFromSession(token: string): Promise<AdminUser | nu
 export async function deleteAdminSession(token: string): Promise<void> {
   if (!token) return;
 
-  try {
-    const db = getDb();
-    db.prepare('DELETE FROM admin_sessions WHERE token = ?').run(token);
-  } catch (err) {
-    console.error('SQLite deleteAdminSession error:', err);
+  if (!isVercelEnvironment) {
+    try {
+      const db = getDb();
+      if (db) {
+        db.prepare('DELETE FROM admin_sessions WHERE token = ?').run(token);
+      }
+    } catch (err) {
+      console.error('SQLite deleteAdminSession error:', err);
+    }
   }
 
   if (isSupabaseConfigured()) {
@@ -361,10 +377,12 @@ export async function changeAdminPassword(
       }
     }
 
-    // Fallback check in SQLite
-    if (!currentUser) {
+    // Fallback check in SQLite (local dev only)
+    if (!currentUser && !isVercelEnvironment) {
       const db = getDb();
-      currentUser = db.prepare('SELECT password_hash, salt FROM admin_users WHERE id = ?').get(userId) as any;
+      if (db) {
+        currentUser = db.prepare('SELECT password_hash, salt FROM admin_users WHERE id = ?').get(userId) as any;
+      }
     }
 
     if (!currentUser) {

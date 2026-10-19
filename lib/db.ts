@@ -4,6 +4,12 @@ import fs from 'fs';
 import { initialSiteContent, SiteContent } from './initialData';
 import { isSupabaseConfigured, getSupabaseAdminClient } from './supabase';
 
+export const isVercelEnvironment = Boolean(
+  process.env.VERCEL || 
+  process.env.NEXT_PUBLIC_VERCEL_ENV || 
+  process.env.AWS_LAMBDA_FUNCTION_NAME
+);
+
 declare global {
   // eslint-disable-next-line no-var
   var __sqliteDbInstance: Database.Database | undefined;
@@ -11,89 +17,93 @@ declare global {
 
 /**
  * Initialize or get SQLite instance (acts as primary local DB or fallback)
+ * Automatically bypassed on Vercel serverless where filesystem is read-only.
  */
-function getDb(): Database.Database {
+export function getDb(): Database.Database | null {
+  if (isVercelEnvironment) return null;
   if (global.__sqliteDbInstance) return global.__sqliteDbInstance;
 
-  const dataDir = path.join(process.cwd(), 'data');
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
+  try {
+    const dataDir = path.join(process.cwd(), 'data');
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+
+    const dbPath = path.join(dataDir, 'content.db');
+    const dbInstance = new Database(dbPath);
+    dbInstance.pragma('journal_mode = WAL');
+    dbInstance.pragma('synchronous = NORMAL');
+    dbInstance.pragma('temp_store = MEMORY');
+    dbInstance.pragma('mmap_size = 268435456');
+    dbInstance.pragma('cache_size = -16000');
+    dbInstance.pragma('busy_timeout = 5000');
+    global.__sqliteDbInstance = dbInstance;
+
+    // Initialize tables
+    dbInstance.exec(`
+      CREATE TABLE IF NOT EXISTS site_content (
+        id TEXT PRIMARY KEY,
+        data TEXT NOT NULL,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+
+      CREATE TABLE IF NOT EXISTS inquiries (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        phone TEXT NOT NULL,
+        email TEXT,
+        message TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_inquiries_created ON inquiries(created_at DESC);
+
+      CREATE TABLE IF NOT EXISTS admin_users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        email TEXT UNIQUE,
+        password_hash TEXT NOT NULL,
+        salt TEXT NOT NULL,
+        name TEXT NOT NULL,
+        role TEXT DEFAULT 'admin',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        last_login DATETIME
+      );
+
+      CREATE TABLE IF NOT EXISTS admin_sessions (
+        token TEXT PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+        expires_at DATETIME NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_admin_sessions_token_exp ON admin_sessions(token, expires_at);
+    `);
+
+    // Check if default admin exists, if not seed default admin
+    const existingAdmin = dbInstance.prepare("SELECT id FROM admin_users WHERE username = 'admin'").get();
+    if (!existingAdmin) {
+      const crypto = require('crypto');
+      const salt = crypto.randomBytes(16).toString('hex');
+      const hash = crypto.pbkdf2Sync('admin123', salt, 10000, 64, 'sha512').toString('hex');
+      dbInstance.prepare(`
+        INSERT INTO admin_users (username, email, password_hash, salt, name, role)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `).run('admin', 'admin@terbangbersamakawan.co.id', hash, salt, 'Administrator PT. TBK', 'superadmin');
+    }
+
+    // Check if main content exists, if not seed with official initial data
+    const existing = dbInstance.prepare("SELECT data FROM site_content WHERE id = 'main'").get() as { data: string } | undefined;
+    if (!existing) {
+      dbInstance.prepare("INSERT INTO site_content (id, data) VALUES ('main', ?)").run(JSON.stringify(initialSiteContent));
+    }
+
+    return dbInstance;
+  } catch (err) {
+    console.warn('SQLite initialization skipped:', err);
+    return null;
   }
-
-  const dbPath = path.join(dataDir, 'content.db');
-  const dbInstance = new Database(dbPath);
-  dbInstance.pragma('journal_mode = WAL');
-  dbInstance.pragma('synchronous = NORMAL');
-  dbInstance.pragma('temp_store = MEMORY');
-  dbInstance.pragma('mmap_size = 268435456');
-  dbInstance.pragma('cache_size = -16000');
-  dbInstance.pragma('busy_timeout = 5000');
-  global.__sqliteDbInstance = dbInstance;
-
-  // Initialize tables
-  dbInstance.exec(`
-    CREATE TABLE IF NOT EXISTS site_content (
-      id TEXT PRIMARY KEY,
-      data TEXT NOT NULL,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-
-    CREATE TABLE IF NOT EXISTS inquiries (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      phone TEXT NOT NULL,
-      email TEXT,
-      message TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_inquiries_created ON inquiries(created_at DESC);
-
-    CREATE TABLE IF NOT EXISTS admin_users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT UNIQUE NOT NULL,
-      email TEXT UNIQUE,
-      password_hash TEXT NOT NULL,
-      salt TEXT NOT NULL,
-      name TEXT NOT NULL,
-      role TEXT DEFAULT 'admin',
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      last_login DATETIME
-    );
-
-    CREATE TABLE IF NOT EXISTS admin_sessions (
-      token TEXT PRIMARY KEY,
-      user_id INTEGER NOT NULL,
-      expires_at DATETIME NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (user_id) REFERENCES admin_users(id) ON DELETE CASCADE
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_admin_sessions_token_exp ON admin_sessions(token, expires_at);
-  `);
-
-  // Check if default admin exists, if not seed default admin (username: admin, pass: admin123)
-  const existingAdmin = dbInstance.prepare("SELECT id FROM admin_users WHERE username = 'admin'").get();
-  if (!existingAdmin) {
-    const crypto = require('crypto');
-    const salt = crypto.randomBytes(16).toString('hex');
-    const hash = crypto.pbkdf2Sync('admin123', salt, 10000, 64, 'sha512').toString('hex');
-    dbInstance.prepare(`
-      INSERT INTO admin_users (username, email, password_hash, salt, name, role)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `).run('admin', 'admin@terbangbersamakawan.co.id', hash, salt, 'Administrator PT. TBK', 'superadmin');
-  }
-
-  // Check if main content exists, if not seed with official initial data
-  const existing = dbInstance.prepare("SELECT data FROM site_content WHERE id = 'main'").get() as { data: string } | undefined;
-  if (!existing) {
-    dbInstance.prepare("INSERT INTO site_content (id, data) VALUES ('main', ?)").run(JSON.stringify(initialSiteContent));
-  }
-
-  return dbInstance;
 }
-
-export { getDb };
 
 /**
  * Merge raw database JSON with initialSiteContent defaults
@@ -267,7 +277,7 @@ function getSiteContentSqlite(): SiteContent {
 }
 
 /**
- * Get site content (Supabase cloud primary when configured, SQLite fallback)
+ * Get site content (Supabase cloud primary when configured, SQLite fallback on local)
  */
 export async function getSiteContent(): Promise<SiteContent> {
   // 1. Supabase primary read if configured (essential for Vercel serverless persistence)
@@ -285,19 +295,29 @@ export async function getSiteContent(): Promise<SiteContent> {
           const raw = typeof data.data === 'string' ? JSON.parse(data.data) : data.data;
           return mergeWithDefaults(raw);
         }
+        if (error) {
+          console.warn('Supabase getSiteContent error:', JSON.stringify(error));
+        }
       }
     } catch (err) {
-      console.warn('Supabase query failed, falling back to SQLite:', err);
+      console.warn('Supabase query failed:', err);
     }
   }
 
-  // 2. Local SQLite read
+  // If running on Vercel serverless, never touch SQLite filesystem
+  if (isVercelEnvironment) {
+    return initialSiteContent;
+  }
+
+  // 2. Local SQLite read (development only)
   try {
     const db = getDb();
-    const row = db.prepare("SELECT data FROM site_content WHERE id = 'main'").get() as { data: string } | undefined;
-    if (row && row.data) {
-      const parsed = JSON.parse(row.data);
-      return mergeWithDefaults(parsed);
+    if (db) {
+      const row = db.prepare("SELECT data FROM site_content WHERE id = 'main'").get() as { data: string } | undefined;
+      if (row && row.data) {
+        const parsed = JSON.parse(row.data);
+        return mergeWithDefaults(parsed);
+      }
     }
   } catch (error) {
     console.error('SQLite getSiteContent error:', error);
@@ -307,16 +327,19 @@ export async function getSiteContent(): Promise<SiteContent> {
 }
 
 /**
- * Update site content in SQLite
+ * Update site content in SQLite (local dev only)
  */
 function updateSiteContentSqlite(newContent: SiteContent): SiteContent {
+  if (isVercelEnvironment) return newContent;
   try {
     const db = getDb();
-    db.prepare(`
-      INSERT INTO site_content (id, data, updated_at) 
-      VALUES ('main', ?, CURRENT_TIMESTAMP)
-      ON CONFLICT(id) DO UPDATE SET data = excluded.data, updated_at = CURRENT_TIMESTAMP
-    `).run(JSON.stringify(newContent));
+    if (db) {
+      db.prepare(`
+        INSERT INTO site_content (id, data, updated_at) 
+        VALUES ('main', ?, CURRENT_TIMESTAMP)
+        ON CONFLICT(id) DO UPDATE SET data = excluded.data, updated_at = CURRENT_TIMESTAMP
+      `).run(JSON.stringify(newContent));
+    }
   } catch (err) {
     console.error('SQLite updateSiteContent error:', err);
   }
@@ -327,8 +350,10 @@ function updateSiteContentSqlite(newContent: SiteContent): SiteContent {
  * Update site content (both Supabase and local SQLite backup)
  */
 export async function updateSiteContent(newContent: SiteContent): Promise<SiteContent> {
-  // Always update local SQLite as backup
-  updateSiteContentSqlite(newContent);
+  // Update local SQLite as backup only when not on Vercel
+  if (!isVercelEnvironment) {
+    updateSiteContentSqlite(newContent);
+  }
 
   if (isSupabaseConfigured()) {
     try {
@@ -343,7 +368,7 @@ export async function updateSiteContent(newContent: SiteContent): Promise<SiteCo
           });
 
         if (error) {
-          console.error('Supabase updateSiteContent error:', error);
+          console.error('Supabase updateSiteContent error:', JSON.stringify(error, null, 2));
         }
       }
     } catch (err) {
@@ -358,15 +383,19 @@ export async function updateSiteContent(newContent: SiteContent): Promise<SiteCo
  * Reset site content to official default data
  */
 export async function resetSiteContent(): Promise<SiteContent> {
-  try {
-    const db = getDb();
-    db.prepare(`
-      INSERT INTO site_content (id, data, updated_at) 
-      VALUES ('main', ?, CURRENT_TIMESTAMP)
-      ON CONFLICT(id) DO UPDATE SET data = excluded.data, updated_at = CURRENT_TIMESTAMP
-    `).run(JSON.stringify(initialSiteContent));
-  } catch (err) {
-    console.error('SQLite resetSiteContent error:', err);
+  if (!isVercelEnvironment) {
+    try {
+      const db = getDb();
+      if (db) {
+        db.prepare(`
+          INSERT INTO site_content (id, data, updated_at) 
+          VALUES ('main', ?, CURRENT_TIMESTAMP)
+          ON CONFLICT(id) DO UPDATE SET data = excluded.data, updated_at = CURRENT_TIMESTAMP
+        `).run(JSON.stringify(initialSiteContent));
+      }
+    } catch (err) {
+      console.error('SQLite resetSiteContent error:', err);
+    }
   }
 
   if (isSupabaseConfigured()) {
@@ -393,16 +422,20 @@ export async function resetSiteContent(): Promise<SiteContent> {
  * Save user inquiry message
  */
 export async function saveInquiry(inquiry: { name: string; phone: string; email?: string; message?: string }) {
-  // Save to SQLite
-  try {
-    const db = getDb();
-    const stmt = db.prepare(`
-      INSERT INTO inquiries (name, phone, email, message)
-      VALUES (?, ?, ?, ?)
-    `);
-    stmt.run(inquiry.name, inquiry.phone, inquiry.email || '', inquiry.message || '');
-  } catch (err) {
-    console.error('SQLite saveInquiry error:', err);
+  // Save to SQLite only if not on Vercel
+  if (!isVercelEnvironment) {
+    try {
+      const db = getDb();
+      if (db) {
+        const stmt = db.prepare(`
+          INSERT INTO inquiries (name, phone, email, message)
+          VALUES (?, ?, ?, ?)
+        `);
+        stmt.run(inquiry.name, inquiry.phone, inquiry.email || '', inquiry.message || '');
+      }
+    } catch (err) {
+      console.error('SQLite saveInquiry error:', err);
+    }
   }
 
   // Save to Supabase
@@ -418,7 +451,7 @@ export async function saveInquiry(inquiry: { name: string; phone: string; email?
         }]);
       }
     } catch (err) {
-      console.error('Supabase saveInquiry error:', err);
+      console.error('Supabase saveInquiry error:', JSON.stringify(err));
     }
   }
 }
@@ -446,12 +479,19 @@ export async function getInquiries() {
     }
   }
 
-  // 2. Local SQLite fallback
+  // If on Vercel, return empty array without touching SQLite
+  if (isVercelEnvironment) {
+    return [];
+  }
+
+  // 2. Local SQLite fallback (development only)
   try {
     const db = getDb();
-    const rows = db.prepare("SELECT * FROM inquiries ORDER BY created_at DESC").all();
-    if (rows && rows.length > 0) {
-      return rows;
+    if (db) {
+      const rows = db.prepare("SELECT * FROM inquiries ORDER BY created_at DESC").all();
+      if (rows && rows.length > 0) {
+        return rows;
+      }
     }
   } catch (err) {
     console.error('SQLite getInquiries error:', err);
@@ -466,12 +506,16 @@ export async function getInquiries() {
 export async function deleteInquiry(id: number): Promise<boolean> {
   let success = false;
 
-  try {
-    const db = getDb();
-    const res = db.prepare('DELETE FROM inquiries WHERE id = ?').run(id);
-    success = res.changes > 0;
-  } catch (err) {
-    console.error('SQLite deleteInquiry error:', err);
+  if (!isVercelEnvironment) {
+    try {
+      const db = getDb();
+      if (db) {
+        const res = db.prepare('DELETE FROM inquiries WHERE id = ?').run(id);
+        success = res.changes > 0;
+      }
+    } catch (err) {
+      console.error('SQLite deleteInquiry error:', err);
+    }
   }
 
   if (isSupabaseConfigured()) {
@@ -493,11 +537,15 @@ export async function deleteInquiry(id: number): Promise<boolean> {
  * Clear all inquiry messages
  */
 export async function clearAllInquiries(): Promise<boolean> {
-  try {
-    const db = getDb();
-    db.prepare('DELETE FROM inquiries').run();
-  } catch (err) {
-    console.error('SQLite clearAllInquiries error:', err);
+  if (!isVercelEnvironment) {
+    try {
+      const db = getDb();
+      if (db) {
+        db.prepare('DELETE FROM inquiries').run();
+      }
+    } catch (err) {
+      console.error('SQLite clearAllInquiries error:', err);
+    }
   }
 
   if (isSupabaseConfigured()) {
