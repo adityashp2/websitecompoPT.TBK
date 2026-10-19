@@ -814,14 +814,14 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
             </div>
 
             {/* Primary Leadership Duo: Dewan Komisaris & Direktur Utama */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 max-w-4xl mx-auto mb-12 sm:mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl sm:max-w-3xl mx-auto mb-10 sm:mb-14">
               {displayPrimaryLeaders.map((member, idx) => (
                 <div
                   key={idx}
                   className="group rounded-2xl bg-white border border-[#DCE7F5] overflow-hidden flex flex-col transition-all duration-300 hover:border-[#073B78] shadow-sm hover:shadow-md reveal-on-scroll"
                 >
-                  {/* Executive Portrait Frame - 3:4 Aspect Ratio with Full Face Visibility */}
-                  <div className="relative w-full aspect-[3/4] bg-[#073B78] overflow-hidden">
+                  {/* Executive Portrait Frame - Compact & Balanced Height */}
+                  <div className="relative w-full h-64 sm:h-72 bg-[#073B78] overflow-hidden">
                     {member.image && member.image.trim() !== '' ? (
                       <>
                         <img
@@ -830,62 +830,62 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                           className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
                           loading="lazy"
                         />
-                        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#102D52]/95 via-[#102D52]/50 to-transparent pointer-events-none" />
+                        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#102D52]/95 via-[#102D52]/50 to-transparent pointer-events-none" />
                       </>
                     ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-[#073B78] relative overflow-hidden">
-                        <div className="relative z-10 w-24 h-28 rounded-2xl border border-white/20 bg-white/10 flex flex-col items-center justify-center p-4">
-                          <Building2 className="w-7 h-7 text-[#FF9D2E] mb-1" />
-                          <span className="text-2xl font-bold text-white tracking-wider">
+                      <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-[#073B78] relative overflow-hidden">
+                        <div className="relative z-10 w-20 h-24 rounded-2xl border border-white/20 bg-white/10 flex flex-col items-center justify-center p-3">
+                          <Building2 className="w-6 h-6 text-[#FF9D2E] mb-1" />
+                          <span className="text-xl font-bold text-white tracking-wider">
                             {member.name ? member.name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase() : 'TBK'}
                           </span>
                         </div>
-                        <span className="relative z-10 mt-3 text-[11px] font-medium text-white/70 tracking-wider">
+                        <span className="relative z-10 mt-2 text-[10px] font-medium text-white/70 tracking-wider">
                           Portret Resmi Perseroan
                         </span>
                       </div>
                     )}
 
                     {/* Role Badge */}
-                    <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md border border-[#FF9D2E]/60 text-[#FF9D2E] text-[11px] font-medium tracking-wide shadow-sm">
+                    <div className="absolute top-3 left-3 z-10 px-2.5 py-0.5 rounded-full bg-[#102D52]/90 backdrop-blur-md border border-[#FF9D2E]/60 text-[#FF9D2E] text-[10px] font-medium tracking-wide shadow-sm">
                       <span>{member.role}</span>
                     </div>
 
                     {/* Legal Verified Badge */}
-                    <div className="absolute top-4 right-4 z-10 px-3 py-1 rounded-full bg-[#102D52]/90 backdrop-blur-md text-[#15966A] text-[11px] font-medium border border-[#15966A]/40 flex items-center gap-1.5 shadow-sm">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#15966A]" />
+                    <div className="absolute top-3 right-3 z-10 px-2.5 py-0.5 rounded-full bg-[#102D52]/90 backdrop-blur-md text-[#15966A] text-[10px] font-medium border border-[#15966A]/40 flex items-center gap-1.5 shadow-sm">
+                      <CheckCircle2 className="w-3 h-3 text-[#15966A]" />
                       <span>SK Kemenkumham</span>
                     </div>
 
                     {/* Name at bottom of portrait */}
-                    <div className="absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6 text-white">
-                      <span className="text-[11px] tracking-wide text-[#FF9D2E] font-medium block mb-0.5">
+                    <div className="absolute inset-x-0 bottom-0 z-10 p-4 sm:p-5 text-white">
+                      <span className="text-[10.5px] tracking-wide text-[#FF9D2E] font-medium block mb-0.5">
                         {member.department || 'Pengurus Inti Perseroan'}
                       </span>
-                      <h3 className="font-serif text-2xl sm:text-3xl text-white font-normal tracking-tight">
+                      <h3 className="font-serif text-xl sm:text-2xl text-white font-normal tracking-tight">
                         {member.name}
                       </h3>
                     </div>
                   </div>
 
                   {/* Body Content */}
-                  <div className="p-6 flex flex-col flex-1 justify-between space-y-4 bg-white">
+                  <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between space-y-3 bg-white">
                     <div>
-                      <div className="text-[11px] font-medium tracking-wide text-[#FF9D2E] mb-2 flex items-center gap-1.5">
+                      <div className="text-[10.5px] font-medium tracking-wide text-[#FF9D2E] mb-1.5 flex items-center gap-1.5">
                         <Briefcase className="w-3.5 h-3.5" />
                         <span>Amanat &amp; Tanggung Jawab</span>
                       </div>
-                      <p className="text-[13px] sm:text-[13.5px] text-[#526783] leading-relaxed">
+                      <p className="text-xs sm:text-[13px] text-[#526783] leading-relaxed line-clamp-3">
                         {member.roleDescription}
                       </p>
                     </div>
 
-                    <div className="pt-3 border-t border-[#DCE7F5] flex items-center justify-between text-xs text-[#526783]">
-                      <span className="flex items-center gap-1.5 text-xs text-[#15966A]">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[#15966A]" />
+                    <div className="pt-2.5 border-t border-[#DCE7F5] flex items-center justify-between text-[11px] text-[#526783]">
+                      <span className="flex items-center gap-1.5 text-[11px] text-[#15966A]">
+                        <CheckCircle2 className="w-3 h-3 text-[#15966A]" />
                         <span>Akta Notaris No. 10</span>
                       </span>
-                      <span className="font-mono text-[11px]">PT. TBK</span>
+                      <span className="font-mono text-[10.5px]">PT. TBK</span>
                     </div>
                   </div>
                 </div>
