@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { SiteContent, initialSiteContent, BannerSlide, PurchaseStep, getYouTubeEmbedUrl, PartnerItem, PartnersConfig, getCrispLogoUrl, mergeSiteContent } from '@/lib/initialData';
+import { SiteContent, initialSiteContent, BannerSlide, PurchaseStep, getYouTubeEmbedUrl, extractYouTubeVideoId, getYouTubeThumbnailUrl, normalizeYouTubeInput, PartnerItem, PartnersConfig, getCrispLogoUrl, mergeSiteContent } from '@/lib/initialData';
 import { getOverlayStyle, getFontFamilyStyle, getFontWeightStyle } from '@/app/components/PromoBannerCarousel';
 import {
   Save,
@@ -1669,7 +1669,10 @@ export default function AdminDashboard() {
                                 <iframe
                                   src={getYouTubeEmbedUrl(slide.videoUrl)!}
                                   title="Preview YouTube"
-                                  className="w-full h-full pointer-events-none"
+                                  className="w-full h-full border-0 pointer-events-none"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                  allowFullScreen
+                                  referrerPolicy="strict-origin-when-cross-origin"
                                 />
                               ) : (
                                 <video
@@ -1894,37 +1897,115 @@ export default function AdminDashboard() {
                                   </button>
                                 </div>
                               </div>
-                              <div className="flex items-center gap-2">
-                                <input
-                                  type="text"
-                                  placeholder="/assets/... atau URL gambar"
-                                  value={slide.image || ''}
-                                  onChange={(e) => {
-                                    const newSlides = [...(content.bannerSlides || [])];
-                                    newSlides[sIdx].image = e.target.value;
-                                    setContent({ ...content, bannerSlides: newSlides });
-                                  }}
-                                  className="flex-1 px-3 py-1.5 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] text-xs font-mono text-[#102D52]"
-                                />
-                                <label className="cursor-pointer px-3 py-1.5 rounded-xl bg-[#073B78] hover:bg-[#0A4B91] text-white text-xs font-bold shadow-xs flex items-center gap-1.5 shrink-0 transition-colors">
-                                  <Upload className="w-3.5 h-3.5" />
-                                  <span>{uploadingKey === `banner-${sIdx}` ? '...' : 'Upload Foto'}</span>
-                                  <input
-                                    type="file"
-                                    accept="image/*"
-                                    className="hidden"
-                                    onChange={(e) => {
-                                      if (e.target.files && e.target.files[0]) {
-                                        handleGenericFileUpload(e.target.files[0], `banner-${sIdx}`, (url) => {
+                              {slide.mediaType === 'video' ? (
+                                <div className="space-y-3 pt-1">
+                                  <div className="space-y-1.5">
+                                    <div className="flex items-center justify-between">
+                                      <label className="text-xs font-bold text-[#073B78] flex items-center gap-1.5">
+                                        <Video className="w-3.5 h-3.5 text-[#FF9D2E]" />
+                                        <span>Link Video YouTube Banner</span>
+                                      </label>
+                                      {extractYouTubeVideoId(slide.videoUrl) && (
+                                        <span className="text-[10.5px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
+                                          <CheckCircle2 className="w-3 h-3" />
+                                          <span>ID: {extractYouTubeVideoId(slide.videoUrl)}</span>
+                                        </span>
+                                      )}
+                                    </div>
+                                    <input
+                                      type="text"
+                                      placeholder="Contoh: https://www.youtube.com/watch?v=... atau https://youtu.be/..."
+                                      value={slide.videoUrl || ''}
+                                      onChange={(e) => {
+                                        let val = e.target.value;
+                                        if (val.includes('<iframe') || /src=["']/i.test(val)) {
+                                          const extracted = extractYouTubeVideoId(val);
+                                          if (extracted) val = `https://www.youtube.com/watch?v=${extracted}`;
+                                        }
+                                        const newSlides = [...(content.bannerSlides || [])];
+                                        newSlides[sIdx].videoUrl = val;
+                                        setContent({ ...content, bannerSlides: newSlides });
+                                      }}
+                                      className="w-full px-3 py-2 rounded-xl bg-white border border-[#DCE7F5] text-xs font-mono text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                                    />
+                                    <p className="text-[10.5px] text-[#526783] leading-relaxed">
+                                      Mendukung semua format: link biasa, share link youtu.be, shorts, live, maupun kode embed &lt;iframe&gt;.
+                                    </p>
+                                  </div>
+
+                                  <div className="space-y-1.5 pt-1 border-t border-[#DCE7F5]">
+                                    <label className="text-[11px] font-semibold text-[#526783] flex items-center justify-between">
+                                      <span>Gambar Cover / Fallback (Ditampilkan saat video memuat)</span>
+                                      {slide.image && (
+                                        <span className="text-[10px] text-emerald-600 font-medium">Ada cover</span>
+                                      )}
+                                    </label>
+                                    <div className="flex items-center gap-2">
+                                      <input
+                                        type="text"
+                                        placeholder="/assets/... atau URL gambar cover"
+                                        value={slide.image || ''}
+                                        onChange={(e) => {
                                           const newSlides = [...(content.bannerSlides || [])];
-                                          newSlides[sIdx].image = url;
+                                          newSlides[sIdx].image = e.target.value;
                                           setContent({ ...content, bannerSlides: newSlides });
-                                        });
-                                      }
+                                        }}
+                                        className="flex-1 px-3 py-1.5 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] text-xs font-mono text-[#102D52]"
+                                      />
+                                      <label className="cursor-pointer px-3 py-1.5 rounded-xl bg-[#073B78] hover:bg-[#0A4B91] text-white text-xs font-bold shadow-xs flex items-center gap-1.5 shrink-0 transition-colors">
+                                        <Upload className="w-3.5 h-3.5" />
+                                        <span>{uploadingKey === `banner-${sIdx}` ? '...' : 'Upload Cover'}</span>
+                                        <input
+                                          type="file"
+                                          accept="image/*"
+                                          className="hidden"
+                                          onChange={(e) => {
+                                            if (e.target.files && e.target.files[0]) {
+                                              handleGenericFileUpload(e.target.files[0], `banner-${sIdx}`, (url) => {
+                                                const newSlides = [...(content.bannerSlides || [])];
+                                                newSlides[sIdx].image = url;
+                                                setContent({ ...content, bannerSlides: newSlides });
+                                              });
+                                            }
+                                          }}
+                                        />
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-2">
+                                  <input
+                                    type="text"
+                                    placeholder="/assets/... atau URL gambar"
+                                    value={slide.image || ''}
+                                    onChange={(e) => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].image = e.target.value;
+                                      setContent({ ...content, bannerSlides: newSlides });
                                     }}
+                                    className="flex-1 px-3 py-1.5 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] text-xs font-mono text-[#102D52]"
                                   />
-                                </label>
-                              </div>
+                                  <label className="cursor-pointer px-3 py-1.5 rounded-xl bg-[#073B78] hover:bg-[#0A4B91] text-white text-xs font-bold shadow-xs flex items-center gap-1.5 shrink-0 transition-colors">
+                                    <Upload className="w-3.5 h-3.5" />
+                                    <span>{uploadingKey === `banner-${sIdx}` ? '...' : 'Upload Foto'}</span>
+                                    <input
+                                      type="file"
+                                      accept="image/*"
+                                      className="hidden"
+                                      onChange={(e) => {
+                                        if (e.target.files && e.target.files[0]) {
+                                          handleGenericFileUpload(e.target.files[0], `banner-${sIdx}`, (url) => {
+                                            const newSlides = [...(content.bannerSlides || [])];
+                                            newSlides[sIdx].image = url;
+                                            setContent({ ...content, bannerSlides: newSlides });
+                                          });
+                                        }
+                                      }}
+                                    />
+                                  </label>
+                                </div>
+                              )}
                             </div>
 
                             {/* SLIDER 1: GESER HORIZONTAL (KANAN - KIRI) */}
@@ -5954,8 +6035,13 @@ export default function AdminDashboard() {
                               placeholder="Contoh: https://www.youtube.com/watch?v=... atau https://youtu.be/..."
                               value={item.videoUrl || ''}
                               onChange={(e) => {
+                                let val = e.target.value;
+                                if (val.includes('<iframe') || /src=["']/i.test(val)) {
+                                  const extracted = extractYouTubeVideoId(val);
+                                  if (extracted) val = `https://www.youtube.com/watch?v=${extracted}`;
+                                }
                                 const newItems = [...content.activities.items];
-                                newItems[idx].videoUrl = e.target.value;
+                                newItems[idx].videoUrl = val;
                                 setContent({
                                   ...content,
                                   activities: { ...content.activities, items: newItems },
@@ -5965,17 +6051,29 @@ export default function AdminDashboard() {
                             />
                             {getYouTubeEmbedUrl(item.videoUrl) && (
                               <div className="pt-1">
-                                <span className="text-[11px] text-emerald-400 font-semibold flex items-center gap-1 mb-1.5">
-                                  <CheckCircle2 className="w-3 h-3" />
-                                  <span>Preview Video Terdeteksi:</span>
-                                </span>
+                                <div className="flex items-center justify-between mb-1.5">
+                                  <span className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                                    <span>Video Terdeteksi (ID: {extractYouTubeVideoId(item.videoUrl)})</span>
+                                  </span>
+                                  <a
+                                    href={`https://www.youtube.com/watch?v=${extractYouTubeVideoId(item.videoUrl)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[10px] text-[#073B78] hover:underline flex items-center gap-1 font-semibold"
+                                  >
+                                    <span>Buka di YouTube</span>
+                                    <ExternalLink className="w-2.5 h-2.5" />
+                                  </a>
+                                </div>
                                 <div className="relative aspect-video max-w-sm rounded-lg overflow-hidden border border-[#DCE7F5] bg-black">
                                   <iframe
                                     src={getYouTubeEmbedUrl(item.videoUrl)!}
                                     title={`Preview Video Kegiatan ${idx + 1}`}
-                                    className="w-full h-full"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    className="w-full h-full border-0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowFullScreen
+                                    referrerPolicy="strict-origin-when-cross-origin"
                                   />
                                 </div>
                               </div>
@@ -6331,12 +6429,17 @@ export default function AdminDashboard() {
                             type="text"
                             placeholder="Contoh: https://www.youtube.com/watch?v=dQw4w9WgXcQ atau https://youtu.be/..."
                             value={content.project.videoUrl || ''}
-                            onChange={(e) =>
+                            onChange={(e) => {
+                              let val = e.target.value;
+                              if (val.includes('<iframe') || /src=["']/i.test(val)) {
+                                const extracted = extractYouTubeVideoId(val);
+                                if (extracted) val = `https://www.youtube.com/watch?v=${extracted}`;
+                              }
                               setContent({
                                 ...content,
-                                project: { ...content.project, videoUrl: e.target.value },
-                              })
-                            }
+                                project: { ...content.project, videoUrl: val },
+                              });
+                            }}
                             className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-mono"
                           />
                         </div>
@@ -6344,22 +6447,34 @@ export default function AdminDashboard() {
                         {/* Live YouTube Preview */}
                         {getYouTubeEmbedUrl(content.project.videoUrl) ? (
                           <div className="space-y-2 pt-2">
-                            <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
-                              <CheckCircle2 className="w-3.5 h-3.5" />
-                              <span>Preview Video Terdeteksi:</span>
-                            </span>
+                            <div className="flex items-center justify-between max-w-lg">
+                              <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1.5">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                                <span>Video YouTube Valid &amp; Siap Ditampilkan (ID: {extractYouTubeVideoId(content.project.videoUrl)})</span>
+                              </span>
+                              <a
+                                href={`https://www.youtube.com/watch?v=${extractYouTubeVideoId(content.project.videoUrl)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-[#073B78] hover:underline flex items-center gap-1 font-semibold"
+                              >
+                                <span>Buka Video</span>
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            </div>
                             <div className="relative aspect-video max-w-lg rounded-xl overflow-hidden border border-[#DCE7F5] bg-black">
                               <iframe
                                 src={getYouTubeEmbedUrl(content.project.videoUrl)!}
                                 title="Preview Video YouTube"
-                                className="w-full h-full"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                className="w-full h-full border-0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 allowFullScreen
+                                referrerPolicy="strict-origin-when-cross-origin"
                               />
                             </div>
                           </div>
                         ) : content.project.videoUrl ? (
-                          <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300">
+                          <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs text-amber-700">
                             Format URL belum dikenali. Harap pastikan link dari YouTube (contoh: https://www.youtube.com/watch?v=... atau https://youtu.be/...).
                           </div>
                         ) : null}

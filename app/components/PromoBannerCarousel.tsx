@@ -255,9 +255,11 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
                 {slide.mediaType === 'video' && slide.videoUrl ? (
                   getYouTubeEmbedUrl(slide.videoUrl) ? (
                     <iframe
-                      src={`${getYouTubeEmbedUrl(slide.videoUrl)}?autoplay=1&mute=1&loop=1&playlist=${getYouTubeEmbedUrl(slide.videoUrl)?.split('/').pop()}&controls=0&showinfo=0&rel=0`}
-                      className="w-full h-full object-cover pointer-events-none scale-125"
-                      allow="autoplay; encrypted-media"
+                      src={getYouTubeEmbedUrl(slide.videoUrl, { autoplay: true, mute: true, loop: true, controls: false })!}
+                      className="w-full h-full object-cover pointer-events-none scale-125 border-0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      referrerPolicy="strict-origin-when-cross-origin"
                       title={slide.eyebrow}
                     />
                   ) : (
@@ -450,9 +452,11 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
                   {slide.mediaType === 'video' && slide.videoUrl ? (
                     getYouTubeEmbedUrl(slide.videoUrl) ? (
                       <iframe
-                        src={`${getYouTubeEmbedUrl(slide.videoUrl)}?autoplay=1&mute=1&loop=1&playlist=${getYouTubeEmbedUrl(slide.videoUrl)?.split('/').pop()}&controls=0&showinfo=0&rel=0`}
-                        className="w-full h-full object-cover pointer-events-none scale-125"
-                        allow="autoplay; encrypted-media"
+                        src={getYouTubeEmbedUrl(slide.videoUrl, { autoplay: true, mute: true, loop: true, controls: false })!}
+                        className="w-full h-full object-cover pointer-events-none scale-125 border-0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                        referrerPolicy="strict-origin-when-cross-origin"
                         title={slide.eyebrow}
                       />
                     ) : (

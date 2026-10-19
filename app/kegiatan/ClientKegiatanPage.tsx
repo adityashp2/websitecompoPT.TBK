@@ -315,11 +315,12 @@ export default function ClientKegiatanPage({ content }: { content: SiteContent }
             <div className="relative aspect-video w-full bg-black flex items-center justify-center">
               {getYouTubeEmbedUrl(videoModal.url) ? (
                 <iframe
-                  src={`${getYouTubeEmbedUrl(videoModal.url)}?autoplay=1`}
+                  src={getYouTubeEmbedUrl(videoModal.url, { autoplay: true })!}
                   title={videoModal.title}
-                  className="w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  className="w-full h-full border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
                 />
               ) : (
                 <video

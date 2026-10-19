@@ -802,34 +802,126 @@ export const initialSiteContent: SiteContent = {
   },
 };
 
-export function getYouTubeEmbedUrl(url: string | undefined | null): string | null {
-  if (!url || typeof url !== 'string') return null;
-  const trimmed = url.trim();
-  if (!trimmed) return null;
+export function extractYouTubeVideoId(input: string | undefined | null): string | null {
+  if (!input || typeof input !== 'string') return null;
+  let str = input.trim();
+  if (!str) return null;
 
-  if (trimmed.includes('youtube.com/embed/')) {
-    const match = trimmed.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/);
-    return match ? `https://www.youtube-nocookie.com/embed/${match[1]}?rel=0` : trimmed;
+  // 1. Ekstrak src jika user copy seluruh tag <iframe>
+  if (str.includes('<iframe') || /src=["']/i.test(str)) {
+    const srcMatch = str.match(/src=["']([^"']+)["']/i);
+    if (srcMatch && srcMatch[1]) {
+      str = srcMatch[1].trim();
+    }
   }
 
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  const match = trimmed.match(regExp);
+  // 2. Decode entities jika ada
+  str = str.replace(/&amp;/g, '&');
 
-  if (match && match[2] && match[2].length === 11) {
-    return `https://www.youtube-nocookie.com/embed/${match[2]}?rel=0`;
+  // 3. Jika input langsung berupa 11 karakter ID video YouTube (misal: dQw4w9WgXcQ)
+  if (/^[a-zA-Z0-9_-]{11}$/.test(str)) {
+    return str;
   }
+
+  // 4. Coba parsing dengan URL standard
+  try {
+    const fullUrl = str.startsWith('http://') || str.startsWith('https://')
+      ? str
+      : `https://${str.replace(/^\/\//, '')}`;
+    const parsed = new URL(fullUrl);
+    const host = parsed.hostname.toLowerCase().replace(/^www\./, '').replace(/^m\./, '');
+
+    // Domain youtu.be/ID
+    if (host === 'youtu.be') {
+      const id = parsed.pathname.slice(1).split('/')[0];
+      if (id && /^[a-zA-Z0-9_-]{11}$/.test(id)) return id;
+    }
+
+    // Domain youtube.com / youtube-nocookie.com
+    if (host.includes('youtube.com') || host.includes('youtube-nocookie.com')) {
+      // Query parameter v=ID (e.g. watch?v=ID)
+      const v = parsed.searchParams.get('v');
+      if (v && /^[a-zA-Z0-9_-]{11}$/.test(v)) return v;
+
+      // Path /embed/ID
+      const embedMatch = parsed.pathname.match(/\/embed\/([a-zA-Z0-9_-]{11})/);
+      if (embedMatch && embedMatch[1]) return embedMatch[1];
+
+      // Path /shorts/ID
+      const shortsMatch = parsed.pathname.match(/\/shorts\/([a-zA-Z0-9_-]{11})/);
+      if (shortsMatch && shortsMatch[1]) return shortsMatch[1];
+
+      // Path /live/ID (Live stream / broadcast video)
+      const liveMatch = parsed.pathname.match(/\/live\/([a-zA-Z0-9_-]{11})/);
+      if (liveMatch && liveMatch[1]) return liveMatch[1];
+
+      // Path /v/ID
+      const vMatch = parsed.pathname.match(/\/v\/([a-zA-Z0-9_-]{11})/);
+      if (vMatch && vMatch[1]) return vMatch[1];
+    }
+  } catch {
+    // Abaikan jika URL constructor gagal, lanjut ke fallback regex
+  }
+
+  // 5. Fallback Regex Komprehensif
+  const vParamMatch = str.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+  if (vParamMatch && vParamMatch[1]) return vParamMatch[1];
+
+  const pathMatch = str.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed|shorts|live|v)\/)([a-zA-Z0-9_-]{11})/i);
+  if (pathMatch && pathMatch[1]) return pathMatch[1];
 
   return null;
 }
 
-export function getYouTubeThumbnailUrl(url: string | undefined | null): string | null {
-  if (!url || typeof url !== 'string') return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  const match = url.trim().match(regExp);
-  if (match && match[2] && match[2].length === 11) {
-    return `https://img.youtube.com/vi/${match[2]}/hqdefault.jpg`;
+export interface YouTubeEmbedOptions {
+  autoplay?: boolean;
+  mute?: boolean;
+  loop?: boolean;
+  controls?: boolean;
+  rel?: boolean;
+}
+
+export function getYouTubeEmbedUrl(
+  url: string | undefined | null,
+  options?: YouTubeEmbedOptions
+): string | null {
+  const videoId = extractYouTubeVideoId(url);
+  if (!videoId) return null;
+
+  const params = new URLSearchParams();
+  params.set('rel', options?.rel ? '1' : '0');
+  params.set('enablejsapi', '1');
+
+  if (options?.autoplay) {
+    params.set('autoplay', '1');
   }
-  return null;
+  if (options?.mute) {
+    params.set('mute', '1');
+  }
+  if (options?.loop) {
+    params.set('loop', '1');
+    params.set('playlist', videoId);
+  }
+  if (options?.controls === false) {
+    params.set('controls', '0');
+  }
+
+  return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+}
+
+export function getYouTubeThumbnailUrl(url: string | undefined | null): string | null {
+  const videoId = extractYouTubeVideoId(url);
+  if (!videoId) return null;
+  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+}
+
+export function normalizeYouTubeInput(input: string | undefined | null): string {
+  if (!input) return '';
+  const videoId = extractYouTubeVideoId(input);
+  if (videoId) {
+    return `https://www.youtube.com/watch?v=${videoId}`;
+  }
+  return input.trim();
 }
 
 export function getCrispLogoUrl(url: string | undefined | null): string {
