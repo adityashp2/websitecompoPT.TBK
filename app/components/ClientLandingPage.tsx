@@ -93,7 +93,7 @@ export default function ClientLandingPage({ initialContent }: { initialContent: 
   }, [initialContent]);
 
   useEffect(() => {
-    fetch('/api/content')
+    fetch('/api/content', { cache: 'no-store' })
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data) {

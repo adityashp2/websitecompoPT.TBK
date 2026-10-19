@@ -8,7 +8,18 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const content = await getSiteContent();
-    return NextResponse.json({ success: true, data: content });
+    return NextResponse.json(
+      { success: true, data: content },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+          'CDN-Cache-Control': 'no-store',
+          'Vercel-CDN-Cache-Control': 'no-store',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      }
+    );
   } catch (error) {
     console.error('Failed to get content:', error);
     return NextResponse.json({ success: false, error: 'Gagal mengambil data' }, { status: 500 });
@@ -32,8 +43,23 @@ export async function PUT(request: Request) {
     const updated = await updateSiteContent(body);
     try {
       revalidatePath('/', 'layout');
+      revalidatePath('/');
+      revalidatePath('/proyek');
+      revalidatePath('/tentang');
+      revalidatePath('/kegiatan');
+      revalidatePath('/pimpinan');
+      revalidatePath('/legalitas');
+      revalidatePath('/kontak');
+      revalidatePath('/simulasi-kpr');
     } catch {}
-    return NextResponse.json({ success: true, data: updated, message: 'Data berhasil diperbarui di database' });
+    return NextResponse.json(
+      { success: true, data: updated, message: 'Data berhasil diperbarui di database' },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+        },
+      }
+    );
   } catch (error) {
     console.error('Failed to update content:', error);
     return NextResponse.json({ success: false, error: 'Gagal memperbarui data' }, { status: 500 });

@@ -17,7 +17,7 @@ export default function KontakPage() {
   const [content, setContent] = useState<SiteContent>(initialSiteContent);
 
   useEffect(() => {
-    fetch('/api/content')
+    fetch('/api/content', { cache: 'no-store' })
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data) {
