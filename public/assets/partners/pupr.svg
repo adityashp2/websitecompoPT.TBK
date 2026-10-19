@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" fill="none" width="100%" height="100%">
+  <rect width="240" height="80" rx="8" fill="#FFFFFF"/>
+  <!-- Kementerian PUPR Logo -->
+  <g transform="translate(14, 14)">
+    <!-- Cakra Emblem Gold and Navy -->
+    <circle cx="24" cy="26" r="22" fill="#0A2240"/>
+    <circle cx="24" cy="26" r="18" fill="#F7B500"/>
+    <circle cx="24" cy="26" r="14" fill="#0A2240"/>
+    <!-- Gear teeth / cakra spokes -->
+    <path d="M24 14 L24 38 M12 26 L36 26 M15 17 L33 35 M15 35 L33 17" stroke="#F7B500" stroke-width="2.5"/>
+    <circle cx="24" cy="26" r="4.5" fill="#F7B500"/>
+    <!-- Text -->
+    <text x="54" y="24" font-family="'Inter', 'Arial Black', sans-serif" font-weight="900" font-size="15" fill="#0A2240" letter-spacing="-0.3">KEMENTERIAN PUPR</text>
+    <text x="54" y="38" font-family="'DM Sans', 'Arial', sans-serif" font-weight="600" font-size="8.5" fill="#64748B" letter-spacing="0.4">SIGAP MEMBANGUN NEGERI</text>
+  </g>
+</svg>

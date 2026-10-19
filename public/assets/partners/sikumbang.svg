@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" fill="none" width="100%" height="100%">
+  <rect width="240" height="80" rx="8" fill="#FFFFFF"/>
+  <!-- SiKumbang PUPR Logo -->
+  <g transform="translate(18, 15)">
+    <!-- Beetle/House motif in teal & orange -->
+    <rect x="6" y="8" width="36" height="34" rx="10" fill="#0D9488"/>
+    <!-- Roof outline -->
+    <path d="M12 20 L24 10 L36 20" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="24" cy="27" r="4" fill="#FF9D2E"/>
+    <!-- Text -->
+    <text x="50" y="27" font-family="'Inter', 'Arial Black', sans-serif" font-weight="900" font-size="20" fill="#0D9488" letter-spacing="-0.5">SiKumbang</text>
+    <text x="50" y="41" font-family="'DM Sans', 'Arial', sans-serif" font-weight="600" font-size="8.5" fill="#526783" letter-spacing="0.5">SISTEM PENGEMBANG PUPR</text>
+  </g>
+</svg>

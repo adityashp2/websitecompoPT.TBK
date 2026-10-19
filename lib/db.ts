@@ -233,6 +233,19 @@ export function mergeWithDefaults(parsed: any): SiteContent {
       highlightText: parsed.promoPopup?.highlightText ?? initialSiteContent.promoPopup?.highlightText,
       urgencyText: parsed.promoPopup?.urgencyText ?? initialSiteContent.promoPopup?.urgencyText,
     },
+    partners: {
+      ...initialSiteContent.partners,
+      ...(parsed.partners || {}),
+      badge: parsed.partners?.badge ?? initialSiteContent.partners?.badge,
+      title: parsed.partners?.title ?? initialSiteContent.partners?.title,
+      subtitle: parsed.partners?.subtitle ?? initialSiteContent.partners?.subtitle,
+      enabled: typeof parsed.partners?.enabled === 'boolean'
+        ? parsed.partners.enabled
+        : (initialSiteContent.partners?.enabled ?? true),
+      items: Array.isArray(parsed.partners?.items) && parsed.partners.items.length > 0
+        ? parsed.partners.items
+        : (initialSiteContent.partners?.items || []),
+    },
   };
 }
 

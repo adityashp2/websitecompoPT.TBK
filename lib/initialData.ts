@@ -64,6 +64,25 @@ export interface PromoPopup {
   urgencyText?: string;
 }
 
+export interface PartnerItem {
+  id: string;
+  name: string;
+  logo: string;
+  url?: string;
+  imageFit?: 'cover' | 'contain';
+  imageOffsetX?: number;
+  imageOffsetY?: number;
+  imageZoom?: number;
+}
+
+export interface PartnersConfig {
+  badge?: string;
+  title?: string;
+  subtitle?: string;
+  enabled?: boolean;
+  items: PartnerItem[];
+}
+
 export interface SiteContent {
   meta: {
     title: string;
@@ -252,6 +271,7 @@ export interface SiteContent {
     logoZoom?: number;
   };
   promoPopup?: PromoPopup;
+  partners?: PartnersConfig;
   socialLinks?: {
     instagram?: string;
     facebook?: string;
@@ -708,6 +728,62 @@ export const initialSiteContent: SiteContent = {
     description: "Program Rumah Subsidi Berkualitas dengan Angsuran Ringan Flat Sampai Lunas",
     ctaText: "Daftar sekarang!!!",
     ctaUrl: "https://wa.me/6281278901234?text=Halo%20PT.%20TBK%2C%20saya%20tertarik%20dengan%20promo%20spesial%20unit%20Puri%20Gunung%20Langgar.",
+  },
+  partners: {
+    badge: "PARTNERS",
+    title: "Our Partners.",
+    subtitle: "Bekerja sama dengan perbankan nasional dan lembaga resmi untuk menjamin kemudahan fasilitas KPR bersubsidi serta kepastian legalitas bagi setiap konsumen.",
+    enabled: true,
+    items: [
+      {
+        id: "partner-btn",
+        name: "Bank BTN (Bank Tabungan Negara)",
+        logo: "/assets/partners/btn.svg",
+        url: "https://www.btn.co.id",
+      },
+      {
+        id: "partner-bsi",
+        name: "Bank Syariah Indonesia (BSI)",
+        logo: "/assets/partners/bsi.svg",
+        url: "https://www.bankbsi.co.id",
+      },
+      {
+        id: "partner-mandiri",
+        name: "Bank Mandiri",
+        logo: "/assets/partners/mandiri.svg",
+        url: "https://www.bankmandiri.co.id",
+      },
+      {
+        id: "partner-bri",
+        name: "Bank BRI",
+        logo: "/assets/partners/bri.svg",
+        url: "https://www.bri.co.id",
+      },
+      {
+        id: "partner-tapera",
+        name: "BP Tapera",
+        logo: "/assets/partners/tapera.svg",
+        url: "https://tapera.go.id",
+      },
+      {
+        id: "partner-pupr",
+        name: "Kementerian PUPR",
+        logo: "/assets/partners/pupr.svg",
+        url: "https://pu.go.id",
+      },
+      {
+        id: "partner-sikumbang",
+        name: "SiKumbang Kementerian PUPR",
+        logo: "/assets/partners/sikumbang.svg",
+        url: "https://sikumbang.tapera.go.id",
+      },
+      {
+        id: "partner-notaris",
+        name: "Kantor Notaris & PPAT Rekanan",
+        logo: "/assets/partners/notaris.svg",
+        url: "",
+      },
+    ],
   },
 };
 

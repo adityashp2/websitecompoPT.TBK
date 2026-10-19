@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { SiteContent, initialSiteContent, BannerSlide, PurchaseStep, getYouTubeEmbedUrl } from '@/lib/initialData';
+import { SiteContent, initialSiteContent, BannerSlide, PurchaseStep, getYouTubeEmbedUrl, PartnerItem, PartnersConfig } from '@/lib/initialData';
 import {
   Save,
   RotateCcw,
@@ -42,7 +42,8 @@ import {
   MessageCircle,
   Maximize2,
   Move,
-  Crop
+  Crop,
+  Handshake
 } from 'lucide-react';
 
 interface Inquiry {
@@ -435,6 +436,7 @@ function ImageAdjustmentControl({
 
 export type AdminTab =
   | 'banners'
+  | 'partners'
   | 'intro-features'
   | 'buying-process'
   | 'kpr-simulation'
@@ -460,6 +462,11 @@ const TAB_GROUPS: Record<
     group: 'Tampilan Beranda',
     title: 'Slide Banner Promosi (Top Carousel)',
     desc: 'Kelola slide banner beranda di bagian paling atas (Puri Gunung Langgar, KPR FLPP 5%, Legalitas SHM, dll.).',
+  },
+    partners: {
+    group: 'Tampilan Beranda',
+    title: 'Mitra & Kerjasama (Our Partners)',
+    desc: 'Kelola logo bank rekanan dan lembaga resmi dalam slider otomatis di beranda website.',
   },
   'intro-features': {
     group: 'Tampilan Beranda',
@@ -527,6 +534,8 @@ const renderTabIcon = (tab: AdminTab) => {
   switch (tab) {
     case 'banners':
       return <Film className="w-5 h-5 text-[#FF9D2E]" />;
+        case 'partners':
+      return <Handshake className="w-5 h-5 text-[#FF9D2E]" />;
     case 'intro-features':
       return <Sparkles className="w-5 h-5 text-[#FF9D2E]" />;
     case 'buying-process':
@@ -1190,6 +1199,26 @@ export default function AdminDashboard() {
                   {content.promoPopup?.enabled ? 'AKTIF' : 'OFF'}
                 </span>
               </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('partners')}
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
+                  activeTab === 'partners'
+                    ? 'bg-[#073B78] text-white font-bold shadow-md shadow-[#073B78]/25'
+                    : 'text-[#526783] hover:text-[#073B78] hover:bg-[#F0F5FA] font-medium'
+                }`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <Handshake className={`w-4 h-4 shrink-0 ${activeTab === 'partners' ? 'text-[#FF9D2E]' : 'text-[#0A4B91]'}`} />
+                  <span className="truncate">Mitra &amp; Kerjasama (Partners)</span>
+                </div>
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold shrink-0 ml-1.5 ${
+                  activeTab === 'partners' ? 'bg-white/20 text-white' : 'bg-[#F0F5FA] text-[#526783] border border-[#DCE7F5]'
+                }`}>
+                  {content.partners?.items?.length || 0}
+                </span>
+              </button>
             </div>
 
             {/* GROUP 2: PROFIL PERUSAHAAN */}
@@ -1369,6 +1398,7 @@ export default function AdminDashboard() {
                 >
                   <optgroup label="TAMPILAN BERANDA">
                     <option value="banners">Banner Promosi Atas ({content.bannerSlides?.length || 0})</option>
+                    <option value="partners">Mitra &amp; Kerjasama (Our Partners) ({content.partners?.items?.length || 0})</option>
                     <option value="intro-features">Statistik &amp; Keunggulan</option>
                     <option value="buying-process">Alur Pembelian Rumah</option>
                     <option value="kpr-simulation">Simulasi KPR FLPP 5%</option>
@@ -1399,6 +1429,7 @@ export default function AdminDashboard() {
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-0.5">
               {[
                 { id: 'banners', label: 'Banner' },
+                { id: 'partners', label: 'Mitra (Partners)' },
                 { id: 'intro-features', label: 'Keunggulan' },
                 { id: 'buying-process', label: 'Alur Beli' },
                 { id: 'kpr-simulation', label: 'KPR FLPP' },
@@ -1944,6 +1975,386 @@ export default function AdminDashboard() {
                               </div>
                             </div>
                           </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+
+                        {/* TAB: OUR PARTNERS (SLIDER OTOMATIS) */}
+            {activeTab === 'partners' && (
+              <div className="space-y-6">
+                <div className="border-b border-[#DCE7F5] pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="font-syne text-xl font-bold text-[#073B78] flex items-center gap-2">
+                      <Handshake className="w-5 h-5 text-[#FF9D2E]" />
+                      Mitra &amp; Kerjasama Resmi (Our Partners Slider)
+                    </h2>
+                    <p className="text-xs text-[#526783] mt-1">
+                      Kelola logo bank penyalur KPR, lembaga kementerian, dan instansi rekanan yang tampil dalam slider otomatis di beranda website.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const currentPartners = content.partners || { badge: 'PARTNERS', title: 'Our Partners.', subtitle: '', enabled: true, items: [] };
+                      const currentItems = Array.isArray(currentPartners.items) ? currentPartners.items : [];
+                      const newItem: PartnerItem = {
+                        id: `partner-${Date.now()}`,
+                        name: 'Nama Mitra / Lembaga',
+                        logo: '',
+                        url: '',
+                      };
+                      setContent({
+                        ...content,
+                        partners: {
+                          ...currentPartners,
+                          items: [...currentItems, newItem],
+                        },
+                      });
+                    }}
+                    className="px-4 py-2 rounded-xl bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-bold shadow-xs flex items-center gap-2 transition-all self-start sm:self-auto"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Tambah Mitra Baru</span>
+                  </button>
+                </div>
+
+                {/* Status Aktif & Header Text Settings */}
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-4 shadow-xs">
+                  <div className="flex items-center justify-between border-b border-[#DCE7F5] pb-3">
+                    <div>
+                      <h3 className="text-sm font-bold text-[#073B78]">Status &amp; Judul Bagian Mitra</h3>
+                      <p className="text-xs text-[#526783]">Sesuaikan teks judul seperti pada inspirasi ICC (PARTNERS / Our Partners.)</p>
+                    </div>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={content.partners?.enabled !== false}
+                        onChange={(e) => {
+                          const currentPartners = content.partners || { badge: 'PARTNERS', title: 'Our Partners.', subtitle: '', enabled: true, items: [] };
+                          setContent({
+                            ...content,
+                            partners: {
+                              ...currentPartners,
+                              enabled: e.target.checked,
+                            },
+                          });
+                        }}
+                        className="w-4 h-4 rounded text-[#073B78] focus:ring-[#073B78]"
+                      />
+                      <span className="text-xs font-bold text-[#073B78]">Tampilkan di Beranda</span>
+                    </label>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
+                        Sub-Judul Kecil Atas (Badge / Label)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="PARTNERS"
+                        value={content.partners?.badge ?? 'PARTNERS'}
+                        onChange={(e) => {
+                          const currentPartners = content.partners || { badge: 'PARTNERS', title: 'Our Partners.', subtitle: '', enabled: true, items: [] };
+                          setContent({
+                            ...content,
+                            partners: {
+                              ...currentPartners,
+                              badge: e.target.value,
+                            },
+                          });
+                        }}
+                        className="w-full h-10 px-3.5 rounded-xl bg-white border border-[#DCE7F5] text-xs font-bold text-[#073B78] uppercase"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
+                        Judul Utama Bagian
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Our Partners."
+                        value={content.partners?.title ?? 'Our Partners.'}
+                        onChange={(e) => {
+                          const currentPartners = content.partners || { badge: 'PARTNERS', title: 'Our Partners.', subtitle: '', enabled: true, items: [] };
+                          setContent({
+                            ...content,
+                            partners: {
+                              ...currentPartners,
+                              title: e.target.value,
+                            },
+                          });
+                        }}
+                        className="w-full h-10 px-3.5 rounded-xl bg-white border border-[#DCE7F5] text-xs font-bold text-[#073B78]"
+                      />
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
+                        Deskripsi Penjelas (Opsional)
+                      </label>
+                      <textarea
+                        rows={2}
+                        placeholder="Bekerja sama dengan perbankan nasional terpercaya..."
+                        value={content.partners?.subtitle ?? ''}
+                        onChange={(e) => {
+                          const currentPartners = content.partners || { badge: 'PARTNERS', title: 'Our Partners.', subtitle: '', enabled: true, items: [] };
+                          setContent({
+                            ...content,
+                            partners: {
+                              ...currentPartners,
+                              subtitle: e.target.value,
+                            },
+                          });
+                        }}
+                        className="w-full p-3 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#526783] leading-relaxed"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Partners List */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-[#073B78]">
+                      Daftar Logo Mitra ({content.partners?.items?.length || 0})
+                    </h3>
+                    <span className="text-xs text-[#526783]">
+                      Logo akan bergeser otomatis secara mulus (infinite smooth marquee)
+                    </span>
+                  </div>
+
+                  {(!content.partners?.items || content.partners.items.length === 0) ? (
+                    <div className="p-8 rounded-2xl bg-[#F8FAFD] border border-[#DCE7F5] text-center text-[#526783] text-sm">
+                      Belum ada mitra. Klik tombol &quot;Tambah Mitra Baru&quot; di atas untuk menambahkan logo mitra.
+                    </div>
+                  ) : (
+                    content.partners.items.map((partner, pIdx) => (
+                      <div
+                        key={partner.id || pIdx}
+                        className="p-5 rounded-2xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-4 hover:border-[#073B78]/40 transition-all shadow-xs"
+                      >
+                        {/* Header Item: Order & Delete */}
+                        <div className="flex items-center justify-between border-b border-[#DCE7F5] pb-3">
+                          <div className="flex items-center gap-2">
+                            <span className="w-6 h-6 rounded-full bg-[#073B78] text-white text-xs font-bold flex items-center justify-center">
+                              {pIdx + 1}
+                            </span>
+                            <span className="font-bold text-xs sm:text-sm text-[#073B78]">
+                              {partner.name || `Mitra ${pIdx + 1}`}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              type="button"
+                              disabled={pIdx === 0}
+                              onClick={() => {
+                                const currentPartners = content.partners!;
+                                const items = [...currentPartners.items];
+                                const temp = items[pIdx];
+                                items[pIdx] = items[pIdx - 1];
+                                items[pIdx - 1] = temp;
+                                setContent({
+                                  ...content,
+                                  partners: { ...currentPartners, items },
+                                });
+                              }}
+                              className="p-1.5 rounded-lg border border-[#DCE7F5] bg-white text-[#526783] hover:text-[#073B78] disabled:opacity-30 disabled:cursor-not-allowed"
+                              title="Pindah ke atas"
+                            >
+                              <ArrowUp className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              disabled={pIdx === (content.partners?.items?.length || 1) - 1}
+                              onClick={() => {
+                                const currentPartners = content.partners!;
+                                const items = [...currentPartners.items];
+                                const temp = items[pIdx];
+                                items[pIdx] = items[pIdx + 1];
+                                items[pIdx + 1] = temp;
+                                setContent({
+                                  ...content,
+                                  partners: { ...currentPartners, items },
+                                });
+                              }}
+                              className="p-1.5 rounded-lg border border-[#DCE7F5] bg-white text-[#526783] hover:text-[#073B78] disabled:opacity-30 disabled:cursor-not-allowed"
+                              title="Pindah ke bawah"
+                            >
+                              <ArrowDown className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const currentPartners = content.partners!;
+                                const items = currentPartners.items.filter((_, i) => i !== pIdx);
+                                setContent({
+                                  ...content,
+                                  partners: { ...currentPartners, items },
+                                });
+                              }}
+                              className="p-1.5 rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100"
+                              title="Hapus mitra"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Fields: Name & URL */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                          <div>
+                            <label className="block text-xs font-bold text-[#073B78] mb-1">
+                              Nama Mitra / Lembaga
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="Contoh: Bank BTN (Bank Tabungan Negara)"
+                              value={partner.name}
+                              onChange={(e) => {
+                                const currentPartners = content.partners!;
+                                const items = [...currentPartners.items];
+                                items[pIdx].name = e.target.value;
+                                setContent({
+                                  ...content,
+                                  partners: { ...currentPartners, items },
+                                });
+                              }}
+                              className="w-full h-9 px-3 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52]"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-xs font-bold text-[#073B78] mb-1">
+                              Link Website (Opsional, terbuka tab baru)
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="https://www.btn.co.id"
+                              value={partner.url || ''}
+                              onChange={(e) => {
+                                const currentPartners = content.partners!;
+                                const items = [...currentPartners.items];
+                                items[pIdx].url = e.target.value;
+                                setContent({
+                                  ...content,
+                                  partners: { ...currentPartners, items },
+                                });
+                              }}
+                              className="w-full h-9 px-3 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783] font-mono"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Logo Upload & Preview */}
+                        <div className="p-4 rounded-xl bg-white border border-[#DCE7F5] space-y-3">
+                          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                            {/* Input URL & Upload Button */}
+                            <div className="md:col-span-7 space-y-2">
+                              <label className="block text-xs font-bold text-[#073B78]">
+                                File Logo Mitra
+                              </label>
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="text"
+                                  placeholder="/assets/partners/btn.svg atau URL logo"
+                                  value={partner.logo}
+                                  onChange={(e) => {
+                                    const currentPartners = content.partners!;
+                                    const items = [...currentPartners.items];
+                                    items[pIdx].logo = e.target.value;
+                                    setContent({
+                                      ...content,
+                                      partners: { ...currentPartners, items },
+                                    });
+                                  }}
+                                  className="flex-1 h-9 px-3 rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] text-xs text-[#102D52] font-mono"
+                                />
+                                <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0">
+                                  <Upload className="w-3.5 h-3.5" />
+                                  <span>{uploadingKey === `partner-${pIdx}` ? 'Uploading...' : 'Upload'}</span>
+                                  <input
+                                    type="file"
+                                    accept="image/*,.svg"
+                                    className="hidden"
+                                    onChange={(e) => {
+                                      if (e.target.files && e.target.files[0]) {
+                                        handleGenericFileUpload(e.target.files[0], `partner-${pIdx}`, (url) => {
+                                          const currentPartners = content.partners!;
+                                          const items = [...currentPartners.items];
+                                          items[pIdx].logo = url;
+                                          setContent({ ...content, partners: { ...currentPartners, items } });
+                                        });
+                                      }
+                                    }}
+                                  />
+                                </label>
+                              </div>
+                              <p className="text-[11px] text-[#526783]">
+                                Format direkomendasikan: SVG, PNG transparan, atau JPG bersih.
+                              </p>
+                            </div>
+
+                            {/* Live Preview Box */}
+                            <div className="md:col-span-5 flex flex-col items-center">
+                              <LivePreviewBadge
+                                title="PREVIEW LOGO MITRA"
+                                subtitle="Tampilan Kartu Beranda"
+                              />
+                              <div className="h-20 w-48 px-3 py-2 bg-white rounded-xl border border-slate-200/90 shadow-sm flex items-center justify-center overflow-hidden">
+                                {partner.logo && partner.logo.trim() !== '' ? (
+                                  <img
+                                    src={partner.logo}
+                                    alt={partner.name || 'Preview'}
+                                    style={{
+                                      objectFit: partner.imageFit || 'contain',
+                                      objectPosition: `${partner.imageOffsetX !== undefined ? partner.imageOffsetX : 50}% ${(partner.imageOffsetY !== undefined ? partner.imageOffsetY : 50)}%`,
+                                      transform: `scale(${((partner.imageZoom !== undefined ? partner.imageZoom : 100) / 100)})`,
+                                    }}
+                                    className="max-h-12 w-auto max-w-full"
+                                  />
+                                ) : (
+                                  <span className="text-[11px] text-[#526783] italic">
+                                    Belum ada logo
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Image Adjustment Control for the Logo */}
+                          {partner.logo && partner.logo.trim() !== '' && (
+                            <ImageAdjustmentControl
+                              title="Pengaturan Posisi &amp; Skala Logo"
+                              fit={partner.imageFit || 'contain'}
+                              offsetX={partner.imageOffsetX}
+                              offsetY={partner.imageOffsetY}
+                              zoom={partner.imageZoom || 100}
+                              defaultOffsetX={50}
+                              defaultOffsetY={50}
+                              onChange={(updates) => {
+                                const currentPartners = content.partners!;
+                                const items = [...currentPartners.items];
+                                items[pIdx] = {
+                                  ...items[pIdx],
+                                  imageFit: updates.fit,
+                                  imageOffsetX: updates.offsetX,
+                                  imageOffsetY: updates.offsetY,
+                                  imageZoom: updates.zoom,
+                                };
+                                setContent({
+                                  ...content,
+                                  partners: { ...currentPartners, items },
+                                });
+                              }}
+                            />
+                          )}
                         </div>
                       </div>
                     ))

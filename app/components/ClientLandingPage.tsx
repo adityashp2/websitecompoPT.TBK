@@ -31,6 +31,7 @@ import Header from './Navbar';
 import Footer from './Footer';
 import FloatingWhatsApp from './FloatingWhatsApp';
 import PromoBannerCarousel from './PromoBannerCarousel';
+import PartnersCarousel from './PartnersCarousel';
 import {
   HeaderHousesIllustration,
   Step1ConsultationIllustration,
@@ -429,6 +430,11 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
             </div>
           </div>
         </section>
+
+        {/* ========================================================= */}
+        {/* OUR PARTNERS: AUTO-SLIDING CAROUSEL (BANK & INSTITUSI)    */}
+        {/* ========================================================= */}
+        <PartnersCarousel partners={content.partners} />
 
         {/* ========================================================= */}
         {/* SECTION 2: PROJECT HIGHLIGHT (Puri Gunung Langgar)        */}
