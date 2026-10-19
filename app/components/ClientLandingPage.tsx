@@ -479,7 +479,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                             alt={slide.caption || 'Foto Proyek'}
                             style={{
                               objectFit: (slide as any).imageFit || 'contain',
-                              objectPosition: `center ${(slide as any).imageOffsetY !== undefined ? (slide as any).imageOffsetY : 50}%`,
+                              objectPosition: `${(slide as any).imageOffsetX !== undefined ? (slide as any).imageOffsetX : 50}% ${(slide as any).imageOffsetY !== undefined ? (slide as any).imageOffsetY : 50}%`,
                               transform: `scale(${(((slide as any).imageZoom !== undefined ? (slide as any).imageZoom : 100) / 100)})`,
                             }}
                             onClick={() => {
@@ -782,7 +782,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                       alt={content.about.officeCaption || 'Kantor & Perencanaan PT. TBK'}
                       style={{
                         objectFit: content.about.officeImageFit || 'cover',
-                        objectPosition: `center ${content.about.officeImageOffsetY !== undefined ? content.about.officeImageOffsetY : 50}%`,
+                        objectPosition: `${content.about.officeImageOffsetX !== undefined ? content.about.officeImageOffsetX : 50}% ${content.about.officeImageOffsetY !== undefined ? content.about.officeImageOffsetY : 50}%`,
                         transform: `scale(${(content.about.officeImageZoom !== undefined ? content.about.officeImageZoom : 100) / 100})`,
                       }}
                       className="w-full h-full transition-transform duration-700"
@@ -861,7 +861,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                           className="w-full h-full transition-all duration-500 ease-out group-hover:scale-105"
                           style={{
                             objectFit: member.imageFit || 'cover',
-                            objectPosition: `center ${member.imageOffsetY !== undefined ? member.imageOffsetY : 12}%`,
+                            objectPosition: `${member.imageOffsetX !== undefined ? member.imageOffsetX : 50}% ${member.imageOffsetY !== undefined ? member.imageOffsetY : 12}%`,
                             transform: `scale(${(member.imageZoom !== undefined ? member.imageZoom : 100) / 100})`,
                           }}
                           loading="lazy"
@@ -958,7 +958,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                             className="w-full h-full transition-all duration-500 hover:scale-105"
                             style={{
                               objectFit: op.imageFit || 'cover',
-                              objectPosition: `center ${op.imageOffsetY !== undefined ? op.imageOffsetY : 15}%`,
+                              objectPosition: `${op.imageOffsetX !== undefined ? op.imageOffsetX : 50}% ${op.imageOffsetY !== undefined ? op.imageOffsetY : 15}%`,
                               transform: `scale(${(op.imageZoom !== undefined ? op.imageZoom : 100) / 100})`,
                             }}
                             loading="lazy"
@@ -1352,7 +1352,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                           alt={item.title}
                           style={{
                             objectFit: (item as any).imageFit || 'cover',
-                            objectPosition: `center ${(item as any).imageOffsetY !== undefined ? (item as any).imageOffsetY : 50}%`,
+                            objectPosition: `${(item as any).imageOffsetX !== undefined ? (item as any).imageOffsetX : 50}% ${(item as any).imageOffsetY !== undefined ? (item as any).imageOffsetY : 50}%`,
                             transform: `scale(${(((item as any).imageZoom !== undefined ? (item as any).imageZoom : 100) / 100)})`,
                           }}
                           className="w-full h-full transition-transform duration-500 group-hover:scale-105"

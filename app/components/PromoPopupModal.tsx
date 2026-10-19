@@ -125,7 +125,7 @@ export default function PromoPopupModal({ promo }: PromoPopupModalProps) {
 
   const imgStyle: React.CSSProperties = {
     objectFit: promo.imageFit || 'contain',
-    objectPosition: `center ${promo.imageOffsetY !== undefined ? promo.imageOffsetY : 50}%`,
+    objectPosition: `${promo.imageOffsetX !== undefined ? promo.imageOffsetX : 50}% ${promo.imageOffsetY !== undefined ? promo.imageOffsetY : 50}%`,
     transform: promo.imageZoom !== undefined ? `scale(${promo.imageZoom / 100})` : undefined,
   };
 

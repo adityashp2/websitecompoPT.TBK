@@ -119,7 +119,7 @@ export default async function PimpinanPage() {
                         className="w-full h-full transition-transform duration-500 ease-out group-hover:scale-105"
                         style={{
                           objectFit: member.imageFit || 'cover',
-                          objectPosition: `center ${member.imageOffsetY !== undefined ? member.imageOffsetY : 12}%`,
+                          objectPosition: `${member.imageOffsetX !== undefined ? member.imageOffsetX : 50}% ${member.imageOffsetY !== undefined ? member.imageOffsetY : 12}%`,
                           transform: `scale(${(member.imageZoom !== undefined ? member.imageZoom : 100) / 100})`,
                         }}
                       />
@@ -221,7 +221,7 @@ export default async function PimpinanPage() {
                               className="w-full h-full transition-transform duration-500 group-hover:scale-105"
                               style={{
                                 objectFit: member.imageFit || 'cover',
-                                objectPosition: `center ${member.imageOffsetY !== undefined ? member.imageOffsetY : 15}%`,
+                                objectPosition: `${member.imageOffsetX !== undefined ? member.imageOffsetX : 50}% ${member.imageOffsetY !== undefined ? member.imageOffsetY : 15}%`,
                                 transform: `scale(${(member.imageZoom !== undefined ? member.imageZoom : 100) / 100})`,
                               }}
                             />

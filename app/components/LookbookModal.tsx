@@ -12,6 +12,7 @@ export interface LookbookItem {
   category?: string;
   specs?: string[];
   imageFit?: 'cover' | 'contain';
+  imageOffsetX?: number;
   imageOffsetY?: number;
   imageZoom?: number;
 }
@@ -175,7 +176,7 @@ export default function LookbookModal({
           alt={currentItem.title}
           style={{
             objectFit: currentItem.imageFit || 'contain',
-            objectPosition: `center ${currentItem.imageOffsetY !== undefined ? currentItem.imageOffsetY : 50}%`,
+            objectPosition: `${currentItem.imageOffsetX !== undefined ? currentItem.imageOffsetX : 50}% ${currentItem.imageOffsetY !== undefined ? currentItem.imageOffsetY : 50}%`,
             transform: currentItem.imageZoom !== undefined ? `scale(${currentItem.imageZoom / 100})` : undefined,
           }}
           className="max-h-[76vh] sm:max-h-[78vh] max-w-[94vw] w-auto h-auto rounded-xl shadow-2xl block mx-auto border border-white/15 animate-in fade-in zoom-in-95 duration-200"

@@ -12,6 +12,7 @@ export interface BannerSlide {
   image: string;
   imageAlt: string;
   imageFit?: 'cover' | 'contain';
+  imageOffsetX?: number;
   imageOffsetY?: number;
   imageZoom?: number;
   mediaType?: 'image' | 'video';
@@ -50,6 +51,7 @@ export interface PromoPopup {
   enabled: boolean;
   image: string;
   imageFit?: 'cover' | 'contain';
+  imageOffsetX?: number;
   imageOffsetY?: number;
   imageZoom?: number;
   badge?: string;
@@ -85,6 +87,7 @@ export interface SiteContent {
     secondaryCtaLink: string;
     backgroundImage: string;
     imageFit?: 'cover' | 'contain';
+    imageOffsetX?: number;
     imageOffsetY?: number;
     imageZoom?: number;
     stats: Array<{ label: string; value: string }>;
@@ -92,6 +95,7 @@ export interface SiteContent {
       image: string;
       caption: string;
       imageFit?: 'cover' | 'contain';
+      imageOffsetX?: number;
       imageOffsetY?: number;
       imageZoom?: number;
     }>;
@@ -110,6 +114,7 @@ export interface SiteContent {
     officeImage?: string;
     officeCaption?: string;
     officeImageFit?: 'cover' | 'contain';
+    officeImageOffsetX?: number;
     officeImageOffsetY?: number;
     officeImageZoom?: number;
     headerBgImage?: string;
@@ -137,6 +142,7 @@ export interface SiteContent {
       department?: string;
       imageFit?: 'cover' | 'contain';
       imagePosition?: string;
+      imageOffsetX?: number;
       imageOffsetY?: number;
       imageZoom?: number;
     }>;
@@ -186,6 +192,7 @@ export interface SiteContent {
       tag: string;
       videoUrl?: string;
       imageFit?: 'cover' | 'contain';
+      imageOffsetX?: number;
       imageOffsetY?: number;
       imageZoom?: number;
     }>;
@@ -201,6 +208,7 @@ export interface SiteContent {
     description: string;
     image: string;
     imageFit?: 'cover' | 'contain';
+    imageOffsetX?: number;
     imageOffsetY?: number;
     imageZoom?: number;
     mediaType?: 'photo' | 'video';
@@ -209,6 +217,7 @@ export interface SiteContent {
       image: string;
       caption?: string;
       imageFit?: 'cover' | 'contain';
+      imageOffsetX?: number;
       imageOffsetY?: number;
       imageZoom?: number;
     }>;
@@ -238,6 +247,7 @@ export interface SiteContent {
     copyrightText: string;
     logo?: string;
     logoFit?: 'cover' | 'contain';
+    logoOffsetX?: number;
     logoOffsetY?: number;
     logoZoom?: number;
   };

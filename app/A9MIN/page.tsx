@@ -40,7 +40,9 @@ import {
   Megaphone,
   Eye,
   MessageCircle,
-  Maximize2
+  Maximize2,
+  Move,
+  Crop
 } from 'lucide-react';
 
 interface Inquiry {
@@ -55,52 +57,103 @@ interface Inquiry {
 interface ImageAdjustmentControlProps {
   title?: string;
   fit?: 'cover' | 'contain';
+  offsetX?: number;
   offsetY?: number;
   zoom?: number;
+  defaultOffsetX?: number;
   defaultOffsetY?: number;
-  onChange: (updates: { fit: 'cover' | 'contain'; offsetY: number; zoom: number }) => void;
+  onChange: (updates: { fit: 'cover' | 'contain'; offsetX: number; offsetY: number; zoom: number }) => void;
 }
 
 function ImageAdjustmentControl({
   title = "Pengaturan Ukuran & Posisi Foto",
   fit = "cover",
+  offsetX,
   offsetY,
   zoom = 100,
+  defaultOffsetX = 50,
   defaultOffsetY = 50,
   onChange,
 }: ImageAdjustmentControlProps) {
+  const currentOffsetX = offsetX !== undefined ? offsetX : defaultOffsetX;
   const currentOffsetY = offsetY !== undefined ? offsetY : defaultOffsetY;
   const currentFit = fit || 'cover';
   const currentZoom = zoom !== undefined ? zoom : 100;
 
+  const padRef = React.useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = React.useState(false);
+
+  const updateFromPointer = (e: React.PointerEvent<HTMLDivElement> | PointerEvent) => {
+    if (!padRef.current) return;
+    const rect = padRef.current.getBoundingClientRect();
+    const rawX = ((e.clientX - rect.left) / rect.width) * 100;
+    const rawY = ((e.clientY - rect.top) / rect.height) * 100;
+    const clampedX = Math.round(Math.max(0, Math.min(100, rawX)));
+    const clampedY = Math.round(Math.max(0, Math.min(100, rawY)));
+    onChange({ fit: currentFit, offsetX: clampedX, offsetY: clampedY, zoom: currentZoom });
+  };
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {}
+    setIsDragging(true);
+    updateFromPointer(e);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDragging) return;
+    updateFromPointer(e);
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (isDragging) {
+      try {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      } catch {}
+      setIsDragging(false);
+    }
+  };
+
   return (
-    <div className="mt-2.5 p-3 rounded-xl bg-[#F0F4FA] border border-[#DCE7F5] space-y-3 text-left">
+    <div className="mt-2.5 p-3.5 rounded-xl bg-[#F0F4FA] border border-[#DCE7F5] space-y-3.5 text-left">
       <div className="flex items-center justify-between">
         <span className="text-[11px] font-bold text-[#073B78] flex items-center gap-1.5">
-          <Maximize2 className="w-3.5 h-3.5 text-[#FF9D2E]" />
+          <Crop className="w-3.5 h-3.5 text-[#FF9D2E]" />
           <span>{title}</span>
         </span>
-        <span className="text-[10px] text-[#526783] bg-white px-2 py-0.5 rounded border border-[#DCE7F5]">
-          Live Sizing
-        </span>
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => onChange({ fit: 'cover', offsetX: 50, offsetY: 50, zoom: 100 })}
+            className="text-[10px] text-[#526783] hover:text-[#073B78] bg-white px-2 py-0.5 rounded border border-[#DCE7F5] hover:border-[#073B78] flex items-center gap-1 transition-all"
+            title="Reset posisi ke tengah (50% / 50%) dan zoom 100%"
+          >
+            <RotateCcw className="w-2.5 h-2.5 text-[#FF9D2E]" />
+            <span>Reset Posisi</span>
+          </button>
+          <span className="text-[10px] text-[#073B78] font-bold bg-[#E6EFFD] px-2 py-0.5 rounded border border-[#C5DCFA]">
+            Live Crop &amp; Pan
+          </span>
+        </div>
       </div>
 
       {/* Pilihan Fit: Cover vs Contain */}
       <div className="grid grid-cols-2 gap-2 text-xs">
         <button
           type="button"
-          onClick={() => onChange({ fit: 'cover', offsetY: currentOffsetY, zoom: currentZoom })}
+          onClick={() => onChange({ fit: 'cover', offsetX: currentOffsetX, offsetY: currentOffsetY, zoom: currentZoom })}
           className={`py-1.5 px-2.5 rounded-lg font-medium border text-center transition-all ${
             currentFit === 'cover'
               ? 'bg-[#073B78] text-white border-[#073B78] shadow-xs'
               : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
           }`}
         >
-          Penuh Bingkai (Cover)
+          Penuh Bingkai (Cover / Crop)
         </button>
         <button
           type="button"
-          onClick={() => onChange({ fit: 'contain', offsetY: currentOffsetY, zoom: currentZoom })}
+          onClick={() => onChange({ fit: 'contain', offsetX: currentOffsetX, offsetY: currentOffsetY, zoom: currentZoom })}
           className={`py-1.5 px-2.5 rounded-lg font-medium border text-center transition-all ${
             currentFit === 'contain'
               ? 'bg-[#073B78] text-white border-[#073B78] shadow-xs'
@@ -111,14 +164,137 @@ function ImageAdjustmentControl({
         </button>
       </div>
 
-      {/* Slider Geser Vertikal (Y-Offset) */}
-      <div>
-        <div className="flex items-center justify-between text-[11px] mb-1">
-          <label className="font-semibold text-[#102D52]">
-            Posisi Geser Vertikal (Y-Offset)
+      {/* INTERACTIVE 2D PAN / CROP PAD */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between text-[11px]">
+          <span className="font-semibold text-[#102D52] flex items-center gap-1.5">
+            <Move className="w-3 h-3 text-[#FF9D2E]" />
+            <span>Pad Titik Fokus &amp; Geser 2D (Klik / Seret Bebas)</span>
+          </span>
+          <span className="text-[10px] font-mono text-[#073B78] font-bold bg-white px-2 py-0.5 rounded border border-[#DCE7F5]">
+            X: {currentOffsetX}% • Y: {currentOffsetY}%
+          </span>
+        </div>
+        <div
+          ref={padRef}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+          className="relative w-full h-24 bg-[#0B1E36] rounded-xl overflow-hidden cursor-crosshair border border-[#073B78]/40 select-none touch-none shadow-inner group transition-all"
+        >
+          {/* Rule of thirds grid lines */}
+          <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 pointer-events-none opacity-20">
+            <div className="border-r border-b border-white" />
+            <div className="border-r border-b border-white" />
+            <div className="border-b border-white" />
+            <div className="border-r border-b border-white" />
+            <div className="border-r border-b border-white" />
+            <div className="border-b border-white" />
+            <div className="border-r border-white" />
+            <div className="border-r border-white" />
+            <div />
+          </div>
+
+          {/* Helper Directional Labels */}
+          <span className="absolute top-1 left-2 text-[8.5px] font-mono uppercase tracking-wider text-white/40 pointer-events-none">
+            Atas-Kiri
+          </span>
+          <span className="absolute top-1 right-2 text-[8.5px] font-mono uppercase tracking-wider text-white/40 pointer-events-none">
+            Atas-Kanan
+          </span>
+          <span className="absolute bottom-1 left-2 text-[8.5px] font-mono uppercase tracking-wider text-white/40 pointer-events-none">
+            Bawah-Kiri
+          </span>
+          <span className="absolute bottom-1 right-2 text-[8.5px] font-mono uppercase tracking-wider text-white/40 pointer-events-none">
+            Bawah-Kanan
+          </span>
+          <span className="absolute inset-x-0 bottom-1 text-center text-[8.5px] font-medium text-white/30 pointer-events-none">
+            Seret titik target ke area yang ingin difokuskan
+          </span>
+
+          {/* Focal Target Reticle */}
+          <div
+            className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-transform duration-75"
+            style={{ left: `${currentOffsetX}%`, top: `${currentOffsetY}%` }}
+          >
+            <div className="relative flex items-center justify-center">
+              <div className="w-7 h-7 rounded-full border-2 border-[#FF9D2E] bg-[#FF9D2E]/25 shadow-md flex items-center justify-center animate-pulse">
+                <div className="w-1.5 h-1.5 rounded-full bg-white shadow-xs" />
+              </div>
+              {/* Crosshair guidelines */}
+              <div className="absolute w-12 h-px bg-[#FF9D2E]/50 pointer-events-none" />
+              <div className="absolute h-12 w-px bg-[#FF9D2E]/50 pointer-events-none" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Slider Geser Horizontal (X-Offset / Kanan - Kiri) */}
+      <div className="space-y-1">
+        <div className="flex items-center justify-between text-[11px]">
+          <label className="font-semibold text-[#102D52] flex items-center gap-1">
+            <span>Posisi Geser Horizontal (Kiri - Kanan)</span>
           </label>
           <span className="text-[10px] font-mono text-[#073B78] font-bold">
-            {currentOffsetY}% {currentOffsetY === 50 ? '(Tengah)' : currentOffsetY < 30 ? '(Fokus Atas)' : '(Fokus Bawah)'}
+            {currentOffsetX}% {currentOffsetX === 50 ? '(Tengah)' : currentOffsetX < 40 ? '(Fokus Kiri)' : '(Fokus Kanan)'}
+          </span>
+        </div>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          step="1"
+          value={currentOffsetX}
+          onChange={(e) =>
+            onChange({
+              fit: currentFit,
+              offsetX: Number(e.target.value),
+              offsetY: currentOffsetY,
+              zoom: currentZoom,
+            })
+          }
+          className="w-full accent-[#FF9D2E] cursor-pointer"
+        />
+        <div className="flex items-center justify-between gap-1 pt-0.5">
+          <button
+            type="button"
+            onClick={() => onChange({ fit: currentFit, offsetX: 0, offsetY: currentOffsetY, zoom: currentZoom })}
+            className={`text-[9.5px] px-2 py-0.5 rounded border transition-all ${
+              currentOffsetX === 0 ? 'bg-[#073B78] text-white border-[#073B78]' : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+            }`}
+          >
+            0% (Paling Kiri)
+          </button>
+          <button
+            type="button"
+            onClick={() => onChange({ fit: currentFit, offsetX: 50, offsetY: currentOffsetY, zoom: currentZoom })}
+            className={`text-[9.5px] px-2 py-0.5 rounded border transition-all ${
+              currentOffsetX === 50 ? 'bg-[#073B78] text-white border-[#073B78]' : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+            }`}
+          >
+            50% (Tengah)
+          </button>
+          <button
+            type="button"
+            onClick={() => onChange({ fit: currentFit, offsetX: 100, offsetY: currentOffsetY, zoom: currentZoom })}
+            className={`text-[9.5px] px-2 py-0.5 rounded border transition-all ${
+              currentOffsetX === 100 ? 'bg-[#073B78] text-white border-[#073B78]' : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+            }`}
+          >
+            100% (Paling Kanan)
+          </button>
+        </div>
+      </div>
+
+      {/* Slider Geser Vertikal (Y-Offset / Atas - Bawah) */}
+      <div className="space-y-1">
+        <div className="flex items-center justify-between text-[11px]">
+          <label className="font-semibold text-[#102D52]">
+            Posisi Geser Vertikal (Atas - Bawah)
+          </label>
+          <span className="text-[10px] font-mono text-[#073B78] font-bold">
+            {currentOffsetY}% {currentOffsetY === 50 ? '(Tengah)' : currentOffsetY < 40 ? '(Fokus Atas)' : '(Fokus Bawah)'}
           </span>
         </div>
         <input
@@ -127,21 +303,52 @@ function ImageAdjustmentControl({
           max="100"
           step="1"
           value={currentOffsetY}
-          onChange={(e) => onChange({ fit: currentFit, offsetY: Number(e.target.value), zoom: currentZoom })}
+          onChange={(e) =>
+            onChange({
+              fit: currentFit,
+              offsetX: currentOffsetX,
+              offsetY: Number(e.target.value),
+              zoom: currentZoom,
+            })
+          }
           className="w-full accent-[#FF9D2E] cursor-pointer"
         />
-        <div className="flex justify-between text-[9px] text-[#526783] mt-0.5 font-medium">
-          <span>0% (Paling Atas)</span>
-          <span>50% (Tengah)</span>
-          <span>100% (Paling Bawah)</span>
+        <div className="flex items-center justify-between gap-1 pt-0.5">
+          <button
+            type="button"
+            onClick={() => onChange({ fit: currentFit, offsetX: currentOffsetX, offsetY: 0, zoom: currentZoom })}
+            className={`text-[9.5px] px-2 py-0.5 rounded border transition-all ${
+              currentOffsetY === 0 ? 'bg-[#073B78] text-white border-[#073B78]' : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+            }`}
+          >
+            0% (Paling Atas)
+          </button>
+          <button
+            type="button"
+            onClick={() => onChange({ fit: currentFit, offsetX: currentOffsetX, offsetY: 50, zoom: currentZoom })}
+            className={`text-[9.5px] px-2 py-0.5 rounded border transition-all ${
+              currentOffsetY === 50 ? 'bg-[#073B78] text-white border-[#073B78]' : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+            }`}
+          >
+            50% (Tengah)
+          </button>
+          <button
+            type="button"
+            onClick={() => onChange({ fit: currentFit, offsetX: currentOffsetX, offsetY: 100, zoom: currentZoom })}
+            className={`text-[9.5px] px-2 py-0.5 rounded border transition-all ${
+              currentOffsetY === 100 ? 'bg-[#073B78] text-white border-[#073B78]' : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+            }`}
+          >
+            100% (Paling Bawah)
+          </button>
         </div>
       </div>
 
-      {/* Slider Skala / Zoom */}
-      <div>
-        <div className="flex items-center justify-between text-[11px] mb-1">
+      {/* Slider Skala / Zoom Foto (Crop Zoom) */}
+      <div className="space-y-1">
+        <div className="flex items-center justify-between text-[11px]">
           <label className="font-semibold text-[#102D52]">
-            Ukuran Skala / Zoom Foto
+            Ukuran Skala / Zoom Foto (Crop Level)
           </label>
           <span className="text-[10px] font-mono text-[#073B78] font-bold">
             {currentZoom}%
@@ -149,17 +356,57 @@ function ImageAdjustmentControl({
         </div>
         <input
           type="range"
-          min="70"
-          max="150"
+          min="60"
+          max="200"
           step="2"
           value={currentZoom}
-          onChange={(e) => onChange({ fit: currentFit, offsetY: currentOffsetY, zoom: Number(e.target.value) })}
+          onChange={(e) =>
+            onChange({
+              fit: currentFit,
+              offsetX: currentOffsetX,
+              offsetY: currentOffsetY,
+              zoom: Number(e.target.value),
+            })
+          }
           className="w-full accent-[#FF9D2E] cursor-pointer"
         />
-        <div className="flex justify-between text-[9px] text-[#526783] mt-0.5 font-medium">
-          <span>70% (Lebih Jauh / Luas)</span>
-          <span>100% (Normal)</span>
-          <span>150% (Zoom Dekat)</span>
+        <div className="flex items-center justify-between gap-1 pt-0.5">
+          <button
+            type="button"
+            onClick={() => onChange({ fit: currentFit, offsetX: currentOffsetX, offsetY: currentOffsetY, zoom: 75 })}
+            className={`text-[9.5px] px-2 py-0.5 rounded border transition-all ${
+              currentZoom === 75 ? 'bg-[#073B78] text-white border-[#073B78]' : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+            }`}
+          >
+            75% (Lebih Luas)
+          </button>
+          <button
+            type="button"
+            onClick={() => onChange({ fit: currentFit, offsetX: currentOffsetX, offsetY: currentOffsetY, zoom: 100 })}
+            className={`text-[9.5px] px-2 py-0.5 rounded border transition-all ${
+              currentZoom === 100 ? 'bg-[#073B78] text-white border-[#073B78]' : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+            }`}
+          >
+            100% (Normal)
+          </button>
+          <button
+            type="button"
+            onClick={() => onChange({ fit: currentFit, offsetX: currentOffsetX, offsetY: currentOffsetY, zoom: 125 })}
+            className={`text-[9.5px] px-2 py-0.5 rounded border transition-all ${
+              currentZoom === 125 ? 'bg-[#073B78] text-white border-[#073B78]' : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+            }`}
+          >
+            125% (Crop Dekat)
+          </button>
+          <button
+            type="button"
+            onClick={() => onChange({ fit: currentFit, offsetX: currentOffsetX, offsetY: currentOffsetY, zoom: 150 })}
+            className={`text-[9.5px] px-2 py-0.5 rounded border transition-all ${
+              currentZoom === 150 ? 'bg-[#073B78] text-white border-[#073B78]' : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+            }`}
+          >
+            150% (Zoom Fokus)
+          </button>
         </div>
       </div>
     </div>
@@ -1396,7 +1643,7 @@ export default function AdminDashboard() {
                                   alt={slide.imageAlt || 'Banner preview'}
                                   style={{
                                     objectFit: slide.imageFit || 'cover',
-                                    objectPosition: `center ${slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%`,
+                                    objectPosition: `${slide.imageOffsetX !== undefined ? slide.imageOffsetX : 50}% ${slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%`,
                                     transform: `scale(${(slide.imageZoom !== undefined ? slide.imageZoom : 100) / 100})`,
                                   }}
                                   className="w-full h-full"
@@ -1536,15 +1783,16 @@ export default function AdminDashboard() {
                                     />
                                   </label>
                                 </div>
-                                {slide.image && (
-                                  <ImageAdjustmentControl
-                                    title="Ukuran & Posisi Gambar Banner"
+                                {slide.image && (<ImageAdjustmentControl
+                                    title="Ukuran, Posisi & Crop Banner"
                                     fit={slide.imageFit || 'cover'}
+                                    offsetX={slide.imageOffsetX !== undefined ? slide.imageOffsetX : 50}
                                     offsetY={slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}
                                     zoom={slide.imageZoom !== undefined ? slide.imageZoom : 100}
-                                    onChange={({ fit, offsetY, zoom }) => {
+                                    onChange={({ fit, offsetX, offsetY, zoom }) => {
                                       const newSlides = [...(content.bannerSlides || [])];
                                       newSlides[sIdx].imageFit = fit;
+                                      newSlides[sIdx].imageOffsetX = offsetX;
                                       newSlides[sIdx].imageOffsetY = offsetY;
                                       newSlides[sIdx].imageZoom = zoom;
                                       setContent({ ...content, bannerSlides: newSlides });
@@ -2701,7 +2949,7 @@ export default function AdminDashboard() {
                               alt="Banner Promo"
                               style={{
                                 objectFit: content.promoPopup.imageFit || 'cover',
-                                objectPosition: `center ${content.promoPopup.imageOffsetY !== undefined ? content.promoPopup.imageOffsetY : 50}%`,
+                                objectPosition: `${content.promoPopup.imageOffsetX !== undefined ? content.promoPopup.imageOffsetX : 50}% ${content.promoPopup.imageOffsetY !== undefined ? content.promoPopup.imageOffsetY : 50}%`,
                                 transform: `scale(${(content.promoPopup.imageZoom !== undefined ? content.promoPopup.imageZoom : 100) / 100})`,
                               }}
                               className="w-full h-full"
@@ -2756,18 +3004,19 @@ export default function AdminDashboard() {
                         </div>
                       </div>
 
-                      {content.promoPopup?.image && (
-                        <ImageAdjustmentControl
-                          title="Ukuran & Posisi Foto Iklan Promo"
+                      {content.promoPopup?.image && (<ImageAdjustmentControl
+                                    title="Ukuran, Posisi & Crop Foto Iklan Promo"
                           fit={content.promoPopup.imageFit || 'contain'}
+                          offsetX={content.promoPopup.imageOffsetX !== undefined ? content.promoPopup.imageOffsetX : 50}
                           offsetY={content.promoPopup.imageOffsetY !== undefined ? content.promoPopup.imageOffsetY : 50}
                           zoom={content.promoPopup.imageZoom !== undefined ? content.promoPopup.imageZoom : 100}
-                          onChange={({ fit, offsetY, zoom }) => {
+                          onChange={({ fit, offsetX, offsetY, zoom }) => {
                             setContent({
                               ...content,
                               promoPopup: {
                                 ...(content.promoPopup || { enabled: false, image: '' }),
                                 imageFit: fit,
+                                imageOffsetX: offsetX,
                                 imageOffsetY: offsetY,
                                 imageZoom: zoom,
                               },
@@ -3125,18 +3374,19 @@ export default function AdminDashboard() {
                         </div>
                       </div>
 
-                      {content.footer?.logo && (
-                        <ImageAdjustmentControl
-                          title="Ukuran & Posisi Logo Footer"
+                      {content.footer?.logo && (<ImageAdjustmentControl
+                                    title="Ukuran, Posisi & Crop Logo Footer"
                           fit={content.footer.logoFit || 'contain'}
+                          offsetX={content.footer.logoOffsetX !== undefined ? content.footer.logoOffsetX : 50}
                           offsetY={content.footer.logoOffsetY !== undefined ? content.footer.logoOffsetY : 50}
                           zoom={content.footer.logoZoom !== undefined ? content.footer.logoZoom : 100}
-                          onChange={({ fit, offsetY, zoom }) => {
+                          onChange={({ fit, offsetX, offsetY, zoom }) => {
                             setContent({
                               ...content,
                               footer: {
                                 ...content.footer,
                                 logoFit: fit,
+                                logoOffsetX: offsetX,
                                 logoOffsetY: offsetY,
                                 logoZoom: zoom,
                               },
@@ -3516,7 +3766,7 @@ export default function AdminDashboard() {
                             alt="Kantor Pusat"
                             style={{
                               objectFit: content.about.officeImageFit || 'cover',
-                              objectPosition: `center ${content.about.officeImageOffsetY !== undefined ? content.about.officeImageOffsetY : 50}%`,
+                              objectPosition: `${content.about.officeImageOffsetX !== undefined ? content.about.officeImageOffsetX : 50}% ${content.about.officeImageOffsetY !== undefined ? content.about.officeImageOffsetY : 50}%`,
                               transform: `scale(${(content.about.officeImageZoom !== undefined ? content.about.officeImageZoom : 100) / 100})`,
                             }}
                             className="w-full h-full"
@@ -3578,18 +3828,19 @@ export default function AdminDashboard() {
                       </div>
                     </div>
 
-                    {content.about.officeImage && (
-                      <ImageAdjustmentControl
-                        title="Ukuran & Posisi Foto Kantor Pusat"
+                    {content.about.officeImage && (<ImageAdjustmentControl
+                                    title="Ukuran, Posisi & Crop Foto Kantor Pusat"
                         fit={content.about.officeImageFit || 'cover'}
+                        offsetX={content.about.officeImageOffsetX !== undefined ? content.about.officeImageOffsetX : 50}
                         offsetY={content.about.officeImageOffsetY !== undefined ? content.about.officeImageOffsetY : 50}
                         zoom={content.about.officeImageZoom !== undefined ? content.about.officeImageZoom : 100}
-                        onChange={({ fit, offsetY, zoom }) => {
+                        onChange={({ fit, offsetX, offsetY, zoom }) => {
                           setContent({
                             ...content,
                             about: {
                               ...content.about,
                               officeImageFit: fit,
+                              officeImageOffsetX: offsetX,
                               officeImageOffsetY: offsetY,
                               officeImageZoom: zoom,
                             },
@@ -3982,7 +4233,7 @@ export default function AdminDashboard() {
                                   className="w-full h-full transition-all duration-200"
                                   style={{
                                     objectFit: member.imageFit || 'cover',
-                                    objectPosition: `center ${member.imageOffsetY !== undefined ? member.imageOffsetY : 15}%`,
+                                    objectPosition: `${member.imageOffsetX !== undefined ? member.imageOffsetX : 50}% ${member.imageOffsetY !== undefined ? member.imageOffsetY : 15}%`,
                                     transform: `scale(${(member.imageZoom !== undefined ? member.imageZoom : 100) / 100})`,
                                   }}
                                 />
@@ -4054,126 +4305,27 @@ export default function AdminDashboard() {
                                 Format: JPG, PNG, atau WebP. Disarankan pas foto portrait vertikal (rasio 3:4 atau 4:5).
                               </span>
 
-                              {/* Panel Pas Foto: Fit Mode, Vertical Offset Slider, & Zoom Slider */}
+                              {/* Panel Pas Foto: Fit Mode, 2D Pan, Offset Sliders, & Zoom Slider */}
                               {member.image && (
-                                <div className="mt-3 p-3 rounded-xl bg-[#F0F4FA] border border-[#DCE7F5] space-y-3">
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-[11px] font-bold text-[#073B78] flex items-center gap-1.5">
-                                      <Maximize2 className="w-3.5 h-3.5 text-[#FF9D2E]" />
-                                      <span>Pengaturan Posisi &amp; Pas Foto Wajah</span>
-                                    </span>
-                                    <span className="text-[10px] text-[#526783] bg-white px-2 py-0.5 rounded border border-[#DCE7F5]">
-                                      Live Preview
-                                    </span>
-                                  </div>
-
-                                  {/* Pilihan Fit: Cover vs Contain */}
-                                  <div className="grid grid-cols-2 gap-2 text-xs">
-                                    <button
-                                      type="button"
-                                      onClick={() => {
-                                        const newMembers = [...content.leadership.members];
-                                        newMembers[idx].imageFit = 'cover';
-                                        setContent({
-                                          ...content,
-                                          leadership: { ...content.leadership, members: newMembers },
-                                        });
-                                      }}
-                                      className={`py-1.5 px-2.5 rounded-lg font-medium border text-center transition-all ${
-                                        (member.imageFit || 'cover') === 'cover'
-                                          ? 'bg-[#073B78] text-white border-[#073B78] shadow-xs'
-                                          : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
-                                      }`}
-                                    >
-                                      Penuh Bingkai (Cover)
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() => {
-                                        const newMembers = [...content.leadership.members];
-                                        newMembers[idx].imageFit = 'contain';
-                                        setContent({
-                                          ...content,
-                                          leadership: { ...content.leadership, members: newMembers },
-                                        });
-                                      }}
-                                      className={`py-1.5 px-2.5 rounded-lg font-medium border text-center transition-all ${
-                                        member.imageFit === 'contain'
-                                          ? 'bg-[#073B78] text-white border-[#073B78] shadow-xs'
-                                          : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
-                                      }`}
-                                    >
-                                      Utuh Tanpa Terpotong (Contain)
-                                    </button>
-                                  </div>
-
-                                  {/* Slider Geser Vertikal (Y-Offset) */}
-                                  <div>
-                                    <div className="flex items-center justify-between text-[11px] mb-1">
-                                      <label className="font-semibold text-[#102D52]">
-                                        Posisi Naik / Turun (Fokus Kepala &amp; Wajah)
-                                      </label>
-                                      <span className="text-[10px] font-mono text-[#073B78] font-bold">
-                                        {member.imageOffsetY !== undefined ? `${member.imageOffsetY}%` : '15% (Default Atas)'}
-                                      </span>
-                                    </div>
-                                    <input
-                                      type="range"
-                                      min="0"
-                                      max="100"
-                                      step="1"
-                                      value={member.imageOffsetY !== undefined ? member.imageOffsetY : 15}
-                                      onChange={(e) => {
-                                        const newMembers = [...content.leadership.members];
-                                        newMembers[idx].imageOffsetY = Number(e.target.value);
-                                        setContent({
-                                          ...content,
-                                          leadership: { ...content.leadership, members: newMembers },
-                                        });
-                                      }}
-                                      className="w-full accent-[#FF9D2E] cursor-pointer"
-                                    />
-                                    <div className="flex justify-between text-[9px] text-[#526783] mt-0.5 font-medium">
-                                      <span>0% (Kepala Paling Atas)</span>
-                                      <span>15% (Rekomendasi Pas Foto)</span>
-                                      <span>50% (Tengah)</span>
-                                      <span>100% (Bawah)</span>
-                                    </div>
-                                  </div>
-
-                                  {/* Slider Skala / Zoom */}
-                                  <div>
-                                    <div className="flex items-center justify-between text-[11px] mb-1">
-                                      <label className="font-semibold text-[#102D52]">
-                                        Ukuran / Zoom Foto
-                                      </label>
-                                      <span className="text-[10px] font-mono text-[#073B78] font-bold">
-                                        {member.imageZoom !== undefined ? `${member.imageZoom}%` : '100%'}
-                                      </span>
-                                    </div>
-                                    <input
-                                      type="range"
-                                      min="70"
-                                      max="140"
-                                      step="2"
-                                      value={member.imageZoom !== undefined ? member.imageZoom : 100}
-                                      onChange={(e) => {
-                                        const newMembers = [...content.leadership.members];
-                                        newMembers[idx].imageZoom = Number(e.target.value);
-                                        setContent({
-                                          ...content,
-                                          leadership: { ...content.leadership, members: newMembers },
-                                        });
-                                      }}
-                                      className="w-full accent-[#FF9D2E] cursor-pointer"
-                                    />
-                                    <div className="flex justify-between text-[9px] text-[#526783] mt-0.5 font-medium">
-                                      <span>70% (Lebih Jauh / Muat Luas)</span>
-                                      <span>100% (Normal)</span>
-                                      <span>140% (Zoom Dekat)</span>
-                                    </div>
-                                  </div>
-                                </div>
+                                <ImageAdjustmentControl
+                                  title="Pengaturan Posisi, Crop & Pas Foto Wajah"
+                                  fit={member.imageFit || 'cover'}
+                                  offsetX={member.imageOffsetX !== undefined ? member.imageOffsetX : 50}
+                                  offsetY={member.imageOffsetY !== undefined ? member.imageOffsetY : 15}
+                                  defaultOffsetY={15}
+                                  zoom={member.imageZoom !== undefined ? member.imageZoom : 100}
+                                  onChange={({ fit, offsetX, offsetY, zoom }) => {
+                                    const newMembers = [...content.leadership.members];
+                                    newMembers[idx].imageFit = fit;
+                                    newMembers[idx].imageOffsetX = offsetX;
+                                    newMembers[idx].imageOffsetY = offsetY;
+                                    newMembers[idx].imageZoom = zoom;
+                                    setContent({
+                                      ...content,
+                                      leadership: { ...content.leadership, members: newMembers },
+                                    });
+                                  }}
+                                />
                               )}
                             </div>
                           </div>
@@ -4614,7 +4766,7 @@ export default function AdminDashboard() {
                                   alt={item.title}
                                   style={{
                                     objectFit: item.imageFit || 'cover',
-                                    objectPosition: `center ${item.imageOffsetY !== undefined ? item.imageOffsetY : 50}%`,
+                                    objectPosition: `${item.imageOffsetX !== undefined ? item.imageOffsetX : 50}% ${item.imageOffsetY !== undefined ? item.imageOffsetY : 50}%`,
                                     transform: `scale(${(item.imageZoom !== undefined ? item.imageZoom : 100) / 100})`,
                                   }}
                                   className="w-full h-full"
@@ -4682,15 +4834,16 @@ export default function AdminDashboard() {
                               <span className="text-[10px] text-[#526783] block">
                                 Format: JPG, PNG, atau WebP. Gambar lanskap (16:10) disarankan.
                               </span>
-                              {item.image && (
-                                <ImageAdjustmentControl
-                                  title="Ukuran & Posisi Foto Dokumentasi"
+                              {item.image && (<ImageAdjustmentControl
+                                    title="Ukuran, Posisi & Crop Foto Dokumentasi"
                                   fit={item.imageFit || 'cover'}
+                                  offsetX={item.imageOffsetX !== undefined ? item.imageOffsetX : 50}
                                   offsetY={item.imageOffsetY !== undefined ? item.imageOffsetY : 50}
                                   zoom={item.imageZoom !== undefined ? item.imageZoom : 100}
-                                  onChange={({ fit, offsetY, zoom }) => {
+                                  onChange={({ fit, offsetX, offsetY, zoom }) => {
                                     const newItems = [...content.activities.items];
                                     newItems[idx].imageFit = fit;
+                                    newItems[idx].imageOffsetX = offsetX;
                                     newItems[idx].imageOffsetY = offsetY;
                                     newItems[idx].imageZoom = zoom;
                                     setContent({
@@ -4918,7 +5071,7 @@ export default function AdminDashboard() {
                             alt="Sampul Proyek"
                             style={{
                               objectFit: content.project.imageFit || 'cover',
-                              objectPosition: `center ${content.project.imageOffsetY !== undefined ? content.project.imageOffsetY : 50}%`,
+                              objectPosition: `${content.project.imageOffsetX !== undefined ? content.project.imageOffsetX : 50}% ${content.project.imageOffsetY !== undefined ? content.project.imageOffsetY : 50}%`,
                               transform: `scale(${(content.project.imageZoom !== undefined ? content.project.imageZoom : 100) / 100})`,
                             }}
                             className="w-full h-full"
@@ -4992,18 +5145,19 @@ export default function AdminDashboard() {
                       </div>
                     </div>
 
-                    {content.project.image && (
-                      <ImageAdjustmentControl
-                        title="Ukuran & Posisi Foto Sampul Proyek"
+                    {content.project.image && (<ImageAdjustmentControl
+                                    title="Ukuran, Posisi & Crop Foto Sampul Proyek"
                         fit={content.project.imageFit || 'cover'}
+                        offsetX={content.project.imageOffsetX !== undefined ? content.project.imageOffsetX : 50}
                         offsetY={content.project.imageOffsetY !== undefined ? content.project.imageOffsetY : 50}
                         zoom={content.project.imageZoom !== undefined ? content.project.imageZoom : 100}
-                        onChange={({ fit, offsetY, zoom }) => {
+                        onChange={({ fit, offsetX, offsetY, zoom }) => {
                           setContent({
                             ...content,
                             project: {
                               ...content.project,
                               imageFit: fit,
+                              imageOffsetX: offsetX,
                               imageOffsetY: offsetY,
                               imageZoom: zoom,
                             },
@@ -5270,7 +5424,7 @@ export default function AdminDashboard() {
                                         alt={`Slide ${idx + 1}`}
                                         style={{
                                           objectFit: slide.imageFit || 'cover',
-                                          objectPosition: `center ${slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%`,
+                                          objectPosition: `${slide.imageOffsetX !== undefined ? slide.imageOffsetX : 50}% ${slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%`,
                                           transform: `scale(${(slide.imageZoom !== undefined ? slide.imageZoom : 100) / 100})`,
                                         }}
                                         className="w-full h-full"
@@ -5352,15 +5506,16 @@ export default function AdminDashboard() {
                                     />
                                   </div>
 
-                                  {slide.image && (
-                                    <ImageAdjustmentControl
-                                      title={`Ukuran & Posisi Foto Slide #${idx + 1}`}
+                                  {slide.image && (<ImageAdjustmentControl
+                                    title={`Ukuran, Posisi & Crop Slide #${idx + 1}`}
                                       fit={slide.imageFit || 'cover'}
+                                      offsetX={slide.imageOffsetX !== undefined ? slide.imageOffsetX : 50}
                                       offsetY={slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}
                                       zoom={slide.imageZoom !== undefined ? slide.imageZoom : 100}
-                                      onChange={({ fit, offsetY, zoom }) => {
+                                      onChange={({ fit, offsetX, offsetY, zoom }) => {
                                         const slides = [...(content.project.slides || [])];
                                         slides[idx].imageFit = fit;
+                                        slides[idx].imageOffsetX = offsetX;
                                         slides[idx].imageOffsetY = offsetY;
                                         slides[idx].imageZoom = zoom;
                                         setContent({

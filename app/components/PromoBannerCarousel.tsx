@@ -147,7 +147,7 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
                       width: '100%',
                       height: '100%',
                       objectFit: slide.imageFit || 'cover',
-                      objectPosition: `center ${slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%`,
+                      objectPosition: `${(slide as any).imageOffsetX !== undefined ? (slide as any).imageOffsetX : 50}% ${slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%`,
                       transform: `scale(${((slide.imageZoom !== undefined ? slide.imageZoom : 100) / 100) * (isActive ? 1.05 : 1)})`,
                     }}
                     className="w-full h-full transition-transform duration-1000"
@@ -340,7 +340,7 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
                         width: '100%',
                         height: '100%',
                         objectFit: slide.imageFit || 'cover',
-                        objectPosition: `center ${slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%`,
+                        objectPosition: `${(slide as any).imageOffsetX !== undefined ? (slide as any).imageOffsetX : 50}% ${slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%`,
                         transform: `scale(${(slide.imageZoom !== undefined ? slide.imageZoom : 100) / 100})`,
                       }}
                       className="w-full h-full"
