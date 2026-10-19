@@ -841,3 +841,65 @@ export function getCrispLogoUrl(url: string | undefined | null): string {
   return trimmed;
 }
 
+export function mergeSiteContent(parsed?: any): SiteContent {
+  if (!parsed || typeof parsed !== 'object') return initialSiteContent;
+  return {
+    ...initialSiteContent,
+    ...parsed,
+    meta: { ...initialSiteContent.meta, ...(parsed.meta || {}) },
+    footer: { ...initialSiteContent.footer, ...(parsed.footer || {}) },
+    contact: { ...initialSiteContent.contact, ...(parsed.contact || {}) },
+    legal: { ...initialSiteContent.legal, ...(parsed.legal || {}) },
+    about: {
+      ...initialSiteContent.about,
+      ...(parsed.about || {}),
+      missions: Array.isArray(parsed.about?.missions) ? parsed.about.missions : (initialSiteContent.about?.missions || []),
+      commitmentPoints: Array.isArray(parsed.about?.commitmentPoints) ? parsed.about.commitmentPoints : (initialSiteContent.about?.commitmentPoints || []),
+      features: Array.isArray(parsed.about?.features) ? parsed.about.features : (initialSiteContent.about?.features || []),
+    },
+    hero: {
+      ...initialSiteContent.hero,
+      ...(parsed.hero || {}),
+      slides: Array.isArray(parsed.hero?.slides) ? parsed.hero.slides : (initialSiteContent.hero?.slides || []),
+      stats: Array.isArray(parsed.hero?.stats) ? parsed.hero.stats : (initialSiteContent.hero?.stats || []),
+    },
+    bannerSlides: Array.isArray(parsed.bannerSlides) ? parsed.bannerSlides : (initialSiteContent.bannerSlides || []),
+    partners: {
+      ...initialSiteContent.partners,
+      ...(parsed.partners || {}),
+      items: Array.isArray(parsed.partners?.items) ? parsed.partners.items : (initialSiteContent.partners?.items || []),
+    },
+    leadership: {
+      ...initialSiteContent.leadership,
+      ...(parsed.leadership || {}),
+      members: Array.isArray(parsed.leadership?.members) ? parsed.leadership.members : (initialSiteContent.leadership?.members || []),
+    },
+    activities: {
+      ...initialSiteContent.activities,
+      ...(parsed.activities || {}),
+      items: Array.isArray(parsed.activities?.items) ? parsed.activities.items : (initialSiteContent.activities?.items || []),
+    },
+    project: {
+      ...initialSiteContent.project,
+      ...(parsed.project || {}),
+      slides: Array.isArray(parsed.project?.slides) ? parsed.project.slides : (initialSiteContent.project?.slides || []),
+      specs: Array.isArray(parsed.project?.specs) ? parsed.project.specs : (initialSiteContent.project?.specs || []),
+    },
+    buyingProcess: {
+      ...initialSiteContent.buyingProcess,
+      ...(parsed.buyingProcess || {}),
+      steps: Array.isArray(parsed.buyingProcess?.steps) ? parsed.buyingProcess.steps : (initialSiteContent.buyingProcess?.steps || []),
+    },
+    kprSimulation: {
+      ...initialSiteContent.kprSimulation,
+      ...(parsed.kprSimulation || {}),
+      benefits: Array.isArray(parsed.kprSimulation?.benefits) ? parsed.kprSimulation.benefits : (initialSiteContent.kprSimulation?.benefits || []),
+    },
+    promoPopup: {
+      ...initialSiteContent.promoPopup,
+      ...(parsed.promoPopup || {}),
+    },
+  };
+}
+
+

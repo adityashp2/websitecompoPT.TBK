@@ -93,7 +93,12 @@ export function hexToRgb(hex?: string): string {
   return `${r}, ${g}, ${b}`;
 }
 
-export function getOverlayStyle(slide: Partial<BannerSlide>): React.CSSProperties {
+export function getOverlayStyle(slide?: Partial<BannerSlide> | null): React.CSSProperties {
+  if (!slide) {
+    return {
+      background: 'linear-gradient(to right, rgba(7, 59, 120, 0.9) 0%, rgba(7, 59, 120, 0.85) 30%, rgba(7, 59, 120, 0.45) 60%, transparent 85%)',
+    };
+  }
   const color = slide.overlayColor || '#073B78';
   const rgb = hexToRgb(color);
   const opacity = (slide.overlayOpacity !== undefined ? slide.overlayOpacity : 90) / 100;
@@ -123,7 +128,12 @@ export function getOverlayStyle(slide: Partial<BannerSlide>): React.CSSPropertie
   };
 }
 
-export function getMobileOverlayStyle(slide: Partial<BannerSlide>): React.CSSProperties {
+export function getMobileOverlayStyle(slide?: Partial<BannerSlide> | null): React.CSSProperties {
+  if (!slide) {
+    return {
+      background: 'linear-gradient(to right, rgba(7, 59, 120, 0.95) 0%, rgba(7, 59, 120, 0.9) 55%, rgba(7, 59, 120, 0.6) 100%)',
+    };
+  }
   const color = slide.overlayColor || '#073B78';
   const rgb = hexToRgb(color);
   const opacity = (slide.overlayOpacity !== undefined ? Math.min(100, slide.overlayOpacity + 5) : 95) / 100;

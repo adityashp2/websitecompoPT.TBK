@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { SiteContent, initialSiteContent, BannerSlide, PurchaseStep, getYouTubeEmbedUrl, PartnerItem, PartnersConfig, getCrispLogoUrl } from '@/lib/initialData';
+import { SiteContent, initialSiteContent, BannerSlide, PurchaseStep, getYouTubeEmbedUrl, PartnerItem, PartnersConfig, getCrispLogoUrl, mergeSiteContent } from '@/lib/initialData';
 import { getOverlayStyle, getFontFamilyStyle, getFontWeightStyle } from '@/app/components/PromoBannerCarousel';
 import {
   Save,
@@ -658,51 +658,53 @@ export default function AdminDashboard() {
     }
   };
 
-  // Check auth session and fetch current database content
+  // Check auth session and fetch current database content safely
   useEffect(() => {
     initDashboard();
-    // Safety fallback: release loading screen if it takes more than 4 seconds
-    const timeout = setTimeout(() => {
-      if (typeof window !== 'undefined' && !adminUser) {
-        window.location.replace('/A9MIN/login');
-      }
-    }, 4000);
-    return () => clearTimeout(timeout);
   }, []);
 
   const initDashboard = async () => {
     setLoading(true);
     try {
       const localToken = typeof window !== 'undefined' ? localStorage.getItem('tbk_admin_token') : null;
-      const [authRes, contentRes] = await Promise.all([
-        fetch('/api/auth/me', {
+
+      // 1. Verify Authentication
+      try {
+        const authRes = await fetch('/api/auth/me', {
           cache: 'no-store',
           headers: localToken ? { Authorization: `Bearer ${localToken}` } : {},
-        }),
-        fetch('/api/content', { cache: 'no-store' }),
-      ]);
-
-      const authJson = await authRes.json().catch(() => ({ authenticated: false }));
-      if (!authRes.ok || !authJson.authenticated) {
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('tbk_admin_token');
-          document.cookie = 'tbk_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-          window.location.replace('/A9MIN/login');
+        });
+        if (authRes.ok) {
+          const authJson = await authRes.json();
+          if (authJson.authenticated && authJson.user) {
+            setAdminUser(authJson.user);
+          }
+        } else if (authRes.status === 401) {
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('tbk_admin_token');
+            document.cookie = 'tbk_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            window.location.replace('/A9MIN/login');
+            return;
+          }
         }
-        return;
+      } catch (authErr) {
+        console.warn('Auth check network warning:', authErr);
       }
-      setAdminUser(authJson.user);
 
-      const contentJson = await contentRes.json().catch(() => ({ success: false }));
-      if (contentJson.success && contentJson.data) {
-        setContent(contentJson.data);
+      // 2. Fetch Content with robust fallback merging
+      try {
+        const contentRes = await fetch('/api/content', { cache: 'no-store' });
+        if (contentRes.ok) {
+          const contentJson = await contentRes.json();
+          if (contentJson.success && contentJson.data) {
+            setContent(mergeSiteContent(contentJson.data));
+          }
+        }
+      } catch (contentErr) {
+        console.warn('Content fetch warning:', contentErr);
       }
     } catch (err) {
-      console.error('Session verification error:', err);
-      if (typeof window !== 'undefined') {
-        window.location.replace('/A9MIN/login');
-      }
-      return;
+      console.error('Session initialization error:', err);
     } finally {
       setLoading(false);
     }
@@ -713,7 +715,7 @@ export default function AdminDashboard() {
       const res = await fetch('/api/content', { cache: 'no-store' });
       const json = await res.json();
       if (json.success && json.data) {
-        setContent(json.data);
+        setContent(mergeSiteContent(json.data));
       }
     } catch (err) {
       console.error(err);
@@ -1563,7 +1565,7 @@ export default function AdminDashboard() {
                       Belum ada slide banner kustom. Klik tombol di atas untuk menambahkan slide baru.
                     </div>
                   ) : (
-                    content.bannerSlides.map((slide, sIdx) => (
+                    (Array.isArray(content.bannerSlides) ? content.bannerSlides : []).filter(Boolean).map((slide, sIdx) => (
                       <div
                         key={slide.id || sIdx}
                         className="p-5 sm:p-6 rounded-2xl bg-[#F8FAFD] border border-[#DCE7F5] hover:border-[#FF9D2E]/50 shadow-xs transition-all space-y-5"
@@ -2784,7 +2786,7 @@ export default function AdminDashboard() {
                       Belum ada mitra. Klik tombol &quot;Tambah Mitra Baru&quot; di atas untuk menambahkan logo mitra.
                     </div>
                   ) : (
-                    content.partners.items.map((partner, pIdx) => (
+                    (content.partners?.items || []).filter(Boolean).map((partner, pIdx) => (
                       <div
                         key={partner.id || pIdx}
                         className="p-5 rounded-2xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-4 hover:border-[#073B78]/40 transition-all shadow-xs"
@@ -4794,7 +4796,7 @@ export default function AdminDashboard() {
                     </div>
 
                     <div className="space-y-2">
-                      {content.about.missions?.map((misi, idx) => (
+                      {(content.about?.missions || []).map((misi, idx) => (
                         <div key={idx} className="flex items-center gap-2">
                           <span className="w-6 h-6 rounded bg-[#FFF7EB] text-[#FF9D2E] text-xs font-bold flex items-center justify-center shrink-0">
                             {idx + 1}
@@ -4803,7 +4805,7 @@ export default function AdminDashboard() {
                             type="text"
                             value={misi}
                             onChange={(e) => {
-                              const newMissions = [...content.about.missions];
+                              const newMissions = [...(content.about?.missions || [])];
                               newMissions[idx] = e.target.value;
                               setContent({
                                 ...content,
@@ -5159,7 +5161,7 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="space-y-4 pt-2">
-                    {content.leadership.members?.map((member, idx) => (
+                    {(content.leadership?.members || []).map((member, idx) => (
                       <div key={idx} className="p-4 sm:p-5 rounded-xl bg-[#F8FAFD] border border-[#FF9D2E]/30 shadow-xs space-y-3">
                         <div className="flex items-center justify-between border-b border-[#DCE7F5] pb-2.5">
                           <span className="text-xs font-bold text-[#FF9D2E] uppercase tracking-wider flex items-center gap-2">
@@ -5174,7 +5176,7 @@ export default function AdminDashboard() {
                               type="button"
                               disabled={idx === 0}
                               onClick={() => {
-                                const members = [...content.leadership.members];
+                                const members = [...(content.leadership?.members || [])];
                                 const temp = members[idx];
                                 members[idx] = members[idx - 1];
                                 members[idx - 1] = temp;
@@ -5705,7 +5707,7 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="space-y-4 pt-2">
-                    {content.activities.items?.map((item, idx) => (
+                    {(content.activities?.items || []).map((item, idx) => (
                       <div key={idx} className="p-4 sm:p-5 rounded-xl bg-[#F8FAFD] border border-[#FF9D2E]/25 space-y-4 hover:border-[#FF9D2E]/30 transition-colors">
                         {/* Header bar with tag and reorder controls */}
                         <div className="flex items-center justify-between border-b border-[#DCE7F5] pb-3">
@@ -5718,7 +5720,7 @@ export default function AdminDashboard() {
                               value={item.tag}
                               placeholder="Tag / Tahap (misal: Tahap 1)"
                               onChange={(e) => {
-                                const newItems = [...content.activities.items];
+                                const newItems = [...(content.activities?.items || [])];
                                 newItems[idx].tag = e.target.value;
                                 setContent({
                                   ...content,
@@ -6430,7 +6432,7 @@ export default function AdminDashboard() {
 
                         {/* Slide Items List */}
                         <div className="space-y-3 pt-1">
-                          {(content.project.slides || []).map((slide, idx) => (
+                          {(content.project?.slides || []).map((slide, idx) => (
                             <div
                               key={idx}
                               className="p-3.5 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-3 relative group"
@@ -6643,14 +6645,14 @@ export default function AdminDashboard() {
                     </div>
 
                     <div className="space-y-2">
-                      {content.project.specs?.map((spec, idx) => (
+                      {(content.project?.specs || []).map((spec, idx) => (
                         <div key={idx} className="flex items-center gap-2 p-2 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
                           <input
                             type="text"
                             placeholder="Label (contoh: Jumlah Unit)"
                             value={spec.label}
                             onChange={(e) => {
-                              const newSpecs = [...content.project.specs];
+                              const newSpecs = [...(content.project?.specs || [])];
                               newSpecs[idx].label = e.target.value;
                               setContent({
                                 ...content,
