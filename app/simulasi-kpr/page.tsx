@@ -67,8 +67,9 @@ export default function SimulasiKprPage() {
     }).format(val);
   };
 
-  const rawWa = content.contact?.whatsapp || '0812-7890-1234';
+  const rawWa = content.contact?.whatsapp?.trim() || '';
   const cleanPhone = rawWa.replace(/\D/g, '');
+  const hasWa = cleanPhone.length >= 7;
   const formattedWa = cleanPhone.startsWith('0')
     ? `62${cleanPhone.slice(1)}`
     : cleanPhone.startsWith('62')
@@ -76,7 +77,7 @@ export default function SimulasiKprPage() {
     : `62${cleanPhone}`;
 
   const waSimulasiMessage = `Halo PT. TBK, saya ingin konsultasi pengajuan KPR Puri Gunung Langgar dengan rincian simulasi:\n- Harga Rumah: ${formatRupiah(harga)}\n- Uang Muka (DP): ${formatRupiah(dp)}\n- Pokok Pinjaman: ${formatRupiah(sisaPokok)}\n- Jangka Waktu (Tenor): ${tenor} Tahun\n- Estimasi Angsuran: ${formatRupiah(angsuranBulan)} / bulan\n\nMohon informasi persyaratan berkas dan survei unit contoh.`;
-  const waUrl = `https://wa.me/${formattedWa}?text=${encodeURIComponent(waSimulasiMessage)}`;
+  const waUrl = hasWa ? `https://wa.me/${formattedWa}?text=${encodeURIComponent(waSimulasiMessage)}` : '';
 
   return (
     <div className="min-h-screen bg-white text-[#102D52] flex flex-col font-sans selection:bg-[#FF9D2E] selection:text-[#102D52]">
@@ -270,16 +271,18 @@ export default function SimulasiKprPage() {
 
                   {/* Action Buttons */}
                   <div className="space-y-3 pt-2">
-                    <a
-                      href={waUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group w-full py-3.5 px-4 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-200 hover:-translate-y-[1px] active:scale-[0.99] text-center shadow-lg"
-                    >
-                      <Phone className="w-4 h-4" />
-                      <span>Ajukan simulasi ini via WhatsApp</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
+                    {hasWa && (
+                      <a
+                        href={waUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group w-full py-3.5 px-4 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-200 hover:-translate-y-[1px] active:scale-[0.99] text-center shadow-lg"
+                      >
+                        <Phone className="w-4 h-4" />
+                        <span>Ajukan simulasi ini via WhatsApp</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    )}
 
                     <Link
                       href="/kontak"

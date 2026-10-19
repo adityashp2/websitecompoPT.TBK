@@ -121,7 +121,13 @@ export default function PromoPopupModal({ promo }: PromoPopupModalProps) {
     return null;
   }
 
-  const ctaUrl = promo.ctaUrl || 'https://wa.me/6281278901234';
+  const ctaUrl = (promo.ctaUrl || '').trim();
+
+  const imgStyle: React.CSSProperties = {
+    objectFit: promo.imageFit || 'contain',
+    objectPosition: `center ${promo.imageOffsetY !== undefined ? promo.imageOffsetY : 50}%`,
+    transform: promo.imageZoom !== undefined ? `scale(${promo.imageZoom / 100})` : undefined,
+  };
 
   const modalContent = (
     <div
@@ -161,21 +167,25 @@ export default function PromoPopupModal({ promo }: PromoPopupModalProps) {
             target={ctaUrl.startsWith('http') ? '_blank' : '_self'}
             rel="noopener noreferrer"
             onClick={handleClose}
-            className="block cursor-pointer focus:outline-none group rounded-none"
+            className="block cursor-pointer focus:outline-none group rounded-none overflow-hidden"
             aria-label="Kunjungi penawaran promo unit perumahan"
           >
             <img
               src={promo.image}
               alt={promo.title || 'Iklan Banner Promo PT. TBK'}
-              className="w-auto h-auto max-w-full max-h-[82vh] object-contain block mx-auto rounded-none transition-transform duration-300 group-hover:scale-[1.01]"
+              style={imgStyle}
+              className="w-auto h-auto max-w-full max-h-[82vh] block mx-auto rounded-none transition-transform duration-300 group-hover:scale-[1.01]"
             />
           </a>
         ) : (
-          <img
-            src={promo.image}
-            alt={promo.title || 'Iklan Banner Promo PT. TBK'}
-            className="w-auto h-auto max-w-full max-h-[82vh] object-contain block mx-auto rounded-none"
-          />
+          <div className="overflow-hidden">
+            <img
+              src={promo.image}
+              alt={promo.title || 'Iklan Banner Promo PT. TBK'}
+              style={imgStyle}
+              className="w-auto h-auto max-w-full max-h-[82vh] block mx-auto rounded-none"
+            />
+          </div>
         )}
       </div>
     </div>

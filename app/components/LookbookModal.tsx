@@ -11,6 +11,9 @@ export interface LookbookItem {
   tag?: string;
   category?: string;
   specs?: string[];
+  imageFit?: 'cover' | 'contain';
+  imageOffsetY?: number;
+  imageZoom?: number;
 }
 
 interface LookbookModalProps {
@@ -97,16 +100,15 @@ export default function LookbookModal({
   if (!isOpen || !currentItem || !mounted) return null;
 
   const cleanPhone = (whatsappNumber || '').replace(/\D/g, '');
+  const hasWa = cleanPhone.length >= 7;
   const formattedWa = cleanPhone.startsWith('0')
     ? `62${cleanPhone.slice(1)}`
     : cleanPhone.startsWith('62')
     ? cleanPhone
-    : cleanPhone
-    ? `62${cleanPhone}`
-    : '6281278901234';
+    : `62${cleanPhone}`;
 
   const waMessage = `Halo PT. TBK, saya melihat dokumentasi "${currentItem.title}" di proyek ${projectName}. Mohon info ketersediaan unit dan jadwal survei lokasi.`;
-  const waUrl = `https://wa.me/${formattedWa}?text=${encodeURIComponent(waMessage)}`;
+  const waUrl = hasWa ? `https://wa.me/${formattedWa}?text=${encodeURIComponent(waMessage)}` : '';
 
   const modalContent = (
     <div
@@ -171,7 +173,12 @@ export default function LookbookModal({
           key={currentItem.image}
           src={currentItem.image}
           alt={currentItem.title}
-          className="max-h-[76vh] sm:max-h-[78vh] max-w-[94vw] w-auto h-auto object-contain rounded-xl shadow-2xl block mx-auto border border-white/15 animate-in fade-in zoom-in-95 duration-200"
+          style={{
+            objectFit: currentItem.imageFit || 'contain',
+            objectPosition: `center ${currentItem.imageOffsetY !== undefined ? currentItem.imageOffsetY : 50}%`,
+            transform: currentItem.imageZoom !== undefined ? `scale(${currentItem.imageZoom / 100})` : undefined,
+          }}
+          className="max-h-[76vh] sm:max-h-[78vh] max-w-[94vw] w-auto h-auto rounded-xl shadow-2xl block mx-auto border border-white/15 animate-in fade-in zoom-in-95 duration-200"
         />
 
         {items.length > 1 && (
@@ -196,15 +203,17 @@ export default function LookbookModal({
         </p>
 
         <div className="flex items-center gap-3">
-          <a
-            href={waUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs shadow-md transition-all hover:scale-105 active:scale-95"
-          >
-            <MessageCircle className="w-4 h-4 fill-current" />
-            <span>Tanya Unit Ini via WhatsApp</span>
-          </a>
+          {hasWa && (
+            <a
+              href={waUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs shadow-md transition-all hover:scale-105 active:scale-95"
+            >
+              <MessageCircle className="w-4 h-4 fill-current" />
+              <span>Tanya Unit Ini via WhatsApp</span>
+            </a>
+          )}
 
           <button
             type="button"

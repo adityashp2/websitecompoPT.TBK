@@ -279,10 +279,14 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
     setFormSubmitting(false);
   };
 
-  const whatsappNumber = sanitize(content.contact?.whatsapp, '0812-7890-1234').replace(/[^0-9]/g, '');
-  const waUrl = whatsappNumber.startsWith('0')
-    ? `https://wa.me/62${whatsappNumber.slice(1)}`
-    : `https://wa.me/${whatsappNumber}`;
+  const rawWaClean = (content.contact?.whatsapp || '').replace(/[^0-9]/g, '');
+  const hasWa = rawWaClean.length >= 7;
+  const whatsappNumber = hasWa ? rawWaClean : '';
+  const waUrl = hasWa
+    ? (whatsappNumber.startsWith('0')
+      ? `https://wa.me/62${whatsappNumber.slice(1)}`
+      : `https://wa.me/${whatsappNumber}`)
+    : '';
 
   // Leadership / Dewan Pengurus & Manajemen Data
   const rawLeadershipMembers = Array.isArray(content.leadership?.members)
@@ -473,6 +477,11 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                           <img
                             src={slide.image}
                             alt={slide.caption || 'Foto Proyek'}
+                            style={{
+                              objectFit: (slide as any).imageFit || 'contain',
+                              objectPosition: `center ${(slide as any).imageOffsetY !== undefined ? (slide as any).imageOffsetY : 50}%`,
+                              transform: `scale(${(((slide as any).imageZoom !== undefined ? (slide as any).imageZoom : 100) / 100)})`,
+                            }}
                             onClick={() => {
                               const projectLookbookItems: LookbookItem[] = activeProjectSlides.map((s, idx) => ({
                                 image: s.image,
@@ -669,15 +678,17 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                     <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
                   </Link>
 
-                  <a
-                    href={waUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="interactive-btn w-full h-[46px] rounded-full border border-[#073B78] hover:bg-[#073B78] hover:text-white text-[#073B78] text-xs font-semibold tracking-normal flex items-center justify-center gap-2"
-                  >
-                    <MessageCircle className="w-4 h-4 text-[#FF9D2E]" />
-                    <span>Tanya Ketersediaan Kavling</span>
-                  </a>
+                  {hasWa && (
+                    <a
+                      href={waUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="interactive-btn w-full h-[46px] rounded-full border border-[#073B78] hover:bg-[#073B78] hover:text-white text-[#073B78] text-xs font-semibold tracking-normal flex items-center justify-center gap-2"
+                    >
+                      <MessageCircle className="w-4 h-4 text-[#FF9D2E]" />
+                      <span>Tanya Ketersediaan Kavling</span>
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
@@ -769,7 +780,12 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                     <img
                       src={content.about.officeImage}
                       alt={content.about.officeCaption || 'Kantor & Perencanaan PT. TBK'}
-                      className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                      style={{
+                        objectFit: content.about.officeImageFit || 'cover',
+                        objectPosition: `center ${content.about.officeImageOffsetY !== undefined ? content.about.officeImageOffsetY : 50}%`,
+                        transform: `scale(${(content.about.officeImageZoom !== undefined ? content.about.officeImageZoom : 100) / 100})`,
+                      }}
+                      className="w-full h-full transition-transform duration-700"
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#102D52]/80 via-transparent to-transparent" />
@@ -1240,18 +1256,20 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                 </div>
 
                 {/* Consultation Button */}
-                <a
-                  href={`${waUrl}?text=${encodeURIComponent(
-                    `Halo PT. TBK, saya tertarik dengan simulasi KPR Puri Gunung Langgar: Harga Unit Rp ${kprHarga.toLocaleString('id-ID')}, DP Rp ${kprDp.toLocaleString('id-ID')}, Tenor ${kprTenor} Tahun (Angsuran sekitar Rp ${kprAngsuran.toLocaleString('id-ID')}/bln). Mohon info ketersediaan unit dan persyaratannya.`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="interactive-btn group w-full h-[48px] rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] font-semibold text-xs tracking-normal flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>Konsultasi Simulasi Ini via WhatsApp</span>
-                  <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
-                </a>
+                {hasWa && (
+                  <a
+                    href={`${waUrl}?text=${encodeURIComponent(
+                      `Halo PT. TBK, saya tertarik dengan simulasi KPR Puri Gunung Langgar: Harga Unit Rp ${kprHarga.toLocaleString('id-ID')}, DP Rp ${kprDp.toLocaleString('id-ID')}, Tenor ${kprTenor} Tahun (Angsuran sekitar Rp ${kprAngsuran.toLocaleString('id-ID')}/bln). Mohon info ketersediaan unit dan persyaratannya.`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="interactive-btn group w-full h-[48px] rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] font-semibold text-xs tracking-normal flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Konsultasi Simulasi Ini via WhatsApp</span>
+                    <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -1332,7 +1350,12 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                         <img
                           src={item.image}
                           alt={item.title}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          style={{
+                            objectFit: (item as any).imageFit || 'cover',
+                            objectPosition: `center ${(item as any).imageOffsetY !== undefined ? (item as any).imageOffsetY : 50}%`,
+                            transform: `scale(${(((item as any).imageZoom !== undefined ? (item as any).imageZoom : 100) / 100)})`,
+                          }}
+                          className="w-full h-full transition-transform duration-500 group-hover:scale-105"
                           loading="lazy"
                         />
                         <div className="absolute top-2.5 left-2.5 bg-[#073B78]/90 text-white text-[10px] font-medium tracking-wide px-2.5 py-1 rounded-full backdrop-blur-sm">

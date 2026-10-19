@@ -22,12 +22,12 @@ export default function FloatingWhatsApp({ content, whatsappNumber }: FloatingWh
   if (!mounted || isNavAdmin) {
     return null;
   }
-  const rawWa =
-    whatsappNumber ||
-    content?.contact?.whatsapp ||
-    initialSiteContent.contact?.whatsapp ||
-    '0812-7890-1234';
+  const rawWa = (whatsappNumber !== undefined ? whatsappNumber : content?.contact?.whatsapp)?.trim() || '';
   const cleanPhone = rawWa.replace(/\D/g, '');
+  if (!cleanPhone) {
+    return null;
+  }
+
   const formattedWa = cleanPhone.startsWith('0')
     ? `62${cleanPhone.slice(1)}`
     : cleanPhone.startsWith('62')

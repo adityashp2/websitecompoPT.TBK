@@ -143,10 +143,14 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
                   <img
                     src={slide.image}
                     alt={slide.imageAlt}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    className={`w-full h-full object-cover object-center transition-transform duration-1000 ${
-                      isActive ? 'scale-105' : 'scale-100'
-                    }`}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: slide.imageFit || 'cover',
+                      objectPosition: `center ${slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%`,
+                      transform: `scale(${((slide.imageZoom !== undefined ? slide.imageZoom : 100) / 100) * (isActive ? 1.05 : 1)})`,
+                    }}
+                    className="w-full h-full transition-transform duration-1000"
                     loading={idx === 0 ? 'eager' : 'lazy'}
                   />
                 )}
@@ -189,33 +193,37 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
 
                   {/* Action CTA Buttons */}
                   <div className="flex items-center gap-4 pt-2">
-                    <Link
-                      href={slide.primaryCtaHref}
-                      prefetch={false}
-                      className="group h-[48px] px-7 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-[13.5px] font-semibold tracking-normal transition-all duration-200 hover:-translate-y-0.5 active:scale-95 shadow-xl shadow-[#FF9D2E]/25 flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                    >
-                      <span>{slide.primaryCtaText}</span>
-                      <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
-                    </Link>
-
-                    {slide.isSecondaryExternal ? (
-                      <a
-                        href={slide.secondaryCtaHref}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="h-[48px] px-7 rounded-full border-2 border-white/40 hover:border-white hover:bg-white/10 text-white text-[13.5px] font-medium tracking-normal transition-all duration-200 hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                      >
-                        <MessageCircle className="w-4 h-4 text-[#FF9D2E]" />
-                        <span>{slide.secondaryCtaText}</span>
-                      </a>
-                    ) : (
+                    {slide.primaryCtaText && slide.primaryCtaText.trim() !== '' && slide.primaryCtaHref && slide.primaryCtaHref.trim() !== '' && (
                       <Link
-                        href={slide.secondaryCtaHref}
+                        href={slide.primaryCtaHref}
                         prefetch={false}
-                        className="h-[48px] px-7 rounded-full border-2 border-white/40 hover:border-white hover:bg-white/10 text-white text-[13.5px] font-medium tracking-normal transition-all duration-200 hover:-translate-y-0.5 active:scale-95 flex items-center justify-center whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                        className="group h-[48px] px-7 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-[13.5px] font-semibold tracking-normal transition-all duration-200 hover:-translate-y-0.5 active:scale-95 shadow-xl shadow-[#FF9D2E]/25 flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                       >
-                        {slide.secondaryCtaText}
+                        <span>{slide.primaryCtaText}</span>
+                        <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
                       </Link>
+                    )}
+
+                    {slide.secondaryCtaText && slide.secondaryCtaText.trim() !== '' && slide.secondaryCtaHref && slide.secondaryCtaHref.trim() !== '' && (
+                      slide.isSecondaryExternal ? (
+                        <a
+                          href={slide.secondaryCtaHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="h-[48px] px-7 rounded-full border-2 border-white/40 hover:border-white hover:bg-white/10 text-white text-[13.5px] font-medium tracking-normal transition-all duration-200 hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                        >
+                          <MessageCircle className="w-4 h-4 text-[#FF9D2E]" />
+                          <span>{slide.secondaryCtaText}</span>
+                        </a>
+                      ) : (
+                        <Link
+                          href={slide.secondaryCtaHref}
+                          prefetch={false}
+                          className="h-[48px] px-7 rounded-full border-2 border-white/40 hover:border-white hover:bg-white/10 text-white text-[13.5px] font-medium tracking-normal transition-all duration-200 hover:-translate-y-0.5 active:scale-95 flex items-center justify-center whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                        >
+                          {slide.secondaryCtaText}
+                        </Link>
+                      )
                     )}
                   </div>
                 </div>
@@ -328,8 +336,14 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
                     <img
                       src={slide.image}
                       alt={slide.imageAlt}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      className="w-full h-full object-cover object-center"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: slide.imageFit || 'cover',
+                        objectPosition: `center ${slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%`,
+                        transform: `scale(${(slide.imageZoom !== undefined ? slide.imageZoom : 100) / 100})`,
+                      }}
+                      className="w-full h-full"
                       loading={idx === 0 ? 'eager' : 'lazy'}
                     />
                   )}
@@ -350,12 +364,14 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
                 {/* Coherent Promotional Content on Banner with safe side padding to clear arrows */}
                 <div className="relative z-10 w-full h-full flex flex-col justify-center px-10 sm:px-14 py-4">
                   {/* Status Badge */}
-                  <div className="mb-2">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#102D52]/90 border border-white/20 text-[#FF9D2E] text-[10.5px] sm:text-[11px] font-medium tracking-wide">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF9D2E] animate-pulse" />
-                      {slide.eyebrow.split('•')[0].trim()}
-                    </span>
-                  </div>
+                  {slide.eyebrow && slide.eyebrow.trim() !== '' && (
+                    <div className="mb-2">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#102D52]/90 border border-white/20 text-[#FF9D2E] text-[10.5px] sm:text-[11px] font-medium tracking-wide">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#FF9D2E] animate-pulse" />
+                        {slide.eyebrow.split('•')[0].trim()}
+                      </span>
+                    </div>
+                  )}
 
                   {/* Punchy Promotional Headline with DM Serif Display */}
                   <h1 className="font-serif font-normal text-[clamp(1.35rem,5.2vw,1.85rem)] sm:text-[clamp(1.75rem,5vw,2.2rem)] leading-[1.2] text-white tracking-tight max-w-[340px] sm:max-w-md">
@@ -364,21 +380,25 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
                   </h1>
 
                   {/* Compact Benefit Message in DM Sans (2 lines readable) */}
-                  <p className="font-sans text-[12px] sm:text-[14px] text-white/90 line-clamp-2 mt-1.5 max-w-xs sm:max-w-sm leading-snug">
-                    {slide.supportingText}
-                  </p>
+                  {slide.supportingText && slide.supportingText.trim() !== '' && (
+                    <p className="font-sans text-[12px] sm:text-[14px] text-white/90 line-clamp-2 mt-1.5 max-w-xs sm:max-w-sm leading-snug">
+                      {slide.supportingText}
+                    </p>
+                  )}
 
                   {/* Responsive CTA Buttons */}
                   <div className="mt-3.5 flex flex-wrap items-center gap-2">
-                    <Link
-                      href={slide.primaryCtaHref}
-                      prefetch={false}
-                      className="h-[34px] sm:h-[36px] px-4 sm:px-5 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-[11.5px] sm:text-[12px] font-bold tracking-normal inline-flex items-center gap-1.5 shadow-md active:scale-95 shrink-0"
-                    >
-                      <span>{slide.primaryCtaText}</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
-                    {slide.secondaryCtaText && (
+                    {slide.primaryCtaText && slide.primaryCtaText.trim() !== '' && slide.primaryCtaHref && slide.primaryCtaHref.trim() !== '' && (
+                      <Link
+                        href={slide.primaryCtaHref}
+                        prefetch={false}
+                        className="h-[34px] sm:h-[36px] px-4 sm:px-5 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-[11.5px] sm:text-[12px] font-bold tracking-normal inline-flex items-center gap-1.5 shadow-md active:scale-95 shrink-0"
+                      >
+                        <span>{slide.primaryCtaText}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    )}
+                    {slide.secondaryCtaText && slide.secondaryCtaText.trim() !== '' && slide.secondaryCtaHref && slide.secondaryCtaHref.trim() !== '' && (
                       <Link
                         href={slide.secondaryCtaHref}
                         prefetch={false}

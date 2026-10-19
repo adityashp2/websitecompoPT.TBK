@@ -81,7 +81,12 @@ export default function ClientProyekGallery({
                 <img
                   src={s.image}
                   alt={s.caption || `Foto Proyek ${idx + 1}`}
-                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                  style={{
+                    objectFit: (s as any).imageFit || 'contain',
+                    objectPosition: `center ${(s as any).imageOffsetY !== undefined ? (s as any).imageOffsetY : 50}%`,
+                    transform: `scale(${(((s as any).imageZoom !== undefined ? (s as any).imageZoom : 100) / 100)})`,
+                  }}
+                  className="w-full h-full group-hover:scale-105 transition-transform duration-300"
                   loading="lazy"
                 />
 

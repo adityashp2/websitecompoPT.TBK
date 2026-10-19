@@ -62,14 +62,17 @@ export default function KontakPage() {
     }
   };
 
-  const rawWa = content.contact?.whatsapp || '0812-7890-1234';
+  const rawWa = content.contact?.whatsapp?.trim() || '';
   const cleanPhone = rawWa.replace(/\D/g, '');
+  const hasWa = cleanPhone.length >= 7;
   const formattedWa = cleanPhone.startsWith('0')
     ? `62${cleanPhone.slice(1)}`
     : cleanPhone.startsWith('62')
     ? cleanPhone
     : `62${cleanPhone}`;
-  const waUrl = `https://wa.me/${formattedWa}?text=${encodeURIComponent('Halo PT. TBK, saya ingin bertanya tentang perumahan subsidi Puri Gunung Langgar.')}`;
+  const waUrl = hasWa
+    ? `https://wa.me/${formattedWa}?text=${encodeURIComponent('Halo PT. TBK, saya ingin bertanya tentang perumahan subsidi Puri Gunung Langgar.')}`
+    : '';
 
   return (
     <div className="min-h-screen bg-white text-[#102D52] flex flex-col font-sans selection:bg-[#FF9D2E] selection:text-[#102D52]">
@@ -118,58 +121,68 @@ export default function KontakPage() {
                 </div>
 
                 <div className="divide-y divide-[#DCE7F5]">
-                  <div className="py-4 first:pt-0">
-                    <span className="text-xs text-[#FF9D2E] font-semibold block mb-1">
-                      Lokasi kantor
-                    </span>
-                    <p className="text-xs sm:text-[13.5px] text-[#102D52] font-semibold leading-relaxed">
-                      {content.contact.address || 'Kawasan Puri Gunung Langgar, Desa Sabah Balau, Kec. Tanjung Bintang, Lampung Selatan'}
-                    </p>
-                  </div>
+                  {content.contact?.address && content.contact.address.trim() !== '' && (
+                    <div className="py-4 first:pt-0">
+                      <span className="text-xs text-[#FF9D2E] font-semibold block mb-1">
+                        Lokasi kantor
+                      </span>
+                      <p className="text-xs sm:text-[13.5px] text-[#102D52] font-semibold leading-relaxed">
+                        {content.contact.address}
+                      </p>
+                    </div>
+                  )}
 
-                  <div className="py-4">
-                    <span className="text-xs text-[#FF9D2E] font-semibold block mb-1">
-                      Layanan WhatsApp resmi
-                    </span>
-                    <p className="font-mono text-sm sm:text-base font-bold text-[#102D52]">
-                      {content.contact.whatsapp || '0812-7890-1234'}
-                    </p>
-                    <span className="text-[11px] text-[#526783] block mt-0.5">Respon cepat informasi berkas &amp; unit kavling</span>
-                  </div>
+                  {hasWa && (
+                    <div className="py-4">
+                      <span className="text-xs text-[#FF9D2E] font-semibold block mb-1">
+                        Layanan WhatsApp resmi
+                      </span>
+                      <p className="font-mono text-sm sm:text-base font-bold text-[#102D52]">
+                        {content.contact.whatsapp}
+                      </p>
+                      <span className="text-[11px] text-[#526783] block mt-0.5">Respon cepat informasi berkas &amp; unit kavling</span>
+                    </div>
+                  )}
 
-                  <div className="py-4">
-                    <span className="text-xs text-[#FF9D2E] font-semibold block mb-1">
-                      Surat elektronik (email)
-                    </span>
-                    <p className="text-xs sm:text-[13.5px] text-[#102D52] font-medium">
-                      {content.contact.email || 'info@terbangbersamakawan.co.id'}
-                    </p>
-                  </div>
+                  {content.contact?.email && content.contact.email.trim() !== '' && (
+                    <div className="py-4">
+                      <span className="text-xs text-[#FF9D2E] font-semibold block mb-1">
+                        Surat elektronik (email)
+                      </span>
+                      <p className="text-xs sm:text-[13.5px] text-[#102D52] font-medium">
+                        {content.contact.email}
+                      </p>
+                    </div>
+                  )}
 
-                  <div className="py-4">
-                    <span className="text-xs text-[#FF9D2E] font-semibold block mb-1">
-                      Jam pelayanan kantor
-                    </span>
-                    <p className="text-xs sm:text-[13.5px] text-[#102D52] font-medium">
-                      {content.contact.operatingHours || 'Senin - Sabtu: 08.00 - 17.00 WIB'}
-                    </p>
-                    <span className="text-[11px] text-[#526783] block mt-0.5">Survei akhir pekan dengan perjanjian awal</span>
-                  </div>
+                  {content.contact?.operatingHours && content.contact.operatingHours.trim() !== '' && (
+                    <div className="py-4">
+                      <span className="text-xs text-[#FF9D2E] font-semibold block mb-1">
+                        Jam pelayanan kantor
+                      </span>
+                      <p className="text-xs sm:text-[13.5px] text-[#102D52] font-medium">
+                        {content.contact.operatingHours}
+                      </p>
+                      <span className="text-[11px] text-[#526783] block mt-0.5">Survei akhir pekan dengan perjanjian awal</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Direct WhatsApp Action */}
-                <div>
-                  <a
-                    href={waUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#15966A] hover:bg-[#117a56] text-white text-sm font-semibold transition-all duration-200 shadow-md"
-                  >
-                    <MessageCircle className="w-4 h-4 fill-current" />
-                    <span>Konsultasi WhatsApp langsung</span>
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
-                  </a>
-                </div>
+                {hasWa && (
+                  <div>
+                    <a
+                      href={waUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#15966A] hover:bg-[#117a56] text-white text-sm font-semibold transition-all duration-200 shadow-md"
+                    >
+                      <MessageCircle className="w-4 h-4 fill-current" />
+                      <span>Konsultasi WhatsApp langsung</span>
+                      <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+                    </a>
+                  </div>
+                )}
 
                 {/* Pendampingan Survei Note */}
                 <div className="pt-4 border-l-4 border-[#073B78] bg-white rounded-r-xl p-4 space-y-1">

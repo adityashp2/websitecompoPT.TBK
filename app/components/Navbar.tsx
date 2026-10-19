@@ -127,14 +127,17 @@ export default function Header({ content }: HeaderProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [mobileMenuOpen, searchOpen]);
 
-  const rawWa = content.contact?.whatsapp || '0812-7890-1234';
+  const rawWa = content.contact?.whatsapp?.trim() || '';
   const cleanPhone = rawWa.replace(/\D/g, '');
+  const hasWa = cleanPhone.length >= 7;
   const formattedWa = cleanPhone.startsWith('0')
     ? `62${cleanPhone.slice(1)}`
     : cleanPhone.startsWith('62')
     ? cleanPhone
     : `62${cleanPhone}`;
-  const waUrl = `https://wa.me/${formattedWa}?text=${encodeURIComponent('Halo PT. TBK, saya ingin berkonsultasi mengenai perumahan Puri Gunung Langgar.')}`;
+  const waUrl = hasWa
+    ? `https://wa.me/${formattedWa}?text=${encodeURIComponent('Halo PT. TBK, saya ingin berkonsultasi mengenai perumahan Puri Gunung Langgar.')}`
+    : '';
 
   // Filtered search results
   const filteredSearch = searchQuery.trim() === ''
@@ -411,16 +414,18 @@ export default function Header({ content }: HeaderProps) {
               <span>Hubungi Kami</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <a
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full min-h-[42px] px-4 rounded-xl border border-white/30 hover:border-[#FF9D2E] hover:bg-[#FF9D2E]/10 text-white text-[13px] font-semibold flex items-center justify-center gap-2 transition-all"
-            >
-              <MessageCircle className="w-4 h-4 text-[#FF9D2E]" />
-              <span>Konsultasi WhatsApp</span>
-            </a>
+            {hasWa && (
+              <a
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full min-h-[42px] px-4 rounded-xl border border-white/30 hover:border-[#FF9D2E] hover:bg-[#FF9D2E]/10 text-white text-[13px] font-semibold flex items-center justify-center gap-2 transition-all"
+              >
+                <MessageCircle className="w-4 h-4 text-[#FF9D2E]" />
+                <span>Konsultasi WhatsApp</span>
+              </a>
+            )}
           </div>
         </div>
         </>

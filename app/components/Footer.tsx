@@ -37,10 +37,12 @@ export default function Footer({ content }: FooterProps) {
               {content.footer?.summary || 'Pengembang perumahan resmi berdomisili di Bandar Lampung. Mengutamakan transparansi informasi, kepastian legalitas, dan mutu hunian layak bagi masyarakat.'}
             </p>
 
-            <div className="pt-2 flex items-center gap-2 text-xs text-white/80">
-              <FileCheck2 className="w-4 h-4 text-[#FF9D2E] shrink-0" />
-              <span>SK Kemenkumham: {content.legal?.skMenkumham || 'AHU-0016462.AH.01.01.TAHUN 2021'}</span>
-            </div>
+            {content.legal?.skMenkumham && content.legal.skMenkumham.trim() !== '' && (
+              <div className="pt-2 flex items-center gap-2 text-xs text-white/80">
+                <FileCheck2 className="w-4 h-4 text-[#FF9D2E] shrink-0" />
+                <span>SK Kemenkumham: {content.legal.skMenkumham}</span>
+              </div>
+            )}
           </div>
 
           {/* Column 2: Address & Coordinates */}
@@ -49,26 +51,36 @@ export default function Footer({ content }: FooterProps) {
               Kantor &amp; Lokasi Proyek
             </div>
             <div className="text-[13px] text-[#DCE7F5]/85 space-y-3 leading-relaxed">
-              <div className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-[#FF9D2E] shrink-0 mt-0.5" />
-                <span>
-                  <strong className="text-white">Kantor:</strong> {content.contact?.address || 'Bandar Lampung, Provinsi Lampung, Indonesia.'}
-                </span>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-[#15966A] shrink-0 mt-0.5" />
-                <span>
-                  <strong className="text-white">Proyek:</strong> {content.project?.name || 'Puri Gunung Langgar'}, {content.project?.district || 'Desa Sabah Balau, Kec. Tanjung Bintang'}, Lampung Selatan.
-                </span>
-              </div>
-              <div className="flex items-center gap-2.5 pt-1 text-[#DCE7F5]/75">
-                <Phone className="w-4 h-4 text-[#FF9D2E] shrink-0" />
-                <span>WhatsApp: {content.contact?.whatsapp || '0812-7890-1234'}</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-[#DCE7F5]/75">
-                <Mail className="w-4 h-4 text-[#FF9D2E] shrink-0" />
-                <span>Email: {content.contact?.email || 'info@terbangbersamakawan.co.id'}</span>
-              </div>
+              {content.contact?.address && content.contact.address.trim() !== '' && (
+                <div className="flex items-start gap-2.5">
+                  <MapPin className="w-4 h-4 text-[#FF9D2E] shrink-0 mt-0.5" />
+                  <span>
+                    <strong className="text-white">Kantor:</strong> {content.contact.address}
+                  </span>
+                </div>
+              )}
+              {content.project?.name && content.project.name.trim() !== '' && (
+                <div className="flex items-start gap-2.5">
+                  <MapPin className="w-4 h-4 text-[#15966A] shrink-0 mt-0.5" />
+                  <span>
+                    <strong className="text-white">Proyek:</strong> {content.project.name}
+                    {content.project.district ? `, ${content.project.district}` : ''}
+                    {content.project.province ? `, ${content.project.province}` : ''}
+                  </span>
+                </div>
+              )}
+              {content.contact?.whatsapp && content.contact.whatsapp.trim() !== '' && (
+                <div className="flex items-center gap-2.5 pt-1 text-[#DCE7F5]/75">
+                  <Phone className="w-4 h-4 text-[#FF9D2E] shrink-0" />
+                  <span>WhatsApp: {content.contact.whatsapp}</span>
+                </div>
+              )}
+              {content.contact?.email && content.contact.email.trim() !== '' && (
+                <div className="flex items-center gap-2.5 text-[#DCE7F5]/75">
+                  <Mail className="w-4 h-4 text-[#FF9D2E] shrink-0" />
+                  <span>Email: {content.contact.email}</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -78,33 +90,39 @@ export default function Footer({ content }: FooterProps) {
               <span className="text-xs uppercase tracking-[0.12em] text-[#FF9D2E] font-bold">
                 Peta Lokasi Kantor
               </span>
-              <a
-                href={content.contact?.mapsUrl || "https://maps.google.com/?q=Bandar+Lampung"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[12px] text-[#DCE7F5]/70 hover:text-[#FF9D2E] flex items-center gap-1 transition-colors"
-              >
-                <span>Buka Google Maps</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
+              {content.contact?.mapsUrl && content.contact.mapsUrl.trim() !== '' && (
+                <a
+                  href={content.contact.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[12px] text-[#DCE7F5]/70 hover:text-[#FF9D2E] flex items-center gap-1 transition-colors"
+                >
+                  <span>Buka Google Maps</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              )}
             </div>
 
-            <div className="relative w-full h-36 rounded-xl overflow-hidden border border-white/15 bg-[#073B78]">
-              <iframe
-                src={content.contact?.mapsEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127103.95764032483!2d105.19799639726562!3d-5.412499999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e40da473d091219%3A0x3039d80b220cc70!2sKota%20Bandar%20Lampung%2C%20Lampung!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Peta Lokasi Kantor PT. Terbang Bersama Kawan"
-                className="w-full h-full opacity-90 hover:opacity-100 transition-opacity"
-              />
-            </div>
-            <p className="text-[11.5px] text-[#DCE7F5]/70">
-              Jam Operasional: {content.contact?.operatingHours || 'Senin - Sabtu: 08.00 - 17.00 WIB'}
-            </p>
+            {content.contact?.mapsEmbedUrl && content.contact.mapsEmbedUrl.trim() !== '' && (
+              <div className="relative w-full h-36 rounded-xl overflow-hidden border border-white/15 bg-[#073B78]">
+                <iframe
+                  src={content.contact.mapsEmbedUrl}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Peta Lokasi Kantor PT. Terbang Bersama Kawan"
+                  className="w-full h-full opacity-90 hover:opacity-100 transition-opacity"
+                />
+              </div>
+            )}
+            {content.contact?.operatingHours && content.contact.operatingHours.trim() !== '' && (
+              <p className="text-[11.5px] text-[#DCE7F5]/70">
+                Jam Operasional: {content.contact.operatingHours}
+              </p>
+            )}
           </div>
         </div>
 

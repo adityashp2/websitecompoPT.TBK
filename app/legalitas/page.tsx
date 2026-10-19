@@ -48,14 +48,17 @@ export const metadata: Metadata = {
 export default async function LegalitasPage() {
   const content = await getSiteContent();
 
-  const rawWa = content.contact?.whatsapp || '0812-7890-1234';
+  const rawWa = content.contact?.whatsapp || '';
   const cleanPhone = rawWa.replace(/\D/g, '');
+  const hasWa = cleanPhone.length >= 7;
   const formattedWa = cleanPhone.startsWith('0')
     ? `62${cleanPhone.slice(1)}`
     : cleanPhone.startsWith('62')
     ? cleanPhone
     : `62${cleanPhone}`;
-  const waUrl = `https://wa.me/${formattedWa}?text=${encodeURIComponent('Halo Tim Legalitas PT. TBK, saya ingin bertanya mengenai keabsahan berkas legalitas perumahan Puri Gunung Langgar.')}`;
+  const waUrl = hasWa
+    ? `https://wa.me/${formattedWa}?text=${encodeURIComponent('Halo Tim Legalitas PT. TBK, saya ingin bertanya mengenai keabsahan berkas legalitas perumahan Puri Gunung Langgar.')}`
+    : '';
 
   const legalDocs = [
     {
@@ -246,17 +249,19 @@ export default async function LegalitasPage() {
                   Kami mengutamakan keamanan dana dan keabsahan hak tanah konsumen sejak awal pemesanan hingga sertifikat berada di tangan Anda.
                 </p>
 
-                <div className="pt-2">
-                  <a
-                    href={waUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#073B78] hover:bg-[#0A4B91] text-white text-xs font-bold tracking-wide transition-all shadow-sm"
-                  >
-                    <Phone className="w-4 h-4 text-[#FF9D2E]" />
-                    <span>Konsultasi Legalitas via WhatsApp</span>
-                  </a>
-                </div>
+                {hasWa && (
+                  <div className="pt-2">
+                    <a
+                      href={waUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#073B78] hover:bg-[#0A4B91] text-white text-xs font-bold tracking-wide transition-all shadow-sm"
+                    >
+                      <Phone className="w-4 h-4 text-[#FF9D2E]" />
+                      <span>Konsultasi Legalitas via WhatsApp</span>
+                    </a>
+                  </div>
+                )}
               </div>
 
               <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -351,15 +356,17 @@ export default async function LegalitasPage() {
               >
                 Lihat Alamat Kantor & Peta Lokasi
               </Link>
-              <a
-                href={waUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs tracking-wide transition-all flex items-center gap-2"
-              >
-                <Phone className="w-4 h-4 text-[#FF9D2E]" />
-                <span>Hubungi Admin Legalitas</span>
-              </a>
+              {hasWa && (
+                <a
+                  href={waUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs tracking-wide transition-all flex items-center gap-2"
+                >
+                  <Phone className="w-4 h-4 text-[#FF9D2E]" />
+                  <span>Hubungi Admin Legalitas</span>
+                </a>
+              )}
             </div>
           </div>
         </section>

@@ -11,6 +11,9 @@ export interface BannerSlide {
   isSecondaryExternal?: boolean;
   image: string;
   imageAlt: string;
+  imageFit?: 'cover' | 'contain';
+  imageOffsetY?: number;
+  imageZoom?: number;
   mediaType?: 'image' | 'video';
   videoUrl?: string;
 }
@@ -46,6 +49,9 @@ export interface KprSimulationConfig {
 export interface PromoPopup {
   enabled: boolean;
   image: string;
+  imageFit?: 'cover' | 'contain';
+  imageOffsetY?: number;
+  imageZoom?: number;
   badge?: string;
   title?: string;
   description?: string;
@@ -78,10 +84,16 @@ export interface SiteContent {
     secondaryCtaText: string;
     secondaryCtaLink: string;
     backgroundImage: string;
+    imageFit?: 'cover' | 'contain';
+    imageOffsetY?: number;
+    imageZoom?: number;
     stats: Array<{ label: string; value: string }>;
     slides?: Array<{
       image: string;
       caption: string;
+      imageFit?: 'cover' | 'contain';
+      imageOffsetY?: number;
+      imageZoom?: number;
     }>;
   };
   about: {
@@ -97,6 +109,9 @@ export interface SiteContent {
     commitmentPoints?: Array<{ title: string; subtitle: string }>;
     officeImage?: string;
     officeCaption?: string;
+    officeImageFit?: 'cover' | 'contain';
+    officeImageOffsetY?: number;
+    officeImageZoom?: number;
     headerBgImage?: string;
     headerSubtitle?: string;
     homeIntroBadge?: string;
@@ -170,6 +185,9 @@ export interface SiteContent {
       image: string;
       tag: string;
       videoUrl?: string;
+      imageFit?: 'cover' | 'contain';
+      imageOffsetY?: number;
+      imageZoom?: number;
     }>;
   };
   project: {
@@ -182,9 +200,18 @@ export interface SiteContent {
     province: string;
     description: string;
     image: string;
+    imageFit?: 'cover' | 'contain';
+    imageOffsetY?: number;
+    imageZoom?: number;
     mediaType?: 'photo' | 'video';
     videoUrl?: string;
-    slides?: Array<{ image: string; caption?: string }>;
+    slides?: Array<{
+      image: string;
+      caption?: string;
+      imageFit?: 'cover' | 'contain';
+      imageOffsetY?: number;
+      imageZoom?: number;
+    }>;
     specs: Array<{ label: string; value: string }>;
     highlights?: Array<{ label: string; value: string; subtext: string; icon?: string }>;
     floorPlan?: Array<{ label: string; value: string }>;

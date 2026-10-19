@@ -52,14 +52,17 @@ export default async function ProyekPage() {
   const slides = (content.project?.slides || []).filter(s => s && s.image && s.image.trim() !== '');
   const ytEmbedUrl = getYouTubeEmbedUrl(content.project?.videoUrl);
 
-  const rawWa = content.contact?.whatsapp || '0812-7890-1234';
+  const rawWa = content.contact?.whatsapp?.trim() || '';
   const cleanPhone = rawWa.replace(/\D/g, '');
+  const hasWa = cleanPhone.length >= 7;
   const formattedWa = cleanPhone.startsWith('0')
     ? `62${cleanPhone.slice(1)}`
     : cleanPhone.startsWith('62')
     ? cleanPhone
     : `62${cleanPhone}`;
-  const waUrl = `https://wa.me/${formattedWa}?text=${encodeURIComponent('Halo PT. TBK, saya tertarik dengan informasi unit Puri Gunung Langgar.')}`;
+  const waUrl = hasWa
+    ? `https://wa.me/${formattedWa}?text=${encodeURIComponent('Halo PT. TBK, saya tertarik dengan informasi unit Puri Gunung Langgar.')}`
+    : '';
 
   return (
     <div className="min-h-screen bg-white text-[#102D52] flex flex-col font-sans selection:bg-[#FF9D2E] selection:text-[#102D52]">
@@ -268,15 +271,17 @@ export default async function ProyekPage() {
                     <span>Hitung Simulasi Angsuran KPR</span>
                     <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
                   </Link>
-                  <a
-                    href={waUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-[#073B78] hover:bg-[#073B78] hover:text-white text-[#073B78] text-xs font-semibold tracking-normal transition-all duration-200 text-center"
-                  >
-                    <Phone className="w-4 h-4 text-[#FF9D2E]" />
-                    <span>Tanya Ketersediaan Kavling</span>
-                  </a>
+                  {hasWa && (
+                    <a
+                      href={waUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-[#073B78] hover:bg-[#073B78] hover:text-white text-[#073B78] text-xs font-semibold tracking-normal transition-all duration-200 text-center"
+                    >
+                      <Phone className="w-4 h-4 text-[#FF9D2E]" />
+                      <span>Tanya Ketersediaan Kavling</span>
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
@@ -349,14 +354,16 @@ export default async function ProyekPage() {
                 <span>{content.project.surveyCta?.buttonText || 'Isi Formulir Survei'}</span>
                 <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
               </Link>
-              <a
-                href={waUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-7 py-3 rounded-full border border-white/40 hover:border-white hover:bg-white/10 text-white text-xs font-semibold tracking-normal transition-all duration-200"
-              >
-                <span>{content.project.surveyCta?.waButtonText || 'WhatsApp Pemasaran'}</span>
-              </a>
+              {hasWa && (
+                <a
+                  href={waUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-7 py-3 rounded-full border border-white/40 hover:border-white hover:bg-white/10 text-white text-xs font-semibold tracking-normal transition-all duration-200"
+                >
+                  <span>{content.project.surveyCta?.waButtonText || 'WhatsApp Pemasaran'}</span>
+                </a>
+              )}
             </div>
           </div>
         </section>

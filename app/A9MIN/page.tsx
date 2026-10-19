@@ -52,6 +52,120 @@ interface Inquiry {
   created_at: string;
 }
 
+interface ImageAdjustmentControlProps {
+  title?: string;
+  fit?: 'cover' | 'contain';
+  offsetY?: number;
+  zoom?: number;
+  defaultOffsetY?: number;
+  onChange: (updates: { fit: 'cover' | 'contain'; offsetY: number; zoom: number }) => void;
+}
+
+function ImageAdjustmentControl({
+  title = "Pengaturan Ukuran & Posisi Foto",
+  fit = "cover",
+  offsetY,
+  zoom = 100,
+  defaultOffsetY = 50,
+  onChange,
+}: ImageAdjustmentControlProps) {
+  const currentOffsetY = offsetY !== undefined ? offsetY : defaultOffsetY;
+  const currentFit = fit || 'cover';
+  const currentZoom = zoom !== undefined ? zoom : 100;
+
+  return (
+    <div className="mt-2.5 p-3 rounded-xl bg-[#F0F4FA] border border-[#DCE7F5] space-y-3 text-left">
+      <div className="flex items-center justify-between">
+        <span className="text-[11px] font-bold text-[#073B78] flex items-center gap-1.5">
+          <Maximize2 className="w-3.5 h-3.5 text-[#FF9D2E]" />
+          <span>{title}</span>
+        </span>
+        <span className="text-[10px] text-[#526783] bg-white px-2 py-0.5 rounded border border-[#DCE7F5]">
+          Live Sizing
+        </span>
+      </div>
+
+      {/* Pilihan Fit: Cover vs Contain */}
+      <div className="grid grid-cols-2 gap-2 text-xs">
+        <button
+          type="button"
+          onClick={() => onChange({ fit: 'cover', offsetY: currentOffsetY, zoom: currentZoom })}
+          className={`py-1.5 px-2.5 rounded-lg font-medium border text-center transition-all ${
+            currentFit === 'cover'
+              ? 'bg-[#073B78] text-white border-[#073B78] shadow-xs'
+              : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+          }`}
+        >
+          Penuh Bingkai (Cover)
+        </button>
+        <button
+          type="button"
+          onClick={() => onChange({ fit: 'contain', offsetY: currentOffsetY, zoom: currentZoom })}
+          className={`py-1.5 px-2.5 rounded-lg font-medium border text-center transition-all ${
+            currentFit === 'contain'
+              ? 'bg-[#073B78] text-white border-[#073B78] shadow-xs'
+              : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+          }`}
+        >
+          Utuh Tanpa Terpotong (Contain)
+        </button>
+      </div>
+
+      {/* Slider Geser Vertikal (Y-Offset) */}
+      <div>
+        <div className="flex items-center justify-between text-[11px] mb-1">
+          <label className="font-semibold text-[#102D52]">
+            Posisi Geser Vertikal (Y-Offset)
+          </label>
+          <span className="text-[10px] font-mono text-[#073B78] font-bold">
+            {currentOffsetY}% {currentOffsetY === 50 ? '(Tengah)' : currentOffsetY < 30 ? '(Fokus Atas)' : '(Fokus Bawah)'}
+          </span>
+        </div>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          step="1"
+          value={currentOffsetY}
+          onChange={(e) => onChange({ fit: currentFit, offsetY: Number(e.target.value), zoom: currentZoom })}
+          className="w-full accent-[#FF9D2E] cursor-pointer"
+        />
+        <div className="flex justify-between text-[9px] text-[#526783] mt-0.5 font-medium">
+          <span>0% (Paling Atas)</span>
+          <span>50% (Tengah)</span>
+          <span>100% (Paling Bawah)</span>
+        </div>
+      </div>
+
+      {/* Slider Skala / Zoom */}
+      <div>
+        <div className="flex items-center justify-between text-[11px] mb-1">
+          <label className="font-semibold text-[#102D52]">
+            Ukuran Skala / Zoom Foto
+          </label>
+          <span className="text-[10px] font-mono text-[#073B78] font-bold">
+            {currentZoom}%
+          </span>
+        </div>
+        <input
+          type="range"
+          min="70"
+          max="150"
+          step="2"
+          value={currentZoom}
+          onChange={(e) => onChange({ fit: currentFit, offsetY: currentOffsetY, zoom: Number(e.target.value) })}
+          className="w-full accent-[#FF9D2E] cursor-pointer"
+        />
+        <div className="flex justify-between text-[9px] text-[#526783] mt-0.5 font-medium">
+          <span>70% (Lebih Jauh / Luas)</span>
+          <span>100% (Normal)</span>
+          <span>150% (Zoom Dekat)</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export type AdminTab =
   | 'banners'
   | 'intro-features'
@@ -1280,7 +1394,12 @@ export default function AdminDashboard() {
                                 <img
                                   src={slide.image}
                                   alt={slide.imageAlt || 'Banner preview'}
-                                  className="w-full h-full object-cover"
+                                  style={{
+                                    objectFit: slide.imageFit || 'cover',
+                                    objectPosition: `center ${slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%`,
+                                    transform: `scale(${(slide.imageZoom !== undefined ? slide.imageZoom : 100) / 100})`,
+                                  }}
+                                  className="w-full h-full"
                                 />
                               ) : (
                                 <div className="w-full h-full flex flex-col items-center justify-center bg-[#F4F7FC] text-[#526783] text-xs p-4 text-center">
@@ -1378,43 +1497,60 @@ export default function AdminDashboard() {
                               </div>
                             ) : (
                               /* FOTO / GAMBAR CONTROLS */
-                              <div className="flex items-center gap-2 pt-1">
-                                <input
-                                  type="text"
-                                  placeholder="/assets/... atau URL gambar"
-                                  value={slide.image}
-                                  onChange={(e) => {
-                                    let val = e.target.value;
-                                    const isVideoLink = val.includes('youtube.com') || val.includes('youtu.be') || val.endsWith('.mp4') || val.endsWith('.webm');
-                                    const newSlides = [...(content.bannerSlides || [])];
-                                    if (isVideoLink) {
-                                      newSlides[sIdx].videoUrl = val;
-                                      newSlides[sIdx].mediaType = 'video';
-                                    } else {
-                                      newSlides[sIdx].image = val;
-                                    }
-                                    setContent({ ...content, bannerSlides: newSlides });
-                                  }}
-                                  className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono font-semibold"
-                                />
-                                <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0">
-                                  <Upload className="w-3.5 h-3.5" />
-                                  <span>{uploadingKey === `banner-${sIdx}` ? '...' : 'Upload'}</span>
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2 pt-1">
                                   <input
-                                    type="file"
-                                    accept="image/*"
-                                    className="hidden"
+                                    type="text"
+                                    placeholder="/assets/... atau URL gambar"
+                                    value={slide.image}
                                     onChange={(e) => {
-                                      if (e.target.files && e.target.files[0]) {
-                                        handleGenericFileUpload(e.target.files[0], `banner-${sIdx}`, (url) => {
-                                          const newSlides = [...(content.bannerSlides || [])];
-                                          newSlides[sIdx].image = url;
-                                          setContent({ ...content, bannerSlides: newSlides });
-                                        });
+                                      let val = e.target.value;
+                                      const isVideoLink = val.includes('youtube.com') || val.includes('youtu.be') || val.endsWith('.mp4') || val.endsWith('.webm');
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      if (isVideoLink) {
+                                        newSlides[sIdx].videoUrl = val;
+                                        newSlides[sIdx].mediaType = 'video';
+                                      } else {
+                                        newSlides[sIdx].image = val;
                                       }
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono font-semibold"
+                                  />
+                                  <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0">
+                                    <Upload className="w-3.5 h-3.5" />
+                                    <span>{uploadingKey === `banner-${sIdx}` ? '...' : 'Upload'}</span>
+                                    <input
+                                      type="file"
+                                      accept="image/*"
+                                      className="hidden"
+                                      onChange={(e) => {
+                                        if (e.target.files && e.target.files[0]) {
+                                          handleGenericFileUpload(e.target.files[0], `banner-${sIdx}`, (url) => {
+                                            const newSlides = [...(content.bannerSlides || [])];
+                                            newSlides[sIdx].image = url;
+                                            setContent({ ...content, bannerSlides: newSlides });
+                                          });
+                                        }
+                                      }}
+                                    />
+                                  </label>
+                                </div>
+                                {slide.image && (
+                                  <ImageAdjustmentControl
+                                    title="Ukuran & Posisi Gambar Banner"
+                                    fit={slide.imageFit || 'cover'}
+                                    offsetY={slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}
+                                    zoom={slide.imageZoom !== undefined ? slide.imageZoom : 100}
+                                    onChange={({ fit, offsetY, zoom }) => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].imageFit = fit;
+                                      newSlides[sIdx].imageOffsetY = offsetY;
+                                      newSlides[sIdx].imageZoom = zoom;
+                                      setContent({ ...content, bannerSlides: newSlides });
                                     }}
                                   />
-                                </label>
+                                )}
                               </div>
                             )}
                           </div>
@@ -2563,7 +2699,12 @@ export default function AdminDashboard() {
                             <img
                               src={content.promoPopup.image}
                               alt="Banner Promo"
-                              className="w-full h-full object-cover"
+                              style={{
+                                objectFit: content.promoPopup.imageFit || 'cover',
+                                objectPosition: `center ${content.promoPopup.imageOffsetY !== undefined ? content.promoPopup.imageOffsetY : 50}%`,
+                                transform: `scale(${(content.promoPopup.imageZoom !== undefined ? content.promoPopup.imageZoom : 100) / 100})`,
+                              }}
+                              className="w-full h-full"
                             />
                           ) : (
                             <span className="text-[10px] text-[#526783]">Belum ada foto</span>
@@ -2614,6 +2755,26 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                       </div>
+
+                      {content.promoPopup?.image && (
+                        <ImageAdjustmentControl
+                          title="Ukuran & Posisi Foto Iklan Promo"
+                          fit={content.promoPopup.imageFit || 'contain'}
+                          offsetY={content.promoPopup.imageOffsetY !== undefined ? content.promoPopup.imageOffsetY : 50}
+                          zoom={content.promoPopup.imageZoom !== undefined ? content.promoPopup.imageZoom : 100}
+                          onChange={({ fit, offsetY, zoom }) => {
+                            setContent({
+                              ...content,
+                              promoPopup: {
+                                ...(content.promoPopup || { enabled: false, image: '' }),
+                                imageFit: fit,
+                                imageOffsetY: offsetY,
+                                imageZoom: zoom,
+                              },
+                            });
+                          }}
+                        />
+                      )}
                     </div>
 
                     {/* Link Tujuan WhatsApp / CTA */}
@@ -2712,7 +2873,12 @@ export default function AdminDashboard() {
                             <img
                               src={content.promoPopup.image}
                               alt={content.promoPopup.title || 'Iklan Banner Promo PT. TBK'}
-                              className="w-full h-auto max-h-[380px] object-contain block group-hover:opacity-95 transition-opacity"
+                              style={{
+                                objectFit: content.promoPopup.imageFit || 'contain',
+                                objectPosition: `center ${content.promoPopup.imageOffsetY !== undefined ? content.promoPopup.imageOffsetY : 50}%`,
+                                transform: `scale(${(content.promoPopup.imageZoom !== undefined ? content.promoPopup.imageZoom : 100) / 100})`,
+                              }}
+                              className="w-full h-auto max-h-[380px] block group-hover:opacity-95 transition-opacity"
                             />
                           </a>
                         ) : (
@@ -3213,7 +3379,12 @@ export default function AdminDashboard() {
                           <img
                             src={content.about.officeImage}
                             alt="Kantor Pusat"
-                            className="w-full h-full object-cover"
+                            style={{
+                              objectFit: content.about.officeImageFit || 'cover',
+                              objectPosition: `center ${content.about.officeImageOffsetY !== undefined ? content.about.officeImageOffsetY : 50}%`,
+                              transform: `scale(${(content.about.officeImageZoom !== undefined ? content.about.officeImageZoom : 100) / 100})`,
+                            }}
+                            className="w-full h-full"
                           />
                         ) : (
                           <span className="text-[10px] text-[#526783]">Belum ada foto</span>
@@ -3271,6 +3442,26 @@ export default function AdminDashboard() {
                         </div>
                       </div>
                     </div>
+
+                    {content.about.officeImage && (
+                      <ImageAdjustmentControl
+                        title="Ukuran & Posisi Foto Kantor Pusat"
+                        fit={content.about.officeImageFit || 'cover'}
+                        offsetY={content.about.officeImageOffsetY !== undefined ? content.about.officeImageOffsetY : 50}
+                        zoom={content.about.officeImageZoom !== undefined ? content.about.officeImageZoom : 100}
+                        onChange={({ fit, offsetY, zoom }) => {
+                          setContent({
+                            ...content,
+                            about: {
+                              ...content.about,
+                              officeImageFit: fit,
+                              officeImageOffsetY: offsetY,
+                              officeImageZoom: zoom,
+                            },
+                          });
+                        }}
+                      />
+                    )}
 
                     <div>
                       <label className="block text-xs font-bold text-[#073B78] mb-1">
@@ -4286,7 +4477,12 @@ export default function AdminDashboard() {
                                 <img
                                   src={item.image}
                                   alt={item.title}
-                                  className="w-full h-full object-cover"
+                                  style={{
+                                    objectFit: item.imageFit || 'cover',
+                                    objectPosition: `center ${item.imageOffsetY !== undefined ? item.imageOffsetY : 50}%`,
+                                    transform: `scale(${(item.imageZoom !== undefined ? item.imageZoom : 100) / 100})`,
+                                  }}
+                                  className="w-full h-full"
                                 />
                               ) : (
                                 <span className="text-[10px] text-[#526783] text-center px-1">Tanpa Foto</span>
@@ -4351,6 +4547,24 @@ export default function AdminDashboard() {
                               <span className="text-[10px] text-[#526783] block">
                                 Format: JPG, PNG, atau WebP. Gambar lanskap (16:10) disarankan.
                               </span>
+                              {item.image && (
+                                <ImageAdjustmentControl
+                                  title="Ukuran & Posisi Foto Dokumentasi"
+                                  fit={item.imageFit || 'cover'}
+                                  offsetY={item.imageOffsetY !== undefined ? item.imageOffsetY : 50}
+                                  zoom={item.imageZoom !== undefined ? item.imageZoom : 100}
+                                  onChange={({ fit, offsetY, zoom }) => {
+                                    const newItems = [...content.activities.items];
+                                    newItems[idx].imageFit = fit;
+                                    newItems[idx].imageOffsetY = offsetY;
+                                    newItems[idx].imageZoom = zoom;
+                                    setContent({
+                                      ...content,
+                                      activities: { ...content.activities, items: newItems },
+                                    });
+                                  }}
+                                />
+                              )}
                             </div>
                           </div>
                         </div>
@@ -4567,7 +4781,12 @@ export default function AdminDashboard() {
                           <img
                             src={content.project.image}
                             alt="Sampul Proyek"
-                            className="w-full h-full object-cover"
+                            style={{
+                              objectFit: content.project.imageFit || 'cover',
+                              objectPosition: `center ${content.project.imageOffsetY !== undefined ? content.project.imageOffsetY : 50}%`,
+                              transform: `scale(${(content.project.imageZoom !== undefined ? content.project.imageZoom : 100) / 100})`,
+                            }}
+                            className="w-full h-full"
                           />
                         ) : (
                           <span className="text-[10px] text-[#526783] text-center px-2">Tanpa Foto Sampul</span>
@@ -4637,6 +4856,26 @@ export default function AdminDashboard() {
                         </div>
                       </div>
                     </div>
+
+                    {content.project.image && (
+                      <ImageAdjustmentControl
+                        title="Ukuran & Posisi Foto Sampul Proyek"
+                        fit={content.project.imageFit || 'cover'}
+                        offsetY={content.project.imageOffsetY !== undefined ? content.project.imageOffsetY : 50}
+                        zoom={content.project.imageZoom !== undefined ? content.project.imageZoom : 100}
+                        onChange={({ fit, offsetY, zoom }) => {
+                          setContent({
+                            ...content,
+                            project: {
+                              ...content.project,
+                              imageFit: fit,
+                              imageOffsetY: offsetY,
+                              imageZoom: zoom,
+                            },
+                          });
+                        }}
+                      />
+                    )}
                   </div>
 
                   {/* PENGATURAN MEDIA PROYEK: FOTO SLIDESHOW ATAU VIDEO YOUTUBE */}
@@ -4894,7 +5133,12 @@ export default function AdminDashboard() {
                                       <img
                                         src={slide.image}
                                         alt={`Slide ${idx + 1}`}
-                                        className="w-full h-full object-cover"
+                                        style={{
+                                          objectFit: slide.imageFit || 'cover',
+                                          objectPosition: `center ${slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%`,
+                                          transform: `scale(${(slide.imageZoom !== undefined ? slide.imageZoom : 100) / 100})`,
+                                        }}
+                                        className="w-full h-full"
                                       />
                                     ) : (
                                       <span className="text-[10px] text-[#526783]">Tanpa Foto</span>
@@ -4969,9 +5213,28 @@ export default function AdminDashboard() {
                                           project: { ...content.project, slides },
                                         });
                                       }}
-                                      className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-gray-200 focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                                      className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                                     />
                                   </div>
+
+                                  {slide.image && (
+                                    <ImageAdjustmentControl
+                                      title={`Ukuran & Posisi Foto Slide #${idx + 1}`}
+                                      fit={slide.imageFit || 'cover'}
+                                      offsetY={slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}
+                                      zoom={slide.imageZoom !== undefined ? slide.imageZoom : 100}
+                                      onChange={({ fit, offsetY, zoom }) => {
+                                        const slides = [...(content.project.slides || [])];
+                                        slides[idx].imageFit = fit;
+                                        slides[idx].imageOffsetY = offsetY;
+                                        slides[idx].imageZoom = zoom;
+                                        setContent({
+                                          ...content,
+                                          project: { ...content.project, slides },
+                                        });
+                                      }}
+                                    />
+                                  )}
                                 </div>
                               </div>
                             </div>
