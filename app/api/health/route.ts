@@ -1,5 +1,11 @@
 import { NextResponse } from 'next/server';
-import { isSupabaseConfigured, getSupabaseAdminClient } from '@/lib/supabase';
+import { 
+  isSupabaseConfigured, 
+  getSupabaseAdminClient, 
+  getSupabaseUrl, 
+  getSupabaseAnonKey, 
+  getSupabaseServiceRoleKey 
+} from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,6 +44,10 @@ export async function GET() {
       .select('id')
       .limit(1);
 
+    const url = getSupabaseUrl();
+    const serviceKey = getSupabaseServiceRoleKey();
+    const anonKey = getSupabaseAnonKey();
+
     if (error) {
       return NextResponse.json({
         status: 'error',
@@ -45,6 +55,10 @@ export async function GET() {
           configured: true,
           connected: false,
           error: error.message,
+          targetUrl: url,
+          activeKeyPrefix: (serviceKey || anonKey).substring(0, 8) + '...',
+          activeKeyLength: (serviceKey || anonKey).length,
+          hasServiceKey: Boolean(serviceKey),
           hint: 'Pastikan script schema.sql sudah dijalankan di menu SQL Editor Supabase.',
         },
         timestamp: new Date().toISOString(),
