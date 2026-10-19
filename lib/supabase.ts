@@ -31,7 +31,9 @@ export function getSupabaseAnonKey(): string {
     if (
       candidate &&
       !candidate.includes('your-anon-key') &&
-      !candidate.startsWith('eyJ') // Abaikan token JWT lama dari project sebelumnya (xgwim)
+      !candidate.startsWith('eyJ') && // Abaikan token JWT lama
+      !candidate.includes('CuLGCi') && // Abaikan key dari project lama xgwim
+      !candidate.startsWith('sb_publishable_0') // Abaikan key dari project lama xgwim
     ) {
       return candidate.trim();
     }
@@ -47,8 +49,14 @@ export function getSupabaseServiceRoleKey(): string {
     ''
   ).trim();
 
-  // Abaikan jika token JWT lama dari project xgwim atau placeholder
-  if (!envKey || envKey.startsWith('eyJ') || envKey.includes('your-service-key')) {
+  // Abaikan jika token JWT lama dari project xgwim, key xgwim, atau placeholder
+  if (
+    !envKey ||
+    envKey.startsWith('eyJ') ||
+    envKey.includes('your-service-key') ||
+    envKey.includes('CuLGCi') ||
+    envKey.includes('xgwim')
+  ) {
     return '';
   }
 

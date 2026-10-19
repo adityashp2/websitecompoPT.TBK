@@ -73,6 +73,8 @@ export async function GET() {
       supabase: {
         configured: true,
         connected: true,
+        targetUrl: url,
+        activeKeyMasked: activeKey.slice(0, 16) + '...' + activeKey.slice(-6),
         message: 'Berhasil terhubung ke database Supabase!',
         recordsFound: data?.length ?? 0,
       },
