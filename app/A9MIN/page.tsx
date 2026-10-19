@@ -65,6 +65,26 @@ interface ImageAdjustmentControlProps {
   onChange: (updates: { fit: 'cover' | 'contain'; offsetX: number; offsetY: number; zoom: number }) => void;
 }
 
+function LivePreviewBadge({
+  title = "LIVE PREVIEW (SESUAI TAMPILAN ASLI WEBSITE)",
+  subtitle = "Simulasi Layar Pengunjung"
+}: {
+  title?: string;
+  subtitle?: string;
+}) {
+  return (
+    <div className="flex items-center justify-between mb-2">
+      <label className="block text-xs font-bold text-[#073B78] uppercase tracking-wider flex items-center gap-1.5">
+        <Eye className="w-4 h-4 text-[#FF9D2E]" />
+        <span>{title}</span>
+      </label>
+      <span className="text-[10px] text-[#526783] bg-white px-2 py-0.5 rounded border border-[#DCE7F5] shadow-2xs font-medium">
+        {subtitle}
+      </span>
+    </div>
+  );
+}
+
 function ImageAdjustmentControl({
   title = "Pengaturan Ukuran & Posisi Foto",
   fit = "cover",
@@ -1614,6 +1634,7 @@ export default function AdminDashboard() {
                               </div>
                             </div>
 
+                            <LivePreviewBadge />
                             {/* PREVIEW CONTAINER */}
                             <div className="relative aspect-[16/9] rounded-xl overflow-hidden bg-black border border-[#DCE7F5] group">
                               {slide.mediaType === 'video' && slide.videoUrl ? (
@@ -3167,6 +3188,7 @@ export default function AdminDashboard() {
                     <p className="text-xs text-[#526783]">
                       Tampil di header navigasi utama, footer, serta panel admin. Disarankan format PNG transparan atau SVG.
                     </p>
+                    <LivePreviewBadge title="LIVE PREVIEW LOGO RESMI (HEADER & NAVBAR)" />
                     <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center pt-1">
                       <div className="h-16 w-36 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] p-2 flex items-center justify-center shrink-0">
                         <img
@@ -3285,7 +3307,8 @@ export default function AdminDashboard() {
                         </p>
                       </div>
 
-                      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center pt-1">
+                      
+                      <LivePreviewBadge title="LIVE PREVIEW LOGO FOOTER (LATAR BIRU GELAP)" /><div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center pt-1">
                         {/* Live Preview Box with exact Footer Navy background */}
                         <div className="w-16 h-16 rounded-xl bg-[#102D52] border border-white/20 p-2 flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
                           {content.footer?.logo && content.footer.logo.trim() !== '' ? (
@@ -3753,6 +3776,7 @@ export default function AdminDashboard() {
                     <p className="text-[11px] text-[#526783]">
                       Foto ini ditampilkan di halaman utama (beranda) pada bagian &quot;Tentang Kami&quot; sebagai visual kantor perusahaan.
                     </p>
+                    <LivePreviewBadge title="LIVE PREVIEW FOTO KANTOR PUSAT" />
                     <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                       <div className="w-28 h-20 rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] overflow-hidden shrink-0 flex items-center justify-center">
                         {content.about.officeImage && content.about.officeImage.trim() !== '' ? (
@@ -4218,7 +4242,8 @@ export default function AdminDashboard() {
                           <label className="block text-[11px] font-semibold text-[#526783]">
                             Foto / Avatar Pengurus
                           </label>
-                          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                          <LivePreviewBadge title="LIVE PREVIEW PAS FOTO PENGURUS" />
+                            <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
                             {/* Portrait Preview with live transform */}
                             <div className="w-20 h-24 rounded-xl overflow-hidden border-2 border-[#FF9D2E]/60 bg-[#073B78] shrink-0 flex items-center justify-center shadow-md relative">
                               {member.image && member.image.trim() !== '' ? (
@@ -4753,6 +4778,7 @@ export default function AdminDashboard() {
                             <ImageIcon className="w-3.5 h-3.5 text-[#FF9D2E]" />
                             <span>Foto Dokumentasi Lapangan</span>
                           </label>
+                          <LivePreviewBadge title="LIVE PREVIEW FOTO DOKUMENTASI KEGIATAN" />
                           <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
                             <div className="w-24 h-16 rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] overflow-hidden shrink-0 flex items-center justify-center">
                               {item.image && item.image.trim() !== '' ? (
@@ -5058,7 +5084,8 @@ export default function AdminDashboard() {
                       </p>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                    
+                    <LivePreviewBadge title="LIVE PREVIEW FOTO SAMPUL UTAMA PROYEK" /><div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                       <div className="w-36 h-24 rounded-xl bg-[#073B78]/5 border border-[#DCE7F5] overflow-hidden shrink-0 flex items-center justify-center">
                         {content.project.image && content.project.image.trim() !== '' ? (
                           <img
