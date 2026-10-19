@@ -66,7 +66,7 @@ const SEARCH_DATABASE: SearchItem[] = [
 export default function Header({ content }: HeaderProps) {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
-  const isHomePage = mounted ? pathname === '/' : true;
+  const isHomePage = pathname === '/';
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
