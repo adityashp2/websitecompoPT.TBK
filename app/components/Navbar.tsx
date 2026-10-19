@@ -220,7 +220,7 @@ export default function Header({ content }: HeaderProps) {
           {/* Left: Brand Identity with existing logo asset */}
           <Link
             href="/"
-            className="flex items-center gap-2 sm:gap-3 min-w-0 max-w-[calc(100%-86px)] min-[980px]:max-w-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] rounded-lg py-1 group"
+            className="flex items-center gap-2 sm:gap-3 min-w-0 max-w-full min-[980px]:max-w-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] rounded-lg py-1 group"
             aria-label="PT. Terbang Bersama Kawan - Beranda"
           >
             {/* Logo Image Asset - Enhanced Sharp High-DPI Emblem */}
@@ -289,35 +289,6 @@ export default function Header({ content }: HeaderProps) {
               );
             })}
           </nav>
-
-          {/* Right Action Icons: Search & Mobile Menu Hamburger */}
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            {/* Search Trigger Button */}
-            <button
-              type="button"
-              onClick={() => setSearchOpen(true)}
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/10 hover:bg-white/15 text-white/90 hover:text-white flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E]"
-              aria-label="Buka pencarian"
-            >
-              <Search className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
-            </button>
-
-            {/* Mobile Menu Hamburger Toggle */}
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="min-[980px]:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/10 hover:bg-[#FF9D2E] text-white hover:text-[#071C38] flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E]"
-              aria-label={mobileMenuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
-              aria-expanded={mobileMenuOpen}
-              aria-controls="mobile-nav-panel"
-            >
-              {mobileMenuOpen ? (
-                <X className="w-5 h-5 stroke-[2.5]" />
-              ) : (
-                <Menu className="w-5 h-5 stroke-[2.5]" />
-              )}
-            </button>
-          </div>
         </div>
       </header>
 
