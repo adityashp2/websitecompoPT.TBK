@@ -209,6 +209,44 @@ const jsonLd = {
           '@id': 'https://terbangbersamakawan.co.id/#organization'
         }
       }
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://terbangbersamakawan.co.id/#faq',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Apa itu perumahan Puri Gunung Langgar?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Puri Gunung Langgar adalah perumahan bersubsidi pemerintah Type 36/72 yang dikembangkan resmi oleh PT. Terbang Bersama Kawan (PT. TBK) di Sabah Balau, Tanjung Bintang, Lampung Selatan, berlegalitas sertifikat SHM dan cicilan KPR FLPP flat 1 jutaan.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Berapa harga rumah dan angsuran KPR subsidi di Puri Gunung Langgar?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Harga unit rumah subsidi resmi Rp 166.000.000 dengan uang muka (DP) ringan mulai Rp 2.000.000 dan estimasi angsuran KPR FLPP bunga tetap 5% flat sekitar Rp 1.050.000/bulan untuk tenor 20 tahun.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Siapa pengembang resmi perumahan Puri Gunung Langgar?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Pengembang resminya adalah PT. Terbang Bersama Kawan (PT. TBK), badan hukum perseroan terbatas yang disahkan Kemenkumham RI No. AHU-0016462.AH.01.01.TAHUN 2021 berdomisili di Kota Bandar Lampung.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Bank apa saja yang melayani KPR FLPP perumahan Puri Gunung Langgar?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Penyaluran KPR subsidi FLPP PT. TBK didukung oleh bank rekanan BUMN terpercaya antara lain Bank BTN, Bank BTN Syariah, Bank BSI (Bank Syariah Indonesia), dan Bank Mandiri.'
+          }
+        }
+      ]
     }
   ]
 };

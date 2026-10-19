@@ -1,3 +1,5 @@
-'use client';
+import { redirect } from 'next/navigation';
 
-export { default } from '../A9MIN/page';
+export default function AdminStudioPage() {
+  redirect('/A9MIN');
+}
