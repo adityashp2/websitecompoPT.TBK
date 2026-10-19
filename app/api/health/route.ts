@@ -47,6 +47,7 @@ export async function GET() {
     const url = getSupabaseUrl();
     const serviceKey = getSupabaseServiceRoleKey();
     const anonKey = getSupabaseAnonKey();
+    const activeKey = serviceKey || anonKey;
 
     if (error) {
       return NextResponse.json({
@@ -56,8 +57,9 @@ export async function GET() {
           connected: false,
           error: error.message,
           targetUrl: url,
-          activeKeyPrefix: (serviceKey || anonKey).substring(0, 8) + '...',
-          activeKeyLength: (serviceKey || anonKey).length,
+          activeKeyMasked: activeKey.slice(0, 16) + '...' + activeKey.slice(-6),
+          activeKeyLength: activeKey.length,
+          isMatchDefault: activeKey === 'sb_publishable_Ax92lEPNOwmEvrfn9-rSrw_7uA7CK7t',
           hasServiceKey: Boolean(serviceKey),
           hint: 'Pastikan script schema.sql sudah dijalankan di menu SQL Editor Supabase.',
         },
