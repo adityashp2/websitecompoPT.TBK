@@ -216,7 +216,7 @@ function LoginFormContent() {
                     required
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
-                    placeholder="admin atau admin@terbangbersamakawan.co.id"
+                    placeholder="Masukkan username atau email..."
                     disabled={loading}
                     autoComplete="username"
                     className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#061830]/80 border border-white/20 text-white placeholder-blue-200/40 text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-2 focus:ring-[#FF9D2E]/25 transition-all disabled:opacity-50"
@@ -294,10 +294,11 @@ function LoginFormContent() {
               </button>
             </form>
 
-            {/* Quick credentials hint */}
-            <div className="mt-5 p-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-center">
-              <p className="text-[11px] text-slate-400">
-                Akses Default: <code className="text-amber-300 font-mono px-1 py-0.5 rounded bg-black/40">admin</code> / <code className="text-amber-300 font-mono px-1 py-0.5 rounded bg-black/40">admin123</code>
+            {/* Production Security Badge */}
+            <div className="mt-5 p-3 rounded-xl bg-white/[0.04] border border-white/10 text-center flex items-center justify-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+              <p className="text-[11px] text-blue-200/70 font-medium">
+                Portal Resmi Terproteksi &bull; PT. Terbang Bersama Kawan
               </p>
             </div>
           </div>
