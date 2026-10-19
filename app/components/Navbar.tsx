@@ -220,7 +220,7 @@ export default function Header({ content }: HeaderProps) {
                 width={120}
                 height={36}
                 style={{ maxHeight: '36px', width: 'auto', objectFit: 'contain' }}
-                className="h-8 sm:h-9 w-auto object-contain brightness-0 invert"
+                className="h-8 sm:h-9 w-auto object-contain"
               />
             </div>
 

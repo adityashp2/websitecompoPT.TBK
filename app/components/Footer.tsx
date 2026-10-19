@@ -35,7 +35,7 @@ export default function Footer({ content }: FooterProps) {
                   <img
                     src={content.meta.logo}
                     alt={`Logo ${content.footer?.companyName || 'PT. Terbang Bersama Kawan'}`}
-                    className="w-full h-full object-contain brightness-0 invert"
+                    className="w-full h-full object-contain"
                   />
                 </div>
               ) : (

@@ -3059,7 +3059,7 @@ export default function AdminDashboard() {
                             <img
                               src={content.meta.logo}
                               alt="Logo Footer Preview"
-                              className="w-full h-full object-contain brightness-0 invert"
+                              className="w-full h-full object-contain"
                             />
                           ) : (
                             <svg viewBox="0 0 24 24" fill="none" className="w-8 h-8 text-[#FF9D2E]" xmlns="http://www.w3.org/2000/svg">

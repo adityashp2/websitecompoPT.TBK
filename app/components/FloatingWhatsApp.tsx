@@ -19,7 +19,7 @@ export default function FloatingWhatsApp({ content, whatsappNumber }: FloatingWh
 
   const currentPath = pathname || (typeof window !== 'undefined' ? window.location.pathname : '');
   const isNavAdmin = currentPath.toLowerCase().includes('admin') || currentPath.toLowerCase().includes('a9min');
-  if (!mounted || isNavAdmin) {
+  if (!mounted || isNavAdmin || currentPath === '/kontak') {
     return null;
   }
   const rawWa = (whatsappNumber !== undefined ? whatsappNumber : content?.contact?.whatsapp)?.trim() || '';

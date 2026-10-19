@@ -134,13 +134,22 @@ export default function KontakPage() {
 
                   {hasWa && (
                     <div className="py-4">
-                      <span className="text-xs text-[#FF9D2E] font-semibold block mb-1">
+                      <span className="text-xs text-[#FF9D2E] font-semibold block mb-1.5">
                         Layanan WhatsApp resmi
                       </span>
-                      <p className="font-mono text-sm sm:text-base font-bold text-[#102D52]">
-                        {content.contact.whatsapp}
-                      </p>
-                      <span className="text-[11px] text-[#526783] block mt-0.5">Respon cepat informasi berkas &amp; unit kavling</span>
+                      <a
+                        href={waUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/30 text-[#102D52] font-mono text-sm sm:text-base font-bold transition-all shadow-xs"
+                      >
+                        <MessageCircle className="w-4 h-4 text-[#15966A] fill-current shrink-0" />
+                        <span>{content.contact.whatsapp}</span>
+                        <ArrowRight className="w-3.5 h-3.5 text-[#15966A] transition-transform duration-200 group-hover:translate-x-1 ml-1" />
+                      </a>
+                      <span className="text-[11px] text-[#526783] block mt-1.5">
+                        Klik nomor di atas untuk langsung chat dengan tim pemasaran kami
+                      </span>
                     </div>
                   )}
 
@@ -167,22 +176,6 @@ export default function KontakPage() {
                     </div>
                   )}
                 </div>
-
-                {/* Direct WhatsApp Action */}
-                {hasWa && (
-                  <div>
-                    <a
-                      href={waUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#15966A] hover:bg-[#117a56] text-white text-sm font-semibold transition-all duration-200 shadow-md"
-                    >
-                      <MessageCircle className="w-4 h-4 fill-current" />
-                      <span>Konsultasi WhatsApp langsung</span>
-                      <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
-                    </a>
-                  </div>
-                )}
 
                 {/* Pendampingan Survei Note */}
                 <div className="pt-4 border-l-4 border-[#073B78] bg-white rounded-r-xl p-4 space-y-1">
