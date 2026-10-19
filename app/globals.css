@@ -349,9 +349,10 @@ header img {
 /* Smooth slide & fade-in when scrolling into viewport       */
 /* ========================================================= */
 .reveal-on-scroll {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 
 .reveal-on-scroll.is-revealed {
@@ -360,9 +361,10 @@ header img {
 }
 
 .reveal-left-on-scroll {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  opacity: 0;
+  transform: translateX(-32px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 
 .reveal-left-on-scroll.is-revealed {
@@ -371,9 +373,10 @@ header img {
 }
 
 .reveal-right-on-scroll {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  opacity: 0;
+  transform: translateX(32px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 
 .reveal-right-on-scroll.is-revealed {

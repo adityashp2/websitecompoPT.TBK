@@ -124,16 +124,32 @@ export default function ClientLandingPage({ initialContent }: { initialContent: 
         });
       },
       {
-        threshold: 0.1,
-        rootMargin: '0px 0px -40px 0px',
+        threshold: 0.05,
+        rootMargin: '0px 0px -20px 0px',
       }
     );
 
     elements.forEach((el) => {
-      el.classList.add('is-revealed');
+      const rect = el.getBoundingClientRect();
+      // If element is already in the visible viewport at load, reveal smoothly
+      if (rect.top < window.innerHeight - 30) {
+        setTimeout(() => {
+          el.classList.add('is-revealed');
+        }, 80);
+      } else {
+        observer.observe(el);
+      }
     });
 
-    return () => observer.disconnect();
+    // Safety fallback: ensure nothing stays permanently hidden
+    const timer = setTimeout(() => {
+      elements.forEach((el) => el.classList.add('is-revealed'));
+    }, 2500);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(timer);
+    };
   }, [content]);
 
   // Project Media State
