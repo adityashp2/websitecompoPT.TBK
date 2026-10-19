@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, ArrowRight, MessageCircle } from 'lucide-react';
+import { ArrowRight, MessageCircle } from 'lucide-react';
 
 import { BannerSlide, defaultBannerSlides, getYouTubeEmbedUrl } from '@/lib/initialData';
 export type { BannerSlide };
@@ -258,26 +258,6 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
               />
             ))}
           </div>
-
-          {/* Navigation Arrows */}
-          <div className="flex items-center gap-2 border-l border-white/20 pl-3.5">
-            <button
-              type="button"
-              onClick={goToPrev}
-              className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#FF9D2E] hover:text-[#102D52] text-white flex items-center justify-center transition-all duration-150 active:scale-95 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white"
-              aria-label="Slide sebelumnya"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <button
-              type="button"
-              onClick={goToNext}
-              className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#FF9D2E] hover:text-[#102D52] text-white flex items-center justify-center transition-all duration-150 active:scale-95 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white"
-              aria-label="Slide selanjutnya"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
         </div>
       </div>
 
@@ -412,28 +392,6 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
               </div>
             );
           })}
-
-          {/* Orange Navigation Arrows Positioned OVER the Banner on Left & Right */}
-          {slides.length > 1 && (
-            <>
-              <button
-                type="button"
-                onClick={goToPrev}
-                className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] active:scale-90 text-[#102D52] flex items-center justify-center shadow-lg transition-transform focus-visible:outline-none"
-                aria-label="Slide sebelumnya"
-              >
-                <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
-              </button>
-              <button
-                type="button"
-                onClick={goToNext}
-                className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] active:scale-90 text-[#102D52] flex items-center justify-center shadow-lg transition-transform focus-visible:outline-none"
-                aria-label="Slide selanjutnya"
-              >
-                <ChevronRight className="w-4 h-4 stroke-[2.5]" />
-              </button>
-            </>
-          )}
 
           {/* Centered Pagination Indicators Beneath the Banner Content */}
           {slides.length > 1 && (
