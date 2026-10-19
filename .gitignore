@@ -49,3 +49,5 @@ public/assets/video_files/*.mkv
 *.download
 
 
+
+supabase/.temp/

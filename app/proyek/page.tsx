@@ -16,8 +16,7 @@ import {
   ShieldCheck, 
   HardHat, 
   Compass, 
-  ArrowRight, 
-  Image as ImageIcon
+  ArrowRight
 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -65,74 +64,63 @@ export default async function ProyekPage() {
     : '';
 
   return (
-    <div className="min-h-screen bg-white text-[#102D52] flex flex-col font-sans selection:bg-[#FF9D2E] selection:text-[#102D52]">
+    <div className="min-h-screen bg-[#000000] text-[#cccccc] flex flex-col font-serif selection:bg-white selection:text-black">
       <Header content={content} />
 
       <main id="main-content" className="flex-1">
-        {/* Page Hero Header */}
-        <section className="bg-gradient-to-br from-[#073B78] via-[#0A4B91] to-[#102D52] text-white pt-12 pb-16 px-4 border-b border-white/10 relative overflow-hidden">
+        {/* Page Hero Header (Bugatti Austere Display) */}
+        <section className="bg-[#000000] text-white pt-20 pb-24 px-6 border-b border-[#262626] relative overflow-hidden">
           <div className="container-editorial relative z-10">
             {/* Breadcrumb */}
-            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-white/70 mb-6">
-              <Link href="/" className="hover:text-[#FF9D2E] transition-colors">Beranda</Link>
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 font-mono text-[11px] tracking-[2px] uppercase text-[#999999] mb-8">
+              <Link href="/" className="hover:text-white transition-colors">BERANDA</Link>
               <span>/</span>
-              <span className="text-[#FF9D2E] font-bold">Proyek Puri Gunung Langgar</span>
+              <span className="text-white">PROYEK PURI GUNUNG LANGGAR</span>
             </nav>
 
-            <div className="max-w-3xl space-y-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[#FF9D2E] text-[11px] font-medium tracking-wide">
-                  <Compass className="w-3.5 h-3.5" />
-                  <span>{content.project.badge || 'Proyek Resmi Perseroan'}</span>
+            <div className="max-w-4xl space-y-5">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="font-mono text-[10px] tracking-[2px] uppercase px-3 py-1 border border-[#262626] text-white">
+                  {content.project.badge || 'PROYEK RESMI PERSEROAN'}
                 </span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#15966A]/20 border border-[#15966A]/40 text-[#15966A] text-[11px] font-medium">
-                  <span className="w-2 h-2 rounded-full bg-[#15966A] animate-pulse" />
-                  <span>KPR FLPP Bersubsidi</span>
+                <span className="font-mono text-[10px] tracking-[2px] uppercase px-3 py-1 border border-white/60 text-white">
+                  KPR FLPP BERSUBSIDI 5%
                 </span>
               </div>
 
-              <h1 className="font-serif font-normal text-3xl sm:text-4xl lg:text-[46px] tracking-tight text-white leading-[1.15]">
+              <h1 className="font-display font-normal text-4xl sm:text-6xl lg:text-[70px] uppercase tracking-[3px] text-white leading-[1.08]">
                 {content.project.name || 'Puri Gunung Langgar'}
               </h1>
-              <div className="flex items-center gap-2 text-white/85 text-sm sm:text-base font-sans">
-                <MapPin className="w-4 h-4 text-[#FF9D2E] shrink-0" />
+              <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[1.5px] text-[#999999]">
+                <MapPin className="w-3.5 h-3.5 text-white shrink-0" />
                 <span>{content.project.location}, {content.project.district}, {content.project.province}</span>
               </div>
-              <p className="font-sans text-white/85 text-[15px] sm:text-base leading-relaxed max-w-2xl">
+              <p className="font-serif text-[#cccccc] text-base sm:text-lg leading-relaxed max-w-2xl pt-2">
                 {content.project.description || 'Puri Gunung Langgar merupakan perwujudan komitmen PT. Terbang Bersama Kawan dalam menghadirkan perumahan bersubsidi berkualitas dengan tata ruang tertata dan lingkungan asri di Lampung Selatan.'}
               </p>
             </div>
           </div>
         </section>
 
-        {/* Quick Highlights Bar */}
-        <section className="bg-[#F4F7FC] border-b border-[#DCE7F5] py-8">
+        {/* Quick Highlights Bar (Bugatti Spec Cells) */}
+        <section className="bg-[#0d0d0d] border-b border-[#262626] py-10">
           <div className="container-editorial">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-[#DCE7F5]">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 divide-y sm:divide-y-0 sm:divide-x divide-[#262626]">
               {(content.project.highlights && content.project.highlights.length > 0
                 ? content.project.highlights
                 : [
-                    { label: "Tipe Rumah", value: "Tipe 36 / 72 m²", subtext: "Luas Bangunan & Kavling", icon: "home" },
-                    { label: "Suku Bunga KPR", value: "5.0% Flat", subtext: "FLPP Tetap Sampai Lunas", icon: "calculator" },
-                    { label: "Legalitas Lahan", value: "Sertifikat Resmi", subtext: "Proses Pemecahan BPN", icon: "shield" },
-                    { label: "Status Proyek", value: "Tahap Konstruksi", subtext: "Pematangan Lahan & Struktur", icon: "hardhat" }
+                    { label: "TIPE UNIT", value: "36 / 72 m²", subtext: "Luas Bangunan & Kavling", icon: "home" },
+                    { label: "SUKU BUNGA", value: "5.0% FLAT", subtext: "FLPP Tetap Sampai Lunas", icon: "calculator" },
+                    { label: "LEGALITAS", value: "SHM", subtext: "Sertifikat Hak Milik", icon: "shield" },
+                    { label: "STATUS FISIK", value: "OPERASIONAL", subtext: "Pematangan Lahan & Struktur", icon: "hardhat" }
                   ]
               ).map((hl, idx) => (
-                <div key={idx} className={`pt-4 sm:pt-0 ${idx > 0 ? 'sm:pl-8' : 'sm:pl-0'} space-y-1`}>
-                  <div className="text-[11px] tracking-wide text-[#526783] font-medium flex items-center gap-1.5">
-                    {hl.icon === 'calculator' ? (
-                      <Calculator className="w-3.5 h-3.5 text-[#15966A]" />
-                    ) : hl.icon === 'shield' ? (
-                      <ShieldCheck className="w-3.5 h-3.5 text-[#073B78]" />
-                    ) : hl.icon === 'hardhat' ? (
-                      <HardHat className="w-3.5 h-3.5 text-[#FF9D2E]" />
-                    ) : (
-                      <Home className="w-3.5 h-3.5 text-[#073B78]" />
-                    )}
-                    <span>{hl.label}</span>
+                <div key={idx} className={`pt-4 sm:pt-0 ${idx > 0 ? 'sm:pl-8' : 'sm:pl-0'} space-y-1.5`}>
+                  <div className="font-mono text-[10.5px] tracking-[2px] uppercase text-[#999999] flex items-center gap-1.5">
+                    {hl.label}
                   </div>
-                  <div className="font-semibold text-xl sm:text-2xl text-[#102D52]">{hl.value}</div>
-                  <div className="text-[11.5px] text-[#526783]">{hl.subtext}</div>
+                  <div className="font-display font-normal text-2xl sm:text-3xl uppercase tracking-[1.5px] text-white">{hl.value}</div>
+                  <div className="font-serif text-xs text-[#999999]">{hl.subtext}</div>
                 </div>
               ))}
             </div>
@@ -140,24 +128,23 @@ export default async function ProyekPage() {
         </section>
 
         {/* Visual Gallery Grid */}
-        <section id="galeri" className="py-16 sm:py-24 bg-white scroll-mt-20">
-          <div className="container-editorial space-y-10">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#DCE7F5] pb-6">
+        <section id="galeri" className="py-24 sm:py-32 bg-[#000000] border-b border-[#262626]">
+          <div className="container-editorial space-y-12">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-[#262626] pb-8">
               <div>
-                <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
-                  <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                  <span>Dokumentasi Kawasan</span>
-                </div>
-                <h2 className="font-serif font-normal text-2xl sm:text-3xl text-[#102D52]">
-                  Galeri Visual Puri Gunung Langgar
+                <span className="font-mono text-xs tracking-[2.5px] uppercase text-[#999999] block mb-2">
+                  DOKUMENTASI KAWASAN
+                </span>
+                <h2 className="font-display font-normal text-3xl sm:text-5xl uppercase tracking-[3px] text-white">
+                  Galeri Visual Proyek
                 </h2>
               </div>
-              <p className="font-sans text-xs sm:text-sm text-[#526783] max-w-md">
+              <p className="font-serif text-sm text-[#999999] max-w-md">
                 Dokumentasi asli pematangan lahan, pembangunan struktur fisik, serta lingkungan kawasan perumahan di Tanjung Bintang.
               </p>
             </div>
 
-            {/* Interactive Lightbox Visual Gallery (Taller, Proportional, Click to Enlarge) */}
+            {/* Interactive Lightbox Visual Gallery */}
             <ClientProyekGallery
               slides={slides}
               projectName={content.project?.name || 'Puri Gunung Langgar'}
@@ -166,23 +153,22 @@ export default async function ProyekPage() {
 
             {/* Video Showcase jika ada */}
             {ytEmbedUrl && (
-              <div className="mt-12 p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-[#073B78] to-[#102D52] text-white space-y-4 shadow-lg">
+              <div className="mt-16 card-bugatti p-8 space-y-4">
                 <div className="flex items-center justify-between flex-wrap gap-2">
-                  <h3 className="font-bold text-lg sm:text-xl text-white">
+                  <h3 className="font-display font-normal text-xl uppercase tracking-[2px] text-white">
                     Video Dokumentasi Lapangan Proyek
                   </h3>
-                  <span className="text-xs text-[#FF9D2E] font-mono uppercase tracking-wider font-bold">
-                    YouTube Official PT. TBK
+                  <span className="font-mono text-xs text-[#999999] uppercase tracking-[2px]">
+                    OFFICIAL VIDEO PT. TBK
                   </span>
                 </div>
-                <div className="aspect-video w-full rounded-xl overflow-hidden bg-black border border-white/10">
+                <div className="aspect-video w-full bg-black border border-[#262626]">
                   <iframe
                     src={ytEmbedUrl}
                     title="Video Dokumentasi Proyek"
                     className="w-full h-full border-0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
-                    referrerPolicy="strict-origin-when-cross-origin"
                   />
                 </div>
               </div>
@@ -191,60 +177,58 @@ export default async function ProyekPage() {
         </section>
 
         {/* Detailed Unit Specs */}
-        <section className="py-16 sm:py-24 bg-[#F4F7FC] border-t border-b border-[#DCE7F5]">
+        <section className="py-24 sm:py-32 bg-[#0d0d0d] border-b border-[#262626]">
           <div className="container-editorial">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
               {/* Left: Spesifikasi Teknis */}
-              <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl border border-[#DCE7F5] shadow-sm space-y-6">
+              <div className="lg:col-span-7 card-bugatti p-8 sm:p-10 space-y-6">
                 <div>
-                  <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
-                    <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                    <span>Standar Bangunan</span>
-                  </div>
-                  <h2 className="font-serif font-normal text-2xl sm:text-3xl text-[#102D52]">
+                  <span className="font-mono text-xs tracking-[2.5px] uppercase text-[#999999] block mb-2">
+                    STANDAR BANGUNAN
+                  </span>
+                  <h2 className="font-display font-normal text-2xl sm:text-4xl uppercase tracking-[2px] text-white">
                     Spesifikasi Teknis Hunian
                   </h2>
-                  <p className="font-sans text-xs sm:text-sm text-[#526783] mt-1 leading-relaxed">
+                  <p className="font-serif text-sm text-[#999999] mt-2 leading-relaxed">
                     Setiap unit dibangun dengan material berstandar teknis agar tahan lama, aman, dan nyaman ditinggali keluarga Anda.
                   </p>
                 </div>
 
-                <div className="divide-y divide-[#DCE7F5]">
+                <div className="divide-y divide-[#262626]">
                   {content.project.specs?.map((spec, i) => (
                     <div
                       key={i}
-                      className="py-3.5 flex items-center justify-between text-xs sm:text-[13.5px]"
+                      className="py-3.5 flex items-center justify-between text-sm"
                     >
-                      <span className="text-[#526783] font-medium">{spec.label}</span>
-                      <span className="font-semibold text-[#102D52] text-right">{spec.value}</span>
+                      <span className="font-mono text-xs uppercase tracking-[1.5px] text-[#999999]">{spec.label}</span>
+                      <span className="font-serif text-white text-right">{spec.value}</span>
                     </div>
                   ))}
                 </div>
 
-                <div className="border-l-4 border-[#15966A] bg-[#E6F7F3] rounded-r-xl pl-4 py-2 text-xs text-[#102D52] flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-[#15966A] shrink-0 mt-0.5" />
-                  <span className="font-sans">
+                <div className="p-4 bg-[#141414] border border-[#262626] font-mono text-xs tracking-[1px] uppercase text-[#cccccc] flex items-start gap-2.5">
+                  <CheckCircle2 className="w-4 h-4 text-white shrink-0 mt-0.5" />
+                  <span>
                     Spesifikasi mengacu pada ketentuan teknis rumah sederhana sehat Kementerian Pekerjaan Umum dan Perumahan Rakyat (PUPR).
                   </span>
                 </div>
               </div>
 
               {/* Right: Denah Tata Ruang */}
-              <div className="lg:col-span-5 bg-white p-6 sm:p-8 rounded-2xl border border-[#DCE7F5] shadow-sm space-y-6">
+              <div className="lg:col-span-5 card-bugatti p-8 sm:p-10 space-y-6">
                 <div>
-                  <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
-                    <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                    <span>Denah Tata Ruang</span>
-                  </div>
-                  <h3 className="font-serif font-normal text-2xl text-[#102D52]">
+                  <span className="font-mono text-xs tracking-[2.5px] uppercase text-[#999999] block mb-2">
+                    DENAH TATA RUANG
+                  </span>
+                  <h3 className="font-display font-normal text-2xl uppercase tracking-[2px] text-white">
                     Pembagian Ruang {content.project?.type || 'Tipe 36/72'}
                   </h3>
-                  <p className="font-sans text-xs sm:text-sm text-[#526783] mt-1 leading-relaxed">
+                  <p className="font-serif text-sm text-[#999999] mt-2 leading-relaxed">
                     Dirancang optimal untuk efisiensi ruang dan sirkulasi udara alami:
                   </p>
                 </div>
 
-                <div className="divide-y divide-[#DCE7F5] text-xs sm:text-[13.5px]">
+                <div className="divide-y divide-[#262626] text-sm">
                   {(content.project.floorPlan && content.project.floorPlan.length > 0
                     ? content.project.floorPlan
                     : [
@@ -257,30 +241,29 @@ export default async function ProyekPage() {
                       ]
                   ).map((fp, i) => (
                     <div key={i} className="py-3 flex items-center justify-between">
-                      <span className="text-[#526783] font-medium">{fp.label}</span>
-                      <span className="font-semibold text-[#102D52]">{fp.value}</span>
+                      <span className="font-mono text-xs uppercase tracking-[1.5px] text-[#999999]">{fp.label}</span>
+                      <span className="font-serif text-white">{fp.value}</span>
                     </div>
                   ))}
                 </div>
 
-                <div className="pt-2 flex flex-col gap-3">
+                <div className="pt-4 flex flex-col gap-3">
                   <Link
                     href="/simulasi-kpr"
-                    className="group inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-xs font-semibold tracking-normal transition-all duration-200 hover:-translate-y-[1px] shadow-sm text-center"
+                    className="w-full btn-bugatti-primary justify-center"
                   >
-                    <Calculator className="w-4 h-4" />
-                    <span>Hitung Simulasi Angsuran KPR</span>
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+                    <span>HITUNG SIMULASI KPR</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                   {hasWa && (
                     <a
                       href={waUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-[#073B78] hover:bg-[#073B78] hover:text-white text-[#073B78] text-xs font-semibold tracking-normal transition-all duration-200 text-center"
+                      className="w-full btn-bugatti-primary justify-center border-[#3a3a3a] text-[#cccccc] hover:border-white hover:text-white"
                     >
-                      <Phone className="w-4 h-4 text-[#FF9D2E]" />
-                      <span>Tanya Ketersediaan Kavling</span>
+                      <Phone className="w-3.5 h-3.5" />
+                      <span>KONSULTASI KAVLING VIA WHATSAPP</span>
                     </a>
                   )}
                 </div>
@@ -290,22 +273,21 @@ export default async function ProyekPage() {
         </section>
 
         {/* Keunggulan Lokasi */}
-        <section className="py-16 sm:py-24 bg-white">
+        <section className="py-24 sm:py-32 bg-[#000000] border-b border-[#262626]">
           <div className="container-editorial">
-            <div className="max-w-2xl mb-12">
-              <div className="flex items-center gap-2 text-[#FF9D2E] font-medium text-xs tracking-wider mb-2">
-                <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                <span>Aksesibilitas Kawasan</span>
-              </div>
-              <h2 className="font-serif font-normal text-2xl sm:text-3xl text-[#102D52]">
-                Nilai Strategis Kawasan {content.project.name || 'Puri Gunung Langgar'}
+            <div className="max-w-2xl mb-16">
+              <span className="font-mono text-xs tracking-[2.5px] uppercase text-[#999999] block mb-2">
+                AKSESIBILITAS KAWASAN
+              </span>
+              <h2 className="font-display font-normal text-3xl sm:text-5xl uppercase tracking-[3px] text-white">
+                Nilai Strategis Kawasan
               </h2>
-              <p className="font-sans text-xs sm:text-sm text-[#526783] mt-1 leading-relaxed">
+              <p className="font-serif text-sm sm:text-base text-[#999999] mt-2 leading-relaxed">
                 Lokasi berkembang di {content.project.location || 'Desa Sabah Balau'} yang menjanjikan kemudahan akses dan kenaikan nilai investasi jangka panjang.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {(content.project.locationAdvantages && content.project.locationAdvantages.length > 0
                 ? content.project.locationAdvantages
                 : [
@@ -326,10 +308,10 @@ export default async function ProyekPage() {
                     }
                   ]
               ).map((adv, idx) => (
-                <div key={idx} className="p-6 rounded-2xl bg-[#F4F7FC] border border-[#DCE7F5] space-y-3">
-                  <span className="font-serif text-3xl text-[#073B78] block">{adv.number || `0${idx + 1}`}</span>
-                  <h3 className="font-semibold text-lg text-[#102D52]">{adv.title}</h3>
-                  <p className="text-xs sm:text-sm text-[#526783] leading-relaxed">
+                <div key={idx} className="card-bugatti p-8 space-y-3 group">
+                  <span className="font-display text-4xl text-white tracking-[2px] block">{adv.number || `0${idx + 1}`}</span>
+                  <h3 className="font-display font-normal text-xl uppercase tracking-[1.5px] text-white">{adv.title}</h3>
+                  <p className="font-serif text-sm text-[#999999] leading-relaxed">
                     {adv.desc}
                   </p>
                 </div>
@@ -338,31 +320,34 @@ export default async function ProyekPage() {
           </div>
         </section>
 
-        {/* Action Teaser CTA Banner */}
-        <section className="py-16 sm:py-20 bg-gradient-to-br from-[#073B78] via-[#0A4B91] to-[#102D52] text-white">
+        {/* Action Teaser CTA Banner (Bugatti Pre-footer Band) */}
+        <section className="py-24 bg-[#0d0d0d] text-white border-b border-[#262626]">
           <div className="container-editorial text-center space-y-6">
-            <h2 className="font-serif font-normal text-2xl sm:text-3xl lg:text-4xl text-white max-w-xl mx-auto">
-              {content.project.surveyCta?.title || 'Jadwalkan Survei Lokasi Proyek Sekarang'}
+            <span className="font-mono text-xs tracking-[2.5px] uppercase text-[#999999] block">
+              JADWALKAN SURVEI
+            </span>
+            <h2 className="font-display font-normal text-3xl sm:text-5xl uppercase tracking-[3px] text-white max-w-2xl mx-auto">
+              {content.project.surveyCta?.title || 'Jadwalkan Kunjungan Lokasi Sekarang'}
             </h2>
-            <p className="font-sans text-white/85 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed">
-              {content.project.surveyCta?.subtitle || 'Tim lapangan PT. TBK siap mendampingi Anda melihat langsung lokasi kavling dan unit contoh di Puri Gunung Langgar.'}
+            <p className="font-serif text-[#cccccc] text-base max-w-xl mx-auto leading-relaxed">
+              {content.project.surveyCta?.subtitle || 'Tim pemasaran PT. TBK siap mendampingi Anda melihat langsung lokasi kavling dan unit contoh di Puri Gunung Langgar.'}
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
               <Link
                 href="/kontak"
-                className="group inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] text-xs font-semibold tracking-normal transition-all duration-200 hover:-translate-y-[1px] shadow-lg"
+                className="btn-bugatti-primary"
               >
-                <span>{content.project.surveyCta?.buttonText || 'Isi Formulir Survei'}</span>
-                <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+                <span>{content.project.surveyCta?.buttonText || 'FORMULIR SURVEI'}</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
               {hasWa && (
                 <a
                   href={waUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-7 py-3 rounded-full border border-white/40 hover:border-white hover:bg-white/10 text-white text-xs font-semibold tracking-normal transition-all duration-200"
+                  className="btn-bugatti-primary border-[#3a3a3a] text-[#cccccc] hover:border-white hover:text-white"
                 >
-                  <span>{content.project.surveyCta?.waButtonText || 'WhatsApp Pemasaran'}</span>
+                  <span>{content.project.surveyCta?.waButtonText || 'WHATSAPP PEMASARAN'}</span>
                 </a>
               )}
             </div>

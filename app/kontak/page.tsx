@@ -75,29 +75,28 @@ export default function KontakPage() {
     : '';
 
   return (
-    <div className="min-h-screen bg-white text-[#102D52] flex flex-col font-sans selection:bg-[#FF9D2E] selection:text-[#102D52]">
+    <div className="min-h-screen bg-[#000000] text-[#cccccc] flex flex-col font-serif selection:bg-white selection:text-black">
       <Header content={content} />
 
       <main id="main-content" className="flex-1">
         {/* Page Hero Header */}
-        <section className="bg-gradient-to-br from-[#073B78] via-[#0A4B91] to-[#102D52] text-white pt-14 pb-16 px-4 border-b border-white/10 relative overflow-hidden">
+        <section className="bg-[#000000] text-white pt-20 pb-24 px-6 border-b border-[#262626] relative overflow-hidden">
           <div className="container-editorial relative z-10">
             {/* Breadcrumb */}
-            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-white/70 mb-6">
-              <Link href="/" className="hover:text-[#FF9D2E] transition-colors">Beranda</Link>
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 font-mono text-[11px] tracking-[2px] uppercase text-[#999999] mb-8">
+              <Link href="/" className="hover:text-white transition-colors">BERANDA</Link>
               <span>/</span>
-              <span className="text-[#FF9D2E] font-medium">Kontak &amp; Konsultasi</span>
+              <span className="text-white">KONTAK &amp; KONSULTASI</span>
             </nav>
 
-            <div className="max-w-3xl space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[#FF9D2E] text-xs font-medium">
-                <Phone className="w-3.5 h-3.5" />
-                <span>{content.contact.badge || 'Hubungi perseroan'}</span>
-              </div>
-              <h1 className="font-serif font-normal text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">
+            <div className="max-w-4xl space-y-5">
+              <span className="font-mono text-[10px] tracking-[2px] uppercase px-3 py-1 border border-[#262626] text-white inline-block">
+                {content.contact.badge || 'HUBUNGI PERSEROAN'}
+              </span>
+              <h1 className="font-display font-normal text-4xl sm:text-6xl lg:text-[70px] uppercase tracking-[3px] text-white leading-[1.08]">
                 {content.contact.title || 'Layanan Konsultasi & Pemesanan'}
               </h1>
-              <p className="text-white/85 text-sm sm:text-base leading-relaxed max-w-2xl">
+              <p className="font-serif text-[#cccccc] text-base sm:text-lg leading-relaxed max-w-2xl pt-2">
                 {content.contact.subtitle || 'Konsultasikan rencana kepemilikan hunian subsidi Anda. Tim representatif kami siap memberikan penjelasan lengkap serta pendampingan survei lokasi.'}
               </p>
             </div>
@@ -105,197 +104,193 @@ export default function KontakPage() {
         </section>
 
         {/* Content Section */}
-        <section className="py-16 sm:py-24 bg-white">
+        <section className="py-24 sm:py-32 bg-[#000000]">
           <div className="container-editorial">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
               {/* Left Contact Information */}
-              <div className="lg:col-span-5 bg-[#F4F7FC] p-4 sm:p-7 lg:p-8 rounded-2xl border border-[#DCE7F5] shadow-sm space-y-6 sm:space-y-8">
+              <div className="lg:col-span-5 card-bugatti p-8 sm:p-10 space-y-8">
                 <div>
-                  <div className="flex items-center gap-2 text-[#FF9D2E] font-semibold text-xs tracking-wider mb-2">
-                    <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                    <span>Informasi kontak</span>
-                  </div>
-                  <h2 className="font-serif font-normal text-2xl sm:text-3xl text-[#102D52]">
-                    Kantor Pemasaran &amp; Domisili
+                  <span className="font-mono text-xs tracking-[2.5px] uppercase text-[#999999] block mb-2">
+                    INFORMASI KONTAK
+                  </span>
+                  <h2 className="font-display font-normal text-2xl sm:text-4xl uppercase tracking-[2px] text-white">
+                    Kantor Pemasaran
                   </h2>
                 </div>
 
-                <div className="divide-y divide-[#DCE7F5]">
+                <div className="divide-y divide-[#262626]">
                   {content.contact?.address && content.contact.address.trim() !== '' && (
-                    <div className="py-4 first:pt-0">
-                      <span className="text-xs text-[#FF9D2E] font-semibold block mb-1">
-                        Lokasi kantor
+                    <div className="py-5 first:pt-0">
+                      <span className="font-mono text-xs text-[#999999] tracking-[2px] uppercase block mb-1">
+                        LOKASI KANTOR
                       </span>
-                      <p className="text-xs sm:text-[13.5px] text-[#102D52] font-semibold leading-relaxed">
+                      <p className="font-serif text-white text-base leading-relaxed">
                         {content.contact.address}
                       </p>
                     </div>
                   )}
 
                   {hasWa && (
-                    <div className="py-4">
-                      <span className="text-xs text-[#FF9D2E] font-semibold block mb-1.5">
-                        Layanan WhatsApp resmi
+                    <div className="py-5">
+                      <span className="font-mono text-xs text-[#999999] tracking-[2px] uppercase block mb-2">
+                        WHATSAPP RESMI
                       </span>
                       <a
                         href={waUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/30 text-[#102D52] font-mono text-sm sm:text-base font-bold transition-all shadow-xs"
+                        className="btn-bugatti-primary w-full justify-between"
                       >
-                        <MessageCircle className="w-4 h-4 text-[#15966A] fill-current shrink-0" />
-                        <span>{content.contact.whatsapp}</span>
-                        <ArrowRight className="w-3.5 h-3.5 text-[#15966A] transition-transform duration-200 group-hover:translate-x-1 ml-1" />
+                        <span className="flex items-center gap-2">
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          <span>{content.contact.whatsapp}</span>
+                        </span>
+                        <ArrowRight className="w-3.5 h-3.5" />
                       </a>
-                      <span className="text-[11px] text-[#526783] block mt-1.5">
-                        Klik nomor di atas untuk langsung chat dengan tim pemasaran kami
-                      </span>
                     </div>
                   )}
 
                   {content.contact?.email && content.contact.email.trim() !== '' && (
-                    <div className="py-4">
-                      <span className="text-xs text-[#FF9D2E] font-semibold block mb-1">
-                        Surat elektronik (email)
+                    <div className="py-5">
+                      <span className="font-mono text-xs text-[#999999] tracking-[2px] uppercase block mb-1">
+                        SURAT ELEKTRONIK
                       </span>
-                      <p className="text-xs sm:text-[13.5px] text-[#102D52] font-medium">
+                      <p className="font-mono text-sm text-white">
                         {content.contact.email}
                       </p>
                     </div>
                   )}
 
                   {content.contact?.operatingHours && content.contact.operatingHours.trim() !== '' && (
-                    <div className="py-4">
-                      <span className="text-xs text-[#FF9D2E] font-semibold block mb-1">
-                        Jam pelayanan kantor
+                    <div className="py-5">
+                      <span className="font-mono text-xs text-[#999999] tracking-[2px] uppercase block mb-1">
+                        JAM PELAYANAN
                       </span>
-                      <p className="text-xs sm:text-[13.5px] text-[#102D52] font-medium">
+                      <p className="font-serif text-white text-sm">
                         {content.contact.operatingHours}
                       </p>
-                      <span className="text-[11px] text-[#526783] block mt-0.5">Survei akhir pekan dengan perjanjian awal</span>
                     </div>
                   )}
                 </div>
 
                 {/* Pendampingan Survei Note */}
-                <div className="pt-4 border-l-4 border-[#073B78] bg-white rounded-r-xl p-4 space-y-1">
-                  <div className="text-xs font-semibold text-[#073B78]">
-                    Pendampingan survei gratis
+                <div className="p-5 border border-[#262626] bg-[#0d0d0d] space-y-2">
+                  <div className="font-mono text-xs tracking-[2px] uppercase text-white">
+                    SURVEI KAVLING LANGSUNG
                   </div>
-                  <p className="text-xs text-[#526783] leading-relaxed">
+                  <p className="font-serif text-xs text-[#999999] leading-relaxed">
                     Survei lokasi Puri Gunung Langgar dapat dijadwalkan setiap hari dengan konfirmasi terlebih dahulu melalui WhatsApp.
                   </p>
                 </div>
               </div>
 
-              {/* Right Interactive Form */}
-              <div className="lg:col-span-7 bg-[#F4F7FC] p-4 sm:p-7 lg:p-9 rounded-2xl border border-[#DCE7F5] shadow-sm">
-                <div className="mb-6">
-                  <div className="flex items-center gap-2 text-[#FF9D2E] font-semibold text-xs tracking-wider mb-2">
-                    <span className="w-5 h-0.5 bg-[#FF9D2E] rounded-full" />
-                    <span>Formulir pemesanan</span>
-                  </div>
-                  <h2 className="font-serif font-normal text-2xl sm:text-3xl text-[#102D52] mb-1.5">
-                    Formulir Minat &amp; Pemesanan Unit
+              {/* Right Interactive Form (Bugatti Underline-Only Inputs) */}
+              <div className="lg:col-span-7 card-bugatti p-8 sm:p-12 space-y-8">
+                <div>
+                  <span className="font-mono text-xs tracking-[2.5px] uppercase text-[#999999] block mb-2">
+                    FORMULIR PEMESANAN
+                  </span>
+                  <h2 className="font-display font-normal text-2xl sm:text-4xl uppercase tracking-[2px] text-white">
+                    Minat &amp; Penjadwalan Survei
                   </h2>
-                  <p className="text-xs sm:text-[13px] text-[#526783]">
-                    Silakan isi data diri Anda di bawah ini. Tim representatif kami akan segera menghubungi nomor Anda untuk memberikan jadwal survei atau detail berkas KPR.
+                  <p className="font-serif text-sm text-[#999999] mt-2">
+                    Silakan isi data diri Anda. Tim perwakilan kami akan segera menghubungi nomor Anda untuk konfirmasi jadwal survei atau detail berkas KPR.
                   </p>
                 </div>
 
                 {formSuccess ? (
-                  <div className="p-8 rounded-2xl bg-[#E6F7F3] border border-[#15966A]/30 text-[#102D52] text-center space-y-3">
-                    <CheckCircle2 className="w-10 h-10 mx-auto text-[#15966A]" />
-                    <div className="text-base font-semibold text-[#15966A]">Pesan Anda Berhasil Terkirim</div>
-                    <p className="text-xs sm:text-sm text-[#526783] max-w-md mx-auto">
+                  <div className="p-8 bg-[#0d0d0d] border border-[#262626] text-center space-y-4">
+                    <CheckCircle2 className="w-8 h-8 mx-auto text-white" />
+                    <div className="font-display uppercase tracking-[2px] text-xl text-white">Pesan Anda Berhasil Terkirim</div>
+                    <p className="font-serif text-sm text-[#999999] max-w-md mx-auto">
                       Terima kasih atas ketertarikan Anda. Tim pemasaran PT. Terbang Bersama Kawan akan segera menghubungi nomor WhatsApp Anda.
                     </p>
                     <button
                       type="button"
                       onClick={() => setFormSuccess(false)}
-                      className="mt-3 px-6 py-2.5 rounded-full bg-[#073B78] hover:bg-[#1C5795] text-white font-semibold text-xs transition-colors"
+                      className="btn-bugatti-primary text-xs"
                     >
-                      Kirim pertanyaan lain
+                      KIRIM PESAN LAIN
                     </button>
                   </div>
                 ) : (
-                  <form onSubmit={handleInquirySubmit} className="space-y-4">
+                  <form onSubmit={handleInquirySubmit} className="space-y-6">
                     {formError && (
-                      <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs sm:text-sm font-semibold">
+                      <div className="p-4 border border-red-500/40 bg-red-950/20 text-red-400 font-mono text-xs tracking-[1px] uppercase">
                         {formError}
                       </div>
                     )}
 
                     <div>
-                      <label htmlFor="kontak-name" className="block text-xs font-semibold text-[#102D52] mb-1.5">
-                        Nama Lengkap *
+                      <label htmlFor="kontak-name" className="block font-mono text-xs tracking-[2px] uppercase text-[#999999] mb-1">
+                        NAMA LENGKAP *
                       </label>
                       <input
                         id="kontak-name"
                         type="text"
                         required
-                        placeholder="Masukkan nama lengkap Anda"
+                        placeholder="MASUKKAN NAMA LENGKAP"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full h-[46px] px-4 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] placeholder-[#526783]/50 focus:outline-none focus:border-[#073B78] focus:ring-1 focus:ring-[#073B78] text-xs sm:text-sm transition-colors"
+                        className="input-bugatti w-full"
                       />
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div>
-                        <label htmlFor="kontak-phone" className="block text-xs font-semibold text-[#102D52] mb-1.5">
-                          Nomor WhatsApp *
+                        <label htmlFor="kontak-phone" className="block font-mono text-xs tracking-[2px] uppercase text-[#999999] mb-1">
+                          NOMOR WHATSAPP *
                         </label>
                         <input
                           id="kontak-phone"
                           type="tel"
                           required
-                          placeholder="Contoh: 0812xxxxxxxx"
+                          placeholder="CONTOH: 0812XXXXXXXX"
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          className="w-full h-[46px] px-4 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] placeholder-[#526783]/50 focus:outline-none focus:border-[#073B78] focus:ring-1 focus:ring-[#073B78] text-xs sm:text-sm transition-colors font-mono"
+                          className="input-bugatti w-full font-mono"
                         />
                       </div>
                       <div>
-                        <label htmlFor="kontak-email" className="block text-xs font-semibold text-[#102D52] mb-1.5">
-                          Alamat Email (Opsional)
+                        <label htmlFor="kontak-email" className="block font-mono text-xs tracking-[2px] uppercase text-[#999999] mb-1">
+                          EMAIL (OPSIONAL)
                         </label>
                         <input
                           id="kontak-email"
                           type="email"
-                          placeholder="nama@email.com"
+                          placeholder="NAMA@EMAIL.COM"
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className="w-full h-[46px] px-4 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] placeholder-[#526783]/50 focus:outline-none focus:border-[#073B78] focus:ring-1 focus:ring-[#073B78] text-xs sm:text-sm transition-colors"
+                          className="input-bugatti w-full font-mono"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label htmlFor="kontak-message" className="block text-xs font-semibold text-[#102D52] mb-1.5">
-                        Pesan atau Minat Khusus
+                      <label htmlFor="kontak-message" className="block font-mono text-xs tracking-[2px] uppercase text-[#999999] mb-1">
+                        PESAN ATAU PERTANYAAN
                       </label>
                       <textarea
                         id="kontak-message"
                         rows={4}
-                        placeholder="Tuliskan pertanyaan mengenai kavling yang diminati, estimasi cicilan KPR, atau jadwal yang diinginkan untuk survei lokasi..."
+                        placeholder="TULISKAN PERTANYAAN KETERSEDIAAN KAVLING, SYARAT KPR, ATAU RENCANA TANGGAL SURVEI..."
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className="w-full p-4 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] placeholder-[#526783]/50 focus:outline-none focus:border-[#073B78] focus:ring-1 focus:ring-[#073B78] text-xs sm:text-sm transition-colors resize-none"
+                        className="w-full p-3 bg-transparent border-b border-[#3a3a3a] focus:border-white text-white font-serif text-sm outline-none resize-none transition-colors"
                       />
                     </div>
 
                     <button
                       type="submit"
                       disabled={formSubmitting}
-                      className="group w-full h-[48px] rounded-full bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] font-semibold text-sm shadow-md transition-all duration-200 hover:-translate-y-[1px] active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50"
+                      className="w-full btn-bugatti-primary justify-center"
                     >
                       {formSubmitting ? (
-                        <span>Mengirim data...</span>
+                        <span>MENGIRIMKAN DATA...</span>
                       ) : (
                         <>
-                          <span>Kirim formulir minat</span>
-                          <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                          <span>KIRIM FORMULIR PEMINATAN</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
                         </>
                       )}
                     </button>

@@ -115,7 +115,7 @@ export default function RouteProgressBar() {
     >
       {/* Progress track */}
       <div
-        className="h-full bg-gradient-to-r from-[#073B78] via-[#FF9D2E] to-[#F28A17] transition-all duration-300 ease-out relative"
+        className="h-full bg-gradient-to-r from-white via-[#c3d9f3] to-white transition-all duration-300 ease-out relative"
         style={{
           width: `${progress}%`,
           opacity: isVisible ? 1 : 0,
@@ -123,7 +123,7 @@ export default function RouteProgressBar() {
         }}
       >
         {/* Glowing Head Particle */}
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-28 h-[4px] bg-[#FF9D2E] rounded-full blur-[1.5px] animate-progress-glow opacity-90" />
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-24 h-[3px] bg-white rounded-full blur-[1px] opacity-90" />
       </div>
     </div>
   );

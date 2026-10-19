@@ -45,10 +45,10 @@ export default function ClientProyekGallery({
 
   if (!slides || slides.length === 0) {
     return (
-      <div className="p-12 text-center space-y-3 border border-dashed border-[#DCE7F5] rounded-2xl">
-        <ImageIcon className="w-10 h-10 text-[#526783]/50 mx-auto" />
-        <h3 className="font-bold text-lg text-[#102D52]">Belum Ada Foto Galeri</h3>
-        <p className="text-xs sm:text-sm text-[#526783] max-w-md mx-auto">
+      <div className="p-16 text-center space-y-4 border border-dashed border-[#262626] bg-[#0d0d0d]">
+        <ImageIcon className="w-10 h-10 text-[#999999]/50 mx-auto" />
+        <h3 className="font-display uppercase text-lg text-white tracking-[0.06em]">Belum Ada Foto Galeri</h3>
+        <p className="font-serif text-sm text-[#999999] max-w-md mx-auto">
           Dokumentasi foto kawasan belum ditambahkan.
         </p>
       </div>
@@ -57,7 +57,7 @@ export default function ClientProyekGallery({
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {slides.map((s, idx) => {
           const isIlustrasi = (s.caption || '').toLowerCase().includes('ilustrasi') || (s.caption || '').toLowerCase().includes('visualisasi');
           const numberTag = String(idx + 1).padStart(2, '0');
@@ -75,10 +75,10 @@ export default function ClientProyekGallery({
               role="button"
               tabIndex={0}
               aria-label={`Lihat foto ${idx + 1}: ${s.caption || 'Dokumentasi Proyek'}`}
-              className="group text-left space-y-3.5 bg-[#F4F7FC] hover:bg-white p-4 sm:p-5 rounded-2xl border border-[#DCE7F5] hover:border-[#FF9D2E]/60 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#FF9D2E]"
+              className="group text-left space-y-4 bg-[#141414] hover:bg-[#1f1f1f] p-5 border border-[#262626] hover:border-[#3a3a3a] transition-all duration-300 cursor-pointer focus:outline-none"
             >
-              {/* Photo Display Stage (Clean Object-Contain, No Cropped / Cutoff Center) */}
-              <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] overflow-hidden rounded-xl border border-[#DCE7F5] bg-[#F4F7FC] flex items-center justify-center p-2">
+              {/* Photo Display Stage */}
+              <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] overflow-hidden border border-[#262626] bg-[#000000] flex items-center justify-center p-2">
                 <img
                   src={upgradeGoogleImageUrl(s.image)}
                   alt={s.caption || `Foto Proyek ${idx + 1}`}
@@ -87,42 +87,42 @@ export default function ClientProyekGallery({
                     objectPosition: `${(s as any).imageOffsetX !== undefined ? (s as any).imageOffsetX : 50}% ${(s as any).imageOffsetY !== undefined ? (s as any).imageOffsetY : 50}%`,
                     transform: `scale(${(((s as any).imageZoom !== undefined ? (s as any).imageZoom : 100) / 100)})`,
                   }}
-                  className="w-full h-full group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />
 
                 {/* Number Badge Top Left */}
-                <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-[#073B78]/90 backdrop-blur-md text-[11px] font-mono font-bold text-white shadow-md border border-white/10">
+                <div className="absolute top-3 left-3 px-2 py-0.5 bg-black/80 backdrop-blur-sm text-[10px] font-mono tracking-[0.2em] text-white border border-[#3a3a3a]">
                   {numberTag}
                 </div>
 
                 {/* Quick Enlarge Indicator Top Right */}
-                <div className="absolute top-3 right-3 p-2 rounded-full bg-black/60 hover:bg-[#073B78] text-white shadow-md backdrop-blur-sm transition-all group-hover:scale-110 border border-white/20">
+                <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/70 hover:bg-white hover:text-black text-white flex items-center justify-center transition-all group-hover:scale-105 border border-white/20">
                   <Maximize2 className="w-3.5 h-3.5" />
                 </div>
 
-                {/* Bottom Overlay Pill on Hover */}
-                <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <span className="px-3 py-1 rounded-full bg-[#FF9D2E] text-[#071C38] text-xs font-bold shadow-md flex items-center gap-1.5 transform translate-y-1 group-hover:translate-y-0 transition-transform duration-300">
+                {/* Bottom Overlay on Hover */}
+                <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black via-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <span className="px-4 py-1.5 rounded-full border border-white/40 bg-black/70 text-white font-mono text-[10px] uppercase tracking-[0.2em] flex items-center gap-2">
                     <Maximize2 className="w-3 h-3" />
-                    <span>Klik Perbesar</span>
+                    <span>Perbesar</span>
                   </span>
                 </div>
               </div>
 
               {/* Caption & Metadata */}
-              <div className="space-y-1.5 pt-0.5">
-                <p className="text-sm sm:text-[14.5px] text-[#102D52] group-hover:text-[#073B78] font-bold leading-snug line-clamp-2 transition-colors">
+              <div className="space-y-2 pt-1">
+                <p className="font-display uppercase text-sm sm:text-base text-white tracking-[0.04em] leading-snug line-clamp-2">
                   {s.caption || `Dokumentasi Proyek ${projectName}`}
                 </p>
-                <div className="flex items-center justify-between text-[11.5px] text-[#526783] pt-1 border-t border-[#DCE7F5]/70">
-                  <span className="truncate max-w-[150px]">PT. Terbang Bersama Kawan</span>
+                <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.15em] text-[#999999] pt-2 border-t border-[#262626]">
+                  <span className="truncate max-w-[150px]">PT. TBK Lampung</span>
                   {isIlustrasi ? (
-                    <span className="text-[#FF9D2E] font-bold px-2 py-0.5 rounded-md bg-[#FFF7EB] border border-[#FF9D2E]/30 shrink-0">
+                    <span className="text-[#999999] border border-[#262626] px-2 py-0.5 shrink-0">
                       Ilustrasi Konsep
                     </span>
                   ) : (
-                    <span className="text-[#15966A] font-bold px-2 py-0.5 rounded-md bg-[#EBF7F2] border border-[#15966A]/30 shrink-0">
+                    <span className="text-[#c3d9f3] border border-[#262626] px-2 py-0.5 shrink-0">
                       Dokumen Lapangan
                     </span>
                   )}

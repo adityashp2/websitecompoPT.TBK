@@ -10,7 +10,6 @@ interface PartnersCarouselProps {
 }
 
 export default function PartnersCarousel({ partners }: PartnersCarouselProps) {
-  // If explicitly disabled or no items, return null
   if (partners?.enabled === false) return null;
 
   const rawItems = Array.isArray(partners?.items) ? partners.items : [];
@@ -23,12 +22,10 @@ export default function PartnersCarousel({ partners }: PartnersCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Duplicate items for infinite marquee illusion
-  // We duplicate enough times so wide screens don't run out of items
   const marqueeItems = [...items, ...items, ...items, ...items];
 
-  const badgeText = partners?.badge?.trim() || 'PARTNERS';
-  const titleText = partners?.title?.trim() || 'Our Partners.';
+  const badgeText = partners?.badge?.trim() || 'MITRA STRATEGIS';
+  const titleText = partners?.title?.trim() || 'PERBANKAN & REKANAN';
   const subtitleText = partners?.subtitle?.trim();
 
   const handleScrollLeft = () => {
@@ -43,31 +40,48 @@ export default function PartnersCarousel({ partners }: PartnersCarouselProps) {
     }
   };
 
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      if (scrollRef.current) {
+        if (
+          scrollRef.current.scrollLeft + scrollRef.current.clientWidth >=
+          scrollRef.current.scrollHeight
+        ) {
+          scrollRef.current.scrollLeft = 0;
+        } else {
+          scrollRef.current.scrollLeft += 1.5;
+        }
+      }
+    }, 28);
+    return () => clearInterval(interval);
+  }, [isPaused]);
+
   return (
     <section
       id="partners"
       aria-label="Mitra & Kerjasama Resmi"
-      className="relative w-full py-12 sm:py-16 bg-[#F8FAFC] border-y border-slate-200/80 overflow-hidden"
+      className="relative w-full py-16 sm:py-20 bg-[#0d0d0d] border-y border-[#262626] overflow-hidden"
     >
-      <div className="w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header (Inspired by ICC "PARTNERS / Our Partners.") */}
-        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+      <div className="w-full max-w-[1360px] mx-auto px-6 sm:px-10">
+        {/* Header */}
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
           {badgeText && (
-            <p className="text-[#FF5A36] text-xs sm:text-sm font-bold uppercase tracking-[0.25em] mb-2 inline-block">
+            <p className="font-mono text-xs tracking-[2.5px] uppercase text-[#999999] mb-2 inline-block">
               {badgeText}
             </p>
           )}
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#102D52] tracking-tight">
+          <h2 className="font-display font-normal text-2xl sm:text-3xl lg:text-4xl uppercase tracking-[3px] text-white">
             {titleText}
           </h2>
           {subtitleText && (
-            <p className="mt-2.5 text-xs sm:text-sm text-slate-500 leading-relaxed">
+            <p className="mt-2 text-sm font-serif text-[#cccccc] leading-relaxed">
               {subtitleText}
             </p>
           )}
         </div>
 
-        {/* Carousel Container with Side Controls & Smooth Infinite Auto-Slide */}
+        {/* Carousel Container */}
         <div
           className="relative w-full group"
           onMouseEnter={() => setIsPaused(true)}
@@ -75,117 +89,64 @@ export default function PartnersCarousel({ partners }: PartnersCarouselProps) {
           onTouchStart={() => setIsPaused(true)}
           onTouchEnd={() => setIsPaused(false)}
         >
-          {/* Left Gradient Fade Mask */}
-          <div className="pointer-events-none absolute left-0 inset-y-0 w-12 sm:w-24 z-10 bg-gradient-to-r from-[#F8FAFC] to-transparent" />
+          {/* Gradient Masks */}
+          <div className="pointer-events-none absolute left-0 inset-y-0 w-12 sm:w-24 z-10 bg-gradient-to-r from-[#0d0d0d] to-transparent" />
+          <div className="pointer-events-none absolute right-0 inset-y-0 w-12 sm:w-24 z-10 bg-gradient-to-l from-[#0d0d0d] to-transparent" />
 
-          {/* Right Gradient Fade Mask */}
-          <div className="pointer-events-none absolute right-0 inset-y-0 w-12 sm:w-24 z-10 bg-gradient-to-l from-[#F8FAFC] to-transparent" />
-
-          {/* Prev Arrow Button (Subtle, matches user reference) */}
+          {/* Navigation Controls */}
           <button
             type="button"
             onClick={handleScrollLeft}
-            className="absolute left-1 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/95 text-[#102D52] shadow-md border border-slate-200/90 flex items-center justify-center opacity-70 hover:opacity-100 hover:bg-[#FF9D2E] hover:text-[#102D52] transition-all duration-200 active:scale-95 focus-visible:outline-none"
-            aria-label="Geser ke kiri"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 border border-[#262626] hover:border-white bg-[#000000]/80 rounded-full text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+            aria-label="Gulir ke kiri"
           >
-            <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
+            <ChevronLeft className="w-4 h-4 stroke-[1.5]" />
           </button>
-
-          {/* Next Arrow Button (Subtle, matches user reference) */}
           <button
             type="button"
             onClick={handleScrollRight}
-            className="absolute right-1 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/95 text-[#102D52] shadow-md border border-slate-200/90 flex items-center justify-center opacity-70 hover:opacity-100 hover:bg-[#FF9D2E] hover:text-[#102D52] transition-all duration-200 active:scale-95 focus-visible:outline-none"
-            aria-label="Geser ke kanan"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 border border-[#262626] hover:border-white bg-[#000000]/80 rounded-full text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+            aria-label="Gulir ke kanan"
           >
-            <ChevronRight className="w-4 h-4 stroke-[2.5]" />
+            <ChevronRight className="w-4 h-4 stroke-[1.5]" />
           </button>
 
-          {/* Sliding Marquee Track */}
+          {/* Track */}
           <div
             ref={scrollRef}
-            className="flex items-center gap-4 sm:gap-6 overflow-x-auto no-scrollbar py-2"
-            style={{
-              scrollBehavior: 'smooth',
-            }}
+            className="flex items-center gap-4 sm:gap-6 overflow-x-hidden scroll-smooth py-2"
           >
-            <div
-              className={`flex items-center gap-4 sm:gap-6 shrink-0 ${
-                isPaused ? '' : 'animate-marquee-smooth'
-              }`}
-            >
-              {marqueeItems.map((item, idx) => {
-                const cardContent = (
-                  <div className="h-20 sm:h-24 w-44 sm:w-52 px-4 py-3 bg-white rounded-xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-[#FF9D2E]/60 transition-all duration-300 flex items-center justify-center group/card cursor-pointer">
-                    <img
-                      src={item.logo}
-                      alt={item.name || `Partner ${idx + 1}`}
-                      style={{
-                        objectFit: item.imageFit || 'contain',
-                        objectPosition: `${item.imageOffsetX !== undefined ? item.imageOffsetX : 50}% ${item.imageOffsetY !== undefined ? item.imageOffsetY : 50}%`,
-                        transform: `scale(${((item.imageZoom !== undefined ? item.imageZoom : 100) / 100)})`,
-                      }}
-                      className="max-h-12 sm:max-h-14 w-auto max-w-full transition-transform duration-300 group-hover/card:scale-105"
-                      loading="lazy"
-                    />
-                  </div>
-                );
-
-                if (item.url && item.url.trim() !== '') {
-                  const isExternal = item.url.startsWith('http://') || item.url.startsWith('https://');
-                  return (
-                    <a
-                      key={`${item.id || idx}-${idx}`}
-                      href={item.url}
-                      target={isExternal ? '_blank' : undefined}
-                      rel={isExternal ? 'noopener noreferrer' : undefined}
-                      className="shrink-0 block focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] rounded-xl"
-                      title={item.name}
-                    >
-                      {cardContent}
-                    </a>
-                  );
-                }
-
-                return (
-                  <div
-                    key={`${item.id || idx}-${idx}`}
-                    className="shrink-0"
-                    title={item.name}
+            {marqueeItems.map((partner, pIdx) => (
+              <div
+                key={`${partner.id}-${pIdx}`}
+                className="flex-shrink-0 w-44 sm:w-52 h-20 sm:h-24 px-5 py-3 bg-[#141414] border border-[#262626] hover:border-white/50 rounded-none flex items-center justify-center transition-all group/item"
+              >
+                {partner.url ? (
+                  <a
+                    href={partner.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full h-full flex items-center justify-center"
+                    title={partner.name}
                   >
-                    {cardContent}
-                  </div>
-                );
-              })}
-            </div>
+                    <img
+                      src={partner.logo}
+                      alt={partner.name}
+                      className="max-h-12 max-w-[130px] object-contain filter grayscale invert opacity-75 group-hover/item:opacity-100 transition-opacity"
+                    />
+                  </a>
+                ) : (
+                  <img
+                    src={partner.logo}
+                    alt={partner.name}
+                    className="max-h-12 max-w-[130px] object-contain filter grayscale invert opacity-75 group-hover/item:opacity-100 transition-opacity"
+                  />
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </div>
-
-      {/* Scoped CSS for Butter-Smooth Continuous Infinite Auto-Sliding Marquee */}
-      <style jsx>{`
-        @keyframes marqueeSmooth {
-          0% {
-            transform: translateX(0%);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        .animate-marquee-smooth {
-          animation: marqueeSmooth 35s linear infinite;
-        }
-        .animate-marquee-smooth:hover {
-          animation-play-state: paused;
-        }
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
     </section>
   );
 }

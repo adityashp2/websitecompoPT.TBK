@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { SiteContent, initialSiteContent } from '@/lib/initialData';
+import { SiteContent } from '@/lib/initialData';
 
 interface FloatingWhatsAppProps {
   content?: SiteContent;
@@ -40,23 +40,18 @@ export default function FloatingWhatsApp({ content, whatsappNumber }: FloatingWh
 
   return (
     <div
-      className="fixed bottom-20 md:bottom-7 right-4 sm:right-6 z-[99999] select-none pointer-events-auto"
-      style={{
-        position: 'fixed',
-        zIndex: 99999,
-      }}
+      className="fixed bottom-20 md:bottom-8 right-5 sm:right-8 z-[99999] select-none pointer-events-auto"
     >
       <a
         href={waUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="group inline-flex items-center gap-2.5 pl-1.5 pr-4 py-1.5 sm:pl-2 sm:pr-5 sm:py-2 rounded-full bg-white hover:bg-[#F8FAFC] shadow-[0_4px_20px_rgba(0,0,0,0.16)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.22)] border border-[#DCE7F5] transition-all duration-200 hover:-translate-y-0.5 active:scale-95 cursor-pointer"
-        aria-label="Ada Pertanyaan? Hubungi layanan WhatsApp resmi PT. TBK"
+        className="group inline-flex items-center gap-3 px-4 py-2.5 rounded-full bg-[#000000]/90 backdrop-blur-md text-white border border-[#3a3a3a] hover:border-white transition-all duration-200 active:scale-95 cursor-pointer"
+        aria-label="Hubungi WhatsApp Resmi PT. TBK"
       >
-        {/* Green Circular WhatsApp Icon */}
-        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#25D366] flex items-center justify-center text-white shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+        <div className="w-5 h-5 flex items-center justify-center text-white shrink-0">
           <svg
-            className="w-5 h-5 fill-current"
+            className="w-4 h-4 fill-current text-white group-hover:scale-105 transition-transform"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
@@ -65,9 +60,8 @@ export default function FloatingWhatsApp({ content, whatsappNumber }: FloatingWh
           </svg>
         </div>
 
-        {/* Text Pill */}
-        <span className="text-[13px] sm:text-[14px] font-medium text-[#475569] group-hover:text-[#0F172A] tracking-normal transition-colors whitespace-nowrap">
-          Ada Pertanyaan?
+        <span className="font-mono text-[11px] tracking-[2px] uppercase text-white transition-colors whitespace-nowrap">
+          WHATSAPP
         </span>
       </a>
     </div>

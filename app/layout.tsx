@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
-import { DM_Serif_Display, DM_Sans, Cormorant_Garamond } from 'next/font/google';
+import { Saira_Condensed, Cormorant_Garamond, JetBrains_Mono } from 'next/font/google';
 import dynamic from 'next/dynamic';
 import './globals.css';
 import RouteProgressBar from './components/RouteProgressBar';
@@ -8,30 +8,29 @@ import RouteProgressBar from './components/RouteProgressBar';
 const MobileBottomNav = dynamic(() => import('./components/MobileBottomNav'), { ssr: false });
 const FloatingWhatsApp = dynamic(() => import('./components/FloatingWhatsApp'), { ssr: false });
 
-const dmSerifDisplay = DM_Serif_Display({
+const sairaCondensed = Saira_Condensed({
+  weight: ['400'],
+  subsets: ['latin'],
+  variable: '--font-display',
+  display: 'swap',
+});
+
+const cormorantGaramond = Cormorant_Garamond({
   weight: ['400'],
   subsets: ['latin'],
   variable: '--font-serif',
   display: 'swap',
 });
 
-const dmSans = DM_Sans({
-  weight: ['400', '500', '600', '700'],
+const jetbrainsMono = JetBrains_Mono({
+  weight: ['400'],
   subsets: ['latin'],
-  variable: '--font-sans',
-  display: 'swap',
-});
-
-const cormorantGaramond = Cormorant_Garamond({
-  weight: ['400', '500', '600', '700'],
-  style: ['normal', 'italic'],
-  subsets: ['latin'],
-  variable: '--font-cormorant',
+  variable: '--font-mono',
   display: 'swap',
 });
 
 export const viewport: Viewport = {
-  themeColor: '#073B78',
+  themeColor: '#000000',
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
@@ -257,7 +256,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className={`scroll-smooth ${dmSerifDisplay.variable} ${dmSans.variable} ${cormorantGaramond.variable}`}>
+    <html lang="id" className={`scroll-smooth ${sairaCondensed.variable} ${cormorantGaramond.variable} ${jetbrainsMono.variable}`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -266,7 +265,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${dmSans.className} bg-[#102D52] text-[#102D52] font-sans antialiased selection:bg-[#FF9D2E] selection:text-[#102D52] min-h-screen`}>
+      <body className={`${cormorantGaramond.className} bg-[#000000] text-[#cccccc] font-serif antialiased selection:bg-white selection:text-black min-h-screen`}>
         <React.Suspense fallback={null}>
           <RouteProgressBar />
         </React.Suspense>

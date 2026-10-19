@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Search, MessageCircle, ArrowRight } from 'lucide-react';
+import { Menu, X, Search, ArrowRight, MessageCircle } from 'lucide-react';
 import { SiteContent, getCrispLogoUrl } from '@/lib/initialData';
 
 interface HeaderProps {
@@ -94,45 +94,31 @@ export default function Header({ content }: HeaderProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Lock body scroll when mobile menu or search modal is open
   useEffect(() => {
     if (mobileMenuOpen || searchOpen) {
       document.body.style.overflow = 'hidden';
+      if (searchOpen && searchInputRef.current) {
+        setTimeout(() => searchInputRef.current?.focus(), 80);
+      }
     } else {
       document.body.style.overflow = '';
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
   }, [mobileMenuOpen, searchOpen]);
 
   useEffect(() => {
-    setMobileMenuOpen(false);
-    setSearchOpen(false);
-  }, [pathname]);
-
-  // Focus search input when opened
-  useEffect(() => {
-    if (searchOpen) {
-      setTimeout(() => {
-        searchInputRef.current?.focus();
-      }, 100);
-    } else {
-      setSearchQuery('');
-    }
-  }, [searchOpen]);
-
-  // Handle Escape key
-  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        if (searchOpen) setSearchOpen(false);
-        if (mobileMenuOpen) setMobileMenuOpen(false);
+        setSearchOpen(false);
+        setMobileMenuOpen(false);
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen((prev) => !prev);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [mobileMenuOpen, searchOpen]);
+  }, []);
 
   const rawWa = content.contact?.whatsapp?.trim() || '';
   const cleanPhone = rawWa.replace(/\D/g, '');
@@ -143,10 +129,9 @@ export default function Header({ content }: HeaderProps) {
     ? cleanPhone
     : `62${cleanPhone}`;
   const waUrl = hasWa
-    ? `https://wa.me/${formattedWa}?text=${encodeURIComponent('Halo PT. TBK, saya ingin berkonsultasi mengenai perumahan Puri Gunung Langgar.')}`
+    ? `https://wa.me/${formattedWa}?text=${encodeURIComponent('Halo PT. TBK, saya tertarik dengan informasi unit Puri Gunung Langgar.')}`
     : '';
 
-  // Filtered search results
   const filteredSearch = searchQuery.trim() === ''
     ? SEARCH_DATABASE
     : SEARCH_DATABASE.filter(item => {
@@ -159,24 +144,14 @@ export default function Header({ content }: HeaderProps) {
         );
       });
 
-  // Main Navigation Items (matching complete PT. TBK navigation)
   const mainNavItems = [
-    { label: 'Beranda', href: '/' },
-    { label: 'Tentang', href: '/tentang' },
-    { label: 'Proyek', href: '/proyek' },
-    { label: 'Legalitas', href: '/legalitas' },
-    { label: 'Kegiatan', href: '/kegiatan' },
-    { label: 'Simulasi', href: '/simulasi-kpr' },
-  ];
-
-  // Complete navigation items for slide-over drawer
-  const allNavItems = [
-    { label: 'Beranda', href: '/' },
-    { label: 'Tentang', href: '/tentang' },
-    { label: 'Proyek', href: '/proyek' },
-    { label: 'Legalitas', href: '/legalitas' },
-    { label: 'Kegiatan', href: '/kegiatan' },
-    { label: 'Simulasi', href: '/simulasi-kpr' },
+    { label: 'BERANDA', href: '/' },
+    { label: 'TENTANG', href: '/tentang' },
+    { label: 'PROYEK', href: '/proyek' },
+    { label: 'LEGALITAS', href: '/legalitas' },
+    { label: 'KEGIATAN', href: '/kegiatan' },
+    { label: 'SIMULASI KPR', href: '/simulasi-kpr' },
+    { label: 'KONTAK', href: '/kontak' },
   ];
 
   return (
@@ -184,82 +159,62 @@ export default function Header({ content }: HeaderProps) {
       {/* Skip to Main Content */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:bg-[#FF9D2E] focus:text-[#102D52] focus:rounded focus:font-semibold focus:shadow-md focus:outline-none focus:ring-2 focus:ring-white"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100001] focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:font-mono focus:text-xs focus:tracking-[2px] focus:outline-none"
       >
-        Menuju ke konten utama
+        MENUJU KE KONTEN UTAMA
       </a>
 
       {/* Spacer for non-homepage views */}
       {!isHomePage && (
-        <div className="h-[58px] min-[980px]:h-[68px] bg-[#073B78]" aria-hidden="true" />
+        <div className="h-[56px] sm:h-[64px] bg-[#000000]" aria-hidden="true" />
       )}
 
-      {/* Main Corporate Header: Permanent Sticky & Fixed on Scroll */}
+      {/* Top Nav (Austere Luxury Bugatti Navigation Bar) */}
       <header
         suppressHydrationWarning
-        className={`fixed top-0 inset-x-0 w-full h-[58px] min-[980px]:h-[68px] bg-[#073B78] z-[100000] transition-[box-shadow,border-color] duration-200 border-b ${
+        className={`fixed top-0 inset-x-0 w-full h-[56px] sm:h-[64px] z-[100000] transition-colors duration-300 border-b ${
           isScrolled
-            ? 'shadow-lg shadow-black/25 border-white/15'
-            : 'shadow-none border-white/10'
+            ? 'bg-[#000000]/95 backdrop-blur-md border-[#262626]'
+            : 'bg-[#000000]/80 backdrop-blur-sm border-[#262626]/60'
         }`}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 100000,
-          backgroundColor: '#073B78',
-          maxHeight: '68px',
-          transform: 'translateZ(0)',
-          WebkitTransform: 'translateZ(0)',
-          backfaceVisibility: 'hidden',
-          WebkitBackfaceVisibility: 'hidden',
-        }}
       >
-        <div className="w-full max-w-[1360px] mx-auto h-full px-3.5 sm:px-6 flex items-center justify-between gap-2">
-          {/* Left: Brand Identity with existing logo asset */}
-          <Link
-            href="/"
-            className="flex items-center gap-2 sm:gap-3 min-w-0 max-w-full min-[980px]:max-w-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] rounded-lg py-1 group"
-            aria-label="PT. Terbang Bersama Kawan - Beranda"
-          >
-            {/* Logo Image Asset - Enhanced Sharp High-DPI Emblem */}
-            <div className="h-9 sm:h-10 w-auto flex items-center shrink-0" style={{ maxHeight: '42px' }}>
-              <img
-                src={getCrispLogoUrl(content.meta?.logo)}
-                alt={`Logo ${content.footer?.companyName || 'PT. Terbang Bersama Kawan'}`}
-                width={120}
-                height={42}
-                style={{
-                  maxHeight: '42px',
-                  width: 'auto',
-                  objectFit: 'contain',
-                  imageRendering: '-webkit-optimize-contrast',
-                }}
-                className="h-9 sm:h-10 w-auto object-contain drop-shadow-sm select-none"
-              />
-            </div>
+        <div className="w-full max-w-[1360px] mx-auto h-full px-4 sm:px-8 flex items-center justify-between gap-4">
+          
+          {/* Left: Mobile Menu Trigger + Brand Emblem */}
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden w-10 h-10 border border-[#262626] rounded-full flex items-center justify-center text-white hover:border-white transition-colors"
+              aria-label={mobileMenuOpen ? 'Tutup navigasi' : 'Buka navigasi'}
+            >
+              {mobileMenuOpen ? <X className="w-4 h-4 stroke-[1.5]" /> : <Menu className="w-4 h-4 stroke-[1.5]" />}
+            </button>
 
-            <div className="flex flex-col text-left min-w-0 overflow-hidden">
-              <span className="text-[13.5px] sm:text-[15px] font-bold tracking-[0.03em] text-white uppercase group-hover:text-[#FF9D2E] transition-colors leading-tight truncate">
-                {content.footer?.companyName || content.footer?.shortName || 'PT. TERBANG BERSAMA KAWAN'}
+            {/* Wordmark Logo Display */}
+            <Link
+              href="/"
+              className="flex items-center gap-3 focus:outline-none group"
+              aria-label="PT. Terbang Bersama Kawan - Beranda"
+            >
+              {content.meta?.logo && (
+                <img
+                  src={getCrispLogoUrl(content.meta.logo)}
+                  alt="Logo"
+                  width={34}
+                  height={34}
+                  className="w-7 h-7 sm:w-8 sm:h-8 object-contain filter invert contrast-125"
+                  style={{ imageRendering: '-webkit-optimize-contrast' }}
+                />
+              )}
+              <span className="font-display font-normal text-sm sm:text-base tracking-[4px] sm:tracking-[6px] text-white uppercase group-hover:text-white/80 transition-opacity whitespace-nowrap">
+                PT. TBK
               </span>
-              <span className="text-[9.5px] sm:text-[10.5px] text-[#FF9D2E] font-medium tracking-[0.04em] uppercase leading-tight mt-0.5 truncate">
-                {(() => {
-                  const comp = (content.footer?.companyName || 'PT. Terbang Bersama Kawan').trim().toLowerCase();
-                  const short = (content.footer?.shortName || 'PT. TBK').trim().toLowerCase();
-                  const tag = (content.meta?.tagline || '').trim();
-                  if (tag && tag.toLowerCase() !== comp && tag.toLowerCase() !== short) {
-                    return tag;
-                  }
-                  return content.footer?.tagline || 'Pengembang Perumahan Resmi';
-                })()}
-              </span>
-            </div>
-          </Link>
+            </Link>
+          </div>
 
-          {/* Center-Right: Desktop Navigation Menu */}
-          <nav aria-label="Menu utama" suppressHydrationWarning className="hidden min-[980px]:flex items-center gap-3.5 min-[1120px]:gap-5 lg:gap-6 xl:gap-7">
+          {/* Center: Desktop Navigation Trinity */}
+          <nav aria-label="Menu utama" className="hidden lg:flex items-center gap-6 xl:gap-8">
             {mainNavItems.map((item) => {
               const isActive = mounted && (item.href === '/'
                 ? pathname === '/'
@@ -271,54 +226,77 @@ export default function Header({ content }: HeaderProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  suppressHydrationWarning
-                  className={`text-[12.5px] min-[1120px]:text-[13.5px] lg:text-[14px] font-medium transition-all relative py-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9D2E] rounded whitespace-nowrap ${
+                  className={`font-mono text-[11px] xl:text-[12px] tracking-[2px] uppercase transition-colors relative py-1 ${
                     isActive
-                      ? 'text-[#FF9D2E] font-bold'
-                      : 'text-white/85 hover:text-white'
+                      ? 'text-white border-b border-white'
+                      : 'text-[#999999] hover:text-white'
                   }`}
                 >
-                  <span suppressHydrationWarning>{item.label}</span>
-                  {isActive && (
-                    <span
-                      className="absolute -bottom-[6px] left-0 right-0 h-[2.5px] bg-[#FF9D2E] rounded-full"
-                      aria-hidden="true"
-                    />
-                  )}
+                  <span>{item.label}</span>
                 </Link>
               );
             })}
           </nav>
+
+          {/* Right: Search & Signature CTA Button */}
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="w-9 h-9 sm:w-10 sm:h-10 border border-[#262626] hover:border-white text-white rounded-full flex items-center justify-center transition-all"
+              aria-label="Cari di website"
+            >
+              <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[1.5]" />
+            </button>
+
+            {hasWa ? (
+              <a
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:inline-flex btn-bugatti-primary text-[11px] sm:text-[12px] h-[38px] px-6"
+              >
+                KONSULTASI
+              </a>
+            ) : (
+              <Link
+                href="/kontak"
+                className="hidden sm:inline-flex btn-bugatti-primary text-[11px] sm:text-[12px] h-[38px] px-6"
+              >
+                KONTAK
+              </Link>
+            )}
+          </div>
         </div>
       </header>
 
       {/* ========================================================= */}
-      {/* SEARCH MODAL (Interactive & Functional)                   */}
+      {/* SEARCH MODAL (Dark Monochrome Luxury Overlay)             */}
       {/* ========================================================= */}
       {searchOpen && (
-        <div className="fixed inset-0 z-[950] flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150">
+        <div className="fixed inset-0 z-[100050] flex items-start justify-center pt-20 px-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
           <div
-            className="w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-[#DCE7F5] overflow-hidden animate-in zoom-in-95 duration-150"
+            className="w-full max-w-2xl bg-[#0d0d0d] border border-[#262626] rounded-none shadow-2xl overflow-hidden animate-in zoom-in-95 duration-150"
             role="dialog"
             aria-modal="true"
-            aria-label="Pencarian Website"
+            aria-label="Pencarian Direktori PT. TBK"
           >
             {/* Search Input Bar */}
-            <div className="p-3.5 sm:p-4 bg-[#F4F7FC] border-b border-[#DCE7F5] flex items-center gap-3">
-              <Search className="w-5 h-5 text-[#073B78] shrink-0" />
+            <div className="p-4 sm:p-5 border-b border-[#262626] flex items-center gap-4 bg-[#141414]">
+              <Search className="w-4 h-4 text-[#999999] shrink-0" />
               <input
                 ref={searchInputRef}
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari proyek, KPR, syarat, legalitas..."
-                className="w-full bg-transparent text-[#102D52] placeholder-[#526783] text-[14px] sm:text-[15px] font-medium outline-none"
+                placeholder="CARI PROYEK, SPESIFIKASI, LEGALITAS, KPR..."
+                className="w-full bg-transparent text-white placeholder-[#666666] font-mono text-xs sm:text-sm tracking-[2px] uppercase outline-none"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="p-1 rounded-md text-[#526783] hover:text-[#102D52]"
+                  className="p-1 text-[#999999] hover:text-white"
                   aria-label="Hapus teks pencarian"
                 >
                   <X className="w-4 h-4" />
@@ -327,17 +305,17 @@ export default function Header({ content }: HeaderProps) {
               <button
                 type="button"
                 onClick={() => setSearchOpen(false)}
-                className="text-xs font-semibold px-2.5 py-1 rounded-md bg-white border border-[#DCE7F5] text-[#526783] hover:text-[#102D52]"
+                className="font-mono text-[11px] tracking-[2px] uppercase px-3 py-1 border border-[#262626] text-[#999999] hover:text-white hover:border-white transition-colors"
               >
                 ESC
               </button>
             </div>
 
             {/* Results List */}
-            <div className="max-h-[60vh] overflow-y-auto p-2 sm:p-3 divide-y divide-[#DCE7F5]/60">
+            <div className="max-h-[60vh] overflow-y-auto p-3 divide-y divide-[#262626]">
               {filteredSearch.length === 0 ? (
-                <div className="py-8 text-center text-[#526783] text-sm">
-                  Tidak ada hasil untuk &ldquo;{searchQuery}&rdquo;. Silakan coba kata kunci lain.
+                <div className="py-12 text-center text-[#999999] font-mono text-xs tracking-[2px] uppercase">
+                  Tidak ditemukan data untuk &ldquo;{searchQuery}&rdquo;.
                 </div>
               ) : (
                 filteredSearch.map((item) => (
@@ -345,21 +323,21 @@ export default function Header({ content }: HeaderProps) {
                     key={item.href}
                     href={item.href}
                     onClick={() => setSearchOpen(false)}
-                    className="p-3 rounded-xl hover:bg-[#F4F7FC] flex items-start gap-3 transition-colors group block"
+                    className="p-4 hover:bg-[#141414] flex items-start gap-4 transition-colors group block"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-[#073B78]/10 text-[#073B78] group-hover:bg-[#FF9D2E] group-hover:text-[#102D52] flex items-center justify-center shrink-0 mt-0.5 transition-colors">
-                      <ArrowRight className="w-4 h-4" />
+                    <div className="w-8 h-8 border border-[#262626] group-hover:border-white text-white flex items-center justify-center shrink-0 mt-0.5 transition-colors">
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[13.5px] font-bold text-[#102D52] group-hover:text-[#073B78]">
+                      <div className="flex items-center gap-3">
+                        <span className="font-display font-normal text-base text-white tracking-[2px] uppercase group-hover:text-white">
                           {item.title}
                         </span>
-                        <span className="text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-[#DCE7F5] text-[#073B78]">
+                        <span className="font-mono text-[10px] tracking-[2px] uppercase px-2 py-0.5 border border-[#262626] text-[#999999]">
                           {item.category}
                         </span>
                       </div>
-                      <p className="text-xs text-[#526783] mt-0.5 line-clamp-1">
+                      <p className="font-serif text-sm text-[#999999] mt-1 line-clamp-1">
                         {item.description}
                       </p>
                     </div>
@@ -372,84 +350,77 @@ export default function Header({ content }: HeaderProps) {
       )}
 
       {/* ========================================================= */}
-      {/* MOBILE & DESKTOP SLIDE DRAWER: ICC-Inspired Layout        */}
+      {/* MOBILE DRAWER: Austere Monochrome Architectural Panel     */}
       {/* ========================================================= */}
       {mobileMenuOpen && (
         <>
-          {/* Subtle backdrop overlay */}
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-xs z-[880] transition-opacity"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100010] transition-opacity"
             onClick={() => setMobileMenuOpen(false)}
             aria-hidden="true"
           />
 
           <div
             id="mobile-nav-panel"
-            className="fixed top-[58px] min-[980px]:top-[68px] inset-x-0 min-[980px]:left-auto min-[980px]:right-0 min-[980px]:w-[380px] min-[980px]:border-l min-[980px]:shadow-2xl bottom-0 bg-[#073B78] z-[890] px-5 py-5 pb-28 min-[980px]:pb-8 flex flex-col justify-between overflow-y-auto border-t min-[980px]:border-t-0 border-white/10 animate-in slide-in-from-right-4 duration-200"
+            className="fixed top-[56px] right-0 w-full sm:w-[380px] bottom-0 bg-[#0d0d0d] border-l border-[#262626] z-[100020] p-6 pb-28 flex flex-col justify-between overflow-y-auto animate-in slide-in-from-right-4 duration-200"
           >
-          {/* Project Status Pill */}
-          <div className="p-3 rounded-xl bg-white/10 border border-white/15 flex items-center justify-between text-xs">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#FF9D2E] animate-pulse" />
-              <span className="font-semibold text-white tracking-wide">Puri Gunung Langgar</span>
+            <div className="space-y-6">
+              {/* Status Pill */}
+              <div className="p-3 bg-[#141414] border border-[#262626] flex items-center justify-between font-mono text-[11px] tracking-[2px] uppercase">
+                <span className="text-white">PURI GUNUNG LANGGAR</span>
+                <span className="text-[#999999]">OPERASIONAL</span>
+              </div>
+
+              {/* Navigation Links */}
+              <nav aria-label="Menu seluler" className="divide-y divide-[#262626]">
+                {mainNavItems.map((item) => {
+                  const isActive = mounted && (item.href === '/'
+                    ? pathname === '/'
+                    : item.href.includes('#')
+                    ? false
+                    : pathname?.startsWith(item.href));
+
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`min-h-[50px] flex items-center justify-between font-mono text-xs tracking-[2.5px] uppercase transition-colors ${
+                        isActive
+                          ? 'text-white'
+                          : 'text-[#999999] hover:text-white'
+                      }`}
+                    >
+                      <span>{item.label}</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-[#666666]" />
+                    </Link>
+                  );
+                })}
+              </nav>
             </div>
-            <span className="text-[11px] text-[#FF9D2E] uppercase font-bold tracking-wider">Proyek Berjalan</span>
-          </div>
 
-          {/* Navigation Links */}
-          <nav aria-label="Menu seluler" className="space-y-1.5 my-3 py-2">
-            {allNavItems.map((item) => {
-              const isActive = mounted && (item.href === '/'
-                ? pathname === '/'
-                : item.href.includes('#')
-                ? false
-                : pathname?.startsWith(item.href));
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  suppressHydrationWarning
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`min-h-[44px] px-4 rounded-xl flex items-center justify-between text-[14px] transition-colors ${
-                    isActive
-                      ? 'bg-white/15 text-white font-bold border-l-4 border-[#FF9D2E]'
-                      : 'text-white/85 hover:bg-white/10 hover:text-white'
-                  }`}
-                >
-                  <span suppressHydrationWarning>{item.label}</span>
-                  {isActive && (
-                    <span className="text-[11px] text-[#FF9D2E] uppercase font-bold">Aktif</span>
-                  )}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Bottom Actions */}
-          <div className="pt-3 border-t border-white/10 space-y-2.5">
-            <Link
-              href="/kontak"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full min-h-[42px] px-4 rounded-xl bg-[#FF9D2E] hover:bg-[#F28A17] text-[#102D52] font-semibold text-[13px] tracking-normal flex items-center justify-center gap-2 transition-all shadow"
-            >
-              <span>Hubungi Kami</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            {hasWa && (
-              <a
-                href={waUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+            {/* Bottom Actions */}
+            <div className="pt-6 border-t border-[#262626] space-y-3">
+              <Link
+                href="/kontak"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full min-h-[42px] px-4 rounded-xl border border-white/30 hover:border-[#FF9D2E] hover:bg-[#FF9D2E]/10 text-white text-[13px] font-semibold flex items-center justify-center gap-2 transition-all"
+                className="w-full btn-bugatti-primary justify-center"
               >
-                <MessageCircle className="w-4 h-4 text-[#FF9D2E]" />
-                <span>Konsultasi WhatsApp</span>
-              </a>
-            )}
+                HUBUNGI KAMI
+              </Link>
+              {hasWa && (
+                <a
+                  href={waUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full btn-bugatti-primary justify-center border-[#3a3a3a] text-[#cccccc]"
+                >
+                  KONSULTASI WHATSAPP
+                </a>
+              )}
+            </div>
           </div>
-        </div>
         </>
       )}
     </>
