@@ -630,7 +630,9 @@ export default function AdminDashboard() {
     initDashboard();
     // Safety fallback: release loading screen if it takes more than 4 seconds
     const timeout = setTimeout(() => {
-      setLoading(false);
+      if (typeof window !== 'undefined' && !adminUser) {
+        window.location.replace('/A9MIN/login');
+      }
     }, 4000);
     return () => clearTimeout(timeout);
   }, []);
@@ -649,8 +651,11 @@ export default function AdminDashboard() {
 
       const authJson = await authRes.json().catch(() => ({ authenticated: false }));
       if (!authRes.ok || !authJson.authenticated) {
-        setLoading(false);
-        router.replace('/A9MIN/login');
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('tbk_admin_token');
+          document.cookie = 'tbk_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          window.location.replace('/A9MIN/login');
+        }
         return;
       }
       setAdminUser(authJson.user);
@@ -661,8 +666,9 @@ export default function AdminDashboard() {
       }
     } catch (err) {
       console.error('Session verification error:', err);
-      setLoading(false);
-      router.replace('/A9MIN/login');
+      if (typeof window !== 'undefined') {
+        window.location.replace('/A9MIN/login');
+      }
       return;
     } finally {
       setLoading(false);
@@ -902,34 +908,21 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#073B78] via-[#0A4B91] to-[#102D52] text-white flex flex-col items-center justify-center p-6 select-none">
-        <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-2.5 flex items-center justify-center mb-5 shadow-2xl shadow-[#073B78]/40">
-          <img
-            src={content.meta?.logo || "/assets/logo-tbk.png"}
-            alt="Logo PT. TBK"
-            className="w-full h-full object-contain"
-          />
+      <div className="min-h-screen bg-[#071C38] text-white flex flex-col items-center justify-center p-6 select-none">
+        <div className="relative flex items-center justify-center mb-5">
+          <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-2.5 flex items-center justify-center shadow-2xl">
+            <img
+              src={content.meta?.logo || "/assets/logo-tbk.png"}
+              alt="Logo PT. TBK"
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="absolute -inset-2 border-2 border-[#FF9D2E]/40 border-t-[#FF9D2E] rounded-3xl animate-spin" />
         </div>
-        <div className="flex items-center gap-2.5 text-[#FF9D2E] font-semibold mb-2">
-          <RefreshCw className="w-5 h-5 animate-spin" />
-          <span className="font-syne text-sm sm:text-base tracking-wide">Menghubungkan Admin Studio PT. TBK...</span>
+        <div className="flex items-center gap-2 text-[#FF9D2E] font-semibold text-sm mb-1">
+          <span className="tracking-wide">Memverifikasi Akses Admin Studio...</span>
         </div>
-        <p className="text-xs text-white/70 mb-6 font-mono">Memuat konten terverifikasi & database cloud...</p>
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => setLoading(false)}
-            className="text-xs px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white font-semibold transition-colors shadow-xs border border-white/25 backdrop-blur-sm"
-          >
-            Buka Langsung
-          </button>
-          <Link
-            href="/A9MIN/login"
-            className="text-xs text-white/80 hover:text-[#FF9D2E] underline font-medium"
-          >
-            Halaman Login
-          </Link>
-        </div>
+        <p className="text-xs text-white/50 font-mono">Panel Terproteksi • PT. Terbang Bersama Kawan</p>
       </div>
     );
   }
