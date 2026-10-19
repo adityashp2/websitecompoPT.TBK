@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Maximize2, Image as ImageIcon } from 'lucide-react';
 import type { LookbookItem } from '../components/LookbookModal';
+import { upgradeGoogleImageUrl } from '@/lib/initialData';
 
 const LookbookModal = dynamic(() => import('../components/LookbookModal'), { ssr: false });
 
@@ -29,7 +30,7 @@ export default function ClientProyekGallery({
   const lookbookItems: LookbookItem[] = slides.map((s, idx) => {
     const isIlustrasi = (s.caption || '').toLowerCase().includes('ilustrasi') || (s.caption || '').toLowerCase().includes('visualisasi');
     return {
-      image: s.image,
+      image: upgradeGoogleImageUrl(s.image),
       title: s.caption || `Dokumentasi Proyek ${projectName}`,
       tag: String(idx + 1).padStart(2, '0'),
       category: isIlustrasi ? 'Ilustrasi Konsep' : 'Dokumen Lapangan',
@@ -79,7 +80,7 @@ export default function ClientProyekGallery({
               {/* Photo Display Stage (Clean Object-Contain, No Cropped / Cutoff Center) */}
               <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] overflow-hidden rounded-xl border border-[#DCE7F5] bg-[#F4F7FC] flex items-center justify-center p-2">
                 <img
-                  src={s.image}
+                  src={upgradeGoogleImageUrl(s.image)}
                   alt={s.caption || `Foto Proyek ${idx + 1}`}
                   style={{
                     objectFit: (s as any).imageFit || 'contain',

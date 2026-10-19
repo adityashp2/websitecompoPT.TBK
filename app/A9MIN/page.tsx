@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { SiteContent, initialSiteContent, BannerSlide, PurchaseStep, getYouTubeEmbedUrl, extractYouTubeVideoId, getYouTubeThumbnailUrl, normalizeYouTubeInput, PartnerItem, PartnersConfig, getCrispLogoUrl, mergeSiteContent } from '@/lib/initialData';
+import { SiteContent, initialSiteContent, BannerSlide, PurchaseStep, getYouTubeEmbedUrl, extractYouTubeVideoId, getYouTubeThumbnailUrl, normalizeYouTubeInput, upgradeGoogleImageUrl, PartnerItem, PartnersConfig, getCrispLogoUrl, mergeSiteContent } from '@/lib/initialData';
 import { getOverlayStyle, getFontFamilyStyle, getFontWeightStyle } from '@/app/components/PromoBannerCarousel';
 import {
   Save,
@@ -6644,8 +6644,12 @@ export default function AdminDashboard() {
                                       placeholder="Path foto (/assets/... atau /uploads/...)"
                                       value={slide.image}
                                       onChange={(e) => {
+                                        let val = e.target.value;
+                                        if (val.includes('googleusercontent.com')) {
+                                          val = upgradeGoogleImageUrl(val);
+                                        }
                                         const slides = [...(content.project.slides || [])];
-                                        slides[idx].image = e.target.value;
+                                        slides[idx].image = val;
                                         setContent({
                                           ...content,
                                           project: { ...content.project, slides },

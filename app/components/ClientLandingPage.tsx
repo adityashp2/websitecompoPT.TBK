@@ -41,7 +41,7 @@ import {
 } from './BuyingProcessIllustrations';
 import PromoPopupModal from './PromoPopupModal';
 import type { LookbookItem } from './LookbookModal';
-import { SiteContent, initialSiteContent } from '@/lib/initialData';
+import { SiteContent, initialSiteContent, upgradeGoogleImageUrl } from '@/lib/initialData';
 
 const LookbookModal = dynamic(() => import('./LookbookModal'), { ssr: false });
 
@@ -460,10 +460,10 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
               {/* Left Column: Media Gallery Viewer - Frameless & Auto Slideshow */}
               <div className="lg:col-span-7 flex flex-col items-center justify-center space-y-3 reveal-left-on-scroll delay-100">
-                {/* Frameless Slideshow Stage */}
+                {/* Clean Uniform Slideshow Stage */}
                 {activeProjectSlides.length > 0 ? (
                   <div
-                    className="relative w-full h-[400px] sm:h-[460px] md:h-[500px] flex items-center justify-center select-none group"
+                    className="relative w-full aspect-[4/3] sm:aspect-[16/10] max-h-[520px] rounded-2xl overflow-hidden shadow-xl border border-slate-200/90 bg-[#0F1D2E] flex items-center justify-center select-none group"
                     tabIndex={0}
                     role="region"
                     aria-label="Slideshow dokumentasi proyek Puri Gunung Langgar. Geser atau klik untuk memperbesar."
@@ -472,25 +472,35 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   >
                     {activeProjectSlides.map((slide, sIdx) => {
                       const isActive = sIdx === currentProjectSlide;
+                      const cleanImg = upgradeGoogleImageUrl(slide.image);
+                      const fitMode = (slide as any).imageFit || 'cover';
                       return (
                         <div
                           key={sIdx}
-                          className={`absolute inset-0 flex items-center justify-center transition-opacity duration-700 ease-in-out ${
+                          className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
                             isActive ? 'opacity-100 z-10 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'
                           }`}
                         >
-                          {/* Gambar Apa Adanya tanpa Frame Tebal / Letterbox Hitam */}
+                          {/* Ambient Blurred Backdrop for contain mode */}
+                          {fitMode === 'contain' && (
+                            <div
+                              className="absolute inset-0 bg-cover bg-center blur-2xl opacity-40 scale-110 pointer-events-none"
+                              style={{ backgroundImage: `url(${cleanImg})` }}
+                            />
+                          )}
+
+                          {/* Full Uniform Image */}
                           <img
-                            src={slide.image}
+                            src={cleanImg}
                             alt={slide.caption || 'Foto Proyek'}
                             style={{
-                              objectFit: (slide as any).imageFit || 'contain',
+                              objectFit: fitMode,
                               objectPosition: `${(slide as any).imageOffsetX !== undefined ? (slide as any).imageOffsetX : 50}% ${(slide as any).imageOffsetY !== undefined ? (slide as any).imageOffsetY : 50}%`,
                               transform: `scale(${(((slide as any).imageZoom !== undefined ? (slide as any).imageZoom : 100) / 100)})`,
                             }}
                             onClick={() => {
                               const projectLookbookItems: LookbookItem[] = activeProjectSlides.map((s, idx) => ({
-                                image: s.image,
+                                image: upgradeGoogleImageUrl(s.image),
                                 title: s.caption || `${content.project?.name || 'Puri Gunung Langgar'} - Dokumentasi Foto`,
                                 description: `Dokumentasi visual proyek ${content.project?.name || 'Puri Gunung Langgar'} yang dikembangkan oleh PT. Terbang Bersama Kawan.`,
                                 tag: `Dokumentasi 0${idx + 1}`,
@@ -502,7 +512,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                                 items: projectLookbookItems,
                               });
                             }}
-                            className="max-h-[400px] sm:max-h-[460px] md:max-h-[500px] w-auto max-w-full object-contain rounded-2xl shadow-lg border border-slate-200/80 cursor-pointer transition-transform duration-300 hover:scale-[1.01]"
+                            className="w-full h-full cursor-pointer transition-transform duration-500 group-hover:scale-[1.02]"
                             loading="lazy"
                           />
                         </div>
@@ -543,7 +553,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                       onClick={(e) => {
                         e.stopPropagation();
                         const projectLookbookItems: LookbookItem[] = activeProjectSlides.map((s, idx) => ({
-                          image: s.image,
+                          image: upgradeGoogleImageUrl(s.image),
                           title: s.caption || `${content.project?.name || 'Puri Gunung Langgar'} - Dokumentasi Foto`,
                           description: `Dokumentasi visual proyek ${content.project?.name || 'Puri Gunung Langgar'} yang dikembangkan oleh PT. Terbang Bersama Kawan.`,
                           tag: `Dokumentasi 0${idx + 1}`,
@@ -555,7 +565,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                           items: projectLookbookItems,
                         });
                       }}
-                      className="absolute top-3 right-3 sm:right-6 z-30 bg-black/60 hover:bg-[#073B78] text-white px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-md backdrop-blur-sm transition-all hover:scale-105 active:scale-95 border border-white/20"
+                      className="absolute top-3 right-3 sm:right-4 z-30 bg-black/60 hover:bg-[#073B78] text-white px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-md backdrop-blur-sm transition-all hover:scale-105 active:scale-95 border border-white/20"
                       aria-label="Perbesar foto"
                     >
                       <Maximize2 className="w-3.5 h-3.5 text-[#FF9D2E]" />
@@ -572,7 +582,7 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   </div>
                 )}
 
-                {/* Indikator Slideshow Dots & Caption di Luar (Tidak Menutupi Poster) */}
+                {/* Indikator Slideshow Dots & Caption di Luar */}
                 <div className="flex flex-col items-center gap-1.5 pt-1 text-center w-full">
                   {activeProjectSlides.length > 1 && (
                     <div className="flex items-center gap-1.5">
@@ -599,17 +609,18 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   )}
                 </div>
 
-                {/* Mini Clean Thumbnail Strip Tanpa Frame Gelap */}
+                {/* Mini Clean Thumbnail Strip */}
                 {activeProjectSlides.length > 1 && (
                   <div className="flex items-center justify-center gap-2 pt-1 overflow-x-auto max-w-full">
                     {activeProjectSlides.map((slide, sIdx) => {
                       const isActive = sIdx === currentProjectSlide;
+                      const cleanThumb = upgradeGoogleImageUrl(slide.image);
                       return (
                         <button
                           key={sIdx}
                           type="button"
                           onClick={() => setCurrentProjectSlide(sIdx)}
-                          className={`relative h-14 sm:h-16 aspect-[3/4] sm:aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200 shrink-0 ${
+                          className={`relative h-14 sm:h-16 aspect-[4/3] sm:aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200 shrink-0 ${
                             isActive
                               ? 'border-[#FF9D2E] shadow-md scale-105 opacity-100 ring-2 ring-[#FF9D2E]/25'
                               : 'border-slate-200 opacity-60 hover:opacity-100'
@@ -617,9 +628,9 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                           aria-label={`Pilih foto ${sIdx + 1}`}
                         >
                           <img
-                            src={slide.image}
+                            src={cleanThumb}
                             alt={slide.caption || `Foto ${sIdx + 1}`}
-                            className="w-full h-full object-contain p-1"
+                            className="w-full h-full object-cover"
                           />
                         </button>
                       );

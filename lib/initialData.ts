@@ -924,6 +924,18 @@ export function normalizeYouTubeInput(input: string | undefined | null): string 
   return input.trim();
 }
 
+export function upgradeGoogleImageUrl(url: string | undefined | null): string {
+  if (!url || typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (trimmed.includes('googleusercontent.com')) {
+    // Jika URL Google berisi parameter downscaling (misal: =w193-h138... atau =s200), ubah ke full HD s1600
+    if (/=(w\d+-h\d+|s\d+)[^=]*$/i.test(trimmed)) {
+      return trimmed.replace(/=(w\d+-h\d+|s\d+)[^=]*$/i, '=s1600');
+    }
+  }
+  return trimmed;
+}
+
 export function getCrispLogoUrl(url: string | undefined | null): string {
   if (!url || typeof url !== 'string' || !url.trim()) return '/assets/logo-tbk-mark.png';
   const trimmed = url.trim();
@@ -974,7 +986,10 @@ export function mergeSiteContent(parsed?: any): SiteContent {
     project: {
       ...initialSiteContent.project,
       ...(parsed.project || {}),
-      slides: Array.isArray(parsed.project?.slides) ? parsed.project.slides : (initialSiteContent.project?.slides || []),
+      slides: (Array.isArray(parsed.project?.slides) ? parsed.project.slides : (initialSiteContent.project?.slides || [])).map((s: any) => ({
+        ...s,
+        image: upgradeGoogleImageUrl(s?.image),
+      })),
       specs: Array.isArray(parsed.project?.specs) ? parsed.project.specs : (initialSiteContent.project?.specs || []),
     },
     buyingProcess: {
