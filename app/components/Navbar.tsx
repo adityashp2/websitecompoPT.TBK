@@ -78,8 +78,15 @@ export default function Header({ content }: HeaderProps) {
   }, []);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 15);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     handleScroll();
@@ -190,10 +197,10 @@ export default function Header({ content }: HeaderProps) {
       {/* Main Corporate Header: Permanent Sticky & Fixed on Scroll */}
       <header
         suppressHydrationWarning
-        className={`fixed top-0 inset-x-0 w-full h-[58px] min-[980px]:h-[68px] transition-all duration-300 ease-out border-b z-[100000] ${
+        className={`fixed top-0 inset-x-0 w-full h-[58px] min-[980px]:h-[68px] bg-[#073B78] z-[100000] transition-[box-shadow,border-color] duration-200 border-b ${
           isScrolled
-            ? 'bg-[#073B78]/95 backdrop-blur-md shadow-lg shadow-black/20 border-white/15'
-            : 'bg-[#073B78] border-white/10 shadow-sm'
+            ? 'shadow-lg shadow-black/25 border-white/15'
+            : 'shadow-none border-white/10'
         }`}
         style={{
           position: 'fixed',
@@ -203,6 +210,10 @@ export default function Header({ content }: HeaderProps) {
           zIndex: 100000,
           backgroundColor: '#073B78',
           maxHeight: '68px',
+          transform: 'translateZ(0)',
+          WebkitTransform: 'translateZ(0)',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
         }}
       >
         <div className="w-full max-w-[1360px] mx-auto h-full px-3.5 sm:px-6 flex items-center justify-between gap-2">
@@ -279,7 +290,34 @@ export default function Header({ content }: HeaderProps) {
             })}
           </nav>
 
+          {/* Right Action Icons: Search & Mobile Menu Hamburger */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Search Trigger Button */}
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/10 hover:bg-white/15 text-white/90 hover:text-white flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E]"
+              aria-label="Buka pencarian"
+            >
+              <Search className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+            </button>
 
+            {/* Mobile Menu Hamburger Toggle */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="min-[980px]:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/10 hover:bg-[#FF9D2E] text-white hover:text-[#071C38] flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E]"
+              aria-label={mobileMenuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-nav-panel"
+            >
+              {mobileMenuOpen ? (
+                <X className="w-5 h-5 stroke-[2.5]" />
+              ) : (
+                <Menu className="w-5 h-5 stroke-[2.5]" />
+              )}
+            </button>
+          </div>
         </div>
       </header>
 
