@@ -26,6 +26,12 @@ export interface BannerSlide {
   headlineHighlightColor?: string;
   supportingTextColor?: string;
   supportingTextFontSize?: 'xs' | 'sm' | 'base' | 'lg';
+
+  // Kustomisasi Daerah Yang Mau Di-biruin (Overlay Gradasi Biru)
+  overlayColor?: string;
+  overlayOpacity?: number;
+  overlayCoverage?: number;
+  overlayDirection?: 'left' | 'right' | 'top' | 'full';
 }
 
 export interface FeatureCard {

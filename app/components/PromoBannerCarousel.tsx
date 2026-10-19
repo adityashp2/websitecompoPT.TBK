@@ -81,6 +81,59 @@ export const getSupportingTextFontSize = (size?: string, isMobile = false) => {
   }
 };
 
+export function hexToRgb(hex?: string): string {
+  let clean = (hex || '').replace('#', '').trim();
+  if (clean.length === 3) {
+    clean = clean.split('').map((c) => c + c).join('');
+  }
+  if (clean.length !== 6) return '7, 59, 120';
+  const r = parseInt(clean.substring(0, 2), 16) || 7;
+  const g = parseInt(clean.substring(2, 4), 16) || 59;
+  const b = parseInt(clean.substring(4, 6), 16) || 120;
+  return `${r}, ${g}, ${b}`;
+}
+
+export function getOverlayStyle(slide: Partial<BannerSlide>): React.CSSProperties {
+  const color = slide.overlayColor || '#073B78';
+  const rgb = hexToRgb(color);
+  const opacity = (slide.overlayOpacity !== undefined ? slide.overlayOpacity : 90) / 100;
+  const coverage = slide.overlayCoverage !== undefined ? slide.overlayCoverage : 60;
+  const direction = slide.overlayDirection || 'left';
+
+  if (direction === 'full') {
+    return {
+      backgroundColor: `rgba(${rgb}, ${opacity})`,
+    };
+  }
+
+  if (direction === 'right') {
+    return {
+      background: `linear-gradient(to left, rgba(${rgb}, ${opacity}) 0%, rgba(${rgb}, ${opacity * 0.95}) ${Math.max(5, coverage - 30)}%, rgba(${rgb}, ${opacity * 0.45}) ${coverage}%, transparent ${Math.min(100, coverage + 25)}%)`,
+    };
+  }
+
+  if (direction === 'top') {
+    return {
+      background: `linear-gradient(to bottom, rgba(${rgb}, ${opacity}) 0%, rgba(${rgb}, ${opacity * 0.9}) ${Math.max(5, coverage - 25)}%, rgba(${rgb}, ${opacity * 0.4}) ${coverage}%, transparent ${Math.min(100, coverage + 20)}%)`,
+    };
+  }
+
+  return {
+    background: `linear-gradient(to right, rgba(${rgb}, ${opacity}) 0%, rgba(${rgb}, ${opacity * 0.95}) ${Math.max(5, coverage - 30)}%, rgba(${rgb}, ${opacity * 0.45}) ${coverage}%, transparent ${Math.min(100, coverage + 25)}%)`,
+  };
+}
+
+export function getMobileOverlayStyle(slide: Partial<BannerSlide>): React.CSSProperties {
+  const color = slide.overlayColor || '#073B78';
+  const rgb = hexToRgb(color);
+  const opacity = (slide.overlayOpacity !== undefined ? Math.min(100, slide.overlayOpacity + 5) : 95) / 100;
+  const coverage = slide.overlayCoverage !== undefined ? Math.min(100, slide.overlayCoverage + 15) : 75;
+
+  return {
+    background: `linear-gradient(to right, rgba(${rgb}, ${opacity}) 0%, rgba(${rgb}, ${opacity * 0.9}) ${Math.max(10, coverage - 20)}%, rgba(${rgb}, ${opacity * 0.6}) 100%)`,
+  };
+}
+
 export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerCarouselProps) {
   const slides: BannerSlide[] = Array.isArray(propSlides)
     ? propSlides
@@ -227,7 +280,8 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
 
               {/* Dark Left-to-Right Corporate Navy Gradient Overlay */}
               <div
-                className="absolute inset-0 z-[1] bg-gradient-to-r from-[#073B78] via-[#073B78]/90 to-[#073B78]/40 xl:to-transparent"
+                className="absolute inset-0 z-[1] pointer-events-none transition-all duration-500"
+                style={getOverlayStyle(slide)}
                 aria-hidden="true"
               />
 
@@ -421,7 +475,8 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
 
                 {/* ICC-Inspired Multi-Stop Navy Gradient Overlay */}
                 <div
-                  className="absolute inset-0 z-[1] bg-gradient-to-r from-[#073B78]/95 via-[#073B78]/85 to-[#073B78]/55"
+                  className="absolute inset-0 z-[1] pointer-events-none transition-all duration-500"
+                  style={getMobileOverlayStyle(slide)}
                   aria-hidden="true"
                 />
 

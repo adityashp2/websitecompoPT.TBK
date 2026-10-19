@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SiteContent, initialSiteContent, BannerSlide, PurchaseStep, getYouTubeEmbedUrl, PartnerItem, PartnersConfig } from '@/lib/initialData';
+import { getOverlayStyle, getFontFamilyStyle, getFontWeightStyle } from '@/app/components/PromoBannerCarousel';
 import {
   Save,
   RotateCcw,
@@ -43,7 +44,10 @@ import {
   Maximize2,
   Move,
   Crop,
-  Handshake
+  Handshake,
+  Palette,
+  Sliders,
+  SlidersHorizontal
 } from 'lucide-react';
 
 interface Inquiry {
@@ -1621,692 +1625,1002 @@ export default function AdminDashboard() {
                           </div>
                         </div>
 
-                        {/* Banner Media (Foto atau Video) */}
-                        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
-                          <div className="md:col-span-5 space-y-3">
-                            <div className="flex items-center justify-between">
-                              <label className="block text-xs font-bold text-[#073B78]">
-                                Media Background Banner
-                              </label>
-                              {/* Toggle Foto vs Video */}
-                              <div className="inline-flex rounded-lg bg-[#EBF3FC] p-0.5 border border-[#DCE7F5]">
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    const newSlides = [...(content.bannerSlides || [])];
-                                    newSlides[sIdx].mediaType = 'image';
-                                    setContent({ ...content, bannerSlides: newSlides });
-                                  }}
-                                  className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all flex items-center gap-1 ${
-                                    (slide.mediaType || 'image') === 'image'
-                                      ? 'bg-[#073B78] text-white shadow-xs'
-                                      : 'text-[#073B78] hover:text-[#0A4B91]'
-                                  }`}
-                                >
-                                  <ImageIcon className="w-3 h-3" />
-                                  <span>Foto</span>
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    const newSlides = [...(content.bannerSlides || [])];
-                                    newSlides[sIdx].mediaType = 'video';
-                                    setContent({ ...content, bannerSlides: newSlides });
-                                  }}
-                                  className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all flex items-center gap-1 ${
-                                    slide.mediaType === 'video'
-                                      ? 'bg-[#FF9D2E] text-[#071C38] shadow-xs'
-                                      : 'text-[#073B78] hover:text-[#0A4B91]'
-                                  }`}
-                                >
-                                  <Video className="w-3 h-3" />
-                                  <span>Video</span>
-                                </button>
-                              </div>
+                        {/* ======================================================== */}
+                        {/* 1. ULTRA REALISTIC WYSIWYG HERO BANNER SIMULATOR (DESKTOP) */}
+                        {/* ======================================================== */}
+                        <div className="space-y-2">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <label className="text-xs font-bold text-[#073B78] uppercase tracking-wider flex items-center gap-1.5">
+                              <Eye className="w-4 h-4 text-[#FF9D2E]" />
+                              <span>Live Simulator Banner (Sesuai Tampilan Asli Website)</span>
+                            </label>
+                            <div className="flex items-center gap-2 text-[10.5px]">
+                              <span className="text-[#526783] bg-white px-2 py-0.5 rounded border border-[#DCE7F5] font-medium hidden sm:inline">
+                                Geser posisi foto &amp; daerah biru di bawah untuk melihat simulasi langsung
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].imageOffsetX = 75;
+                                  newSlides[sIdx].imageOffsetY = 40;
+                                  newSlides[sIdx].imageZoom = 100;
+                                  newSlides[sIdx].overlayCoverage = 60;
+                                  newSlides[sIdx].overlayOpacity = 90;
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="px-2 py-0.5 rounded bg-[#EBF3FC] hover:bg-[#DCE7F5] text-[#073B78] font-bold border border-[#C5DCFA] transition-colors"
+                                title="Setel posisi foto model ke kanan (75%) dan gradasi biru standar (60%)"
+                              >
+                                Rekomendasi Foto Model (Kanan)
+                              </button>
                             </div>
-
-                            <LivePreviewBadge />
-                            {/* PREVIEW CONTAINER */}
-                            <div className="relative aspect-[16/9] rounded-xl overflow-hidden bg-black border border-[#DCE7F5] group">
-                              {slide.mediaType === 'video' && slide.videoUrl ? (
-                                getYouTubeEmbedUrl(slide.videoUrl) ? (
-                                  <iframe
-                                    src={getYouTubeEmbedUrl(slide.videoUrl)!}
-                                    title="Preview YouTube Banner"
-                                    className="w-full h-full"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                  />
-                                ) : (
-                                  <video
-                                    src={slide.videoUrl}
-                                    controls
-                                    poster={slide.image || undefined}
-                                    className="w-full h-full object-cover"
-                                  />
-                                )
-                              ) : slide.image ? (
-                                <img
-                                  src={slide.image}
-                                  alt={slide.imageAlt || 'Banner preview'}
-                                  style={{
-                                    objectFit: slide.imageFit || 'cover',
-                                    objectPosition: `${slide.imageOffsetX !== undefined ? slide.imageOffsetX : 50}% ${slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%`,
-                                    transform: `scale(${(slide.imageZoom !== undefined ? slide.imageZoom : 100) / 100})`,
-                                  }}
-                                  className="w-full h-full"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex flex-col items-center justify-center bg-[#F4F7FC] text-[#526783] text-xs p-4 text-center">
-                                  <ImageIcon className="w-8 h-8 text-[#526783]/40 mb-1.5" />
-                                  <span className="font-semibold text-[#073B78]">Belum Ada Foto / Media</span>
-                                  <span className="text-[10.5px] text-[#526783]">Upload foto atau masukkan link video</span>
-                                </div>
-                              )}
-                            </div>
-
-                            {/* VIDEO CONTROLS */}
-                            {slide.mediaType === 'video' ? (
-                              <div className="space-y-2 pt-1">
-                                <div className="space-y-1">
-                                  <label className="text-[11px] font-semibold text-[#073B78] block">
-                                    Link Video (YouTube atau URL MP4)
-                                  </label>
-                                  <div className="flex items-center gap-2">
-                                    <input
-                                      type="text"
-                                      placeholder="https://youtube.com/watch?v=... atau /uploads/...mp4"
-                                      value={slide.videoUrl || ''}
-                                      onChange={(e) => {
-                                        let val = e.target.value;
-                                        if (val.includes('<iframe') || /src=["']/i.test(val)) {
-                                          const match = val.match(/src=["']([^"']+)["']/i);
-                                          if (match && match[1]) val = match[1];
-                                        }
-                                        const newSlides = [...(content.bannerSlides || [])];
-                                        newSlides[sIdx].videoUrl = val;
-                                        newSlides[sIdx].mediaType = 'video';
-                                        setContent({ ...content, bannerSlides: newSlides });
-                                      }}
-                                      className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono font-semibold"
-                                    />
-                                    <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#FF9D2E] hover:bg-[#F28A17] text-[#071C38] text-xs font-bold shadow-xs flex items-center gap-1.5 shrink-0 transition-colors">
-                                      <Upload className="w-3.5 h-3.5" />
-                                      <span>{uploadingKey === `banner-video-${sIdx}` ? 'Uploading...' : 'Upload MP4'}</span>
-                                      <input
-                                        type="file"
-                                        accept="video/mp4,video/webm,video/ogg,video/quicktime"
-                                        className="hidden"
-                                        onChange={(e) => {
-                                          if (e.target.files && e.target.files[0]) {
-                                            handleGenericFileUpload(e.target.files[0], `banner-video-${sIdx}`, (url) => {
-                                              const newSlides = [...(content.bannerSlides || [])];
-                                              newSlides[sIdx].videoUrl = url;
-                                              newSlides[sIdx].mediaType = 'video';
-                                              setContent({ ...content, bannerSlides: newSlides });
-                                            });
-                                          }
-                                        }}
-                                      />
-                                    </label>
-                                  </div>
-                                </div>
-
-                                {/* Poster Fallback Image */}
-                                <div className="space-y-1 pt-1">
-                                  <label className="text-[11px] text-[#526783] block font-medium">
-                                    Foto Cover / Poster (Muncul saat video loading):
-                                  </label>
-                                  <div className="flex items-center gap-2">
-                                    <input
-                                      type="text"
-                                      placeholder="URL Cover (Opsional)"
-                                      value={slide.image || ''}
-                                      onChange={(e) => {
-                                        const newSlides = [...(content.bannerSlides || [])];
-                                        newSlides[sIdx].image = e.target.value;
-                                        setContent({ ...content, bannerSlides: newSlides });
-                                      }}
-                                      className="flex-1 px-3 py-1 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono"
-                                    />
-                                    <label className="cursor-pointer px-2.5 py-1 rounded-lg bg-white hover:bg-slate-50 border border-[#DCE7F5] text-xs text-[#073B78] font-semibold flex items-center gap-1 shrink-0">
-                                      <Upload className="w-3 h-3" />
-                                      <span>Poster</span>
-                                      <input
-                                        type="file"
-                                        accept="image/*"
-                                        className="hidden"
-                                        onChange={(e) => {
-                                          if (e.target.files && e.target.files[0]) {
-                                            handleGenericFileUpload(e.target.files[0], `banner-poster-${sIdx}`, (url) => {
-                                              const newSlides = [...(content.bannerSlides || [])];
-                                              newSlides[sIdx].image = url;
-                                              setContent({ ...content, bannerSlides: newSlides });
-                                            });
-                                          }
-                                        }}
-                                      />
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                            ) : (
-                              /* FOTO / GAMBAR CONTROLS */
-                              <div className="space-y-2">
-                                <div className="flex items-center gap-2 pt-1">
-                                  <input
-                                    type="text"
-                                    placeholder="/assets/... atau URL gambar"
-                                    value={slide.image}
-                                    onChange={(e) => {
-                                      let val = e.target.value;
-                                      const isVideoLink = val.includes('youtube.com') || val.includes('youtu.be') || val.endsWith('.mp4') || val.endsWith('.webm');
-                                      const newSlides = [...(content.bannerSlides || [])];
-                                      if (isVideoLink) {
-                                        newSlides[sIdx].videoUrl = val;
-                                        newSlides[sIdx].mediaType = 'video';
-                                      } else {
-                                        newSlides[sIdx].image = val;
-                                      }
-                                      setContent({ ...content, bannerSlides: newSlides });
-                                    }}
-                                    className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono font-semibold"
-                                  />
-                                  <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0">
-                                    <Upload className="w-3.5 h-3.5" />
-                                    <span>{uploadingKey === `banner-${sIdx}` ? '...' : 'Upload'}</span>
-                                    <input
-                                      type="file"
-                                      accept="image/*"
-                                      className="hidden"
-                                      onChange={(e) => {
-                                        if (e.target.files && e.target.files[0]) {
-                                          handleGenericFileUpload(e.target.files[0], `banner-${sIdx}`, (url) => {
-                                            const newSlides = [...(content.bannerSlides || [])];
-                                            newSlides[sIdx].image = url;
-                                            setContent({ ...content, bannerSlides: newSlides });
-                                          });
-                                        }
-                                      }}
-                                    />
-                                  </label>
-                                </div>
-                                {slide.image && (<ImageAdjustmentControl
-                                    title="Ukuran, Posisi & Crop Banner"
-                                    fit={slide.imageFit || 'cover'}
-                                    offsetX={slide.imageOffsetX !== undefined ? slide.imageOffsetX : 50}
-                                    offsetY={slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}
-                                    zoom={slide.imageZoom !== undefined ? slide.imageZoom : 100}
-                                    onChange={({ fit, offsetX, offsetY, zoom }) => {
-                                      const newSlides = [...(content.bannerSlides || [])];
-                                      newSlides[sIdx].imageFit = fit;
-                                      newSlides[sIdx].imageOffsetX = offsetX;
-                                      newSlides[sIdx].imageOffsetY = offsetY;
-                                      newSlides[sIdx].imageZoom = zoom;
-                                      setContent({ ...content, bannerSlides: newSlides });
-                                    }}
-                                  />
-                                )}
-                              </div>
-                            )}
                           </div>
 
-                          {/* Banner Text Fields */}
-                          <div className="md:col-span-8 space-y-3.5">
-                            <div>
-                              <label className="block text-xs font-bold text-[#073B78] mb-1">
-                                Label Atas (Eyebrow Badge)
-                              </label>
-                              <input
-                                type="text"
-                                value={slide.eyebrow}
-                                placeholder="Contoh: Puri Gunung Langgar • Proyek Berjalan"
-                                onChange={(e) => {
-                                  const newSlides = [...(content.bannerSlides || [])];
-                                  newSlides[sIdx].eyebrow = e.target.value;
-                                  setContent({ ...content, bannerSlides: newSlides });
-                                }}
-                                className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
-                              />
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                              <div>
-                                <label className="block text-xs font-bold text-[#073B78] mb-1">
-                                  Headline Baris 1 (Putih)
-                                </label>
-                                <input
-                                  type="text"
-                                  value={slide.headlineFirstLine}
-                                  placeholder="Contoh: Hunian bersubsidi yang layak,"
-                                  onChange={(e) => {
-                                    const newSlides = [...(content.bannerSlides || [])];
-                                    newSlides[sIdx].headlineFirstLine = e.target.value;
-                                    setContent({ ...content, bannerSlides: newSlides });
-                                  }}
-                                  className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                          {/* SIMULATOR SCREEN */}
+                          <div className="relative w-full aspect-[21/9] min-h-[220px] sm:min-h-[260px] md:min-h-[290px] rounded-2xl overflow-hidden bg-[#071324] border-2 border-[#073B78]/30 shadow-md group select-none">
+                            {/* Layer 0: Background Media (Image or Video) */}
+                            {slide.mediaType === 'video' && slide.videoUrl ? (
+                              getYouTubeEmbedUrl(slide.videoUrl) ? (
+                                <iframe
+                                  src={getYouTubeEmbedUrl(slide.videoUrl)!}
+                                  title="Preview YouTube"
+                                  className="w-full h-full pointer-events-none"
                                 />
-                              </div>
-                              <div>
-                                <label className="block text-xs font-bold text-[#C76A08] mb-1">
-                                  Headline Highlight (Warna Emas / Kuning)
-                                </label>
-                                <input
-                                  type="text"
-                                  value={slide.headlineHighlight}
-                                  placeholder="Contoh: dibangun dari Lampung."
-                                  onChange={(e) => {
-                                    const newSlides = [...(content.bannerSlides || [])];
-                                    newSlides[sIdx].headlineHighlight = e.target.value;
-                                    setContent({ ...content, bannerSlides: newSlides });
-                                  }}
-                                  className="w-full px-3.5 py-2 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] text-[#C76A08] text-xs focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-bold"
+                              ) : (
+                                <video
+                                  src={slide.videoUrl}
+                                  controls
+                                  poster={slide.image || undefined}
+                                  className="w-full h-full object-cover"
                                 />
-                              </div>
-                            </div>
-
-                            <div>
-                              <label className="block text-xs font-bold text-[#073B78] mb-1">
-                                Deskripsi Pendukung (Paragraf Ringkas)
-                              </label>
-                              <textarea
-                                rows={2}
-                                value={slide.supportingText}
-                                onChange={(e) => {
-                                  const newSlides = [...(content.bannerSlides || [])];
-                                  newSlides[sIdx].supportingText = e.target.value;
-                                  setContent({ ...content, bannerSlides: newSlides });
+                              )
+                            ) : slide.image ? (
+                              <img
+                                src={slide.image}
+                                alt={slide.imageAlt || 'Banner Simulator'}
+                                style={{
+                                  objectFit: slide.imageFit || 'cover',
+                                  objectPosition: `${slide.imageOffsetX !== undefined ? slide.imageOffsetX : 50}% ${slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%`,
+                                  transform: `scale(${(slide.imageZoom !== undefined ? slide.imageZoom : 100) / 100})`,
                                 }}
-                                className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                                className="w-full h-full pointer-events-none transition-all duration-300"
                               />
+                            ) : (
+                              <div className="w-full h-full flex flex-col items-center justify-center text-white/50 text-xs">
+                                <ImageIcon className="w-8 h-8 mb-1 opacity-50" />
+                                <span>Belum ada foto banner</span>
+                              </div>
+                            )}
+
+                            {/* Layer 1: Live Customizable Blue Gradient Overlay */}
+                            <div
+                              className="absolute inset-0 z-[1] pointer-events-none transition-all duration-300"
+                              style={getOverlayStyle(slide)}
+                              aria-hidden="true"
+                            />
+
+                            {/* Layer 2: Geometric Ribbon Accent */}
+                            <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden opacity-25" aria-hidden="true">
+                              <div className="absolute -bottom-8 left-1/2 w-48 h-6 bg-[#FF9D2E] rounded-full transform -rotate-45" />
                             </div>
 
-                            
-                              {/* PENGATURAN TYPOGRAPHY, UKURAN, WARNA & TIPE FONT */}
-                            <div className="p-4 sm:p-5 rounded-xl bg-white border border-[#DCE7F5] space-y-4 shadow-2xs">
-                              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#DCE7F5] pb-2.5">
-                                <div className="flex items-center gap-2 text-xs font-bold text-[#073B78]">
-                                  <Sparkles className="w-4 h-4 text-[#FF9D2E]" />
-                                  <span>Kustomisasi Ukuran, Warna &amp; Tipe Font Headline</span>
+                            {/* Layer 3: Simulated Live Typography & CTA Content */}
+                            <div className="absolute inset-0 z-[3] p-5 sm:p-7 md:p-8 flex flex-col justify-center max-w-[65%] pointer-events-none">
+                              {/* Eyebrow */}
+                              {slide.eyebrow && (
+                                <div className="mb-1.5">
+                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#102D52]/90 border border-white/20 text-[#FF9D2E] text-[10px] sm:text-[11px] font-semibold">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF9D2E] animate-pulse" />
+                                    {slide.eyebrow}
+                                  </span>
                                 </div>
-                                <span className="text-[10px] text-[#526783] bg-[#F8FAFD] px-2 py-0.5 rounded border border-[#DCE7F5] font-medium">
-                                  Pratinjau Langsung Real-time
+                              )}
+
+                              {/* Headline */}
+                              <div
+                                style={{
+                                  fontFamily: getFontFamilyStyle(slide.headlineFontFamily),
+                                  fontWeight: getFontWeightStyle(slide.headlineFontWeight),
+                                }}
+                                className="text-sm sm:text-lg md:text-xl lg:text-2xl font-bold leading-tight drop-shadow-sm line-clamp-2"
+                              >
+                                <span style={{ color: slide.headlineFirstLineColor || '#FFFFFF' }}>
+                                  {slide.headlineFirstLine || 'Hunian bersubsidi yang layak,'}{' '}
+                                </span>
+                                <span style={{ color: slide.headlineHighlightColor || '#FF9D2E' }}>
+                                  {slide.headlineHighlight || 'dibangun dari Lampung.'}
                                 </span>
                               </div>
 
-                              {/* LIVE TYPOGRAPHY PREVIEW BOX */}
-                              <div className="p-4 sm:p-5 rounded-xl bg-[#073B78] text-white space-y-2.5 border border-[#0A4B91] shadow-inner overflow-hidden">
-                                <div className="flex items-center justify-between text-[10.5px] text-[#FF9D2E] font-mono uppercase tracking-wider border-b border-white/10 pb-1.5">
-                                  <span>LIVE PREVIEW TEKS HERO BANNER</span>
-                                  <span>Slide #{sIdx + 1}</span>
-                                </div>
-                                <div
-                                  style={{
-                                    fontFamily:
-                                      slide.headlineFontFamily === 'sans'
-                                        ? 'var(--font-sans), sans-serif'
-                                        : slide.headlineFontFamily === 'cormorant'
-                                        ? 'var(--font-cormorant), Garamond, serif'
-                                        : slide.headlineFontFamily === 'system'
-                                        ? "system-ui, -apple-system, sans-serif"
-                                        : slide.headlineFontFamily === 'georgia'
-                                        ? "Georgia, serif"
-                                        : 'var(--font-serif), Georgia, serif',
-                                    fontWeight:
-                                      slide.headlineFontWeight === 'medium'
-                                        ? 500
-                                        : slide.headlineFontWeight === 'semibold'
-                                        ? 600
-                                        : slide.headlineFontWeight === 'bold'
-                                        ? 700
-                                        : slide.headlineFontWeight === 'extrabold'
-                                        ? 800
-                                        : 400,
-                                    fontSize:
-                                      slide.headlineFontSize === 'sm'
-                                        ? '1.35rem'
-                                        : slide.headlineFontSize === 'base'
-                                        ? '1.65rem'
-                                        : slide.headlineFontSize === 'xl'
-                                        ? '2.35rem'
-                                        : slide.headlineFontSize === '2xl'
-                                        ? '2.8rem'
-                                        : '1.95rem',
-                                    lineHeight: 1.15,
-                                  }}
-                                  className="tracking-tight transition-all duration-200"
-                                >
-                                  <span style={{ color: slide.headlineFirstLineColor || '#FFFFFF' }}>
-                                    {slide.headlineFirstLine || 'Hunian bersubsidi yang layak,'}
-                                  </span>
-                                  <br />
-                                  <span style={{ color: slide.headlineHighlightColor || '#FF9D2E' }}>
-                                    {slide.headlineHighlight || 'dibangun dari Lampung.'}
-                                  </span>
-                                </div>
-                                <p
-                                  style={{
-                                    color: slide.supportingTextColor || 'rgba(255, 255, 255, 0.9)',
-                                    fontSize:
-                                      slide.supportingTextFontSize === 'xs'
-                                        ? '11.5px'
-                                        : slide.supportingTextFontSize === 'base'
-                                        ? '14px'
-                                        : slide.supportingTextFontSize === 'lg'
-                                        ? '16px'
-                                        : '13px',
-                                  }}
-                                  className="leading-relaxed opacity-95 transition-all duration-200"
-                                >
-                                  {slide.supportingText ||
-                                    'PT. Terbang Bersama Kawan adalah pengembang perumahan di Bandar Lampung...'}
-                                </p>
-                              </div>
+                              {/* Supporting text */}
+                              <p
+                                style={{ color: slide.supportingTextColor || '#E2E8F0' }}
+                                className="text-[10px] sm:text-[11.5px] mt-1.5 line-clamp-2 drop-shadow-xs opacity-90"
+                              >
+                                {slide.supportingText || 'PT. Terbang Bersama Kawan adalah pengembang perumahan di Bandar Lampung...'}
+                              </p>
 
-                              {/* CONTROLS ROW 1: TIPE FONT, KETEBALAN & UKURAN HEADLINE */}
-                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                <div>
-                                  <label className="block text-xs font-bold text-[#073B78] mb-1">
-                                    Tipe Font (Font Family)
-                                  </label>
-                                  <select
-                                    value={slide.headlineFontFamily || 'serif'}
-                                    onChange={(e) => {
-                                      const newSlides = [...(content.bannerSlides || [])];
-                                      newSlides[sIdx].headlineFontFamily = e.target.value as any;
-                                      setContent({ ...content, bannerSlides: newSlides });
-                                    }}
-                                    className="w-full h-9 px-3 rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] text-xs font-semibold text-[#073B78] focus:outline-none focus:border-[#FF9D2E]"
-                                  >
-                                    <option value="serif">DM Serif Display (Klasik Mewah &amp; Elegan)</option>
-                                    <option value="sans">DM Sans (Modern, Bersih &amp; Minimalis)</option>
-                                    <option value="cormorant">Cormorant Garamond (Editorial Royal)</option>
-                                    <option value="system">System UI (Tech Clean Modern)</option>
-                                    <option value="georgia">Georgia (Classic Newspaper Press)</option>
-                                  </select>
-                                </div>
-
-                                <div>
-                                  <label className="block text-xs font-bold text-[#073B78] mb-1">
-                                    Ketebalan Font (Font Weight)
-                                  </label>
-                                  <select
-                                    value={slide.headlineFontWeight || 'normal'}
-                                    onChange={(e) => {
-                                      const newSlides = [...(content.bannerSlides || [])];
-                                      newSlides[sIdx].headlineFontWeight = e.target.value as any;
-                                      setContent({ ...content, bannerSlides: newSlides });
-                                    }}
-                                    className="w-full h-9 px-3 rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] text-xs font-semibold text-[#073B78] focus:outline-none focus:border-[#FF9D2E]"
-                                  >
-                                    <option value="normal">Normal (400)</option>
-                                    <option value="medium">Medium (500)</option>
-                                    <option value="semibold">Semi-Bold (600)</option>
-                                    <option value="bold">Bold (700)</option>
-                                    <option value="extrabold">Extra-Bold (800)</option>
-                                  </select>
-                                </div>
-
-                                <div>
-                                  <label className="block text-xs font-bold text-[#073B78] mb-1">
-                                    Ukuran Headline (Font Size)
-                                  </label>
-                                  <select
-                                    value={slide.headlineFontSize || 'lg'}
-                                    onChange={(e) => {
-                                      const newSlides = [...(content.bannerSlides || [])];
-                                      newSlides[sIdx].headlineFontSize = e.target.value as any;
-                                      setContent({ ...content, bannerSlides: newSlides });
-                                    }}
-                                    className="w-full h-9 px-3 rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] text-xs font-semibold text-[#073B78] focus:outline-none focus:border-[#FF9D2E]"
-                                  >
-                                    <option value="sm">Kecil / Ringkas (Compact)</option>
-                                    <option value="base">Sedang (Medium)</option>
-                                    <option value="lg">Besar (Standar Default)</option>
-                                    <option value="xl">Sangat Besar (Punchy Impact)</option>
-                                    <option value="2xl">Raksasa / Ekstra Besar (Hero Focus)</option>
-                                  </select>
-                                </div>
-                              </div>
-
-                              {/* CONTROLS ROW 2: WARNA BARIS 1, WARNA HIGHLIGHT & WARNA DESKRIPSI */}
-                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 border-t border-[#DCE7F5]">
-                                {/* Color 1: Headline First Line */}
-                                <div className="space-y-1.5 p-3 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
-                                  <div className="flex items-center justify-between">
-                                    <label className="text-[11px] font-bold text-[#073B78] uppercase">
-                                      Warna Teks Baris 1
-                                    </label>
-                                    <span
-                                      className="w-4 h-4 rounded-full border border-slate-300 shadow-2xs"
-                                      style={{ backgroundColor: slide.headlineFirstLineColor || '#FFFFFF' }}
-                                    />
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <input
-                                      type="color"
-                                      value={slide.headlineFirstLineColor || '#FFFFFF'}
-                                      onChange={(e) => {
-                                        const newSlides = [...(content.bannerSlides || [])];
-                                        newSlides[sIdx].headlineFirstLineColor = e.target.value;
-                                        setContent({ ...content, bannerSlides: newSlides });
-                                      }}
-                                      className="w-8 h-8 rounded-lg cursor-pointer border border-[#DCE7F5] p-0.5 bg-white shrink-0"
-                                      title="Pilih warna custom"
-                                    />
-                                    <input
-                                      type="text"
-                                      value={slide.headlineFirstLineColor || '#FFFFFF'}
-                                      onChange={(e) => {
-                                        const newSlides = [...(content.bannerSlides || [])];
-                                        newSlides[sIdx].headlineFirstLineColor = e.target.value;
-                                        setContent({ ...content, bannerSlides: newSlides });
-                                      }}
-                                      className="flex-1 h-8 px-2 rounded-lg bg-white border border-[#DCE7F5] text-xs font-mono font-semibold text-[#102D52]"
-                                    />
-                                  </div>
-                                  {/* Quick Palette */}
-                                  <div className="flex items-center gap-1.5 pt-1">
-                                    {[
-                                      { color: '#FFFFFF', label: 'Putih' },
-                                      { color: '#FFD700', label: 'Emas' },
-                                      { color: '#38BDF8', label: 'Cyan' },
-                                      { color: '#FACC15', label: 'Kuning' },
-                                      { color: '#E2E8F0', label: 'Silver' },
-                                    ].map((c) => (
-                                      <button
-                                        key={c.color}
-                                        type="button"
-                                        onClick={() => {
-                                          const newSlides = [...(content.bannerSlides || [])];
-                                          newSlides[sIdx].headlineFirstLineColor = c.color;
-                                          setContent({ ...content, bannerSlides: newSlides });
-                                        }}
-                                        className="w-5 h-5 rounded-full border border-slate-300 shadow-2xs hover:scale-110 active:scale-95 transition-transform"
-                                        style={{ backgroundColor: c.color }}
-                                        title={c.label}
-                                      />
-                                    ))}
-                                  </div>
-                                </div>
-
-                                {/* Color 2: Headline Highlight */}
-                                <div className="space-y-1.5 p-3 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
-                                  <div className="flex items-center justify-between">
-                                    <label className="text-[11px] font-bold text-[#C76A08] uppercase">
-                                      Warna Sorotan (Highlight)
-                                    </label>
-                                    <span
-                                      className="w-4 h-4 rounded-full border border-slate-300 shadow-2xs"
-                                      style={{ backgroundColor: slide.headlineHighlightColor || '#FF9D2E' }}
-                                    />
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <input
-                                      type="color"
-                                      value={slide.headlineHighlightColor || '#FF9D2E'}
-                                      onChange={(e) => {
-                                        const newSlides = [...(content.bannerSlides || [])];
-                                        newSlides[sIdx].headlineHighlightColor = e.target.value;
-                                        setContent({ ...content, bannerSlides: newSlides });
-                                      }}
-                                      className="w-8 h-8 rounded-lg cursor-pointer border border-[#DCE7F5] p-0.5 bg-white shrink-0"
-                                      title="Pilih warna custom"
-                                    />
-                                    <input
-                                      type="text"
-                                      value={slide.headlineHighlightColor || '#FF9D2E'}
-                                      onChange={(e) => {
-                                        const newSlides = [...(content.bannerSlides || [])];
-                                        newSlides[sIdx].headlineHighlightColor = e.target.value;
-                                        setContent({ ...content, bannerSlides: newSlides });
-                                      }}
-                                      className="flex-1 h-8 px-2 rounded-lg bg-white border border-[#DCE7F5] text-xs font-mono font-bold text-[#C76A08]"
-                                    />
-                                  </div>
-                                  {/* Quick Palette */}
-                                  <div className="flex items-center gap-1.5 pt-1">
-                                    {[
-                                      { color: '#FF9D2E', label: 'Oranye Emas' },
-                                      { color: '#F59E0B', label: 'Amber' },
-                                      { color: '#EAB308', label: 'Emas Cerah' },
-                                      { color: '#34D399', label: 'Emerald' },
-                                      { color: '#F87171', label: 'Merah Karang' },
-                                      { color: '#FFFFFF', label: 'Putih' },
-                                    ].map((c) => (
-                                      <button
-                                        key={c.color}
-                                        type="button"
-                                        onClick={() => {
-                                          const newSlides = [...(content.bannerSlides || [])];
-                                          newSlides[sIdx].headlineHighlightColor = c.color;
-                                          setContent({ ...content, bannerSlides: newSlides });
-                                        }}
-                                        className="w-5 h-5 rounded-full border border-slate-300 shadow-2xs hover:scale-110 active:scale-95 transition-transform"
-                                        style={{ backgroundColor: c.color }}
-                                        title={c.label}
-                                      />
-                                    ))}
-                                  </div>
-                                </div>
-
-                                {/* Color 3: Supporting Text & Size */}
-                                <div className="space-y-1.5 p-3 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
-                                  <div className="flex items-center justify-between">
-                                    <label className="text-[11px] font-bold text-[#073B78] uppercase">
-                                      Warna &amp; Ukuran Deskripsi
-                                    </label>
-                                    <span
-                                      className="w-4 h-4 rounded-full border border-slate-300 shadow-2xs"
-                                      style={{ backgroundColor: slide.supportingTextColor || '#E2E8F0' }}
-                                    />
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <input
-                                      type="color"
-                                      value={slide.supportingTextColor || '#E2E8F0'}
-                                      onChange={(e) => {
-                                        const newSlides = [...(content.bannerSlides || [])];
-                                        newSlides[sIdx].supportingTextColor = e.target.value;
-                                        setContent({ ...content, bannerSlides: newSlides });
-                                      }}
-                                      className="w-8 h-8 rounded-lg cursor-pointer border border-[#DCE7F5] p-0.5 bg-white shrink-0"
-                                      title="Pilih warna custom"
-                                    />
-                                    <select
-                                      value={slide.supportingTextFontSize || 'sm'}
-                                      onChange={(e) => {
-                                        const newSlides = [...(content.bannerSlides || [])];
-                                        newSlides[sIdx].supportingTextFontSize = e.target.value as any;
-                                        setContent({ ...content, bannerSlides: newSlides });
-                                      }}
-                                      className="flex-1 h-8 px-2 rounded-lg bg-white border border-[#DCE7F5] text-xs font-semibold text-[#073B78]"
-                                    >
-                                      <option value="xs">Teks Kecil (12px)</option>
-                                      <option value="sm">Teks Standar (14px)</option>
-                                      <option value="base">Teks Sedang (16px)</option>
-                                      <option value="lg">Teks Besar (18px)</option>
-                                    </select>
-                                  </div>
-                                  {/* Quick Palette */}
-                                  <div className="flex items-center gap-1.5 pt-1">
-                                    {[
-                                      { color: '#FFFFFF', label: 'Putih Terang' },
-                                      { color: '#E2E8F0', label: 'Putih Soft' },
-                                      { color: '#CBD5E1', label: 'Silver' },
-                                      { color: '#FEF08A', label: 'Kuning Soft' },
-                                      { color: '#FED7AA', label: 'Krem Oranye' },
-                                    ].map((c) => (
-                                      <button
-                                        key={c.color}
-                                        type="button"
-                                        onClick={() => {
-                                          const newSlides = [...(content.bannerSlides || [])];
-                                          newSlides[sIdx].supportingTextColor = c.color;
-                                          setContent({ ...content, bannerSlides: newSlides });
-                                        }}
-                                        className="w-5 h-5 rounded-full border border-slate-300 shadow-2xs hover:scale-110 active:scale-95 transition-transform"
-                                        style={{ backgroundColor: c.color }}
-                                        title={c.label}
-                                      />
-                                    ))}
-                                  </div>
-                                </div>
+                              {/* CTA Buttons */}
+                              <div className="flex items-center gap-2 mt-2.5">
+                                <span className="px-2.5 py-1 rounded-md bg-[#FF9D2E] text-[#071C38] text-[10px] font-bold shadow-xs">
+                                  {slide.primaryCtaText || 'Lihat Proyek'}
+                                </span>
+                                <span className="px-2.5 py-1 rounded-md bg-white/10 border border-white/40 text-white text-[10px] font-medium backdrop-blur-xs">
+                                  {slide.secondaryCtaText || 'Hubungi Kami'}
+                                </span>
                               </div>
                             </div>
 
-                            {/* CTA Buttons */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-[#DCE7F5]">
-                              <div className="space-y-1.5 p-3 rounded-xl bg-white border border-[#DCE7F5]">
-                                <span className="text-[11px] font-bold text-[#073B78] uppercase">Tombol Utama 1</span>
+                            {/* Layer 4: Real-time Position & Overlay HUD Badge */}
+                            <div className="absolute top-2.5 right-2.5 z-[4] flex items-center gap-2 bg-[#071324]/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/15 text-[10px] sm:text-[11px] text-white font-mono shadow-md">
+                              <span>X: <b className="text-[#FF9D2E]">{slide.imageOffsetX !== undefined ? slide.imageOffsetX : 50}%</b></span>
+                              <span className="text-white/30">•</span>
+                              <span>Y: <b className="text-[#FF9D2E]">{slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%</b></span>
+                              <span className="text-white/30">•</span>
+                              <span>Zoom: <b className="text-emerald-400">{slide.imageZoom !== undefined ? slide.imageZoom : 100}%</b></span>
+                              <span className="text-white/30">•</span>
+                              <span>Biru: <b className="text-[#38BDF8]">{slide.overlayCoverage !== undefined ? slide.overlayCoverage : 60}%</b></span>
+                            </div>
+
+                            {/* Layer 5: Quick Micro-Nudge Overlay Buttons (Bottom-Right) */}
+                            <div className="absolute bottom-2.5 right-2.5 z-[4] flex items-center gap-1 bg-[#071324]/85 backdrop-blur-md p-1 rounded-xl border border-white/15 shadow-md">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  const cur = newSlides[sIdx].imageOffsetX !== undefined ? newSlides[sIdx].imageOffsetX! : 50;
+                                  newSlides[sIdx].imageOffsetX = Math.max(0, cur - 5);
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-[10.5px] font-bold transition-colors"
+                                title="Geser foto 5% ke kiri"
+                              >
+                                ← Kiri
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  const cur = newSlides[sIdx].imageOffsetX !== undefined ? newSlides[sIdx].imageOffsetX! : 50;
+                                  newSlides[sIdx].imageOffsetX = Math.min(100, cur + 5);
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-[10.5px] font-bold transition-colors"
+                                title="Geser foto 5% ke kanan"
+                              >
+                                Kanan →
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  const cur = newSlides[sIdx].imageOffsetY !== undefined ? newSlides[sIdx].imageOffsetY! : 50;
+                                  newSlides[sIdx].imageOffsetY = Math.max(0, cur - 5);
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-[10.5px] font-bold transition-colors"
+                                title="Geser foto 5% ke atas"
+                              >
+                                ↑ Naik
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  const cur = newSlides[sIdx].imageOffsetY !== undefined ? newSlides[sIdx].imageOffsetY! : 50;
+                                  newSlides[sIdx].imageOffsetY = Math.min(100, cur + 5);
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-[10.5px] font-bold transition-colors"
+                                title="Geser foto 5% ke bawah"
+                              >
+                                ↓ Turun
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].imageOffsetX = 50;
+                                  newSlides[sIdx].imageOffsetY = 50;
+                                  newSlides[sIdx].imageZoom = 100;
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="p-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-[10.5px] font-bold transition-colors ml-0.5"
+                                title="Reset posisi ke tengah (50% / 50%)"
+                              >
+                                <RotateCcw className="w-3.5 h-3.5 text-[#FF9D2E]" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* ======================================================== */}
+                        {/* 2. DUA KOLOM PENGATUR: POSISI FOTO & DAERAH BIRU */}
+                        {/* ======================================================== */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+                          {/* KOLOM KIRI: PENGATUR POSISI, CROP & ZOOM FOTO */}
+                          <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#DCE7F5] space-y-4 shadow-2xs">
+                            <div className="flex items-center justify-between border-b border-[#DCE7F5] pb-2.5">
+                              <div className="flex items-center gap-2">
+                                <Move className="w-4 h-4 text-[#FF9D2E]" />
+                                <span className="text-xs font-bold text-[#073B78]">
+                                  Posisi &amp; Zoom Foto (Kanan-Kiri &amp; Naik-Turun)
+                                </span>
+                              </div>
+                              <span className="text-[10px] text-[#073B78] font-bold bg-[#EBF3FC] px-2 py-0.5 rounded border border-[#C5DCFA]">
+                                X: {slide.imageOffsetX !== undefined ? slide.imageOffsetX : 50}% • Y: {slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%
+                              </span>
+                            </div>
+
+                            {/* Media Type & Upload */}
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between text-xs font-bold text-[#073B78]">
+                                <span>Sumber Gambar / Media</span>
+                                <div className="inline-flex rounded-lg bg-[#EBF3FC] p-0.5 border border-[#DCE7F5]">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].mediaType = 'image';
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className={`px-2 py-0.5 rounded text-[11px] font-bold transition-all ${
+                                      (slide.mediaType || 'image') === 'image'
+                                        ? 'bg-[#073B78] text-white shadow-xs'
+                                        : 'text-[#073B78]'
+                                    }`}
+                                  >
+                                    Foto
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].mediaType = 'video';
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className={`px-2 py-0.5 rounded text-[11px] font-bold transition-all ${
+                                      slide.mediaType === 'video'
+                                        ? 'bg-[#FF9D2E] text-[#071C38] shadow-xs'
+                                        : 'text-[#073B78]'
+                                    }`}
+                                  >
+                                    Video
+                                  </button>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
                                 <input
                                   type="text"
-                                  placeholder="Label Tombol (misal: Lihat Proyek)"
-                                  value={slide.primaryCtaText}
+                                  placeholder="/assets/... atau URL gambar"
+                                  value={slide.image || ''}
                                   onChange={(e) => {
                                     const newSlides = [...(content.bannerSlides || [])];
-                                    newSlides[sIdx].primaryCtaText = e.target.value;
+                                    newSlides[sIdx].image = e.target.value;
                                     setContent({ ...content, bannerSlides: newSlides });
                                   }}
-                                  className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52]"
+                                  className="flex-1 px-3 py-1.5 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] text-xs font-mono text-[#102D52]"
+                                />
+                                <label className="cursor-pointer px-3 py-1.5 rounded-xl bg-[#073B78] hover:bg-[#0A4B91] text-white text-xs font-bold shadow-xs flex items-center gap-1.5 shrink-0 transition-colors">
+                                  <Upload className="w-3.5 h-3.5" />
+                                  <span>{uploadingKey === `banner-${sIdx}` ? '...' : 'Upload Foto'}</span>
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={(e) => {
+                                      if (e.target.files && e.target.files[0]) {
+                                        handleGenericFileUpload(e.target.files[0], `banner-${sIdx}`, (url) => {
+                                          const newSlides = [...(content.bannerSlides || [])];
+                                          newSlides[sIdx].image = url;
+                                          setContent({ ...content, bannerSlides: newSlides });
+                                        });
+                                      }
+                                    }}
+                                  />
+                                </label>
+                              </div>
+                            </div>
+
+                            {/* SLIDER 1: GESER HORIZONTAL (KANAN - KIRI) */}
+                            <div className="space-y-1.5 p-3 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
+                              <div className="flex items-center justify-between">
+                                <label className="text-[11px] font-bold text-[#073B78] uppercase flex items-center gap-1">
+                                  <span>↔ Geser Kanan - Kiri (X-Offset)</span>
+                                </label>
+                                <span className="text-xs font-mono font-bold text-[#073B78]">
+                                  {slide.imageOffsetX !== undefined ? slide.imageOffsetX : 50}%
+                                </span>
+                              </div>
+                              <input
+                                type="range"
+                                min={0}
+                                max={100}
+                                step={1}
+                                value={slide.imageOffsetX !== undefined ? slide.imageOffsetX : 50}
+                                onChange={(e) => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].imageOffsetX = Number(e.target.value);
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="w-full accent-[#073B78] cursor-pointer"
+                              />
+                              {/* Quick Presets */}
+                              <div className="grid grid-cols-5 gap-1 pt-1 text-[10px]">
+                                {[
+                                  { label: 'Mentok Kiri', val: 0 },
+                                  { label: 'Kiri (25%)', val: 25 },
+                                  { label: 'Tengah (50%)', val: 50 },
+                                  { label: 'Model Kanan (75%)', val: 75, highlight: true },
+                                  { label: 'Mentok Kanan', val: 100 },
+                                ].map((p) => (
+                                  <button
+                                    key={p.val}
+                                    type="button"
+                                    onClick={() => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].imageOffsetX = p.val;
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className={`py-1 px-1 rounded-md text-center font-semibold transition-all border ${
+                                      (slide.imageOffsetX !== undefined ? slide.imageOffsetX : 50) === p.val
+                                        ? 'bg-[#073B78] text-white border-[#073B78] shadow-2xs'
+                                        : p.highlight
+                                        ? 'bg-[#FFF8EE] text-[#C76A08] border-[#FFD8A8] hover:bg-[#FFEED4]'
+                                        : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+                                    }`}
+                                  >
+                                    {p.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* SLIDER 2: GESER VERTIKAL (NAIK - TURUN) */}
+                            <div className="space-y-1.5 p-3 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
+                              <div className="flex items-center justify-between">
+                                <label className="text-[11px] font-bold text-[#073B78] uppercase flex items-center gap-1">
+                                  <span>↕ Geser Naik - Turun (Y-Offset)</span>
+                                </label>
+                                <span className="text-xs font-mono font-bold text-[#073B78]">
+                                  {slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}%
+                                </span>
+                              </div>
+                              <input
+                                type="range"
+                                min={0}
+                                max={100}
+                                step={1}
+                                value={slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50}
+                                onChange={(e) => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].imageOffsetY = Number(e.target.value);
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="w-full accent-[#073B78] cursor-pointer"
+                              />
+                              {/* Quick Presets */}
+                              <div className="grid grid-cols-3 gap-1 pt-1 text-[10px]">
+                                {[
+                                  { label: 'Fokus Atas / Kepala (20%)', val: 20 },
+                                  { label: 'Tengah Normal (50%)', val: 50 },
+                                  { label: 'Fokus Bawah (80%)', val: 80 },
+                                ].map((p) => (
+                                  <button
+                                    key={p.val}
+                                    type="button"
+                                    onClick={() => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].imageOffsetY = p.val;
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className={`py-1 px-1 rounded-md text-center font-semibold transition-all border ${
+                                      (slide.imageOffsetY !== undefined ? slide.imageOffsetY : 50) === p.val
+                                        ? 'bg-[#073B78] text-white border-[#073B78] shadow-2xs'
+                                        : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+                                    }`}
+                                  >
+                                    {p.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* SLIDER 3: ZOOM / SKALA FOTO */}
+                            <div className="space-y-1.5 p-3 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
+                              <div className="flex items-center justify-between">
+                                <label className="text-[11px] font-bold text-[#073B78] uppercase flex items-center gap-1">
+                                  <span>🔍 Ukuran Skala / Zoom Foto</span>
+                                </label>
+                                <span className="text-xs font-mono font-bold text-emerald-600">
+                                  {slide.imageZoom !== undefined ? slide.imageZoom : 100}%
+                                </span>
+                              </div>
+                              <input
+                                type="range"
+                                min={70}
+                                max={200}
+                                step={1}
+                                value={slide.imageZoom !== undefined ? slide.imageZoom : 100}
+                                onChange={(e) => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].imageZoom = Number(e.target.value);
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="w-full accent-emerald-600 cursor-pointer"
+                              />
+                              {/* Quick Presets */}
+                              <div className="grid grid-cols-4 gap-1 pt-1 text-[10px]">
+                                {[
+                                  { label: '85% Luas', val: 85 },
+                                  { label: '100% Normal', val: 100 },
+                                  { label: '125% Sedang', val: 125 },
+                                  { label: '150% Dekat', val: 150 },
+                                ].map((p) => (
+                                  <button
+                                    key={p.val}
+                                    type="button"
+                                    onClick={() => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].imageZoom = p.val;
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className={`py-1 px-1 rounded-md text-center font-semibold transition-all border ${
+                                      (slide.imageZoom !== undefined ? slide.imageZoom : 100) === p.val
+                                        ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
+                                        : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+                                    }`}
+                                  >
+                                    {p.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Fit Mode Button */}
+                            <div className="grid grid-cols-2 gap-2 text-xs pt-1">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].imageFit = 'cover';
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className={`py-1.5 px-2 rounded-lg font-bold border transition-all text-center ${
+                                  (slide.imageFit || 'cover') === 'cover'
+                                    ? 'bg-[#073B78] text-white border-[#073B78] shadow-xs'
+                                    : 'bg-white text-[#526783] border-[#DCE7F5]'
+                                }`}
+                              >
+                                Penuh Bingkai (Cover / Crop)
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].imageFit = 'contain';
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className={`py-1.5 px-2 rounded-lg font-bold border transition-all text-center ${
+                                  slide.imageFit === 'contain'
+                                    ? 'bg-[#073B78] text-white border-[#073B78] shadow-xs'
+                                    : 'bg-white text-[#526783] border-[#DCE7F5]'
+                                }`}
+                              >
+                                Utuh Tanpa Terpotong (Contain)
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* KOLOM KANAN: PENGATUR DAERAH YANG MAU DI-BIRUIN (OVERLAY GRADASI BIRU) */}
+                          <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#DCE7F5] space-y-4 shadow-2xs">
+                            <div className="flex items-center justify-between border-b border-[#DCE7F5] pb-2.5">
+                              <div className="flex items-center gap-2">
+                                <Palette className="w-4 h-4 text-[#38BDF8]" />
+                                <span className="text-xs font-bold text-[#073B78]">
+                                  Daerah Yang Mau Di-biruin (Overlay Gradasi Biru)
+                                </span>
+                              </div>
+                              <span className="text-[10px] text-[#073B78] font-bold bg-[#EBF3FC] px-2 py-0.5 rounded border border-[#C5DCFA]">
+                                Lebar: {slide.overlayCoverage !== undefined ? slide.overlayCoverage : 60}% • Pekat: {slide.overlayOpacity !== undefined ? slide.overlayOpacity : 90}%
+                              </span>
+                            </div>
+
+                            {/* SLIDER 1: LEBAR / JANGKAUAN DAERAH BIRU (COVERAGE) */}
+                            <div className="space-y-1.5 p-3 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
+                              <div className="flex items-center justify-between">
+                                <label className="text-[11px] font-bold text-[#073B78] uppercase flex items-center gap-1">
+                                  <span>📏 Lebar Daerah Biru (Jangkauan Penutup Teks)</span>
+                                </label>
+                                <span className="text-xs font-mono font-bold text-[#073B78]">
+                                  {slide.overlayCoverage !== undefined ? slide.overlayCoverage : 60}%
+                                </span>
+                              </div>
+                              <p className="text-[10.5px] text-[#526783] leading-tight">
+                                Semakin kecil nilai, semakin bersih area foto model di kanan dari tutupan warna biru.
+                              </p>
+                              <input
+                                type="range"
+                                min={20}
+                                max={100}
+                                step={1}
+                                value={slide.overlayCoverage !== undefined ? slide.overlayCoverage : 60}
+                                onChange={(e) => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].overlayCoverage = Number(e.target.value);
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="w-full accent-[#073B78] cursor-pointer"
+                              />
+                              {/* Quick Presets */}
+                              <div className="grid grid-cols-5 gap-1 pt-1 text-[10px]">
+                                {[
+                                  { label: '35% Sempit', val: 35 },
+                                  { label: '50% Separuh', val: 50 },
+                                  { label: '60% Seimbang', val: 60, highlight: true },
+                                  { label: '75% Lebar', val: 75 },
+                                  { label: '100% Penuh', val: 100 },
+                                ].map((p) => (
+                                  <button
+                                    key={p.val}
+                                    type="button"
+                                    onClick={() => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].overlayCoverage = p.val;
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className={`py-1 px-1 rounded-md text-center font-semibold transition-all border ${
+                                      (slide.overlayCoverage !== undefined ? slide.overlayCoverage : 60) === p.val
+                                        ? 'bg-[#073B78] text-white border-[#073B78] shadow-2xs'
+                                        : p.highlight
+                                        ? 'bg-[#EBF3FC] text-[#073B78] border-[#C5DCFA] hover:bg-[#DCE7F5]'
+                                        : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+                                    }`}
+                                  >
+                                    {p.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* SLIDER 2: KEPEKATAN WARNA BIRU (OPACITY) */}
+                            <div className="space-y-1.5 p-3 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
+                              <div className="flex items-center justify-between">
+                                <label className="text-[11px] font-bold text-[#073B78] uppercase flex items-center gap-1">
+                                  <span>💧 Kepekatan / Kegelapan Warna Biru (Opacity)</span>
+                                </label>
+                                <span className="text-xs font-mono font-bold text-[#073B78]">
+                                  {slide.overlayOpacity !== undefined ? slide.overlayOpacity : 90}%
+                                </span>
+                              </div>
+                              <input
+                                type="range"
+                                min={20}
+                                max={100}
+                                step={1}
+                                value={slide.overlayOpacity !== undefined ? slide.overlayOpacity : 90}
+                                onChange={(e) => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].overlayOpacity = Number(e.target.value);
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="w-full accent-[#073B78] cursor-pointer"
+                              />
+                              {/* Quick Presets */}
+                              <div className="grid grid-cols-4 gap-1 pt-1 text-[10px]">
+                                {[
+                                  { label: '60% Transparan', val: 60 },
+                                  { label: '75% Sedang', val: 75 },
+                                  { label: '90% Standar', val: 90, highlight: true },
+                                  { label: '100% Solid', val: 100 },
+                                ].map((p) => (
+                                  <button
+                                    key={p.val}
+                                    type="button"
+                                    onClick={() => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].overlayOpacity = p.val;
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className={`py-1 px-1 rounded-md text-center font-semibold transition-all border ${
+                                      (slide.overlayOpacity !== undefined ? slide.overlayOpacity : 90) === p.val
+                                        ? 'bg-[#073B78] text-white border-[#073B78] shadow-2xs'
+                                        : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+                                    }`}
+                                  >
+                                    {p.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* WARNA OVERLAY BIRU */}
+                            <div className="space-y-1.5 p-3 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
+                              <div className="flex items-center justify-between">
+                                <label className="text-[11px] font-bold text-[#073B78] uppercase">
+                                  Warna Daerah Biru / Background Tint
+                                </label>
+                                <span
+                                  className="w-4 h-4 rounded-full border border-slate-300 shadow-2xs"
+                                  style={{ backgroundColor: slide.overlayColor || '#073B78' }}
+                                />
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="color"
+                                  value={slide.overlayColor || '#073B78'}
+                                  onChange={(e) => {
+                                    const newSlides = [...(content.bannerSlides || [])];
+                                    newSlides[sIdx].overlayColor = e.target.value;
+                                    setContent({ ...content, bannerSlides: newSlides });
+                                  }}
+                                  className="w-8 h-8 rounded-lg cursor-pointer border border-[#DCE7F5] p-0.5 bg-white shrink-0"
+                                  title="Pilih warna custom"
                                 />
                                 <input
                                   type="text"
-                                  placeholder="Tujuan Link (misal: /proyek)"
-                                  value={slide.primaryCtaHref}
+                                  value={slide.overlayColor || '#073B78'}
                                   onChange={(e) => {
                                     const newSlides = [...(content.bannerSlides || [])];
-                                    newSlides[sIdx].primaryCtaHref = e.target.value;
+                                    newSlides[sIdx].overlayColor = e.target.value;
                                     setContent({ ...content, bannerSlides: newSlides });
                                   }}
-                                  className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783] font-mono"
+                                  className="flex-1 h-8 px-2 rounded-lg bg-white border border-[#DCE7F5] text-xs font-mono font-bold text-[#073B78]"
                                 />
+                              </div>
+                              {/* Quick Presets */}
+                              <div className="flex items-center gap-1.5 pt-1">
+                                {[
+                                  { color: '#073B78', label: 'Navy PT. TBK' },
+                                  { color: '#0B2545', label: 'Biru Malam' },
+                                  { color: '#031730', label: 'Midnight Navy' },
+                                  { color: '#0F172A', label: 'Slate Gelap' },
+                                  { color: '#000000', label: 'Hitam Sinematik' },
+                                ].map((c) => (
+                                  <button
+                                    key={c.color}
+                                    type="button"
+                                    onClick={() => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].overlayColor = c.color;
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className="w-6 h-6 rounded-full border border-slate-300 shadow-2xs hover:scale-110 active:scale-95 transition-transform"
+                                    style={{ backgroundColor: c.color }}
+                                    title={c.label}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* ARAH GRADASI OVERLAY */}
+                            <div className="space-y-1.5 p-3 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
+                              <label className="text-[11px] font-bold text-[#073B78] uppercase block">
+                                Arah Gradasi Daerah Biru
+                              </label>
+                              <div className="grid grid-cols-2 gap-1.5 text-[11px]">
+                                {[
+                                  { id: 'left', label: 'Kiri ke Kanan (Default)' },
+                                  { id: 'right', label: 'Kanan ke Kiri' },
+                                  { id: 'top', label: 'Atas ke Bawah' },
+                                  { id: 'full', label: 'Rata / Solid Tint' },
+                                ].map((d) => (
+                                  <button
+                                    key={d.id}
+                                    type="button"
+                                    onClick={() => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].overlayDirection = d.id as any;
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className={`py-1 px-2 rounded-lg font-semibold text-center border transition-all ${
+                                      (slide.overlayDirection || 'left') === d.id
+                                        ? 'bg-[#073B78] text-white border-[#073B78] shadow-2xs'
+                                        : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+                                    }`}
+                                  >
+                                    {d.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* ======================================================== */}
+                        {/* 3. KONTROL TEKS, TIPOGRAFI & TOMBOL CTA */}
+                        {/* ======================================================== */}
+                        <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#DCE7F5] space-y-4 shadow-2xs">
+                          <div className="flex items-center gap-2 border-b border-[#DCE7F5] pb-2.5 text-xs font-bold text-[#073B78]">
+                            <Sparkles className="w-4 h-4 text-[#FF9D2E]" />
+                            <span>Konten Teks, Tipografi &amp; Tombol Aksi Slide</span>
+                          </div>
+
+                          {/* Eyebrow */}
+                          <div>
+                            <label className="block text-xs font-bold text-[#073B78] mb-1">
+                              Label Atas (Eyebrow Badge)
+                            </label>
+                            <input
+                              type="text"
+                              value={slide.eyebrow}
+                              placeholder="Contoh: Puri Gunung Langgar • Proyek Berjalan"
+                              onChange={(e) => {
+                                const newSlides = [...(content.bannerSlides || [])];
+                                newSlides[sIdx].eyebrow = e.target.value;
+                                setContent({ ...content, bannerSlides: newSlides });
+                              }}
+                              className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                            />
+                          </div>
+
+                          {/* Headline baris 1 & highlight */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-xs font-bold text-[#073B78] mb-1">
+                                Headline Baris 1 (Putih / Bebas)
+                              </label>
+                              <input
+                                type="text"
+                                value={slide.headlineFirstLine}
+                                placeholder="Contoh: Hunian bersubsidi yang layak,"
+                                onChange={(e) => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].headlineFirstLine = e.target.value;
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-bold text-[#C76A08] mb-1">
+                                Headline Highlight (Emas / Kuning)
+                              </label>
+                              <input
+                                type="text"
+                                value={slide.headlineHighlight}
+                                placeholder="Contoh: dibangun dari Lampung."
+                                onChange={(e) => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].headlineHighlight = e.target.value;
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="w-full px-3.5 py-2 rounded-xl bg-[#FFF8EE] border border-[#FFD8A8] text-[#C76A08] text-xs focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-bold"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Deskripsi */}
+                          <div>
+                            <label className="block text-xs font-bold text-[#073B78] mb-1">
+                              Deskripsi Pendukung (Paragraf Ringkas)
+                            </label>
+                            <textarea
+                              rows={2}
+                              value={slide.supportingText}
+                              onChange={(e) => {
+                                const newSlides = [...(content.bannerSlides || [])];
+                                newSlides[sIdx].supportingText = e.target.value;
+                                setContent({ ...content, bannerSlides: newSlides });
+                              }}
+                              className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-xs focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                            />
+                          </div>
+
+                          {/* PENGATURAN TIPOGRAFI, UKURAN & WARNA TEKS */}
+                          <div className="p-4 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-3">
+                            <span className="text-[11px] font-bold text-[#073B78] uppercase block">
+                              Kustomisasi Tipe Font, Ukuran &amp; Warna Huruf
+                            </span>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                              {/* Font Family */}
+                              <div className="space-y-1">
+                                <label className="text-[10.5px] font-semibold text-[#073B78] block">Tipe Font (Family)</label>
+                                <select
+                                  value={slide.headlineFontFamily || 'serif'}
+                                  onChange={(e) => {
+                                    const newSlides = [...(content.bannerSlides || [])];
+                                    newSlides[sIdx].headlineFontFamily = e.target.value as any;
+                                    setContent({ ...content, bannerSlides: newSlides });
+                                  }}
+                                  className="w-full h-8 px-2 rounded-lg bg-white border border-[#DCE7F5] text-xs font-semibold text-[#073B78]"
+                                >
+                                  <option value="serif">Serif Elegan (DM Serif Display)</option>
+                                  <option value="sans">Modern Sans (DM Sans / Inter)</option>
+                                  <option value="cormorant">Editorial Serif (Cormorant)</option>
+                                  <option value="system">Modern System UI</option>
+                                  <option value="georgia">Georgia Klasik</option>
+                                </select>
                               </div>
 
-                              <div className="space-y-1.5 p-3 rounded-xl bg-white border border-[#DCE7F5]">
-                                <span className="text-[11px] font-bold text-[#073B78] uppercase">Tombol Sekunder 2</span>
-                                <input
-                                  type="text"
-                                  placeholder="Label Tombol (misal: Konsultasi WhatsApp)"
-                                  value={slide.secondaryCtaText}
+                              {/* Font Weight */}
+                              <div className="space-y-1">
+                                <label className="text-[10.5px] font-semibold text-[#073B78] block">Ketebalan Font (Weight)</label>
+                                <select
+                                  value={slide.headlineFontWeight || 'normal'}
                                   onChange={(e) => {
                                     const newSlides = [...(content.bannerSlides || [])];
-                                    newSlides[sIdx].secondaryCtaText = e.target.value;
+                                    newSlides[sIdx].headlineFontWeight = e.target.value as any;
                                     setContent({ ...content, bannerSlides: newSlides });
                                   }}
-                                  className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52]"
-                                />
-                                <input
-                                  type="text"
-                                  placeholder="Tujuan Link (misal: /kontak atau wa URL)"
-                                  value={slide.secondaryCtaHref}
-                                  onChange={(e) => {
-                                    const newSlides = [...(content.bannerSlides || [])];
-                                    newSlides[sIdx].secondaryCtaHref = e.target.value;
-                                    setContent({ ...content, bannerSlides: newSlides });
-                                  }}
-                                  className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783] font-mono"
-                                />
+                                  className="w-full h-8 px-2 rounded-lg bg-white border border-[#DCE7F5] text-xs font-semibold text-[#073B78]"
+                                >
+                                  <option value="normal">Normal (400)</option>
+                                  <option value="medium">Medium (500)</option>
+                                  <option value="semibold">Semi Bold (600)</option>
+                                  <option value="bold">Bold (700)</option>
+                                  <option value="extrabold">Extra Bold (800)</option>
+                                </select>
                               </div>
+
+                              {/* Font Size */}
+                              <div className="space-y-1">
+                                <label className="text-[10.5px] font-semibold text-[#073B78] block">Ukuran Font Headline</label>
+                                <select
+                                  value={slide.headlineFontSize || 'lg'}
+                                  onChange={(e) => {
+                                    const newSlides = [...(content.bannerSlides || [])];
+                                    newSlides[sIdx].headlineFontSize = e.target.value as any;
+                                    setContent({ ...content, bannerSlides: newSlides });
+                                  }}
+                                  className="w-full h-8 px-2 rounded-lg bg-white border border-[#DCE7F5] text-xs font-semibold text-[#073B78]"
+                                >
+                                  <option value="sm">Sedang Ringkas (text-3xl / 4xl)</option>
+                                  <option value="base">Standar Proporsional (text-4xl / 5xl)</option>
+                                  <option value="lg">Besar Menonjol (text-5xl / 6xl)</option>
+                                  <option value="xl">Sangat Besar / Jumbo (text-6xl / 7xl)</option>
+                                  <option value="2xl">Raksasa / Heroic (text-7xl / 8xl)</option>
+                                </select>
+                              </div>
+                            </div>
+
+                            {/* Color Pickers */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+                              {/* Color 1: Baris 1 */}
+                              <div className="space-y-1 p-2.5 rounded-lg bg-white border border-[#DCE7F5]">
+                                <div className="flex items-center justify-between text-[10.5px] font-bold text-[#073B78]">
+                                  <span>Warna Baris 1</span>
+                                  <span className="w-3.5 h-3.5 rounded-full border border-slate-300" style={{ backgroundColor: slide.headlineFirstLineColor || '#FFFFFF' }} />
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                  <input
+                                    type="color"
+                                    value={slide.headlineFirstLineColor || '#FFFFFF'}
+                                    onChange={(e) => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].headlineFirstLineColor = e.target.value;
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className="w-7 h-7 rounded-md cursor-pointer border border-[#DCE7F5] p-0.5 bg-white shrink-0"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={slide.headlineFirstLineColor || '#FFFFFF'}
+                                    onChange={(e) => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].headlineFirstLineColor = e.target.value;
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className="flex-1 h-7 px-1.5 rounded-md bg-white border border-[#DCE7F5] text-[11px] font-mono text-[#102D52]"
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Color 2: Highlight */}
+                              <div className="space-y-1 p-2.5 rounded-lg bg-white border border-[#DCE7F5]">
+                                <div className="flex items-center justify-between text-[10.5px] font-bold text-[#C76A08]">
+                                  <span>Warna Highlight</span>
+                                  <span className="w-3.5 h-3.5 rounded-full border border-slate-300" style={{ backgroundColor: slide.headlineHighlightColor || '#FF9D2E' }} />
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                  <input
+                                    type="color"
+                                    value={slide.headlineHighlightColor || '#FF9D2E'}
+                                    onChange={(e) => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].headlineHighlightColor = e.target.value;
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className="w-7 h-7 rounded-md cursor-pointer border border-[#DCE7F5] p-0.5 bg-white shrink-0"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={slide.headlineHighlightColor || '#FF9D2E'}
+                                    onChange={(e) => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].headlineHighlightColor = e.target.value;
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className="flex-1 h-7 px-1.5 rounded-md bg-white border border-[#DCE7F5] text-[11px] font-mono font-bold text-[#C76A08]"
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Color 3: Deskripsi */}
+                              <div className="space-y-1 p-2.5 rounded-lg bg-white border border-[#DCE7F5]">
+                                <div className="flex items-center justify-between text-[10.5px] font-bold text-[#073B78]">
+                                  <span>Warna Deskripsi</span>
+                                  <span className="w-3.5 h-3.5 rounded-full border border-slate-300" style={{ backgroundColor: slide.supportingTextColor || '#E2E8F0' }} />
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                  <input
+                                    type="color"
+                                    value={slide.supportingTextColor || '#E2E8F0'}
+                                    onChange={(e) => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].supportingTextColor = e.target.value;
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className="w-7 h-7 rounded-md cursor-pointer border border-[#DCE7F5] p-0.5 bg-white shrink-0"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={slide.supportingTextColor || '#E2E8F0'}
+                                    onChange={(e) => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].supportingTextColor = e.target.value;
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className="flex-1 h-7 px-1.5 rounded-md bg-white border border-[#DCE7F5] text-[11px] font-mono text-[#102D52]"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* CTA Buttons */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-[#DCE7F5]">
+                            <div className="space-y-1.5 p-3 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
+                              <span className="text-[11px] font-bold text-[#073B78] uppercase">Tombol Utama 1</span>
+                              <input
+                                type="text"
+                                placeholder="Label Tombol (misal: Lihat Proyek)"
+                                value={slide.primaryCtaText}
+                                onChange={(e) => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].primaryCtaText = e.target.value;
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52]"
+                              />
+                              <input
+                                type="text"
+                                placeholder="Tujuan Link (misal: /proyek)"
+                                value={slide.primaryCtaHref}
+                                onChange={(e) => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].primaryCtaHref = e.target.value;
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783] font-mono"
+                              />
+                            </div>
+
+                            <div className="space-y-1.5 p-3 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
+                              <span className="text-[11px] font-bold text-[#073B78] uppercase">Tombol Sekunder 2</span>
+                              <input
+                                type="text"
+                                placeholder="Label Tombol (misal: Konsultasi WhatsApp)"
+                                value={slide.secondaryCtaText}
+                                onChange={(e) => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].secondaryCtaText = e.target.value;
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52]"
+                              />
+                              <input
+                                type="text"
+                                placeholder="Tujuan Link (misal: /kontak atau wa URL)"
+                                value={slide.secondaryCtaHref}
+                                onChange={(e) => {
+                                  const newSlides = [...(content.bannerSlides || [])];
+                                  newSlides[sIdx].secondaryCtaHref = e.target.value;
+                                  setContent({ ...content, bannerSlides: newSlides });
+                                }}
+                                className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#526783] font-mono"
+                              />
                             </div>
                           </div>
                         </div>
