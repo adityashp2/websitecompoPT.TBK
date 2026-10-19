@@ -130,13 +130,7 @@ export default function ClientLandingPage({ initialContent }: { initialContent: 
     );
 
     elements.forEach((el) => {
-      const rect = el.getBoundingClientRect();
-      // If element is already in initial screen viewport on load, reveal it immediately
-      if (rect.top < window.innerHeight - 30) {
-        el.classList.add('is-revealed');
-      } else {
-        observer.observe(el);
-      }
+      el.classList.add('is-revealed');
     });
 
     return () => observer.disconnect();
