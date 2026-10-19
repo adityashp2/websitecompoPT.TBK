@@ -151,7 +151,7 @@ function LoginFormContent() {
       <main className="relative z-10 flex-1 flex items-center justify-center px-4 py-8">
         <div className="w-full max-w-[440px]">
           {/* Card Container */}
-          <div className="relative rounded-3xl bg-[#0B1E36]/85 backdrop-blur-2xl border border-white/15 shadow-2xl shadow-[#040C18]/80 p-6 sm:p-9 transition-all">
+          <div className="relative rounded-3xl bg-[#0A2E5C]/90 backdrop-blur-2xl border border-white/20 shadow-2xl shadow-[#040C18]/60 p-6 sm:p-9 transition-all">
             {/* Top Glowing Edge Accent */}
             <div className="absolute -top-[1px] inset-x-8 h-[2px] bg-gradient-to-r from-transparent via-[#FF9D2E] to-transparent" />
 
@@ -175,7 +175,7 @@ function LoginFormContent() {
               <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white font-syne">
                 Masuk ke Panel Kendali
               </h1>
-              <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+              <p className="text-xs text-blue-200/70 mt-1.5 leading-relaxed">
                 Puri Gunung Langgar &bull; CMS SQLite & Cloud Ready
               </p>
             </div>
@@ -202,12 +202,12 @@ function LoginFormContent() {
               <div>
                 <label 
                   htmlFor="identifier" 
-                  className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5"
+                  className="block text-xs font-semibold uppercase tracking-wider text-blue-100/90 mb-1.5"
                 >
                   Username atau Email
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-blue-200/60">
                     <User className="w-4 h-4" />
                   </div>
                   <input
@@ -219,7 +219,7 @@ function LoginFormContent() {
                     placeholder="admin atau admin@terbangbersamakawan.co.id"
                     disabled={loading}
                     autoComplete="username"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#071324]/80 border border-white/15 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-2 focus:ring-[#FF9D2E]/25 transition-all disabled:opacity-50"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#061830]/80 border border-white/20 text-white placeholder-blue-200/40 text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-2 focus:ring-[#FF9D2E]/25 transition-all disabled:opacity-50"
                   />
                 </div>
               </div>
@@ -229,13 +229,13 @@ function LoginFormContent() {
                 <div className="flex items-center justify-between mb-1.5">
                   <label 
                     htmlFor="password" 
-                    className="block text-xs font-semibold uppercase tracking-wider text-slate-300"
+                    className="block text-xs font-semibold uppercase tracking-wider text-blue-100/90"
                   >
                     Kata Sandi (Password)
                   </label>
                 </div>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-blue-200/60">
                     <Lock className="w-4 h-4" />
                   </div>
                   <input
@@ -247,7 +247,7 @@ function LoginFormContent() {
                     placeholder="Masukkan kata sandi..."
                     disabled={loading}
                     autoComplete="current-password"
-                    className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-[#071324]/80 border border-white/15 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-2 focus:ring-[#FF9D2E]/25 transition-all disabled:opacity-50"
+                    className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-[#061830]/80 border border-white/20 text-white placeholder-blue-200/40 text-xs sm:text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-2 focus:ring-[#FF9D2E]/25 transition-all disabled:opacity-50"
                   />
                   <button
                     type="button"
