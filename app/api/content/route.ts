@@ -5,41 +5,11 @@ import { getCurrentAdminUser } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const url = new URL(request.url);
-    const isDebug = url.searchParams.get('debug') === '1';
-
-    let debugInfo: any = undefined;
-    if (isDebug) {
-      const { isSupabaseConfigured, getSupabaseAdminClient } = await import('@/lib/supabase');
-      let queryResult: any = null;
-      let queryError: any = null;
-      try {
-        const client = getSupabaseAdminClient();
-        if (client) {
-          const res = await client.from('site_content').select('id, updated_at').eq('id', 'main').single();
-          queryResult = res.data;
-          queryError = res.error;
-        }
-      } catch (e: any) {
-        queryError = e?.message || String(e);
-      }
-
-      debugInfo = {
-        isConfigured: isSupabaseConfigured(),
-        hasUrl: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL),
-        urlValue: (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '').slice(0, 30),
-        hasAnonKey: Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY),
-        hasServiceKey: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY),
-        queryResult,
-        queryError,
-      };
-    }
-
     const content = await getSiteContent();
     return NextResponse.json(
-      { success: true, data: content, ...(debugInfo ? { debug: debugInfo } : {}) },
+      { success: true, data: content },
       {
         headers: {
           'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
