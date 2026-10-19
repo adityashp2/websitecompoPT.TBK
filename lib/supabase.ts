@@ -4,33 +4,46 @@ const DEFAULT_SUPABASE_URL = 'https://emluamqrtbakrikurmsz.supabase.co';
 const DEFAULT_ANON_KEY = 'sb_publishable_Ax92lEPNOwmEvrfn9-rSrw_7uA7CK7t';
 
 export function getSupabaseUrl(): string {
-  const raw =
-    process.env.SUPABASE_URL ||
-    process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    DEFAULT_SUPABASE_URL;
+  const candidates = [
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_URL,
+    DEFAULT_SUPABASE_URL,
+  ];
 
-  return raw
-    .trim()
-    .replace(/\/rest\/v1\/?$/i, '')
-    .replace(/\/+$/, '');
+  for (const candidate of candidates) {
+    if (candidate && !candidate.includes('xgwim') && !candidate.includes('your-project-id')) {
+      return candidate.trim().replace(/\/rest\/v1\/?$/i, '').replace(/\/+$/, '');
+    }
+  }
+
+  return DEFAULT_SUPABASE_URL;
 }
 
 export function getSupabaseAnonKey(): string {
-  return (
-    process.env.SUPABASE_ANON_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-    process.env.SUPABASE_PUBLISHABLE_KEY ||
-    DEFAULT_ANON_KEY
-  ).trim();
+  const candidates = [
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    process.env.SUPABASE_ANON_KEY,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    process.env.SUPABASE_PUBLISHABLE_KEY,
+  ];
+
+  for (const candidate of candidates) {
+    if (candidate && !candidate.includes('your-anon-key')) {
+      return candidate.trim();
+    }
+  }
+
+  return DEFAULT_ANON_KEY;
 }
 
 export function getSupabaseServiceRoleKey(): string {
-  return (
+  const envKey = (
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
     process.env.SUPABASE_SECRET_KEY ||
     ''
   ).trim();
+
+  return envKey;
 }
 
 /**
@@ -44,6 +57,7 @@ export function isSupabaseConfigured(): boolean {
     url &&
     url.startsWith('https://') &&
     !url.includes('your-project-id') &&
+    !url.includes('xgwim') &&
     (anon || service) &&
     !anon.includes('your-anon-key')
   );
@@ -63,6 +77,7 @@ export function getSupabaseAdminClient(): SupabaseClient | null {
   if (!_adminClient) {
     const url = getSupabaseUrl();
     const key = getSupabaseServiceRoleKey() || getSupabaseAnonKey();
+    console.log('[Supabase Admin] Initializing client for target:', url);
     _adminClient = createClient(url, key, {
       auth: {
         persistSession: false,
