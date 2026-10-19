@@ -39,7 +39,8 @@ import {
   ChevronDown,
   Megaphone,
   Eye,
-  MessageCircle
+  MessageCircle,
+  Maximize2
 } from 'lucide-react';
 
 interface Inquiry {
