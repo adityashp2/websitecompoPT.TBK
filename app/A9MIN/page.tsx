@@ -2615,247 +2615,119 @@ export default function AdminDashboard() {
                       </div>
                     </div>
 
-                    {/* Pengaturan Teks Format ICC (Image 1) */}
-                    <div>
-                      <label className="block text-xs font-bold text-[#073B78] mb-1">
-                        Sapaan / Greeting (Atas)
+                    {/* Link Tujuan WhatsApp / CTA */}
+                    <div className="p-4 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-2">
+                      <label className="block text-xs font-bold text-[#073B78]">
+                        Link Tujuan saat Banner Diklik (WhatsApp / Website)
                       </label>
+                      <p className="text-[11px] text-[#526783]">
+                        Masukkan tautan WhatsApp pemasaran atau link promosi (misal: <code className="bg-white px-1.5 py-0.5 rounded border border-[#DCE7F5] text-[#073B78]">https://wa.me/62812...</code>).
+                      </p>
                       <input
                         type="text"
-                        value={content.promoPopup?.greeting || ''}
+                        value={content.promoPopup?.ctaUrl || ''}
                         onChange={(e) =>
                           setContent({
                             ...content,
                             promoPopup: {
                               ...(content.promoPopup || { enabled: false, image: '' }),
-                              greeting: e.target.value,
+                              ctaUrl: e.target.value,
                             },
                           })
                         }
-                        placeholder="Contoh: 👋 Hai, calon pemilik rumah impian!"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-semibold focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                        placeholder="https://wa.me/6281278901234?text=Halo%20saya%20tertarik%20promo"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
                     </div>
 
+                    {/* Judul & Alt Teks Brosur */}
                     <div>
                       <label className="block text-xs font-bold text-[#073B78] mb-1">
-                        Teks Highlight Oranye (Tengah)
+                        Keterangan / Nama Promosi (Alt Teks)
                       </label>
                       <input
                         type="text"
-                        value={content.promoPopup?.highlightText || ''}
+                        value={content.promoPopup?.title || ''}
                         onChange={(e) =>
                           setContent({
                             ...content,
                             promoPopup: {
                               ...(content.promoPopup || { enabled: false, image: '' }),
-                              highlightText: e.target.value,
+                              title: e.target.value,
                             },
                           })
                         }
-                        placeholder="Contoh: JANGAN LEWATKAN KESEMPATAN UNTUK MEMILIKI HUNIAN RESMI BERSUBSIDI"
+                        placeholder="Contoh: Promo Spesial Unit Subsidi Puri Gunung Langgar"
                         className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                       />
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-bold text-[#073B78] mb-1">
-                          Nama Proyek (Garis Bawah)
-                        </label>
-                        <input
-                          type="text"
-                          value={content.promoPopup?.title || ''}
-                          onChange={(e) =>
-                            setContent({
-                              ...content,
-                              promoPopup: {
-                                ...(content.promoPopup || { enabled: false, image: '' }),
-                                title: e.target.value,
-                              },
-                            })
-                          }
-                          placeholder="Contoh: PURI GUNUNG LANGGAR"
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-bold focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-bold text-[#073B78] mb-1">
-                          Batch / Periode Promo
-                        </label>
-                        <input
-                          type="text"
-                          value={content.promoPopup?.badge || ''}
-                          onChange={(e) =>
-                            setContent({
-                              ...content,
-                              promoPopup: {
-                                ...(content.promoPopup || { enabled: false, image: '' }),
-                                badge: e.target.value,
-                              },
-                            })
-                          }
-                          placeholder="Contoh: BATCH SUBSIDI TAHUN 2026"
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-[#073B78] mb-1">
-                        Teks Urgensi Waktu (Ikon Jam)
-                      </label>
-                      <input
-                        type="text"
-                        value={content.promoPopup?.urgencyText || ''}
-                        onChange={(e) =>
-                          setContent({
-                            ...content,
-                            promoPopup: {
-                              ...(content.promoPopup || { enabled: false, image: '' }),
-                              urgencyText: e.target.value,
-                            },
-                          })
-                        }
-                        placeholder="Contoh: ⏰ Amankan tempatmu sekarang sebelum terlambat!"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-semibold focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
-                      />
-                    </div>
-
-                    {/* Tombol CTA & Link */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-bold text-[#073B78] mb-1">
-                          Teks Tombol CTA
-                        </label>
-                        <input
-                          type="text"
-                          value={content.promoPopup?.ctaText || ''}
-                          onChange={(e) =>
-                            setContent({
-                              ...content,
-                              promoPopup: {
-                                ...(content.promoPopup || { enabled: false, image: '' }),
-                                ctaText: e.target.value,
-                              },
-                            })
-                          }
-                          placeholder="Contoh: Daftar sekarang!!!"
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-bold focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-bold text-[#073B78] mb-1">
-                          Link Tujuan Klik (WhatsApp / URL)
-                        </label>
-                        <input
-                          type="text"
-                          value={content.promoPopup?.ctaUrl || ''}
-                          onChange={(e) =>
-                            setContent({
-                              ...content,
-                              promoPopup: {
-                                ...(content.promoPopup || { enabled: false, image: '' }),
-                                ctaUrl: e.target.value,
-                              },
-                            })
-                          }
-                          placeholder="https://wa.me/62812... atau /kontak"
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-xs text-[#102D52] font-mono focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/80 text-[11px] text-amber-900 leading-relaxed">
-                      💡 <strong>Format Split Poster & Teks (Gaya ICC):</strong> Sisi kiri menampilkan poster flyer vertikal penuh, sisi kanan menampilkan sapaan, teks oranye ajakan, jam urgensi, dan tombol &quot;Daftar sekarang!!!&quot;. Pop-up otomatis muncul di awal saat pengunjung membuka website.
+                    <div className="p-4 rounded-xl bg-blue-50/70 border border-blue-200 text-[11px] text-[#073B78] leading-relaxed space-y-1">
+                      <p className="font-bold flex items-center gap-1.5 text-xs text-[#073B78]">
+                        <span>💡 Format Pop-up Banner Flyer Murni:</span>
+                      </p>
+                      <p>
+                        Saat pengunjung membuka beranda, poster flyer akan langsung muncul utuh di tengah layar dengan tombol tutup <strong>&quot;X&quot;</strong> di pojok kanan atas banner.
+                      </p>
+                      <p>
+                        Jika pengunjung mengklik banner tersebut, sistem akan langsung mengarahkan mereka ke WhatsApp pemasaran resmi PT. TBK.
+                      </p>
                     </div>
                   </div>
 
-                  {/* Right Column: Live Mockup Preview */}
+                  {/* Right Column: Live Mockup Preview (Exact Match to Web Popup) */}
                   <div className="lg:col-span-5 space-y-3">
                     <div className="flex items-center justify-between">
                       <label className="block text-xs font-bold text-[#073B78] uppercase tracking-wider flex items-center gap-1.5">
                         <Eye className="w-4 h-4 text-[#FF9D2E]" />
-                        <span>Live Preview Tampilan Pop-up</span>
+                        <span>Live Preview (Sesuai Tampilan Asli Website)</span>
                       </label>
                       <span className="text-[10px] text-[#526783] bg-white px-2 py-0.5 rounded border border-[#DCE7F5]">
                         Simulasi Layar Pengunjung
                       </span>
                     </div>
 
-                    <div className="p-4 sm:p-5 rounded-2xl bg-[#0A2548]/90 border border-[#1C5795] flex items-start justify-center pt-5 min-h-[420px]">
-                      {/* Modal Mockup Box - Warm Cream & Navy Style */}
-                      <div className="relative w-full max-w-sm bg-[#FAF6EE] rounded-2xl shadow-2xl p-3 sm:p-3.5 text-left border border-[#E9DCBF]">
-                        {/* Mock Close Button */}
+                    {/* Preview Box - Exact dark translucent backdrop */}
+                    <div className="p-5 sm:p-6 rounded-2xl bg-black/85 backdrop-blur-md border border-slate-700/60 flex items-center justify-center min-h-[460px] relative overflow-hidden">
+                      {/* Modal Mockup Box - Pure Flyer Banner with X button */}
+                      <div className="relative inline-block max-w-[280px] sm:max-w-xs shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] border border-white/20">
+                        {/* Mock Close Button X */}
                         <div
-                          className="absolute top-2.5 right-2.5 z-20 w-6 h-6 rounded-full bg-[#102D52] text-white flex items-center justify-center cursor-default shadow-xs"
-                          title="Tombol X Tutup Iklan"
+                          className="absolute top-2 right-2 z-30 w-7 h-7 bg-black/75 text-white flex items-center justify-center border border-white/50 cursor-pointer hover:bg-red-600 transition-colors shadow-lg"
+                          title="Tombol X Tutup Iklan (Pengunjung dapat menutup pop-up)"
                         >
-                          <X className="w-3.5 h-3.5 stroke-[2.5]" />
+                          <X className="w-4 h-4 stroke-[2.5]" />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-2.5 items-center pt-1">
-                          {/* Mock Poster Kiri */}
-                          <div className="bg-[#F3EBDA] border border-[#E2D4BC] overflow-hidden rounded-xl p-1 flex items-center justify-center relative">
-                            <span className="absolute top-1.5 left-1.5 bg-[#102D52] text-[#FF9D2E] text-[7px] font-bold px-1.5 py-0.5 rounded-full uppercase">
-                              Promo
-                            </span>
-                            {content.promoPopup?.image ? (
-                              <img
-                                src={content.promoPopup.image}
-                                alt="Poster Preview"
-                                className="w-full h-auto max-h-[160px] object-contain block rounded-lg"
-                              />
-                            ) : (
-                              <div className="h-32 flex items-center justify-center text-[9px] text-slate-400 p-2 text-center">
-                                Upload poster
-                              </div>
-                            )}
+                        {/* Foto Banner Murni */}
+                        {content.promoPopup?.image ? (
+                          <a
+                            href={content.promoPopup?.ctaUrl || '#'}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block group"
+                            title="Klik untuk tes link WhatsApp"
+                          >
+                            <img
+                              src={content.promoPopup.image}
+                              alt={content.promoPopup.title || 'Iklan Banner Promo PT. TBK'}
+                              className="w-full h-auto max-h-[380px] object-contain block group-hover:opacity-95 transition-opacity"
+                            />
+                          </a>
+                        ) : (
+                          <div className="h-64 w-48 flex flex-col items-center justify-center p-4 bg-slate-800 text-center text-slate-300">
+                            <ImageIcon className="w-8 h-8 text-[#FF9D2E] mb-2 opacity-60" />
+                            <span className="text-xs font-semibold">Belum Ada Banner</span>
+                            <span className="text-[10px] text-slate-400 mt-1">Upload gambar brosur promo di kolom sebelah kiri</span>
                           </div>
-
-                          {/* Mock Keterangan Kanan */}
-                          <div className="space-y-1.5 text-left pr-1">
-                            <div className="flex items-center gap-1">
-                              <span className="px-2 py-0.5 rounded-full bg-[#102D52] text-white text-[7.5px] font-bold uppercase">
-                                {content.promoPopup?.badge || 'Batch 2026'}
-                              </span>
-                            </div>
-
-                            <h5 className="font-bold text-[10.5px] text-[#102D52] leading-tight">
-                              {content.promoPopup?.greeting || '👋 Hai, calon pemilik rumah impian!'}
-                            </h5>
-
-                            <div className="p-1.5 rounded-lg bg-[#F4ECE0] border border-[#E3D4BE] space-y-0.5 text-[8px]">
-                              <p className="font-bold text-[#A85822] uppercase line-clamp-1">
-                                {content.promoPopup?.highlightText || 'HUNIAN RESMI BERSUBSIDI'}
-                              </p>
-                              <p className="font-serif font-bold text-[#102D52]">
-                                {content.promoPopup?.title || 'PURI GUNUNG LANGGAR'}
-                              </p>
-                              <p className="text-[#15966A] font-semibold">✓ Angsuran Mulai 1 Juta-an</p>
-                            </div>
-
-                            <p className="font-bold text-[8.5px] text-[#B91C1C] leading-tight bg-[#FEECEB] p-1 rounded border border-[#FCD2CE]">
-                              {content.promoPopup?.urgencyText || '⏰ Amankan tempatmu sekarang!'}
-                            </p>
-
-                            <div className="pt-0.5">
-                              <div className="w-full py-1.5 rounded-lg bg-[#102D52] text-white font-bold text-[9px] text-center shadow-xs flex items-center justify-center gap-1">
-                                <MessageCircle className="w-3 h-3 fill-white text-[#102D52]" />
-                                <span>{content.promoPopup?.ctaText || 'Daftar sekarang!!!'}</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                        )}
                       </div>
                     </div>
 
                     <p className="text-[11px] text-[#526783] text-center italic">
                       {content.promoPopup?.enabled
-                        ? '✅ Pop-up ini akan otomatis muncul tepat di awal saat pengunjung membuka beranda.'
-                        : '⭕ Iklan ini sedang mati (OFF). Klik tombol aktifkan di atas untuk menampilkan di web.'}
+                        ? '✅ Pop-up banner murni ini aktif dan akan otomatis muncul begitu pengunjung membuka website.'
+                        : '⭕ Iklan sedang MATI (OFF). Klik tombol aktifkan di atas jika ingin menampilkan pop-up.'}
                     </p>
                   </div>
                 </div>
