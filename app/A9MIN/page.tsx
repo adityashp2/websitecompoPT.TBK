@@ -1920,6 +1920,340 @@ export default function AdminDashboard() {
                               />
                             </div>
 
+                            
+                              {/* PENGATURAN TYPOGRAPHY, UKURAN, WARNA & TIPE FONT */}
+                            <div className="p-4 sm:p-5 rounded-xl bg-white border border-[#DCE7F5] space-y-4 shadow-2xs">
+                              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#DCE7F5] pb-2.5">
+                                <div className="flex items-center gap-2 text-xs font-bold text-[#073B78]">
+                                  <Sparkles className="w-4 h-4 text-[#FF9D2E]" />
+                                  <span>Kustomisasi Ukuran, Warna &amp; Tipe Font Headline</span>
+                                </div>
+                                <span className="text-[10px] text-[#526783] bg-[#F8FAFD] px-2 py-0.5 rounded border border-[#DCE7F5] font-medium">
+                                  Pratinjau Langsung Real-time
+                                </span>
+                              </div>
+
+                              {/* LIVE TYPOGRAPHY PREVIEW BOX */}
+                              <div className="p-4 sm:p-5 rounded-xl bg-[#073B78] text-white space-y-2.5 border border-[#0A4B91] shadow-inner overflow-hidden">
+                                <div className="flex items-center justify-between text-[10.5px] text-[#FF9D2E] font-mono uppercase tracking-wider border-b border-white/10 pb-1.5">
+                                  <span>LIVE PREVIEW TEKS HERO BANNER</span>
+                                  <span>Slide #{sIdx + 1}</span>
+                                </div>
+                                <div
+                                  style={{
+                                    fontFamily:
+                                      slide.headlineFontFamily === 'sans'
+                                        ? 'var(--font-sans), sans-serif'
+                                        : slide.headlineFontFamily === 'cormorant'
+                                        ? 'var(--font-cormorant), Garamond, serif'
+                                        : slide.headlineFontFamily === 'system'
+                                        ? "system-ui, -apple-system, sans-serif"
+                                        : slide.headlineFontFamily === 'georgia'
+                                        ? "Georgia, serif"
+                                        : 'var(--font-serif), Georgia, serif',
+                                    fontWeight:
+                                      slide.headlineFontWeight === 'medium'
+                                        ? 500
+                                        : slide.headlineFontWeight === 'semibold'
+                                        ? 600
+                                        : slide.headlineFontWeight === 'bold'
+                                        ? 700
+                                        : slide.headlineFontWeight === 'extrabold'
+                                        ? 800
+                                        : 400,
+                                    fontSize:
+                                      slide.headlineFontSize === 'sm'
+                                        ? '1.35rem'
+                                        : slide.headlineFontSize === 'base'
+                                        ? '1.65rem'
+                                        : slide.headlineFontSize === 'xl'
+                                        ? '2.35rem'
+                                        : slide.headlineFontSize === '2xl'
+                                        ? '2.8rem'
+                                        : '1.95rem',
+                                    lineHeight: 1.15,
+                                  }}
+                                  className="tracking-tight transition-all duration-200"
+                                >
+                                  <span style={{ color: slide.headlineFirstLineColor || '#FFFFFF' }}>
+                                    {slide.headlineFirstLine || 'Hunian bersubsidi yang layak,'}
+                                  </span>
+                                  <br />
+                                  <span style={{ color: slide.headlineHighlightColor || '#FF9D2E' }}>
+                                    {slide.headlineHighlight || 'dibangun dari Lampung.'}
+                                  </span>
+                                </div>
+                                <p
+                                  style={{
+                                    color: slide.supportingTextColor || 'rgba(255, 255, 255, 0.9)',
+                                    fontSize:
+                                      slide.supportingTextFontSize === 'xs'
+                                        ? '11.5px'
+                                        : slide.supportingTextFontSize === 'base'
+                                        ? '14px'
+                                        : slide.supportingTextFontSize === 'lg'
+                                        ? '16px'
+                                        : '13px',
+                                  }}
+                                  className="leading-relaxed opacity-95 transition-all duration-200"
+                                >
+                                  {slide.supportingText ||
+                                    'PT. Terbang Bersama Kawan adalah pengembang perumahan di Bandar Lampung...'}
+                                </p>
+                              </div>
+
+                              {/* CONTROLS ROW 1: TIPE FONT, KETEBALAN & UKURAN HEADLINE */}
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div>
+                                  <label className="block text-xs font-bold text-[#073B78] mb-1">
+                                    Tipe Font (Font Family)
+                                  </label>
+                                  <select
+                                    value={slide.headlineFontFamily || 'serif'}
+                                    onChange={(e) => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].headlineFontFamily = e.target.value as any;
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className="w-full h-9 px-3 rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] text-xs font-semibold text-[#073B78] focus:outline-none focus:border-[#FF9D2E]"
+                                  >
+                                    <option value="serif">DM Serif Display (Klasik Mewah &amp; Elegan)</option>
+                                    <option value="sans">DM Sans (Modern, Bersih &amp; Minimalis)</option>
+                                    <option value="cormorant">Cormorant Garamond (Editorial Royal)</option>
+                                    <option value="system">System UI (Tech Clean Modern)</option>
+                                    <option value="georgia">Georgia (Classic Newspaper Press)</option>
+                                  </select>
+                                </div>
+
+                                <div>
+                                  <label className="block text-xs font-bold text-[#073B78] mb-1">
+                                    Ketebalan Font (Font Weight)
+                                  </label>
+                                  <select
+                                    value={slide.headlineFontWeight || 'normal'}
+                                    onChange={(e) => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].headlineFontWeight = e.target.value as any;
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className="w-full h-9 px-3 rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] text-xs font-semibold text-[#073B78] focus:outline-none focus:border-[#FF9D2E]"
+                                  >
+                                    <option value="normal">Normal (400)</option>
+                                    <option value="medium">Medium (500)</option>
+                                    <option value="semibold">Semi-Bold (600)</option>
+                                    <option value="bold">Bold (700)</option>
+                                    <option value="extrabold">Extra-Bold (800)</option>
+                                  </select>
+                                </div>
+
+                                <div>
+                                  <label className="block text-xs font-bold text-[#073B78] mb-1">
+                                    Ukuran Headline (Font Size)
+                                  </label>
+                                  <select
+                                    value={slide.headlineFontSize || 'lg'}
+                                    onChange={(e) => {
+                                      const newSlides = [...(content.bannerSlides || [])];
+                                      newSlides[sIdx].headlineFontSize = e.target.value as any;
+                                      setContent({ ...content, bannerSlides: newSlides });
+                                    }}
+                                    className="w-full h-9 px-3 rounded-lg bg-[#F8FAFD] border border-[#DCE7F5] text-xs font-semibold text-[#073B78] focus:outline-none focus:border-[#FF9D2E]"
+                                  >
+                                    <option value="sm">Kecil / Ringkas (Compact)</option>
+                                    <option value="base">Sedang (Medium)</option>
+                                    <option value="lg">Besar (Standar Default)</option>
+                                    <option value="xl">Sangat Besar (Punchy Impact)</option>
+                                    <option value="2xl">Raksasa / Ekstra Besar (Hero Focus)</option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              {/* CONTROLS ROW 2: WARNA BARIS 1, WARNA HIGHLIGHT & WARNA DESKRIPSI */}
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 border-t border-[#DCE7F5]">
+                                {/* Color 1: Headline First Line */}
+                                <div className="space-y-1.5 p-3 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
+                                  <div className="flex items-center justify-between">
+                                    <label className="text-[11px] font-bold text-[#073B78] uppercase">
+                                      Warna Teks Baris 1
+                                    </label>
+                                    <span
+                                      className="w-4 h-4 rounded-full border border-slate-300 shadow-2xs"
+                                      style={{ backgroundColor: slide.headlineFirstLineColor || '#FFFFFF' }}
+                                    />
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <input
+                                      type="color"
+                                      value={slide.headlineFirstLineColor || '#FFFFFF'}
+                                      onChange={(e) => {
+                                        const newSlides = [...(content.bannerSlides || [])];
+                                        newSlides[sIdx].headlineFirstLineColor = e.target.value;
+                                        setContent({ ...content, bannerSlides: newSlides });
+                                      }}
+                                      className="w-8 h-8 rounded-lg cursor-pointer border border-[#DCE7F5] p-0.5 bg-white shrink-0"
+                                      title="Pilih warna custom"
+                                    />
+                                    <input
+                                      type="text"
+                                      value={slide.headlineFirstLineColor || '#FFFFFF'}
+                                      onChange={(e) => {
+                                        const newSlides = [...(content.bannerSlides || [])];
+                                        newSlides[sIdx].headlineFirstLineColor = e.target.value;
+                                        setContent({ ...content, bannerSlides: newSlides });
+                                      }}
+                                      className="flex-1 h-8 px-2 rounded-lg bg-white border border-[#DCE7F5] text-xs font-mono font-semibold text-[#102D52]"
+                                    />
+                                  </div>
+                                  {/* Quick Palette */}
+                                  <div className="flex items-center gap-1.5 pt-1">
+                                    {[
+                                      { color: '#FFFFFF', label: 'Putih' },
+                                      { color: '#FFD700', label: 'Emas' },
+                                      { color: '#38BDF8', label: 'Cyan' },
+                                      { color: '#FACC15', label: 'Kuning' },
+                                      { color: '#E2E8F0', label: 'Silver' },
+                                    ].map((c) => (
+                                      <button
+                                        key={c.color}
+                                        type="button"
+                                        onClick={() => {
+                                          const newSlides = [...(content.bannerSlides || [])];
+                                          newSlides[sIdx].headlineFirstLineColor = c.color;
+                                          setContent({ ...content, bannerSlides: newSlides });
+                                        }}
+                                        className="w-5 h-5 rounded-full border border-slate-300 shadow-2xs hover:scale-110 active:scale-95 transition-transform"
+                                        style={{ backgroundColor: c.color }}
+                                        title={c.label}
+                                      />
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* Color 2: Headline Highlight */}
+                                <div className="space-y-1.5 p-3 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
+                                  <div className="flex items-center justify-between">
+                                    <label className="text-[11px] font-bold text-[#C76A08] uppercase">
+                                      Warna Sorotan (Highlight)
+                                    </label>
+                                    <span
+                                      className="w-4 h-4 rounded-full border border-slate-300 shadow-2xs"
+                                      style={{ backgroundColor: slide.headlineHighlightColor || '#FF9D2E' }}
+                                    />
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <input
+                                      type="color"
+                                      value={slide.headlineHighlightColor || '#FF9D2E'}
+                                      onChange={(e) => {
+                                        const newSlides = [...(content.bannerSlides || [])];
+                                        newSlides[sIdx].headlineHighlightColor = e.target.value;
+                                        setContent({ ...content, bannerSlides: newSlides });
+                                      }}
+                                      className="w-8 h-8 rounded-lg cursor-pointer border border-[#DCE7F5] p-0.5 bg-white shrink-0"
+                                      title="Pilih warna custom"
+                                    />
+                                    <input
+                                      type="text"
+                                      value={slide.headlineHighlightColor || '#FF9D2E'}
+                                      onChange={(e) => {
+                                        const newSlides = [...(content.bannerSlides || [])];
+                                        newSlides[sIdx].headlineHighlightColor = e.target.value;
+                                        setContent({ ...content, bannerSlides: newSlides });
+                                      }}
+                                      className="flex-1 h-8 px-2 rounded-lg bg-white border border-[#DCE7F5] text-xs font-mono font-bold text-[#C76A08]"
+                                    />
+                                  </div>
+                                  {/* Quick Palette */}
+                                  <div className="flex items-center gap-1.5 pt-1">
+                                    {[
+                                      { color: '#FF9D2E', label: 'Oranye Emas' },
+                                      { color: '#F59E0B', label: 'Amber' },
+                                      { color: '#EAB308', label: 'Emas Cerah' },
+                                      { color: '#34D399', label: 'Emerald' },
+                                      { color: '#F87171', label: 'Merah Karang' },
+                                      { color: '#FFFFFF', label: 'Putih' },
+                                    ].map((c) => (
+                                      <button
+                                        key={c.color}
+                                        type="button"
+                                        onClick={() => {
+                                          const newSlides = [...(content.bannerSlides || [])];
+                                          newSlides[sIdx].headlineHighlightColor = c.color;
+                                          setContent({ ...content, bannerSlides: newSlides });
+                                        }}
+                                        className="w-5 h-5 rounded-full border border-slate-300 shadow-2xs hover:scale-110 active:scale-95 transition-transform"
+                                        style={{ backgroundColor: c.color }}
+                                        title={c.label}
+                                      />
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* Color 3: Supporting Text & Size */}
+                                <div className="space-y-1.5 p-3 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5]">
+                                  <div className="flex items-center justify-between">
+                                    <label className="text-[11px] font-bold text-[#073B78] uppercase">
+                                      Warna &amp; Ukuran Deskripsi
+                                    </label>
+                                    <span
+                                      className="w-4 h-4 rounded-full border border-slate-300 shadow-2xs"
+                                      style={{ backgroundColor: slide.supportingTextColor || '#E2E8F0' }}
+                                    />
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <input
+                                      type="color"
+                                      value={slide.supportingTextColor || '#E2E8F0'}
+                                      onChange={(e) => {
+                                        const newSlides = [...(content.bannerSlides || [])];
+                                        newSlides[sIdx].supportingTextColor = e.target.value;
+                                        setContent({ ...content, bannerSlides: newSlides });
+                                      }}
+                                      className="w-8 h-8 rounded-lg cursor-pointer border border-[#DCE7F5] p-0.5 bg-white shrink-0"
+                                      title="Pilih warna custom"
+                                    />
+                                    <select
+                                      value={slide.supportingTextFontSize || 'sm'}
+                                      onChange={(e) => {
+                                        const newSlides = [...(content.bannerSlides || [])];
+                                        newSlides[sIdx].supportingTextFontSize = e.target.value as any;
+                                        setContent({ ...content, bannerSlides: newSlides });
+                                      }}
+                                      className="flex-1 h-8 px-2 rounded-lg bg-white border border-[#DCE7F5] text-xs font-semibold text-[#073B78]"
+                                    >
+                                      <option value="xs">Teks Kecil (12px)</option>
+                                      <option value="sm">Teks Standar (14px)</option>
+                                      <option value="base">Teks Sedang (16px)</option>
+                                      <option value="lg">Teks Besar (18px)</option>
+                                    </select>
+                                  </div>
+                                  {/* Quick Palette */}
+                                  <div className="flex items-center gap-1.5 pt-1">
+                                    {[
+                                      { color: '#FFFFFF', label: 'Putih Terang' },
+                                      { color: '#E2E8F0', label: 'Putih Soft' },
+                                      { color: '#CBD5E1', label: 'Silver' },
+                                      { color: '#FEF08A', label: 'Kuning Soft' },
+                                      { color: '#FED7AA', label: 'Krem Oranye' },
+                                    ].map((c) => (
+                                      <button
+                                        key={c.color}
+                                        type="button"
+                                        onClick={() => {
+                                          const newSlides = [...(content.bannerSlides || [])];
+                                          newSlides[sIdx].supportingTextColor = c.color;
+                                          setContent({ ...content, bannerSlides: newSlides });
+                                        }}
+                                        className="w-5 h-5 rounded-full border border-slate-300 shadow-2xs hover:scale-110 active:scale-95 transition-transform"
+                                        style={{ backgroundColor: c.color }}
+                                        title={c.label}
+                                      />
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
                             {/* CTA Buttons */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-[#DCE7F5]">
                               <div className="space-y-1.5 p-3 rounded-xl bg-white border border-[#DCE7F5]">

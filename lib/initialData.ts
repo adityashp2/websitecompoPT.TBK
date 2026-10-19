@@ -17,6 +17,15 @@ export interface BannerSlide {
   imageZoom?: number;
   mediaType?: 'image' | 'video';
   videoUrl?: string;
+
+  // Kustomisasi Ukuran, Warna, dan Tipe Font Teks Banner
+  headlineFontFamily?: 'serif' | 'sans' | 'cormorant' | 'system' | 'georgia';
+  headlineFontSize?: 'sm' | 'base' | 'lg' | 'xl' | '2xl';
+  headlineFontWeight?: 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold';
+  headlineFirstLineColor?: string;
+  headlineHighlightColor?: string;
+  supportingTextColor?: string;
+  supportingTextFontSize?: 'xs' | 'sm' | 'base' | 'lg';
 }
 
 export interface FeatureCard {

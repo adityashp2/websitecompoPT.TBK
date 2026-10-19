@@ -12,6 +12,75 @@ interface PromoBannerCarouselProps {
   whatsappUrl?: string;
 }
 
+
+export const getFontFamilyStyle = (family?: string) => {
+  switch (family) {
+    case 'sans':
+      return 'var(--font-sans), sans-serif';
+    case 'cormorant':
+      return 'var(--font-cormorant), Garamond, serif';
+    case 'system':
+      return "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+    case 'georgia':
+      return "Georgia, 'Times New Roman', serif";
+    case 'serif':
+    default:
+      return 'var(--font-serif), Georgia, serif';
+  }
+};
+
+export const getFontWeightStyle = (weight?: string) => {
+  switch (weight) {
+    case 'medium': return 500;
+    case 'semibold': return 600;
+    case 'bold': return 700;
+    case 'extrabold': return 800;
+    case 'normal':
+    default: return 400;
+  }
+};
+
+export const getDesktopFontSize = (size?: string) => {
+  switch (size) {
+    case 'sm': return 'clamp(2.25rem, 3.2vw, 2.75rem)';
+    case 'base': return 'clamp(2.75rem, 3.8vw, 3.5rem)';
+    case 'xl': return 'clamp(3.5rem, 5.2vw, 4.85rem)';
+    case '2xl': return 'clamp(4rem, 6vw, 5.5rem)';
+    case 'lg':
+    default: return 'clamp(3rem, 4.5vw, 4.25rem)';
+  }
+};
+
+export const getMobileFontSize = (size?: string) => {
+  switch (size) {
+    case 'sm': return 'clamp(1.15rem, 4.2vw, 1.45rem)';
+    case 'base': return 'clamp(1.25rem, 4.8vw, 1.65rem)';
+    case 'xl': return 'clamp(1.55rem, 5.8vw, 2.15rem)';
+    case '2xl': return 'clamp(1.75rem, 6.5vw, 2.45rem)';
+    case 'lg':
+    default: return 'clamp(1.35rem, 5.2vw, 1.85rem)';
+  }
+};
+
+export const getSupportingTextFontSize = (size?: string, isMobile = false) => {
+  if (isMobile) {
+    switch (size) {
+      case 'xs': return '11px';
+      case 'base': return '13.5px';
+      case 'lg': return '15px';
+      case 'sm':
+      default: return '12px';
+    }
+  }
+  switch (size) {
+    case 'xs': return '14px';
+    case 'base': return '16px';
+    case 'lg': return '19px';
+    case 'sm':
+    default: return '16.5px';
+  }
+};
+
 export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerCarouselProps) {
   const slides: BannerSlide[] = Array.isArray(propSlides)
     ? propSlides
@@ -180,16 +249,37 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
                     <span>{slide.eyebrow}</span>
                   </div>
 
-                  {/* Headline with DM Serif Display & Muted Gold Highlight */}
-                  <h1 className="font-serif font-normal text-[clamp(3rem,4.5vw,4.25rem)] leading-[1.12] tracking-tight text-white">
-                    <span>{slide.headlineFirstLine}</span><br />
-                    <span className="text-[#FF9D2E] font-serif">{slide.headlineHighlight}</span>
+                  {/* Headline with Customizable Typography, Size & Colors */}
+                  <h1
+                    style={{
+                      fontFamily: getFontFamilyStyle(slide.headlineFontFamily),
+                      fontSize: getDesktopFontSize(slide.headlineFontSize),
+                      fontWeight: getFontWeightStyle(slide.headlineFontWeight),
+                      lineHeight: 1.12,
+                    }}
+                    className="tracking-tight text-white"
+                  >
+                    <span style={{ color: slide.headlineFirstLineColor || '#FFFFFF' }}>
+                      {slide.headlineFirstLine}
+                    </span>
+                    <br />
+                    <span style={{ color: slide.headlineHighlightColor || '#FF9D2E' }}>
+                      {slide.headlineHighlight}
+                    </span>
                   </h1>
 
-                  {/* Supporting Description in DM Sans */}
-                  <p className="font-sans text-[16px] lg:text-[17.5px] text-white/90 leading-relaxed max-w-xl">
-                    {slide.supportingText}
-                  </p>
+                  {/* Supporting Description with Customizable Size & Color */}
+                  {slide.supportingText && slide.supportingText.trim() !== '' && (
+                    <p
+                      style={{
+                        color: slide.supportingTextColor || 'rgba(255, 255, 255, 0.9)',
+                        fontSize: getSupportingTextFontSize(slide.supportingTextFontSize, false),
+                      }}
+                      className="font-sans leading-relaxed max-w-xl"
+                    >
+                      {slide.supportingText}
+                    </p>
+                  )}
 
                   {/* Action CTA Buttons */}
                   <div className="flex items-center gap-4 pt-2">
@@ -353,15 +443,33 @@ export default function PromoBannerCarousel({ slides: propSlides }: PromoBannerC
                     </div>
                   )}
 
-                  {/* Punchy Promotional Headline with DM Serif Display */}
-                  <h1 className="font-serif font-normal text-[clamp(1.35rem,5.2vw,1.85rem)] sm:text-[clamp(1.75rem,5vw,2.2rem)] leading-[1.2] text-white tracking-tight max-w-[340px] sm:max-w-md">
-                    <span>{slide.headlineFirstLine}</span>{' '}
-                    <span className="text-[#FF9D2E] font-serif">{slide.headlineHighlight}</span>
+                  {/* Punchy Promotional Headline with Customizable Typography & Colors */}
+                  <h1
+                    style={{
+                      fontFamily: getFontFamilyStyle(slide.headlineFontFamily),
+                      fontSize: getMobileFontSize(slide.headlineFontSize),
+                      fontWeight: getFontWeightStyle(slide.headlineFontWeight),
+                      lineHeight: 1.2,
+                    }}
+                    className="text-white tracking-tight max-w-[340px] sm:max-w-md"
+                  >
+                    <span style={{ color: slide.headlineFirstLineColor || '#FFFFFF' }}>
+                      {slide.headlineFirstLine}
+                    </span>{' '}
+                    <span style={{ color: slide.headlineHighlightColor || '#FF9D2E' }}>
+                      {slide.headlineHighlight}
+                    </span>
                   </h1>
 
-                  {/* Compact Benefit Message in DM Sans (2 lines readable) */}
+                  {/* Compact Benefit Message in DM Sans with Customizable Color & Size */}
                   {slide.supportingText && slide.supportingText.trim() !== '' && (
-                    <p className="font-sans text-[12px] sm:text-[14px] text-white/90 line-clamp-2 mt-1.5 max-w-xs sm:max-w-sm leading-snug">
+                    <p
+                      style={{
+                        color: slide.supportingTextColor || 'rgba(255, 255, 255, 0.9)',
+                        fontSize: getSupportingTextFontSize(slide.supportingTextFontSize, true),
+                      }}
+                      className="font-sans line-clamp-2 mt-1.5 max-w-xs sm:max-w-sm leading-snug"
+                    >
                       {slide.supportingText}
                     </p>
                   )}
