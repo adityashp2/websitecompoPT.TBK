@@ -1,41 +1,51 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// Environment variables for Supabase (supports both server-only and NEXT_PUBLIC_ prefixes)
-const rawSupabaseUrl =
-  process.env.SUPABASE_URL ||
-  process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  '';
+const DEFAULT_SUPABASE_URL = 'https://emluamqrtbakrikurmsz.supabase.co';
+const DEFAULT_ANON_KEY = 'sb_publishable_Ax92lEPNOwmEvrfn9-rSrw_7uA7CK7t';
 
-// Automatically sanitize URL if user appended /rest/v1 or trailing slash
-const supabaseUrl = rawSupabaseUrl
-  .trim()
-  .replace(/\/rest\/v1\/?$/i, '')
-  .replace(/\/+$/, '');
+export function getSupabaseUrl(): string {
+  const raw =
+    process.env.SUPABASE_URL ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    DEFAULT_SUPABASE_URL;
 
-const supabaseAnonKey = (
-  process.env.SUPABASE_ANON_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-  process.env.SUPABASE_PUBLISHABLE_KEY ||
-  ''
-).trim();
+  return raw
+    .trim()
+    .replace(/\/rest\/v1\/?$/i, '')
+    .replace(/\/+$/, '');
+}
 
-const supabaseServiceRoleKey = (
-  process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  process.env.SUPABASE_SECRET_KEY ||
-  ''
-).trim();
+export function getSupabaseAnonKey(): string {
+  return (
+    process.env.SUPABASE_ANON_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.SUPABASE_PUBLISHABLE_KEY ||
+    DEFAULT_ANON_KEY
+  ).trim();
+}
+
+export function getSupabaseServiceRoleKey(): string {
+  return (
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.SUPABASE_SECRET_KEY ||
+    ''
+  ).trim();
+}
 
 /**
  * Check if valid Supabase credentials have been configured
  */
 export function isSupabaseConfigured(): boolean {
+  const url = getSupabaseUrl();
+  const anon = getSupabaseAnonKey();
+  const service = getSupabaseServiceRoleKey();
   return Boolean(
-    supabaseUrl &&
-    supabaseUrl.startsWith('https://') &&
-    !supabaseUrl.includes('your-project-id') &&
-    (supabaseAnonKey || supabaseServiceRoleKey) &&
-    !supabaseAnonKey.includes('your-anon-key')
+    url &&
+    url.startsWith('https://') &&
+    !url.includes('your-project-id') &&
+    (anon || service) &&
+    !anon.includes('your-anon-key')
   );
 }
 
@@ -51,8 +61,9 @@ export function getSupabaseAdminClient(): SupabaseClient | null {
   if (!isSupabaseConfigured()) return null;
 
   if (!_adminClient) {
-    const key = supabaseServiceRoleKey || supabaseAnonKey;
-    _adminClient = createClient(supabaseUrl, key, {
+    const url = getSupabaseUrl();
+    const key = getSupabaseServiceRoleKey() || getSupabaseAnonKey();
+    _adminClient = createClient(url, key, {
       auth: {
         persistSession: false,
         autoRefreshToken: false,
@@ -69,7 +80,9 @@ export function getSupabaseClient(): SupabaseClient | null {
   if (!isSupabaseConfigured()) return null;
 
   if (!_publicClient) {
-    _publicClient = createClient(supabaseUrl, supabaseAnonKey || supabaseServiceRoleKey, {
+    const url = getSupabaseUrl();
+    const key = getSupabaseAnonKey() || getSupabaseServiceRoleKey();
+    _publicClient = createClient(url, key, {
       auth: {
         persistSession: false,
       },
