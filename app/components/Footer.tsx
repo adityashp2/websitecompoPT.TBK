@@ -17,18 +17,41 @@ export default function Footer({ content }: FooterProps) {
           {/* Column 1: Company Profile & Verification */}
           <div className="md:col-span-12 lg:col-span-4 space-y-4">
             <Link href="/" className="inline-flex items-center gap-3 group">
-              <div className="w-9 h-9 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center p-1.5 shrink-0 group-hover:border-[#FF9D2E]/50 transition-colors">
-                <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#FF9D2E]" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M3 21h18M5 21V7l5-4v18M14 21V9l5 4v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M8 9h.01M8 13h.01M8 17h.01M16 15h.01M16 18h.01" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-                </svg>
-              </div>
+              {content.footer?.logo && content.footer.logo.trim() !== '' ? (
+                <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/15 overflow-hidden flex items-center justify-center p-1 shrink-0 group-hover:border-[#FF9D2E]/50 transition-colors">
+                  <img
+                    src={content.footer.logo}
+                    alt={`Logo ${content.footer?.companyName || 'PT. Terbang Bersama Kawan'}`}
+                    style={{
+                      objectFit: content.footer.logoFit || 'contain',
+                      objectPosition: `center ${content.footer.logoOffsetY !== undefined ? content.footer.logoOffsetY : 50}%`,
+                      transform: content.footer.logoZoom !== undefined ? `scale(${content.footer.logoZoom / 100})` : undefined,
+                    }}
+                    className="w-full h-full"
+                  />
+                </div>
+              ) : content.meta?.logo && content.meta.logo.trim() !== '' ? (
+                <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/15 overflow-hidden flex items-center justify-center p-1 shrink-0 group-hover:border-[#FF9D2E]/50 transition-colors">
+                  <img
+                    src={content.meta.logo}
+                    alt={`Logo ${content.footer?.companyName || 'PT. Terbang Bersama Kawan'}`}
+                    className="w-full h-full object-contain brightness-0 invert"
+                  />
+                </div>
+              ) : (
+                <div className="w-9 h-9 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center p-1.5 shrink-0 group-hover:border-[#FF9D2E]/50 transition-colors">
+                  <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#FF9D2E]" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 21h18M5 21V7l5-4v18M14 21V9l5 4v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M8 9h.01M8 13h.01M8 17h.01M16 15h.01M16 18h.01" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              )}
               <div className="flex flex-col text-left">
                 <span className="font-bold text-[15px] text-white tracking-[0.04em] uppercase group-hover:text-[#FF9D2E] transition-colors">
                   {content.footer?.companyName || 'PT. Terbang Bersama Kawan'}
                 </span>
                 <span className="text-[10.5px] text-[#FF9D2E] uppercase tracking-[0.05em] font-medium">
-                  Pengembang Properti Bandar Lampung
+                  {content.footer?.tagline || 'Pengembang Properti Bandar Lampung'}
                 </span>
               </div>
             </Link>

@@ -3029,6 +3029,123 @@ export default function AdminDashboard() {
                       Informasi Footer Website
                     </h3>
 
+                    {/* Logo Khusus Footer */}
+                    <div className="p-4 sm:p-5 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] space-y-3">
+                      <div>
+                        <label className="block text-xs font-bold text-[#073B78] uppercase tracking-wider flex items-center gap-1.5">
+                          <ImageIcon className="w-4 h-4 text-[#FF9D2E]" />
+                          <span>Logo / Lambang Perusahaan di Footer</span>
+                        </label>
+                        <p className="text-xs text-[#526783] mt-0.5">
+                          Upload foto atau logo khusus untuk bagian footer website (tampil di latar belakang biru gelap #102D52).
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center pt-1">
+                        {/* Live Preview Box with exact Footer Navy background */}
+                        <div className="w-16 h-16 rounded-xl bg-[#102D52] border border-white/20 p-2 flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
+                          {content.footer?.logo && content.footer.logo.trim() !== '' ? (
+                            <img
+                              src={content.footer.logo}
+                              alt="Logo Footer Preview"
+                              style={{
+                                objectFit: content.footer.logoFit || 'contain',
+                                objectPosition: `center ${content.footer.logoOffsetY !== undefined ? content.footer.logoOffsetY : 50}%`,
+                                transform: `scale(${(content.footer.logoZoom !== undefined ? content.footer.logoZoom : 100) / 100})`,
+                              }}
+                              className="w-full h-full"
+                            />
+                          ) : content.meta?.logo && content.meta.logo.trim() !== '' ? (
+                            <img
+                              src={content.meta.logo}
+                              alt="Logo Footer Preview"
+                              className="w-full h-full object-contain brightness-0 invert"
+                            />
+                          ) : (
+                            <svg viewBox="0 0 24 24" fill="none" className="w-8 h-8 text-[#FF9D2E]" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M3 21h18M5 21V7l5-4v18M14 21V9l5 4v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M8 9h.01M8 13h.01M8 17h.01M16 15h.01M16 18h.01" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+                            </svg>
+                          )}
+                        </div>
+
+                        <div className="flex-1 w-full space-y-1.5">
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              placeholder="Path atau URL logo footer (/assets/... atau /uploads/...)"
+                              value={content.footer?.logo || ''}
+                              onChange={(e) =>
+                                setContent({
+                                  ...content,
+                                  footer: { ...content.footer, logo: e.target.value },
+                                })
+                              }
+                              className="flex-1 px-3 py-2 rounded-lg bg-white border border-[#DCE7F5] text-xs text-[#102D52] focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E] font-mono"
+                            />
+                            <label className="cursor-pointer px-3.5 py-2 rounded-lg bg-[#073B78] hover:bg-[#0A4B91] text-white border border-[#073B78] text-xs font-semibold shadow-xs flex items-center gap-1.5 shrink-0 transition-colors">
+                              <Upload className="w-3.5 h-3.5" />
+                              <span>{uploadingKey === 'footer-logo' ? 'Mengupload...' : 'Upload Logo'}</span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                disabled={uploadingKey === 'footer-logo'}
+                                onChange={(e) => {
+                                  if (e.target.files && e.target.files[0]) {
+                                    handleGenericFileUpload(e.target.files[0], 'footer-logo', (url) => {
+                                      setContent({
+                                        ...content,
+                                        footer: { ...content.footer, logo: url },
+                                      });
+                                    });
+                                  }
+                                }}
+                              />
+                            </label>
+                            {content.footer?.logo && (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setContent({
+                                    ...content,
+                                    footer: { ...content.footer, logo: '' },
+                                  })
+                                }
+                                className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-500 text-xs transition-colors"
+                                title="Hapus logo khusus footer"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
+                          <span className="text-[10.5px] text-[#526783] block">
+                            Jika logo khusus footer dikosongkan, sistem otomatis menggunakan logo utama perusahaan atau lambang resmi PT. TBK.
+                          </span>
+                        </div>
+                      </div>
+
+                      {content.footer?.logo && (
+                        <ImageAdjustmentControl
+                          title="Ukuran & Posisi Logo Footer"
+                          fit={content.footer.logoFit || 'contain'}
+                          offsetY={content.footer.logoOffsetY !== undefined ? content.footer.logoOffsetY : 50}
+                          zoom={content.footer.logoZoom !== undefined ? content.footer.logoZoom : 100}
+                          onChange={({ fit, offsetY, zoom }) => {
+                            setContent({
+                              ...content,
+                              footer: {
+                                ...content.footer,
+                                logoFit: fit,
+                                logoOffsetY: offsetY,
+                                logoZoom: zoom,
+                              },
+                            });
+                          }}
+                        />
+                      )}
+                    </div>
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-bold text-[#073B78] mb-1">
@@ -3062,6 +3179,24 @@ export default function AdminDashboard() {
                           className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
                         />
                       </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-[#073B78] mb-1">
+                        Slogan / Tagline di Bawah Nama Perusahaan (Footer)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Contoh: Pengembang Properti Bandar Lampung"
+                        value={content.footer?.tagline || ''}
+                        onChange={(e) =>
+                          setContent({
+                            ...content,
+                            footer: { ...content.footer, tagline: e.target.value },
+                          })
+                        }
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DCE7F5] text-[#102D52] text-sm focus:outline-none focus:border-[#FF9D2E] focus:ring-1 focus:ring-[#FF9D2E]"
+                      />
                     </div>
 
                     <div>

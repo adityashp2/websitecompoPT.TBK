@@ -236,6 +236,10 @@ export interface SiteContent {
     tagline?: string;
     summary: string;
     copyrightText: string;
+    logo?: string;
+    logoFit?: 'cover' | 'contain';
+    logoOffsetY?: number;
+    logoZoom?: number;
   };
   promoPopup?: PromoPopup;
   socialLinks?: {
@@ -675,9 +679,13 @@ export const initialSiteContent: SiteContent = {
   footer: {
     companyName: "PT. Terbang Bersama Kawan",
     shortName: "PT. TBK",
-    tagline: "Pengembang Perumahan Resmi",
+    tagline: "Pengembang Properti Bandar Lampung",
     summary: "Pengembang perumahan resmi, amanah, dan berkualitas berdomisili di Bandar Lampung. Mengutamakan transparansi, kepuasan konsumen, dan legalitas sah.",
     copyrightText: "Hak Cipta Dilindungi Undang-Undang. PT. Terbang Bersama Kawan (PT. TBK).",
+    logo: "/assets/logo-tbk.png",
+    logoFit: "contain",
+    logoOffsetY: 50,
+    logoZoom: 100,
   },
   promoPopup: {
     enabled: true,
