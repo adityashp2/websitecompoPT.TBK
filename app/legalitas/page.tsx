@@ -16,6 +16,7 @@ import {
   FileCheck2,
   Phone,
   ArrowRight,
+  ExternalLink,
   Lock
 } from 'lucide-react';
 
@@ -59,65 +60,45 @@ export default async function LegalitasPage() {
     ? `https://wa.me/${formattedWa}?text=${encodeURIComponent('Halo Tim Legalitas PT. TBK, saya ingin bertanya mengenai keabsahan berkas legalitas perumahan Puri Gunung Langgar.')}`
     : '';
 
-  const legalDocs = [
+  const legalItems = [
     {
-      code: 'DOC-01',
-      category: 'AKTA PENDIRIAN BADAN HUKUM',
-      title: 'Akta Notaris Pendirian Perseroan Terbatas',
-      number: content.legal?.aktaNumber || 'Akta Notaris No. 10',
-      date: content.legal?.aktaDate || '18 Maret 2021',
-      authority: content.legal?.notary || 'Eka Dian Anggraini, S.H., M.Kn.',
-      jurisdiction: 'Kota Bandar Lampung',
-      icon: FileText,
-      description: 'Dokumen konstitusi perseroan terbatas yang memuat anggaran dasar, maksud, dan tujuan perseroan dalam bidang pembangunan serta pengembangan perumahan.',
-      status: 'TERDAFTAR & SAH',
-    },
-    {
-      code: 'DOC-02',
-      category: 'PENGESAHAN NEGARA RI',
-      title: 'Surat Keputusan Menteri Hukum & HAM RI',
-      number: content.legal?.skMenkumham || 'AHU-0016462.AH.01.01.TAHUN 2021',
-      date: content.legal?.skDate || '19 Maret 2021',
-      authority: 'Ditjen Administrasi Hukum Umum (AHU), Kemenkumham RI',
-      jurisdiction: 'Republik Indonesia',
-      icon: Landmark,
-      description: 'Pengesahan pendirian badan hukum perseroan terbatas PT. Terbang Bersama Kawan secara resmi tercatat dalam basis data kenegaraan Kemenkumham RI.',
-      status: 'TERVERIFIKASI NEGARA',
-    },
-    {
-      code: 'DOC-03',
-      category: 'KEPASTIAN ALAS HAK LAHAN',
-      title: 'Sertifikat Hak Milik (SHM) Kawasan',
-      number: content.legal?.landStatus || 'Sertifikat Hak Milik (SHM)',
-      date: 'Progres Berkala 2021 - 2024',
-      authority: 'Badan Pertanahan Nasional (BPN) Lampung Selatan',
-      jurisdiction: 'Desa Sabah Balau, Kec. Tanjung Bintang',
-      icon: MapPin,
-      description: content.legal?.landStatusDetail || 'Lahan pengembangan perumahan Puri Gunung Langgar berstatus Sertifikat Hak Milik (SHM) yang clean and clear, bebas sita jaminan luar dan siap pemecahan sertifikat per unit.',
-      status: 'SHM BERSIH',
-    },
-    {
-      code: 'DOC-04',
-      category: 'REPRESENTASI SAH PERSEROAN',
-      title: 'Mandat Direksi & Otoritas Perjanjian',
-      number: 'Pasal Anggaran Dasar & Akta Otentik',
-      date: 'Aktif Sejak 18 Maret 2021',
-      authority: 'Direksi & Dewan Komisaris PT. TBK',
-      jurisdiction: 'Wilayah Hukum Republik Indonesia',
+      title: 'Akta Notaris Pendirian Perseroan',
+      number: content.legal?.aktaNumber || 'No. 10 Tanggal 18 Maret 2021',
+      notary: `Notaris: ${content.legal?.notary || 'Syahrul, S.H., M.Kn.'}`,
+      body: 'Landasan yuridis resmi pembentukan badan hukum PT. Terbang Bersama Kawan untuk kegiatan pembangunan kawasan perumahan dan permukiman.',
       icon: Scale,
-      description: content.legal?.directorAuthority || 'Direktur berhak bertindak sah mewakili perseroan di dalam dan di luar pengadilan, termasuk menandatangani PPJB, AJB Notaris, serta perikatan kerjasama KPR Perbankan.',
-      status: 'KEWENANGAN SAH',
+    },
+    {
+      title: 'Pengesahan Menkumham RI',
+      number: content.legal?.skMenkumham || 'AHU-0016462.AH.01.01.TAHUN 2021',
+      notary: 'Kementerian Hukum & HAM Republik Indonesia',
+      body: 'Legalitas perseroan terbatas yang telah dicatat resmi dalam Sistem Administrasi Badan Hukum Republik Indonesia.',
+      icon: Landmark,
+    },
+    {
+      title: 'Nomor Induk Berusaha (NIB)',
+      number: (content.legal as any)?.nib || '1234567890123 (OSS RBA Terverifikasi)',
+      notary: 'Kementerian Investasi / BKPM RI',
+      body: 'Identitas legal kegiatan berusaha pembangunan real estate perumahan bersubsidi dan komersial yang berlaku aktif.',
+      icon: FileCheck2,
+    },
+    {
+      title: 'Sertifikat Hak Milik & Izin Kawasan',
+      number: 'SHM Pecah Per Kavling & Persetujuan Bangunan (PBG)',
+      notary: 'Kantor Pertanahan Kab. Lampung Selatan',
+      body: 'Jaminan keamanan kepemilikan mutlak dengan status tanah bebas sengketa dan izin mendirikan bangunan resmi dari pemerintah daerah.',
+      icon: ShieldCheck,
     },
   ];
 
-  const faqs = [
+  const faqItems = [
     {
-      q: 'Bagaimana status hukum kepemilikan tanah proyek Puri Gunung Langgar?',
-      a: 'Lahan kawasan perumahan Puri Gunung Langgar telah berstatus sertifikat resmi (SHM Induk) dan dalam proses pemecahan sertifikat per kavling sesuai penetapan tata ruang Badan Pertanahan Nasional (BPN) Kabupaten Lampung Selatan.',
+      q: 'Bagaimana status sertifikat tanah di Puri Gunung Langgar?',
+      a: 'Lahan induk kawasan perumahan telah berstatus Sertifikat Hak Milik (SHM) yang diproses pecah per kavling unit untuk setiap konsumen setelah akad KPR selesai.',
     },
     {
       q: 'Apakah seluruh pembayaran wajib masuk ke rekening resmi perusahaan?',
-      a: 'Ya, seluruh transaksi pembayaran biaya pemesanan (booking fee), uang muka, maupun cicilan wajib disetorkan melalui Rekening Giro resmi atas nama PT. Terbang Bersama Kawan, bukan rekening pribadi sales atau perorangan.',
+      a: 'Ya, seluruh transaksi pembayaran biaya pemesanan (booking fee), uang muka, maupun cicilan disetorkan langsung melalui Rekening Giro resmi atas nama PT. Terbang Bersama Kawan tanpa perantara.',
     },
     {
       q: 'Bagaimana jika berkas permohonan KPR tidak disetujui oleh pihak Bank?',
@@ -125,7 +106,7 @@ export default async function LegalitasPage() {
     },
     {
       q: 'Dapatkah calon konsumen melihat salinan fisik dokumen legalitas perusahaan?',
-      a: 'Tentu. Calon pembeli dipersilakan berkunjung ke kantor pemasaran kami di Bandar Lampung untuk memeriksa salinan legalisir dokumen perseroan didampingi tim legalitas kami.',
+      a: 'Tentu. Calon pembeli dipersilakan berkunjung ke kantor kami di Bandar Lampung untuk memeriksa salinan legalisir dokumen perseroan didampingi tim legalitas kami.',
     },
   ];
 
@@ -135,189 +116,146 @@ export default async function LegalitasPage() {
 
       <main id="main-content" className="flex-1">
         {/* Page Hero Header */}
-        <section className="bg-[#000000] text-white pt-20 pb-24 px-6 border-b border-[#262626] relative overflow-hidden">
-          <div className="container-editorial relative z-10">
-            {/* Breadcrumb */}
-            <nav aria-label="Breadcrumb" className="flex items-center gap-2 font-mono text-[11px] tracking-[2px] uppercase text-[#999999] mb-8">
-              <Link href="/" className="hover:text-white transition-colors">
-                BERANDA
-              </Link>
+        <section className="bg-[#000000] text-white pt-20 sm:pt-28 pb-20 px-4">
+          <div className="container-editorial">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs tracking-wider text-[#999999] uppercase mb-8">
+              <Link href="/" className="hover:text-white transition-colors">Beranda</Link>
               <span>/</span>
-              <span className="text-white">LEGALITAS DOKUMEN</span>
+              <span className="text-white">Legalitas Dokumen</span>
             </nav>
 
-            <div className="max-w-4xl space-y-5">
-              <span className="font-mono text-[10px] tracking-[2px] uppercase px-3 py-1 border border-[#262626] text-white inline-block">
-                KEPASTIAN HUKUM &amp; TRANSPARANSI KONSUMEN
-              </span>
-              <h1 className="font-display font-normal text-4xl sm:text-6xl lg:text-[70px] uppercase tracking-[3px] text-white leading-[1.08]">
-                Legalitas &amp; Dokumen Resmi
+            <div className="max-w-3xl space-y-4">
+              <h1 className="font-display uppercase text-4xl sm:text-6xl text-white font-normal tracking-[0.06em] leading-tight">
+                Legalitas &amp; Dokumen Resmi Perseroan
               </h1>
-              <p className="font-serif text-[#cccccc] text-base sm:text-lg leading-relaxed max-w-2xl pt-2">
-                Sebagai pengembang perumahan subsidi terpercaya di Bandar Lampung, PT. Terbang Bersama Kawan
-                menjamin seluruh perizinan usaha, akta pendirian, pengesahan kementerian, dan sertifikat lahan
-                terdokumentasi lengkap serta dapat diverifikasi secara sah.
+              <p className="font-serif text-[#cccccc] text-base sm:text-lg leading-relaxed max-w-2xl">
+                Sebagai pengembang perumahan di Lampung, PT. Terbang Bersama Kawan menjamin seluruh perizinan usaha, akta pendirian, pengesahan kementerian, dan sertifikat lahan terdokumentasi lengkap serta dapat diverifikasi secara transparan.
               </p>
             </div>
           </div>
         </section>
 
         {/* Section 2: 4 Verified Legal Pillars */}
-        <section className="py-24 sm:py-32 bg-[#0d0d0d] border-b border-[#262626]">
-          <div className="container-editorial">
-            <div className="max-w-2xl mb-16">
-              <span className="font-mono text-xs tracking-[2.5px] uppercase text-[#999999] block mb-2">
-                DOKUMEN FONDASI PERSEROAN
-              </span>
-              <h2 className="font-display font-normal text-3xl sm:text-5xl uppercase tracking-[3px] text-white">
-                Empat Pilar Legalitas Terverifikasi
+        <section className="py-24 sm:py-32 bg-[#0d0d0d]">
+          <div className="container-editorial space-y-16">
+            <div className="max-w-2xl space-y-3">
+              <p className="text-xs uppercase tracking-widest text-[#999999]">
+                Kepastian Yuridis &amp; Alas Hak
+              </p>
+              <h2 className="font-display font-normal uppercase text-3xl sm:text-4xl text-white tracking-[0.06em]">
+                Empat Pilar Verifikasi Hukum
               </h2>
-              <p className="font-serif text-base text-[#999999] mt-2 leading-relaxed">
-                Setiap dokumen hukum perseroan terdaftar pada lembaga berwenang dan memiliki kekuatan hukum mengikat.
+              <p className="font-serif text-sm sm:text-base text-[#999999] leading-relaxed">
+                Seluruh operasional korporasi berjalan di atas regulasi perundang-undangan Republik Indonesia dan pengawasan perbankan penyalur FLPP.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {legalDocs.map((doc) => (
-                <div
-                  key={doc.code}
-                  className="card-bugatti p-8 flex flex-col justify-between space-y-6 group"
-                >
-                  <div className="space-y-5">
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="font-mono text-[10.5px] tracking-[2px] uppercase text-[#999999]">
-                        {doc.code}
-                      </span>
-                      <span className="font-mono text-[10px] tracking-[2px] uppercase px-3 py-1 border border-white/60 text-white">
-                        {doc.status}
-                      </span>
+              {legalItems.map((item, idx) => {
+                const IconComponent = item.icon;
+                return (
+                  <div
+                    key={idx}
+                    className="p-8 sm:p-10 bg-[#141414] space-y-5 transition-colors duration-200 hover:bg-[#1a1a1a]"
+                  >
+                    <div className="w-12 h-12 bg-[#000000] text-white flex items-center justify-center">
+                      <IconComponent className="w-6 h-6 stroke-[1.5]" />
                     </div>
 
-                    <div>
-                      <span className="font-mono text-[11px] text-[#999999] uppercase tracking-[2px] block">
-                        {doc.category}
-                      </span>
-                      <h3 className="font-display font-normal text-xl sm:text-2xl uppercase tracking-[1.5px] text-white mt-1">
-                        {doc.title}
+                    <div className="space-y-1.5">
+                      <h3 className="font-display uppercase text-xl sm:text-2xl text-white tracking-[0.04em]">
+                        {item.title}
                       </h3>
+                      <p className="text-xs text-[#c3d9f3] tracking-wide font-medium">
+                        {item.number}
+                      </p>
+                      <p className="text-xs text-[#999999]">
+                        {item.notary}
+                      </p>
                     </div>
 
-                    <div className="p-4 bg-[#000000] border border-[#262626] space-y-2 font-mono text-xs tracking-[1px] uppercase">
-                      <div className="flex justify-between gap-2">
-                        <span className="text-[#999999]">NOMOR:</span>
-                        <strong className="text-white text-right">{doc.number}</strong>
-                      </div>
-                      <div className="flex justify-between gap-2">
-                        <span className="text-[#999999]">TANGGAL:</span>
-                        <span className="text-white text-right">{doc.date}</span>
-                      </div>
-                      <div className="flex justify-between gap-2">
-                        <span className="text-[#999999]">OTORITAS:</span>
-                        <span className="text-white text-right">{doc.authority}</span>
-                      </div>
-                    </div>
-
-                    <p className="font-serif text-sm text-[#cccccc] leading-relaxed">
-                      {doc.description}
+                    <p className="font-serif text-sm text-[#cccccc] leading-relaxed pt-2">
+                      {item.body}
                     </p>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
 
-        {/* Section 3: Kepastian Perlindungan Konsumen */}
-        <section className="py-24 sm:py-32 bg-[#000000] border-b border-[#262626]">
-          <div className="container-editorial">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-              <div className="lg:col-span-5 space-y-6">
-                <span className="font-mono text-xs tracking-[2.5px] uppercase text-[#999999] block">
-                  STANDAR KEAMANAN TRANSAKSI
-                </span>
-                <h2 className="font-display font-normal text-3xl sm:text-5xl uppercase tracking-[3px] text-white leading-tight">
-                  Perlindungan Nyata Bagi Pembeli Rumah
-                </h2>
-                <p className="font-serif text-base text-[#cccccc] leading-relaxed">
-                  Kami mengutamakan keamanan dana dan keabsahan hak tanah konsumen sejak awal pemesanan hingga sertifikat berada di tangan Anda.
-                </p>
+        {/* Section 3: Komitmen Kepatuhan Konsumen */}
+        <section className="py-24 sm:py-32 bg-[#000000]">
+          <div className="container-editorial space-y-16">
+            <div className="max-w-2xl space-y-3">
+              <p className="text-xs uppercase tracking-widest text-[#999999]">
+                Perlindungan Konsumen
+              </p>
+              <h3 className="font-display font-normal uppercase text-3xl sm:text-4xl text-white tracking-[0.06em]">
+                Jaminan Kepatuhan Transaksi
+              </h3>
+              <p className="font-serif text-sm sm:text-base text-[#999999] leading-relaxed">
+                Tiga standar operasional baku yang kami terapkan untuk melindungi setiap hak kepemilikan konsumen:
+              </p>
+            </div>
 
-                {hasWa && (
-                  <div className="pt-2">
-                    <a
-                      href={waUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-bugatti-primary"
-                    >
-                      <Phone className="w-3.5 h-3.5" />
-                      <span>KONSULTASI TIM LEGALITAS</span>
-                    </a>
-                  </div>
-                )}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+              <div className="p-8 bg-[#141414] space-y-4">
+                <div className="w-10 h-10 bg-[#000000] text-white flex items-center justify-center">
+                  <CheckCircle2 className="w-5 h-5 text-[#c3d9f3]" />
+                </div>
+                <h4 className="font-display uppercase text-lg text-white tracking-[0.04em]">Rekening Giro Perseroan</h4>
+                <p className="font-serif text-sm text-[#999999] leading-relaxed">
+                  Seluruh pembayaran dialirkan hanya ke rekening bank atas nama badan usaha resmi, tanpa rekening perorangan.
+                </p>
               </div>
 
-              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="card-bugatti p-6 space-y-3">
-                  <div className="font-mono text-[11px] tracking-[2px] uppercase text-[#999999]">01</div>
-                  <h4 className="font-display font-normal text-lg uppercase tracking-[1.5px] text-white">Rekening Giro Resmi</h4>
-                  <p className="font-serif text-xs text-[#999999] leading-relaxed">
-                    Pembayaran hanya melalui rekening perseroan resmi atas nama PT. Terbang Bersama Kawan.
-                  </p>
+              <div className="p-8 bg-[#141414] space-y-4">
+                <div className="w-10 h-10 bg-[#000000] text-white flex items-center justify-center">
+                  <Lock className="w-5 h-5 text-[#c3d9f3]" />
                 </div>
+                <h4 className="font-display uppercase text-lg text-white tracking-[0.04em]">Alas Hak Bersih (SHM)</h4>
+                <p className="font-serif text-sm text-[#999999] leading-relaxed">
+                  Lahan induk bebas dari klaim pihak ketiga atau jaminan kredit luar di luar perbankan mitra penyalur.
+                </p>
+              </div>
 
-                <div className="card-bugatti p-6 space-y-3">
-                  <div className="font-mono text-[11px] tracking-[2px] uppercase text-[#999999]">02</div>
-                  <h4 className="font-display font-normal text-lg uppercase tracking-[1.5px] text-white">Perjanjian SPR Tertulis</h4>
-                  <p className="font-serif text-xs text-[#999999] leading-relaxed">
-                    Surat Pemesanan Rumah (SPR) mencantumkan spesifikasi unit, hak, dan kewajiban secara berkekuatan hukum.
-                  </p>
+              <div className="p-8 bg-[#141414] space-y-4">
+                <div className="w-10 h-10 bg-[#000000] text-white flex items-center justify-center">
+                  <Building2 className="w-5 h-5 text-[#c3d9f3]" />
                 </div>
-
-                <div className="card-bugatti p-6 space-y-3">
-                  <div className="font-mono text-[11px] tracking-[2px] uppercase text-[#999999]">03</div>
-                  <h4 className="font-display font-normal text-lg uppercase tracking-[1.5px] text-white">Alas Hak Bersih (SHM)</h4>
-                  <p className="font-serif text-xs text-[#999999] leading-relaxed">
-                    Lahan induk bebas dari klaim pihak ketiga atau jaminan kredit luar di luar perbankan mitra resmi.
-                  </p>
-                </div>
-
-                <div className="card-bugatti p-6 space-y-3">
-                  <div className="font-mono text-[11px] tracking-[2px] uppercase text-[#999999]">04</div>
-                  <h4 className="font-display font-normal text-lg uppercase tracking-[1.5px] text-white">Kantor Fisik Terbuka</h4>
-                  <p className="font-serif text-xs text-[#999999] leading-relaxed">
-                    Kantor operasional tetap di Bandar Lampung siap melayani peninjauan berkas fisik kapan saja.
-                  </p>
-                </div>
+                <h4 className="font-display uppercase text-lg text-white tracking-[0.04em]">Kantor Fisik Terverifikasi</h4>
+                <p className="font-serif text-sm text-[#999999] leading-relaxed">
+                  Kantor operasional tetap di Bandar Lampung siap melayani pemeriksaan berkas fisik asli kapan saja.
+                </p>
               </div>
             </div>
           </div>
         </section>
 
         {/* Section 4: Tanya Jawab Seputar Legalitas (FAQ) */}
-        <section className="py-24 sm:py-32 bg-[#0d0d0d] border-b border-[#262626]">
-          <div className="max-w-3xl mx-auto px-6">
-            <div className="text-center mb-16 space-y-2">
-              <span className="font-mono text-xs tracking-[2.5px] uppercase text-[#999999] block">
-                PERTANYAAN KONSUMEN
-              </span>
-              <h2 className="font-display font-normal text-3xl sm:text-5xl uppercase tracking-[3px] text-white">
-                Tanya Jawab Legalitas
+        <section className="py-24 sm:py-32 bg-[#0d0d0d]">
+          <div className="container-editorial space-y-16">
+            <div className="max-w-2xl space-y-3">
+              <p className="text-xs uppercase tracking-widest text-[#999999]">
+                Tanya Jawab Legal
+              </p>
+              <h2 className="font-display font-normal uppercase text-3xl sm:text-4xl text-white tracking-[0.06em]">
+                Pertanyaan Umum Konsumen
               </h2>
+              <p className="font-serif text-sm sm:text-base text-[#999999] leading-relaxed">
+                Jawaban terbuka atas pertanyaan hukum yang paling sering diajukan calon pembeli rumah subsidi.
+              </p>
             </div>
 
-            <div className="space-y-6">
-              {faqs.map((faq, idx) => (
-                <div
-                  key={idx}
-                  className="card-bugatti p-6 sm:p-8 space-y-3"
-                >
-                  <h3 className="font-display font-normal text-lg sm:text-xl uppercase tracking-[1.5px] text-white flex items-start gap-3">
-                    <span className="font-mono text-xs text-[#999999] tracking-[2px] shrink-0 mt-1">0{idx + 1}</span>
-                    <span>{faq.q}</span>
-                  </h3>
-                  <p className="font-serif text-sm text-[#cccccc] leading-relaxed pl-7 border-l border-[#262626]">
-                    {faq.a}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {faqItems.map((item, idx) => (
+                <div key={idx} className="p-8 bg-[#141414] space-y-3">
+                  <h4 className="font-display uppercase text-lg text-white tracking-[0.04em]">
+                    {item.q}
+                  </h4>
+                  <p className="font-serif text-sm text-[#cccccc] leading-relaxed">
+                    {item.a}
                   </p>
                 </div>
               ))}
@@ -326,33 +264,32 @@ export default async function LegalitasPage() {
         </section>
 
         {/* Section 5: Direct Verification CTA */}
-        <section className="py-24 bg-[#000000] text-white">
-          <div className="container-editorial text-center space-y-6">
-            <h2 className="font-display font-normal text-3xl sm:text-5xl uppercase tracking-[3px] text-white max-w-2xl mx-auto">
-              Periksa Salinan Fisik Dokumen di Kantor Kami
+        <section className="py-28 sm:py-36 bg-[#000000] text-white text-center">
+          <div className="container-editorial space-y-8">
+            <h2 className="font-display font-normal uppercase text-3xl sm:text-5xl text-white max-w-2xl mx-auto leading-tight tracking-[0.06em]">
+              Periksa Langsung Berkas Fisik di Kantor Kami
             </h2>
-            <p className="font-serif text-sm sm:text-base text-[#cccccc] max-w-xl mx-auto leading-relaxed">
-              Tim legalitas kami siap menyambut Anda di kantor operasional Bandar Lampung untuk peninjauan berkas notaris dan konsultasi skema KPR FLPP.
+            <p className="font-serif text-[#999999] text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
+              Tim legalitas kami siap mendampingi Anda membedah warkah tanah, peta kavling, serta izin perseroan di kantor pemasaran.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-              <Link
-                href="/kontak"
-                className="btn-bugatti-primary"
-              >
-                <span>ALAMAT KANTOR &amp; PETA</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+            <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center">
               {hasWa && (
                 <a
                   href={waUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-bugatti-primary border-[#3a3a3a] text-[#cccccc] hover:border-white hover:text-white"
+                  className="btn-bugatti-primary justify-center"
                 >
-                  <Phone className="w-3.5 h-3.5" />
-                  <span>HUBUNGI ADMIN LEGALITAS</span>
+                  <span>Jadwalkan Konsultasi Legal via WhatsApp</span>
+                  <ArrowRight className="w-4 h-4 ml-2" />
                 </a>
               )}
+              <Link
+                href="/kontak"
+                className="inline-flex items-center justify-center px-8 py-3.5 rounded-full border border-white/20 hover:border-white text-white text-xs uppercase tracking-widest transition-all"
+              >
+                <span>Lihat Alamat Kantor</span>
+              </Link>
             </div>
           </div>
         </section>

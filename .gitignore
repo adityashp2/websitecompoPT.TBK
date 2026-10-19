@@ -51,3 +51,6 @@ public/assets/video_files/*.mkv
 
 
 supabase/.temp/
+
+# Taste skill working dir
+.taste-skill/
