@@ -819,17 +819,22 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                   key={idx}
                   className="group rounded-2xl bg-white border border-[#DCE7F5] overflow-hidden flex flex-col transition-all duration-300 hover:border-[#073B78] shadow-sm hover:shadow-md reveal-on-scroll"
                 >
-                  {/* Executive Portrait Frame - Compact & Balanced Height */}
-                  <div className="relative w-full h-64 sm:h-72 bg-[#073B78] overflow-hidden">
+                  {/* Executive Portrait Frame - Balanced Vertical Aspect Ratio for Official Portraits */}
+                  <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] min-h-[340px] sm:min-h-[380px] bg-[#073B78] overflow-hidden">
                     {member.image && member.image.trim() !== '' ? (
                       <>
                         <img
                           src={member.image}
                           alt={member.name}
-                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
+                          className="w-full h-full transition-all duration-500 ease-out group-hover:scale-105"
+                          style={{
+                            objectFit: member.imageFit || 'cover',
+                            objectPosition: `center ${member.imageOffsetY !== undefined ? member.imageOffsetY : 12}%`,
+                            transform: `scale(${(member.imageZoom !== undefined ? member.imageZoom : 100) / 100})`,
+                          }}
                           loading="lazy"
                         />
-                        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#102D52]/95 via-[#102D52]/50 to-transparent pointer-events-none" />
+                        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#102D52] via-[#102D52]/60 to-transparent pointer-events-none" />
                       </>
                     ) : (
                       <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-[#073B78] relative overflow-hidden">
@@ -918,7 +923,12 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
                           <img
                             src={op.image}
                             alt={op.name}
-                            className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500"
+                            className="w-full h-full transition-all duration-500 hover:scale-105"
+                            style={{
+                              objectFit: op.imageFit || 'cover',
+                              objectPosition: `center ${op.imageOffsetY !== undefined ? op.imageOffsetY : 15}%`,
+                              transform: `scale(${(op.imageZoom !== undefined ? op.imageZoom : 100) / 100})`,
+                            }}
                             loading="lazy"
                           />
                         ) : (

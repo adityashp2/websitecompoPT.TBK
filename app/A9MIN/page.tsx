@@ -3646,13 +3646,18 @@ export default function AdminDashboard() {
                             Foto / Avatar Pengurus
                           </label>
                           <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-                            {/* Portrait Preview */}
-                            <div className="w-16 h-20 rounded-xl overflow-hidden border border-[#FF9D2E]/40 bg-white shrink-0 flex items-center justify-center shadow-md">
+                            {/* Portrait Preview with live transform */}
+                            <div className="w-20 h-24 rounded-xl overflow-hidden border-2 border-[#FF9D2E]/60 bg-[#073B78] shrink-0 flex items-center justify-center shadow-md relative">
                               {member.image && member.image.trim() !== '' ? (
                                 <img
                                   src={member.image}
                                   alt={member.name}
-                                  className="w-full h-full object-cover object-top"
+                                  className="w-full h-full transition-all duration-200"
+                                  style={{
+                                    objectFit: member.imageFit || 'cover',
+                                    objectPosition: `center ${member.imageOffsetY !== undefined ? member.imageOffsetY : 15}%`,
+                                    transform: `scale(${(member.imageZoom !== undefined ? member.imageZoom : 100) / 100})`,
+                                  }}
                                 />
                               ) : (
                                 <div className="text-[#FF9D2E] font-bold text-xs font-serif text-center px-1">
@@ -3719,8 +3724,130 @@ export default function AdminDashboard() {
                                 )}
                               </div>
                               <span className="text-[10px] text-[#526783] block">
-                                Format: JPG, PNG, atau WebP. Disarankan foto portrait vertikal (rasio 3:4 atau 4:5).
+                                Format: JPG, PNG, atau WebP. Disarankan pas foto portrait vertikal (rasio 3:4 atau 4:5).
                               </span>
+
+                              {/* Panel Pas Foto: Fit Mode, Vertical Offset Slider, & Zoom Slider */}
+                              {member.image && (
+                                <div className="mt-3 p-3 rounded-xl bg-[#F0F4FA] border border-[#DCE7F5] space-y-3">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-[11px] font-bold text-[#073B78] flex items-center gap-1.5">
+                                      <Maximize2 className="w-3.5 h-3.5 text-[#FF9D2E]" />
+                                      <span>Pengaturan Posisi &amp; Pas Foto Wajah</span>
+                                    </span>
+                                    <span className="text-[10px] text-[#526783] bg-white px-2 py-0.5 rounded border border-[#DCE7F5]">
+                                      Live Preview
+                                    </span>
+                                  </div>
+
+                                  {/* Pilihan Fit: Cover vs Contain */}
+                                  <div className="grid grid-cols-2 gap-2 text-xs">
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const newMembers = [...content.leadership.members];
+                                        newMembers[idx].imageFit = 'cover';
+                                        setContent({
+                                          ...content,
+                                          leadership: { ...content.leadership, members: newMembers },
+                                        });
+                                      }}
+                                      className={`py-1.5 px-2.5 rounded-lg font-medium border text-center transition-all ${
+                                        (member.imageFit || 'cover') === 'cover'
+                                          ? 'bg-[#073B78] text-white border-[#073B78] shadow-xs'
+                                          : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+                                      }`}
+                                    >
+                                      Penuh Bingkai (Cover)
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const newMembers = [...content.leadership.members];
+                                        newMembers[idx].imageFit = 'contain';
+                                        setContent({
+                                          ...content,
+                                          leadership: { ...content.leadership, members: newMembers },
+                                        });
+                                      }}
+                                      className={`py-1.5 px-2.5 rounded-lg font-medium border text-center transition-all ${
+                                        member.imageFit === 'contain'
+                                          ? 'bg-[#073B78] text-white border-[#073B78] shadow-xs'
+                                          : 'bg-white text-[#526783] border-[#DCE7F5] hover:bg-slate-50'
+                                      }`}
+                                    >
+                                      Utuh Tanpa Terpotong (Contain)
+                                    </button>
+                                  </div>
+
+                                  {/* Slider Geser Vertikal (Y-Offset) */}
+                                  <div>
+                                    <div className="flex items-center justify-between text-[11px] mb-1">
+                                      <label className="font-semibold text-[#102D52]">
+                                        Posisi Naik / Turun (Fokus Kepala &amp; Wajah)
+                                      </label>
+                                      <span className="text-[10px] font-mono text-[#073B78] font-bold">
+                                        {member.imageOffsetY !== undefined ? `${member.imageOffsetY}%` : '15% (Default Atas)'}
+                                      </span>
+                                    </div>
+                                    <input
+                                      type="range"
+                                      min="0"
+                                      max="100"
+                                      step="1"
+                                      value={member.imageOffsetY !== undefined ? member.imageOffsetY : 15}
+                                      onChange={(e) => {
+                                        const newMembers = [...content.leadership.members];
+                                        newMembers[idx].imageOffsetY = Number(e.target.value);
+                                        setContent({
+                                          ...content,
+                                          leadership: { ...content.leadership, members: newMembers },
+                                        });
+                                      }}
+                                      className="w-full accent-[#FF9D2E] cursor-pointer"
+                                    />
+                                    <div className="flex justify-between text-[9px] text-[#526783] mt-0.5 font-medium">
+                                      <span>0% (Kepala Paling Atas)</span>
+                                      <span>15% (Rekomendasi Pas Foto)</span>
+                                      <span>50% (Tengah)</span>
+                                      <span>100% (Bawah)</span>
+                                    </div>
+                                  </div>
+
+                                  {/* Slider Skala / Zoom */}
+                                  <div>
+                                    <div className="flex items-center justify-between text-[11px] mb-1">
+                                      <label className="font-semibold text-[#102D52]">
+                                        Ukuran / Zoom Foto
+                                      </label>
+                                      <span className="text-[10px] font-mono text-[#073B78] font-bold">
+                                        {member.imageZoom !== undefined ? `${member.imageZoom}%` : '100%'}
+                                      </span>
+                                    </div>
+                                    <input
+                                      type="range"
+                                      min="70"
+                                      max="140"
+                                      step="2"
+                                      value={member.imageZoom !== undefined ? member.imageZoom : 100}
+                                      onChange={(e) => {
+                                        const newMembers = [...content.leadership.members];
+                                        newMembers[idx].imageZoom = Number(e.target.value);
+                                        setContent({
+                                          ...content,
+                                          leadership: { ...content.leadership, members: newMembers },
+                                        });
+                                      }}
+                                      className="w-full accent-[#FF9D2E] cursor-pointer"
+                                    />
+                                    <div className="flex justify-between text-[9px] text-[#526783] mt-0.5 font-medium">
+                                      <span>70% (Lebih Jauh / Muat Luas)</span>
+                                      <span>100% (Normal)</span>
+                                      <span>140% (Zoom Dekat)</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>

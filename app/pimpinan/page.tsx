@@ -116,7 +116,12 @@ export default async function PimpinanPage() {
                       <img
                         src={member.image}
                         alt={member.name}
-                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 ease-out"
+                        className="w-full h-full transition-transform duration-500 ease-out group-hover:scale-105"
+                        style={{
+                          objectFit: member.imageFit || 'cover',
+                          objectPosition: `center ${member.imageOffsetY !== undefined ? member.imageOffsetY : 12}%`,
+                          transform: `scale(${(member.imageZoom !== undefined ? member.imageZoom : 100) / 100})`,
+                        }}
                       />
                     ) : (
                       <div className="w-full h-full flex flex-col items-center justify-center p-4 text-white text-center">
@@ -213,7 +218,12 @@ export default async function PimpinanPage() {
                             <img
                               src={member.image}
                               alt={member.name}
-                              className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                              className="w-full h-full transition-transform duration-500 group-hover:scale-105"
+                              style={{
+                                objectFit: member.imageFit || 'cover',
+                                objectPosition: `center ${member.imageOffsetY !== undefined ? member.imageOffsetY : 15}%`,
+                                transform: `scale(${(member.imageZoom !== undefined ? member.imageZoom : 100) / 100})`,
+                              }}
                             />
                           ) : (
                             <div className="flex flex-col items-center justify-center text-center p-4">

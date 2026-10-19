@@ -120,6 +120,10 @@ export interface SiteContent {
       roleDescription: string;
       image: string;
       department?: string;
+      imageFit?: 'cover' | 'contain';
+      imagePosition?: string;
+      imageOffsetY?: number;
+      imageZoom?: number;
     }>;
   };
   buyingProcess?: {
