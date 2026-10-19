@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { SiteContent } from '@/lib/initialData';
+import { SiteContent, getCrispLogoUrl } from '@/lib/initialData';
 import { MapPin, Phone, Mail, FileCheck2, ExternalLink } from 'lucide-react';
 
 interface FooterProps {
@@ -20,12 +20,13 @@ export default function Footer({ content }: FooterProps) {
               {content.footer?.logo && content.footer.logo.trim() !== '' ? (
                 <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/15 overflow-hidden flex items-center justify-center p-1 shrink-0 group-hover:border-[#FF9D2E]/50 transition-colors">
                   <img
-                    src={content.footer.logo}
+                    src={getCrispLogoUrl(content.footer.logo)}
                     alt={`Logo ${content.footer?.companyName || 'PT. Terbang Bersama Kawan'}`}
                     style={{
                       objectFit: content.footer.logoFit || 'contain',
                       objectPosition: `center ${content.footer.logoOffsetY !== undefined ? content.footer.logoOffsetY : 50}%`,
                       transform: content.footer.logoZoom !== undefined ? `scale(${content.footer.logoZoom / 100})` : undefined,
+                      imageRendering: '-webkit-optimize-contrast',
                     }}
                     className="w-full h-full"
                   />
@@ -33,8 +34,9 @@ export default function Footer({ content }: FooterProps) {
               ) : content.meta?.logo && content.meta.logo.trim() !== '' ? (
                 <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/15 overflow-hidden flex items-center justify-center p-1 shrink-0 group-hover:border-[#FF9D2E]/50 transition-colors">
                   <img
-                    src={content.meta.logo}
+                    src={getCrispLogoUrl(content.meta.logo)}
                     alt={`Logo ${content.footer?.companyName || 'PT. Terbang Bersama Kawan'}`}
+                    style={{ imageRendering: '-webkit-optimize-contrast' }}
                     className="w-full h-full object-contain"
                   />
                 </div>

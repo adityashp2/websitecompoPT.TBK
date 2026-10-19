@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { SiteContent, initialSiteContent, BannerSlide, PurchaseStep, getYouTubeEmbedUrl, PartnerItem, PartnersConfig } from '@/lib/initialData';
+import { SiteContent, initialSiteContent, BannerSlide, PurchaseStep, getYouTubeEmbedUrl, PartnerItem, PartnersConfig, getCrispLogoUrl } from '@/lib/initialData';
 import { getOverlayStyle, getFontFamilyStyle, getFontWeightStyle } from '@/app/components/PromoBannerCarousel';
 import {
   Save,
@@ -945,8 +945,9 @@ export default function AdminDashboard() {
         <div className="relative flex items-center justify-center mb-5">
           <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-2.5 flex items-center justify-center shadow-2xl">
             <img
-              src={content.meta?.logo || "/assets/logo-tbk.png"}
+              src={getCrispLogoUrl(content.meta?.logo)}
               alt="Logo PT. TBK"
+              style={{ imageRendering: '-webkit-optimize-contrast' }}
               className="w-full h-full object-contain"
             />
           </div>
@@ -969,8 +970,9 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-3.5 min-w-0">
             <div className="h-10 w-10 rounded-xl bg-white/10 border border-white/20 p-1 flex items-center justify-center shrink-0 shadow-inner">
               <img
-                src={content.meta?.logo || "/assets/logo-tbk.png"}
+                src={getCrispLogoUrl(content.meta?.logo)}
                 alt="Logo PT. TBK"
+                style={{ imageRendering: '-webkit-optimize-contrast' }}
                 className="h-full w-auto object-contain"
               />
             </div>
@@ -4249,10 +4251,11 @@ export default function AdminDashboard() {
                     </p>
                     <LivePreviewBadge title="LIVE PREVIEW LOGO RESMI (HEADER & NAVBAR)" />
                     <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center pt-1">
-                      <div className="h-16 w-36 rounded-xl bg-[#F8FAFD] border border-[#DCE7F5] p-2 flex items-center justify-center shrink-0">
+                      <div className="h-16 w-36 rounded-xl bg-[#073B78] border border-[#DCE7F5] p-2 flex items-center justify-center shrink-0">
                         <img
-                          src={content.meta?.logo || '/assets/logo-tbk.png'}
+                          src={getCrispLogoUrl(content.meta?.logo)}
                           alt="Logo Preview"
+                          style={{ imageRendering: '-webkit-optimize-contrast' }}
                           className="h-full w-auto object-contain"
                         />
                       </div>

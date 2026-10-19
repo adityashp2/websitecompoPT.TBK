@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X, Search, MessageCircle, ArrowRight } from 'lucide-react';
-import { SiteContent } from '@/lib/initialData';
+import { SiteContent, getCrispLogoUrl } from '@/lib/initialData';
 
 interface HeaderProps {
   content: SiteContent;
@@ -212,24 +212,37 @@ export default function Header({ content }: HeaderProps) {
             className="flex items-center gap-2 sm:gap-3 min-w-0 max-w-[calc(100%-86px)] min-[980px]:max-w-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9D2E] rounded-lg py-1 group"
             aria-label="PT. Terbang Bersama Kawan - Beranda"
           >
-            {/* Logo Image Asset */}
-            <div className="h-8 sm:h-9 w-auto flex items-center shrink-0" style={{ maxHeight: '36px', overflow: 'hidden' }}>
+            {/* Logo Image Asset - Enhanced Sharp High-DPI Emblem */}
+            <div className="h-9 sm:h-10 w-auto flex items-center shrink-0" style={{ maxHeight: '42px' }}>
               <img
-                src={content.meta?.logo || '/assets/logo-tbk.png'}
+                src={getCrispLogoUrl(content.meta?.logo)}
                 alt={`Logo ${content.footer?.companyName || 'PT. Terbang Bersama Kawan'}`}
                 width={120}
-                height={36}
-                style={{ maxHeight: '36px', width: 'auto', objectFit: 'contain' }}
-                className="h-8 sm:h-9 w-auto object-contain"
+                height={42}
+                style={{
+                  maxHeight: '42px',
+                  width: 'auto',
+                  objectFit: 'contain',
+                  imageRendering: '-webkit-optimize-contrast',
+                }}
+                className="h-9 sm:h-10 w-auto object-contain drop-shadow-sm select-none"
               />
             </div>
 
             <div className="flex flex-col text-left min-w-0 overflow-hidden">
-              <span className="text-[13px] sm:text-[15px] font-bold tracking-[0.04em] text-white uppercase group-hover:text-[#FF9D2E] transition-colors leading-tight truncate">
-                {content.footer?.shortName || 'PT. TBK'}
+              <span className="text-[13.5px] sm:text-[15px] font-bold tracking-[0.03em] text-white uppercase group-hover:text-[#FF9D2E] transition-colors leading-tight truncate">
+                {content.footer?.companyName || content.footer?.shortName || 'PT. TERBANG BERSAMA KAWAN'}
               </span>
-              <span className="text-[9px] sm:text-[10.5px] text-[#FF9D2E] font-medium tracking-[0.03em] uppercase leading-tight mt-0.5 truncate">
-                {content.meta?.tagline || 'Terbang Bersama Kawan'}
+              <span className="text-[9.5px] sm:text-[10.5px] text-[#FF9D2E] font-medium tracking-[0.04em] uppercase leading-tight mt-0.5 truncate">
+                {(() => {
+                  const comp = (content.footer?.companyName || 'PT. Terbang Bersama Kawan').trim().toLowerCase();
+                  const short = (content.footer?.shortName || 'PT. TBK').trim().toLowerCase();
+                  const tag = (content.meta?.tagline || '').trim();
+                  if (tag && tag.toLowerCase() !== comp && tag.toLowerCase() !== short) {
+                    return tag;
+                  }
+                  return content.footer?.tagline || 'Pengembang Perumahan Resmi';
+                })()}
               </span>
             </div>
           </Link>

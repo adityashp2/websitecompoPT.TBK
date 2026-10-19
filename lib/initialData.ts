@@ -831,3 +831,13 @@ export function getYouTubeThumbnailUrl(url: string | undefined | null): string |
   }
   return null;
 }
+
+export function getCrispLogoUrl(url: string | undefined | null): string {
+  if (!url || typeof url !== 'string' || !url.trim()) return '/assets/logo-tbk-mark.png';
+  const trimmed = url.trim();
+  if (trimmed === '/assets/logo-tbk.png' || trimmed === '/logo.png') {
+    return '/assets/logo-tbk-mark.png';
+  }
+  return trimmed;
+}
+
