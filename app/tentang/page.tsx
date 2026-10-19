@@ -20,8 +20,25 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: 'Tentang Kami | PT. Terbang Bersama Kawan (PT. TBK)',
-  description: 'Profil resmi PT. Terbang Bersama Kawan, pengembang perumahan bersubsidi terpercaya di Bandar Lampung. Visi, misi, legalitas Kemenkumham, dan komitmen mutu pembangunan.',
+  title: 'Tentang Perusahaan & Visi Misi | PT. Terbang Bersama Kawan (PT. TBK)',
+  description: 'Profil resmi PT. Terbang Bersama Kawan, pengembang perumahan bersubsidi terpercaya di Lampung. Visi, misi, legalitas SK Kemenkumham RI Tahun 2021, dan komitmen penyediaan rumah layak huni bagi masyarakat.',
+  keywords: [
+    'Profil PT Terbang Bersama Kawan',
+    'Sejarah PT TBK',
+    'Developer Properti Bandar Lampung',
+    'Visi Misi PT Terbang Bersama Kawan',
+    'Pengembang Rumah Subsidi Lampung'
+  ],
+  alternates: {
+    canonical: 'https://terbangbersamakawan.co.id/tentang',
+  },
+  openGraph: {
+    title: 'Tentang Perusahaan | PT. Terbang Bersama Kawan (PT. TBK)',
+    description: 'Profil, visi, misi, dan komitmen pengembang hunian berkualitas di Lampung.',
+    url: 'https://terbangbersamakawan.co.id/tentang',
+    siteName: 'PT. Terbang Bersama Kawan (PT. TBK)',
+    type: 'website',
+  },
 };
 
 export default async function TentangPage() {

@@ -25,6 +25,23 @@ export const revalidate = 0;
 export const metadata: Metadata = {
   title: 'Dewan Pengurus & Manajemen Perseroan | PT. Terbang Bersama Kawan',
   description: 'Struktur dewan komisaris, direksi utama, dan jajaran manajemen operasional resmi PT. Terbang Bersama Kawan. Berintegritas membangun kawasan perumahan Puri Gunung Langgar di Lampung.',
+  keywords: [
+    'Komisaris PT Terbang Bersama Kawan',
+    'Direktur Utama PT TBK',
+    'Riski Apriadi PT TBK',
+    'Heri Ilhamsyah PT TBK',
+    'Manajemen PT Terbang Bersama Kawan'
+  ],
+  alternates: {
+    canonical: 'https://terbangbersamakawan.co.id/pimpinan',
+  },
+  openGraph: {
+    title: 'Dewan Pengurus & Manajemen Perseroan | PT. Terbang Bersama Kawan',
+    description: 'Profil pimpinan dan dewan pengurus pengembang perumahan PT. Terbang Bersama Kawan.',
+    url: 'https://terbangbersamakawan.co.id/pimpinan',
+    siteName: 'PT. Terbang Bersama Kawan (PT. TBK)',
+    type: 'website',
+  },
 };
 
 export default async function PimpinanPage() {

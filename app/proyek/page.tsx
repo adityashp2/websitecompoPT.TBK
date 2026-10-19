@@ -24,8 +24,26 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: 'Proyek Puri Gunung Langgar | PT. Terbang Bersama Kawan',
-  description: 'Informasi lengkap perumahan subsidi Puri Gunung Langgar di Desa Sabah Balau, Tanjung Bintang, Lampung Selatan. Spesifikasi unit tipe 36/72, fasilitas, lokasi strategis, dan KPR FLPP.',
+  title: 'Perumahan Puri Gunung Langgar Tipe 36/72 | Rumah Subsidi Lampung - PT. TBK',
+  description: 'Informasi lengkap spesifikasi rumah subsidi Puri Gunung Langgar tipe 36/72 di Desa Sabah Balau, Tanjung Bintang, Lampung Selatan. Fasilitas jalan cor beton, air sumur bor, listrik PLN, dan skema KPR FLPP bunga 5% tetap.',
+  keywords: [
+    'Puri Gunung Langgar',
+    'Rumah Subsidi Tipe 36/72 Lampung',
+    'Perumahan Subsidi Tanjung Bintang',
+    'Rumah Murah Sabah Balau Lampung',
+    'Harga Rumah Subsidi Lampung 2026',
+    'Brosur Puri Gunung Langgar PT TBK'
+  ],
+  alternates: {
+    canonical: 'https://terbangbersamakawan.co.id/proyek',
+  },
+  openGraph: {
+    title: 'Perumahan Puri Gunung Langgar Tipe 36/72 | PT. Terbang Bersama Kawan',
+    description: 'Rumah subsidi berkualitas berstandar PUPR di Tanjung Bintang, Lampung Selatan. Angsuran mulai 1 jutaan/bulan.',
+    url: 'https://terbangbersamakawan.co.id/proyek',
+    siteName: 'PT. Terbang Bersama Kawan (PT. TBK)',
+    type: 'website',
+  },
 };
 
 export default async function ProyekPage() {

@@ -288,6 +288,11 @@ Mohon informasi ketersediaan unit, tahapan berkas KPR subsidi FLPP, dan jadwal s
       <Header content={content} />
 
       <main id="main-content" suppressHydrationWarning>
+        {/* SEO Primary Heading for Search Engine Crawlers */}
+        <h1 className="sr-only">
+          PT. Terbang Bersama Kawan (PT. TBK) - Pengembang Perumahan Subsidi Berkualitas Puri Gunung Langgar Lampung
+        </h1>
+
         {/* ========================================================= */}
         {/* 2. FULL-WIDTH PROMOTIONAL BANNER CAROUSEL (HIGHEST PRIORITY) */}
         {/* Inspired by Indonesian Certification Center (ICC)          */}

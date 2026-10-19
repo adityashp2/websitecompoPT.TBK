@@ -24,11 +24,24 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: 'Legalitas & Dokumen Resmi | PT. Terbang Bersama Kawan',
-  description: 'Arsip legalitas resmi PT. Terbang Bersama Kawan: Akta Notaris No. 10, SK Pengesahan Kemenkumham RI AHU-0016462.AH.01.01.TAHUN 2021, dan kepastian alas hak SHM Puri Gunung Langgar.',
+  title: 'Legalitas Hukum & Izin Resmi Pengembang | PT. Terbang Bersama Kawan',
+  description: 'Arsip legalitas resmi PT. Terbang Bersama Kawan: Akta Notaris No. 10, SK Pengesahan Kemenkumham RI AHU-0016462.AH.01.01.TAHUN 2021, perizinan PBG/IMB, dan sertifikat hak milik (SHM) Puri Gunung Langgar Lampung.',
+  keywords: [
+    'Legalitas PT Terbang Bersama Kawan',
+    'Izin Kemenkumham PT TBK',
+    'Sertifikat SHM Puri Gunung Langgar',
+    'Pengembang Rumah Subsidi Resmi Lampung',
+    'Kepastian Hukum Perumahan Lampung'
+  ],
+  alternates: {
+    canonical: 'https://terbangbersamakawan.co.id/legalitas',
+  },
   openGraph: {
-    title: 'Legalitas & Dokumen Resmi | PT. Terbang Bersama Kawan',
-    description: 'Kepastian hukum dan legalitas perumahan bersubsidi di Lampung Selatan.',
+    title: 'Legalitas Hukum & Dokumen Resmi | PT. Terbang Bersama Kawan',
+    description: 'Jaminan keamanan investasi dan kepastian hukum kepemilikan unit perumahan bersubsidi di Lampung.',
+    url: 'https://terbangbersamakawan.co.id/legalitas',
+    siteName: 'PT. Terbang Bersama Kawan (PT. TBK)',
+    type: 'website',
   },
 };
 
